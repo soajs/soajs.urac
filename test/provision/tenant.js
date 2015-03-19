@@ -2,7 +2,7 @@
 
 module.exports = function(ObjectId) {
 	return ({
-		"_id": ObjectId("10d2cb5fc04ce51e06000001"),
+		"_id": new ObjectId("10d2cb5fc04ce51e06000001"),
 		"oauth": {
 			"secret": "shhh this is a secret",
 			"redirectUri": "",
@@ -15,7 +15,7 @@ module.exports = function(ObjectId) {
 			{
 				"product": "TPROD",
 				"package": "TPROD_BASIC",
-				"appId": ObjectId("30d2cb5fc04ce51e06000001"),
+				"appId": new ObjectId("30d2cb5fc04ce51e06000001"),
 				"description": "this is a description for app for test tenant for test product and basic package",
 				"acl": {
 					"urac": {},
@@ -92,7 +92,7 @@ module.exports = function(ObjectId) {
 			{
 				"product": "TPROD",
 				"package": "TPROD_BASIC",
-				"appId": ObjectId("30d2cb5fc04ce51e06000002"),
+				"appId": new ObjectId("30d2cb5fc04ce51e06000002"),
 				"description": "this is a description for app for test tenant for test product and basic package, and with example03 in acl",
 				"acl": {
 					"urac": {},
@@ -126,7 +126,7 @@ module.exports = function(ObjectId) {
 			{
 				"product": "TPROD",
 				"package": "TPROD_EXAMPLE03",
-				"appId": ObjectId("30d2cb5fc04ce51e06000003"),
+				"appId": new ObjectId("30d2cb5fc04ce51e06000003"),
 				"description": "this is a description for app for test tenant for test product and example03 package",
 				"_TTL": 86400000, // 24 hours
 				"keys": [
@@ -153,5 +153,5 @@ module.exports = function(ObjectId) {
 				]
 			}
 		]
-	})
+	});
 };

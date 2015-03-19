@@ -2,7 +2,7 @@
 
 module.exports = function(ObjectId) {
 	return ({
-		"_id": ObjectId("50d2cb5fc04ce51e06000001"),
+		"_id": new ObjectId("50d2cb5fc04ce51e06000001"),
 		"code": "TPROD",
 		"name": "Test Product",
 		"description": "this is a description for test product",
