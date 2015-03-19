@@ -1,0 +1,39 @@
+{
+  "name": "soajs.urac",
+  "description": "soajs URAC service",
+  "version": "0.0.1",
+  "author": {
+    "name": "soajs team",
+    "email": "team@soajs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:soajs/soajs.urac.git"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies":{
+    "soajs.controller" : "0.0.*",
+    "grunt":"0.4.5",
+    "grunt-contrib-jshint":"0.10.0",
+    "grunt-jsdoc" : "*",
+    "grunt-contrib-clean" : "*",
+    "grunt-mocha-test" : "*",
+    "grunt-env" : "*",
+    "grunt-istanbul" : "0.3.0",
+    "grunt-coveralls" : "*",
+    "jshint" : "*",
+    "lodash": "*",
+    "mocha" : "*",
+    "request" : "*"
+  },
+  "dependencies": {
+    "soajs": "0.0.*",
+    "bcrypt": "*",
+    "node-uuid": "*"
+  }
+}
