@@ -29,7 +29,8 @@
     "jshint" : "*",
     "lodash": "*",
     "mocha" : "*",
-    "request" : "*"
+    "request" : "*",
+    "mongoskin": "*"
   },
   "dependencies": {
     "soajs": "0.0.*",
