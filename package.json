@@ -30,7 +30,7 @@
     "lodash": "*",
     "mocha" : "*",
     "request" : "*",
-    "mongoskin": "*"
+    "shelljs": "*"
   },
   "dependencies": {
     "soajs": "0.0.*",
