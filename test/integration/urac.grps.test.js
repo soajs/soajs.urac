@@ -42,20 +42,15 @@ function requester(apiName, method, params, cb) {
 			if(params.headers.hasOwnProperty(h)) {
 				options.headers[h] = params.headers[h];
 			}
-			else {
-
-			}
+			else {}
 		}
 	}
-
 	if(params.form) {
 		options.form = params.form;
 	}
-
 	if(params.qs) {
 		options.qs = params.qs;
 	}
-
 	request[method](options, function(error, response, body) {
 		assert.ifError(error);
 		assert.ok(body);
@@ -63,8 +58,8 @@ function requester(apiName, method, params, cb) {
 	});
 }
 
-/*
-describe("importing sample data", function() {
+
+describe.skip("importing sample data", function() {
 	it.skip("do import", function(done) {
 		shell.pushd(sampleData.dir);
 		shell.exec("chmod +x " + sampleData.shell, function(code) {
@@ -90,13 +85,13 @@ describe("importing sample data", function() {
 		}, 1000);
 	});
 });
-*/
+
 
 describe.only("urac group tests", function() {
 	before(function(done) {
 		setTimeout(function() {			
 			urac = helper.requireModule('./index');
-			done();
+			done();			
 		}, 1500);
 	});
 	
@@ -104,36 +99,9 @@ describe.only("urac group tests", function() {
 		console.log("=======================================");
 		done();
 	});
-
-	describe("testing list users API", function() {
-		it("SUCCESS - will return user records", function(done) {
-			var params = {};
-			requester('admin/listUsers', 'get', params, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);
-				assert.ok(body.data.length > 0);
-				done();
-			});
-		});
-
-	});
 	
 	describe("testing groups API", function() {
-		var gId = '';
-		it("SUCCESS - will return grps records", function(done) {
-			var params = {};
-			requester('admin/listGroups', 'get', params, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);
-				assert.ok(body.data.length > 0);
-				done();
-			});
-		});
-
+		var gId = '';	
 		it("SUCCESS - will create group", function(done) {
 			var params = {
 				form: {
@@ -158,9 +126,38 @@ describe.only("urac group tests", function() {
 					});
 				});			
 			
+			});						
+		});
+		
+		it("FAIL - will NOT create group", function(done) {
+			var params = {
+				form: {
+					'name': 'gold',
+					'description': 'grp description'
+				}
+			};
+
+			requester('admin/addGroup', 'post', params, function(error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.deepEqual(body.errors.details[0], {"code": 420, "message": "Group name already exists. Choose another"});
+				done();				
+			});			
+		
+								
+		});
+		
+		it("SUCCESS - will return grps records", function(done) {
+			var params = {};
+			requester('admin/listGroups', 'get', params, function(error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.ok(body.data);
+				assert.ok(body.data.length > 0);
+				done();
 			});
-			
-			
 		});
 		
 		it("FAIL - will NOT edit group", function(done) {
@@ -204,6 +201,27 @@ describe.only("urac group tests", function() {
 		
 		});
 		
+		it("FAIL - will NOT edit group", function(done) {
+			var params = {
+				qs: {
+					'gId': gId
+				},
+				form: {
+					'name': 'gold 2',
+					'description': 'description 2 '
+				}
+			};
+			
+			requester('admin/editGroup', 'post', params, function(error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.deepEqual(body.errors.details[0], {"code": 420, "message": "Group name already exists. Choose another"});		
+				done();
+			});
+		
+		});
+		
 		it("FAIL - will not delete group", function(done) {
 			var params = {
 				qs: {
@@ -224,8 +242,7 @@ describe.only("urac group tests", function() {
 				qs: {
 					'gId': gId
 				}
-			};
-			
+			};			
 			requester('admin/deleteGroup', 'get', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
