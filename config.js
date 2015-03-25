@@ -18,7 +18,16 @@ module.exports = {
 		411: "invalid user id provided",
 		412: "You have provided the same existing email address",
 		413: "Invalid profile field provided. Profile should be a stringified object." ,
-		414: "Unable to add user."
+		414: "Unable to add user.",
+		415: "Unable to find group.",
+		416: "Unable to create Group.",
+		417: "Invalid group id provided",
+		418: "Unable to edit Group.",
+		419: "Unable to delete Group.",
+		420: "Group name already exists. Choose another",
+		
+		
+		600: "Database connection error"
 	},
 
 	"schema": {
@@ -254,6 +263,44 @@ module.exports = {
 				"source": ['body.status'],
 				"required": true,
 				"validation": {"type": "string", enum: ['active', 'inactive']}
+			}
+		},
+		'/admin/listGroups': {
+		},
+		'/admin/addGroup': {
+			"name": {
+				"source": ['body.name'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"description": {
+				"source": ['body.description'],
+				"required": true,
+				"validation": {"type": "string"}
+			}
+		},
+		'/admin/editGroup': {
+			"gId": {
+				"source": ['query.gId'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"name": {
+				"source": ['body.name'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"description": {
+				"source": ['body.description'],
+				"required": true,
+				"validation": {"type": "string"}
+			}
+		},
+		'/admin/deleteGroup': {
+			"gId": {
+				"source": ['query.gId'],
+				"required": true,
+				"validation": {"type": "string"}
 			}
 		}
 	}
