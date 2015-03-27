@@ -551,6 +551,7 @@ service.get("/admin/changeUserStatus", function(req, res) {
 	} catch(e) {
 		return res.jsonp(req.soajs.buildResponse({"code": 411, "msg": config.errors[411]}));
 	}
+	
 	//get user database record
 	var criteria = {
 	  '_id': userId, 'locked': { $ne: true }
@@ -558,7 +559,7 @@ service.get("/admin/changeUserStatus", function(req, res) {
 	/* $ne selects the documents where the value of the field is not equal (i.e. !=) to the specified value. 
 	 * This includes documents that do not contain the field. */
 	mongo.findOne(userCollectionName, criteria, function(err, userRecord) {
-		if(err || !userRecord) { console.log(' **** user not found ') ;
+		if(err || !userRecord) { 
 			return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]})); 
 		}	
 		//update record entries
@@ -603,17 +604,19 @@ function updateUserRecord(req, complete, cb) {
 			userRecord.username = req.soajs.inputmaskData['username'];
 			userRecord.firstName = req.soajs.inputmaskData['firstName'];
 			userRecord.lastName = req.soajs.inputmaskData['lastName'];
-
+			//console.log(req.soajs.inputmaskData);
+			
 			if(complete) {
 				userRecord.email = req.soajs.inputmaskData['email'];
-				if( userRecord.locked && (userRecord.locked==true))
-				{
-					console.log(' is set userRecord.locked  ');
-				}
-				else if (!userRecord.locked ){
-					userRecord.status = req.soajs.inputmaskData['status'];
-				}
-				
+				// cannot change status or groups of the locked user ??
+				if (!userRecord.locked ){
+					userRecord.status = req.soajs.inputmaskData['status'];			
+					if(req.soajs.inputmaskData['groups']){
+						userRecord.groups = req.soajs.inputmaskData['groups'];
+					}else{
+						userRecord.groups = [];
+					}				
+				}				
 			}
 
 			if(req.soajs.inputmaskData['profile']) {
@@ -628,7 +631,6 @@ function updateUserRecord(req, complete, cb) {
 			//update record in the database
 			mongo.save(userCollectionName, userRecord, function(err) {
 				if(err) { return cb({"code": 407, "msg": config.errors[407]}); }
-
 				return cb(null, true);
 			});
 		});
@@ -649,62 +651,30 @@ service.post("/admin/editUser", function(req, res) {
 	});
 });
 
-service.get("/admin/listGroups", function(req, res) {
+service.get("/admin/group/list", function(req, res) {
 	var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 	mongo.find(groupsCollectionName, {}, {}, function(err, grpsRecords) {
 		if(err || !grpsRecords) { return res.jsonp(req.soajs.buildResponse({"code": 415, "msg": config.errors[405]})); }
-
+		//console.log( grpsRecords ) ;
 		//if no records return empty array
 		if(grpsRecords.length === 0) { return res.jsonp(req.soajs.buildResponse(null, [])); }
-
-		//loop in records and remove the passwords
-		//userRecords.forEach(function(oneUserRecord) { delete oneUserRecord.password; });
 
 		return res.jsonp(req.soajs.buildResponse(null, grpsRecords));
 	});
 });
 
-function updateGroupRecord(req, complete, cb) {
-	//check if grp record is there
-	var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-	var groupId;
-	try {
-		groupId = mongo.ObjectId(req.soajs.inputmaskData['gId']);
-	} catch(e) {
-		return cb({"code": 417, "msg": config.errors[417]});
-	}
-	mongo.findOne(groupsCollectionName, {'_id': groupId}, function(err, grpRecord) {
-		if(err || !grpRecord) { return cb({"code": 415, "msg": config.errors[415]}); }
-		
-		//update record entries
-		grpRecord.name = req.soajs.inputmaskData['name'];
-		grpRecord.description = req.soajs.inputmaskData['description'];
-			
-		mongo.count(groupsCollectionName, {'name': grpRecord.name}, function(error, count) {
-			if(error) { return cb({"code": 600, "msg": config.errors[600]}); }
-
-			if(count > 0) { return cb({"code": 420, "msg": config.errors[420]}); }
-
-			//update record in the database
-			mongo.save(groupsCollectionName, grpRecord, function(err) {
-				if(err) { return cb({"code": 418, "msg": config.errors[418]}); }
-				return cb(null, true);
-			});						
-		});		
-	});
-}
-
-service.post("/admin/addGroup", function(req, res) {
+service.post("/admin/group/add", function(req, res) {
 	var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 	var grpRecord = {
+		"code": req.soajs.inputmaskData['code'],			
 		"name": req.soajs.inputmaskData['name'],			 
 		"description": req.soajs.inputmaskData['description']
 	};
 	
-	mongo.count(groupsCollectionName, {'name': grpRecord.name}, function(error, count) {
+	mongo.count(groupsCollectionName, {'code': grpRecord.code}, function(error, count) {
 		if(error) { return res.jsonp(req.soajs.buildResponse({"code": 600 , "msg": config.errors[600]})); }
 
-		if(count > 0) { return res.jsonp(req.soajs.buildResponse({"code": 420 , "msg": config.errors[420]})); }
+		if(count > 0) { return res.jsonp(req.soajs.buildResponse({"code": 421 , "msg": config.errors[421]})); }
 
 		mongo.insert(groupsCollectionName, grpRecord, function(err) {
 			if(err) {  
@@ -716,13 +686,34 @@ service.post("/admin/addGroup", function(req, res) {
 	
 });
 
-service.post("/admin/editGroup", function(req, res) {
+function updateGroupRecord(req, complete, cb) {
+	//check if grp record is there
+	var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
+	var groupId;	
+	try {
+		groupId = mongo.ObjectId(req.soajs.inputmaskData['gId']);
+	} catch(e) {
+		return cb({"code": 417, "msg": config.errors[417]});
+	}
+	var s = {
+		'$set': {
+          'description': req.soajs.inputmaskData.description,
+          'name': req.soajs.inputmaskData.name
+     	}
+	};
+	mongo.update(groupsCollectionName,{'_id': groupId}, s, {'upsert': false, 'safe': true}, function(err) {
+		if(err) { return cb({"code": 418, "msg": config.errors[418]}); } 
+		return cb(null);
+	});	
+}
+
+service.post("/admin/group/edit", function(req, res) {
 	updateGroupRecord(req, true, function(error) {
 		if(error) { return res.jsonp(req.soajs.buildResponse({"code": error.code, "msg": error.msg})); }
 		return res.jsonp(req.soajs.buildResponse(null, true));
 	});
 });
-service.get("/admin/deleteGroup", function(req, res) {
+service.get("/admin/group/delete", function(req, res) {
 	var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 	var groupId;
 	try {
@@ -730,14 +721,57 @@ service.get("/admin/deleteGroup", function(req, res) {
 	} catch(e) {
 		return res.jsonp(req.soajs.buildResponse({"code": 417, "msg": config.errors[417]})); 
 	}
-	var criteria = {
-  		  '_id': groupId, 'locked': { $ne: true }
-    };
-	mongo.remove(groupsCollectionName, criteria , function(error) {
-        if(error) { return res.jsonp(req.soajs.buildResponse({"code": 419, "msg": config.errors[419]})); }
-        return res.jsonp(req.soajs.buildResponse(null, "delete successful"));
-    });  
+	
+    mongo.findOne(groupsCollectionName, {'_id': groupId} , function(error, record) {    	
+  	  if(error || !record) { return res.jsonp(req.soajs.buildResponse({"code": 415, "msg": config.errors[415]})); }	
+  	  
+  	  if(record.locked === true )
+  	  {
+  		//console.log( record ) ; 
+		//return error msg that this record is locked
+		return res.jsonp(req.soajs.buildResponse({"code": 500, "msg": config.errors[500]})); 
+  	  }
+  		var criteria = {
+  			'_id': groupId, 'locked': { $ne: true }
+  	    };
+  		var grpCode = record.code;
+  		mongo.remove(groupsCollectionName, criteria , function(error) {
+  	      if(error) { return res.jsonp(req.soajs.buildResponse({"code": 419, "msg": config.errors[419]})); }  	        
+  	      mongo.update(userCollectionName, {groups: grpCode},{$pull: { groups: grpCode} },{multi: true}, function(err) {
+  			if(err) { return res.jsonp(req.soajs.buildResponse({"code": 600, "msg": config.errors[600]})); }  			
+  			return res.jsonp(req.soajs.buildResponse(null, "delete successful"));						
+  	      }); 	      
+ 	         
+  	    }); 		
+ 		  		  
+  	  					
+    }); 
+    
+    
 });
+// add multiple Users To Group
+service.post("/admin/group/addUsers", function(req, res) {
+	var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 
+	// delete from all users
+	var grp = req.soajs.inputmaskData['code'];
+	
+	mongo.update(userCollectionName, {groups: grp},{$pull: { groups: grp} },{multi: true}, function(err) {
+		if(err) { return res.jsonp(req.soajs.buildResponse({"code": 600, "msg": config.errors[600]})); }
+		
+		var users = req.soajs.inputmaskData['users'] ;
+		if( users && users.length > 0){
+			mongo.update(userCollectionName, {'username': {$in: users } },{$push: { groups: grp} } , function(err) {
+				if(err) { return res.jsonp(req.soajs.buildResponse({"code": 600, "msg": config.errors[600]})); }
+			
+				return res.jsonp(req.soajs.buildResponse(null, "map successful"));
+			});
+		}
+		else{
+			return res.jsonp(req.soajs.buildResponse(null, "successful. all users deleted"));
+		}				
+	});
+
+});
 
 service.start();

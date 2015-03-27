@@ -25,8 +25,10 @@ module.exports = {
 		418: "Unable to edit Group.",
 		419: "Unable to delete Group.",
 		420: "Group name already exists. Choose another",
+		421: "Group code already exists. Choose another",
 		
-		
+		500: "This record in locked. You cannot delete it",
+			
 		600: "Database connection error"
 	},
 
@@ -259,15 +261,34 @@ module.exports = {
 				"required": true,
 				"validation": {"type": "string", 'format': 'email'}
 			},
+			"groups": {
+				"source": ['body.groups'],
+				"required": false,
+				"validation": {
+					"type": "array",
+					"items":{
+						"type":"string"
+					}
+				}
+			},		
 			"status": {
 				"source": ['body.status'],
 				"required": true,
 				"validation": {"type": "string", enum: ['active', 'inactive']}
 			}
 		},
-		'/admin/listGroups': {
+		'/admin/group/list': {
 		},
-		'/admin/addGroup': {
+		'/admin/group/add': {
+			"code": {
+				"source": ['body.code'],
+				"required": true,
+				"validation": {
+					"type": "string",
+					"format": "alphanumeric",
+					"maxLength": 20
+				}
+			},
 			"name": {
 				"source": ['body.name'],
 				"required": true,
@@ -279,7 +300,7 @@ module.exports = {
 				"validation": {"type": "string"}
 			}
 		},
-		'/admin/editGroup': {
+		'/admin/group/edit': {
 			"gId": {
 				"source": ['query.gId'],
 				"required": true,
@@ -296,12 +317,33 @@ module.exports = {
 				"validation": {"type": "string"}
 			}
 		},
-		'/admin/deleteGroup': {
+		'/admin/group/delete': {
 			"gId": {
 				"source": ['query.gId'],
 				"required": true,
 				"validation": {"type": "string"}
 			}
+		},
+		"/admin/group/addUsers":{
+			"code": {
+				"source": ['body.groupCode'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"users": {
+				"source": ['body.users'],
+				"required": false,
+				"validation": {
+					"type": "array", 
+					"items":{
+						"type":"string"
+					}	
+				}
+			}
+		},
+		"/admin/user/editGroups":{
+			
 		}
+		
 	}
 };

@@ -262,7 +262,6 @@ describe("simple urac tests", function() {
 
 	describe("testing join API without validation", function() {
 		it("change service tenant configuration, set validate to false", function(done) {
-
 			var options = {
 				uri: 'http://localhost:5001/loadProvision',
 				headers: {
@@ -326,7 +325,6 @@ describe("simple urac tests", function() {
 					//"password": 'password'
 				}
 			};
-
 			requester('login', 'post', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -408,11 +406,8 @@ describe("simple urac tests", function() {
 	describe("testing logout API", function() {
 		it("FAIL - missing params", function(done) {
 			var params = {
-				qs: {
-					//"username": 'mike123'
-				}
+				qs: {}
 			};
-
 			requester('logout', 'get', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -905,7 +900,6 @@ describe("simple urac tests", function() {
 			var params = {
 				qs: {}
 			};
-
 			requester('account/getUser', 'get', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -921,7 +915,6 @@ describe("simple urac tests", function() {
 					"username": 'invalid'
 				}
 			};
-
 			requester('account/getUser', 'get', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -937,7 +930,6 @@ describe("simple urac tests", function() {
 					"username": 'mike123'
 				}
 			};
-
 			requester('account/getUser', 'get', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -974,7 +966,6 @@ describe("simple urac tests", function() {
 					'confirmation': 'myPassword'
 				}
 			};
-
 			requester('account/changePassword', 'post', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1433,7 +1424,6 @@ describe("simple urac tests", function() {
 			});
 		});
 
-
 	});
 
 	describe("testing edit user API", function() {
@@ -1565,7 +1555,7 @@ describe("simple urac tests", function() {
 		it("FAIL - invalid user account", function(done) {
 			var params = {
 				qs: {
-					'uId': 'abcdabcdabcd',
+					'uId': 'dfds',
 					'status': 'active'
 				}
 			};
@@ -1573,7 +1563,7 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 405, "message": "Unable to find User. Please try again."});
+				assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
 				done();
 			});
 		});
@@ -1688,20 +1678,6 @@ describe("simple urac tests", function() {
 	
 	describe("testing groups API", function() {
 		var gId = '';
-		it("SUCCESS - will return grps records", function(done) {
-			var params = {};
-			requester('admin/listGroups', 'get', params, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);
-				assert.ok(body.data.length > 0);
-				done();
-			});
-		});
-
-		it("SUCCESS - will create group", function(done) {});
 		
-		it("SUCCESS - will edit group", function(done) {});
 	});
 });

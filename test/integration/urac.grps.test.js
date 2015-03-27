@@ -2,7 +2,7 @@
 var assert = require('assert');
 var request = require("request");
 var helper = require("../helper.js");
-// var shell = require('shelljs');
+var shell = require('shelljs');
 
 var soajs = require('soajs');
 var controller = require("soajs.controller");
@@ -59,8 +59,8 @@ function requester(apiName, method, params, cb) {
 }
 
 
-describe.skip("importing sample data", function() {
-	it.skip("do import", function(done) {
+describe("importing sample data", function() {
+	it("do import", function(done) {
 		shell.pushd(sampleData.dir);
 		shell.exec("chmod +x " + sampleData.shell, function(code) {
 			assert.equal(code, 0);
@@ -75,182 +75,298 @@ describe.skip("importing sample data", function() {
 	after(function(done) {
 		setTimeout(function() {
 			console.log('test data imported.');
-			urac = helper.requireModule('./index');
+			urac = helper.requireModule('./index');					
 			mongoSession.dropDatabase(function() {
-				mongo.dropDatabase(function() {
-					console.log('starting tests ....');
-					done();
-				});
+				console.log('starting tests ....');
+				done();
 			});
 		}, 1000);
 	});
 });
-
-
-describe.only("urac group tests", function() {
-	before(function(done) {
-		setTimeout(function() {			
-			urac = helper.requireModule('./index');
-			done();			
-		}, 1500);
-	});
-	
+var gId = '';
+describe("urac group tests", function() {	
 	afterEach(function(done) {
 		console.log("=======================================");
 		done();
 	});
 	
 	describe("testing groups API", function() {
-		var gId = '';	
-		it("SUCCESS - will create group", function(done) {
-			var params = {
-				form: {
-					'name': 'gold',
-					'description': 'grp description'
-				}
-			};
-			mongo.dropCollection('groups', function() {
-				requester('admin/addGroup', 'post', params, function(error, body) {
+		
+		describe("testing create group API", function() {
+			
+			it("SUCCESS - will create new group", function(done) {
+				var params = {
+					form: {
+						'code': 'gold',
+						'name': 'Gold',
+						'description': 'grp description'
+					}
+				};
+				requester('admin/group/add', 'post', params, function(error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
 					assert.ok(body.data);
 					
-					mongo.findOne('groups', {'name': 'gold'}, function(error, record) {
+					mongo.findOne('groups', {'code': 'gold'}, function(error, record) {
 						assert.ifError(error);
 						assert.ok(record);
-						console.log(record);
-						//assert.equal(record.name , 'gold');
+						console.log(record);						
 						gId = record._id.toString();// will be used by other test cases
 						done();
 					});
-				});			
+				});											
+			});
+			it("FAIL - will NOT create group - code exists", function(done) {
+				var params = {
+					form: {
+						'code': 'gold',
+						'name': 'gold',
+						'description': 'grp description'
+					}
+				};
+				requester('admin/group/add', 'post', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.deepEqual(body.errors.details[0], {"code": 421, "message": "Group code already exists. Choose another"});
+					done();				
+				});												
+			});
+			it("SUCCESS - will create new group - silver", function(done) {
+				var params = {
+					form: {
+						'code': 'silver',
+						'name': 'Silver Group',
+						'description': 'grp description'
+					}
+				};
+				requester('admin/group/add', 'post', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					done();				
+				});												
+			});
 			
-			});						
+		});
+	
+		
+		describe("testing edit group API", function() {		
+			it("FAIL - will NOT edit group - Invalid id", function(done) {
+				var params = {
+					qs: {'gId': '5645'},
+					form: {
+						'name': 'gold 2',
+						'description': 'description 2 '
+					}
+				};				
+				requester('admin/group/edit', 'post', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.deepEqual(body.errors.details[0], {"code": 417, "message": "Invalid group id provided"});		
+					done();
+				});
+			
+			});
+			it("SUCCESS - will edit group", function(done) {
+				var params = {
+					qs: {
+						'gId': gId
+					},
+					form: {
+						'name': 'gold name',
+						'description': 'description update'
+					}
+				};			
+				requester('admin/group/edit', 'post', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);				
+					done();
+				});
+			
+			});		
+			
+		});
+		describe("testing mapping", function() {
+			var uId ='' ;
+			it("SUCCESS - will map grp to users", function(done) {
+				var params = {
+					form: {
+						'groupCode': 'bronze',
+						'users': [ 'user1', 'user2']
+					}
+				};
+				requester('admin/group/addUsers', 'post', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);				
+					done();
+				});
+			});
+			
+			it("SUCCESS - will map grp to users - empty array", function(done) {
+				var params = {
+					form: {
+						'groupCode': 'silver',
+						'users': []
+					}
+				};
+				requester('admin/group/addUsers', 'post', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);				
+					done();
+				});
+			});
+			
+			it("SUCCESS - will update user account", function(done) {
+				mongo.findOne("users", {'username': 'user1'}, function(error, userRecord) {
+					assert.ifError(error);
+					assert.ok(userRecord);
+					console.log('userRecord') ; 
+					console.log(userRecord) ; 
+					uId = userRecord._id.toString();
+					var params = {
+						qs: {'uId': uId},
+						form: {
+							'firstName': 'mike',
+							'lastName': 'hajj',
+							"email": "user1@domain.com",
+							'username': 'user1',
+							'status': 'active', 
+							"groups" : ['silver', 'gold', 'bronze']
+						}
+					};
+					
+					requester('admin/editUser', 'post', params, function(error, body) {
+						assert.ifError(error);
+						assert.ok(body); assert.ok(body.data);
+						console.log(JSON.stringify(body));
+						mongo.findOne("users", {'username': 'user1'}, function(error, userRecord) {
+							assert.ifError(error);
+							assert.ok(userRecord);
+							assert.deepEqual(userRecord.groups, ['silver', 'gold', 'bronze']);
+							done();
+						});
+					});
+					
+				});
+				
+			});
+			it("SUCCESS - will update user account - no groups", function(done) {
+				var params = {
+					qs: {'uId': uId},
+					form: {
+						'firstName': 'mike',
+						'lastName': 'hajj',
+						"email": "user1@domain.com",
+						'username': 'user1',
+						'status': 'active', 
+						"groups" : []
+					}
+				};
+				requester('admin/editUser', 'post', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body); assert.ok(body.data);
+					console.log(JSON.stringify(body));
+					mongo.findOne("users", {'username': 'user1'}, function(error, userRecord) {
+						assert.ifError(error);
+						assert.ok(userRecord);
+						//assert.deepEqual(userRecord.groups, []);
+						done();
+					});
+				});
+				
+			
+				
+			});
+			
 		});
 		
-		it("FAIL - will NOT create group", function(done) {
-			var params = {
-				form: {
-					'name': 'gold',
-					'description': 'grp description'
-				}
-			};
+		describe.skip("testing delete group API", function() {	
+			it("FAIL - will not delete group", function(done) {
+				var params = {
+					qs: {'gId': 'gfdg56'}
+				};			
+				requester('admin/group/delete', 'get', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.deepEqual(body.errors.details[0], {"code": 417, "message": "Invalid group id provided"});				
+					done();
+				});	
+			});
+			it("SUCCESS - will delete group gold", function(done) {
+				var params = {
+					qs: {
+						'gId': gId
+					}
+				};
+				requester('admin/group/delete', 'get', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);				
+					done();
+				});		
+			});
+			it("FAIL - will not delete locked group", function(done) {			
+				mongo.findOne('groups', {'name': 'administrator'}, function(error, record) {
+					assert.ifError(error);
+					assert.ok(record);
+					//console.log(record);						
+					var Id = record._id.toString();
+					var params = {
+						qs: {'gId': Id}
+					};			
+					requester('admin/group/delete', 'get', params, function(error, body) {
+						assert.ifError(error);
+						assert.ok(body);
+						console.log(JSON.stringify(body));
+						assert.deepEqual(body.errors.details[0],
+								{"code": 500, "message": "This record in locked. You cannot delete it"});													
+						done();
+					});
 
-			requester('admin/addGroup', 'post', params, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 420, "message": "Group name already exists. Choose another"});
-				done();				
-			});			
-		
-								
-		});
-		
-		it("SUCCESS - will return grps records", function(done) {
-			var params = {};
-			requester('admin/listGroups', 'get', params, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);
-				assert.ok(body.data.length > 0);
-				done();
-			});
-		});
-		
-		it("FAIL - will NOT edit group", function(done) {
-			var params = {
-				qs: {
-					'gId': '5645'
-				},
-				form: {
-					'name': 'gold 2',
-					'description': 'description 2 '
-				}
-			};
+				});
 			
-			requester('admin/editGroup', 'post', params, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 417, "message": "Invalid group id provided"});		
-				done();
 			});
-		
-		});
-		it("SUCCESS - will edit group", function(done) {
-			var params = {
-				qs: {
-					'gId': gId
-				},
-				form: {
-					'name': 'gold 2',
-					'description': 'description 2 '
-				}
-			};
 			
-			requester('admin/editGroup', 'post', params, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);				
-				done();
-			});
-		
 		});
-		
-		it("FAIL - will NOT edit group", function(done) {
-			var params = {
-				qs: {
-					'gId': gId
-				},
-				form: {
-					'name': 'gold 2',
-					'description': 'description 2 '
-				}
-			};
+	
+		describe("testing list group API", function() {
+			it("SUCCESS - will return grps records", function(done) {
+				var params = {};
+				requester('admin/group/list', 'get', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					assert.ok(body.data.length > 0);
+					done();
+				});
+			});
 			
-			requester('admin/editGroup', 'post', params, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 420, "message": "Group name already exists. Choose another"});		
-				done();
+			it("SUCCESS - will return empty records", function(done) {
+				mongo.dropCollection('groups', function() {
+					var params = {};
+					requester('admin/group/list', 'get', params, function(error, body) {
+						assert.ifError(error);
+						assert.ok(body);
+						console.log(JSON.stringify(body));
+						assert.ok(body.data);
+						assert.equal(body.data.length, 0);
+						done();
+					});
+				});		
 			});
+		});	
 		
-		});
-		
-		it("FAIL - will not delete group", function(done) {
-			var params = {
-				qs: {
-					'gId': 'gfdgfdg56'
-				}
-			};			
-			requester('admin/deleteGroup', 'get', params, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 417, "message": "Invalid group id provided"});				
-				done();
-			});
-		
-		});
-		it("SUCCESS - will delete group", function(done) {
-			var params = {
-				qs: {
-					'gId': gId
-				}
-			};			
-			requester('admin/deleteGroup', 'get', params, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);				
-				done();
-			});
-		
-		});
 	});
 });
