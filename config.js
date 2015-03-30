@@ -17,7 +17,7 @@ module.exports = {
 		410: "username taken, please choose another username",
 		411: "invalid user id provided",
 		412: "You have provided the same existing email address",
-		413: "Invalid profile field provided. Profile should be a stringified object." ,
+		413: "Invalid profile field provided. Profile should be a stringified object.",
 		414: "Unable to add user.",
 		415: "Unable to find group.",
 		416: "Unable to create Group.",
@@ -28,7 +28,7 @@ module.exports = {
 		421: "Group code already exists. Choose another",
 		
 		500: "This record in locked. You cannot delete it",
-			
+
 		600: "Database connection error"
 	},
 
@@ -233,8 +233,7 @@ module.exports = {
 				"validation": {"type": "string", enum: ['active', 'inactive']}
 			}
 		},
-		'/admin/listUsers': {
-		},
+		'/admin/listUsers': {},
 		'/admin/editUser': {
 			"uId": {
 				"source": ['query.uId'],
@@ -266,19 +265,18 @@ module.exports = {
 				"required": false,
 				"validation": {
 					"type": "array",
-					"items":{
-						"type":"string"
+					"items": {
+						"type": "string"
 					}
 				}
-			},		
+			},
 			"status": {
 				"source": ['body.status'],
 				"required": true,
 				"validation": {"type": "string", enum: ['active', 'inactive']}
 			}
 		},
-		'/admin/group/list': {
-		},
+		'/admin/group/list': {},
 		'/admin/group/add': {
 			"code": {
 				"source": ['body.code'],
@@ -324,7 +322,7 @@ module.exports = {
 				"validation": {"type": "string"}
 			}
 		},
-		"/admin/group/addUsers":{
+		"/admin/group/addUsers": {
 			"code": {
 				"source": ['body.groupCode'],
 				"required": true,
@@ -334,16 +332,15 @@ module.exports = {
 				"source": ['body.users'],
 				"required": false,
 				"validation": {
-					"type": "array", 
-					"items":{
-						"type":"string"
-					}	
+					"type": "array",
+					"items": {
+						"type": "string",
+						'required': true
+					}
 				}
 			}
 		},
-		"/admin/user/editGroups":{
-			
-		}
+		"/admin/user/editGroups": {}
 		
 	}
 };
