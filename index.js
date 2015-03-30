@@ -90,6 +90,7 @@ service.post("/login", function(req, res) {
 					delete record.config.keys;
 				}
 				if(req.soajs.servicesConfig.dashboardui) {
+					if(!record.config) { record.config = {}; }
 					record.config.dashboard = req.soajs.servicesConfig.dashboardui;
 				}
 				return res.jsonp(req.soajs.buildResponse(null, record));
