@@ -282,14 +282,12 @@ describe("urac group tests", function() {
 						done();
 					});
 				});
-				
 			
-				
 			});
 			
 		});
 		
-		describe.skip("testing delete group API", function() {	
+		describe("testing delete group API", function() {	
 			it("FAIL - will not delete group", function(done) {
 				var params = {
 					qs: {'gId': 'gfdg56'}
