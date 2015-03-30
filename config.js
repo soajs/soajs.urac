@@ -219,6 +219,16 @@ module.exports = {
 				"source": ['body.profile'],
 				"required": false,
 				"validation": {"type": "string"}
+			},
+			"groups": {
+				"source": ['body.groups'],
+				"required": false,
+				"validation": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
 			}
 		},
 		'/admin/changeUserStatus': {

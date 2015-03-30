@@ -375,7 +375,6 @@ describe("simple urac tests", function() {
 					"password": 'password'
 				}
 			};
-
 			requester('login', 'post', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -383,8 +382,7 @@ describe("simple urac tests", function() {
 				assert.ok(body.data);
 				done();
 			});
-		});
-
+		});		
 		it("SUCCESS - will login user with email instead of username", function(done) {
 			var params = {
 				form: {
@@ -540,7 +538,7 @@ describe("simple urac tests", function() {
 					'firstName': 'eliane',
 					'lastName': 'nassif',
 					'email': 'nassif.eliane@gmail.com',
-					'profile': '{"gender":"female"}'
+					'profile': '{"gender":"female", "age":25}'
 				}
 			};
 			requester('admin/addUser', 'post', params, function(error, body) {

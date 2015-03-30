@@ -208,7 +208,7 @@ service.post("/resetPassword", function(req, res) {
 
 service.post("/join", function(req, res) {
 	var requireValidation = req.soajs.servicesConfig.urac.validateJoin;
-
+	
 	var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 	mongo.findOne(userCollectionName, {$or: [{'username': req.soajs.inputmaskData['username']}, {'email': req.soajs.inputmaskData['email']}]}, function(err, record) {
 		if(err) { return res.jsonp(req.soajs.buildResponse({"code": 403, "msg": config.errors[403]})); }
@@ -234,8 +234,7 @@ service.post("/join", function(req, res) {
 				'packages': {},
 				'keys': {}
 			}
-		};
-
+		};		
 		//add record in db
 		mongo.insert(userCollectionName, userRecord, function(err, record) {
 			if(err || !record) { return res.jsonp(req.soajs.buildResponse({"code": 403, "msg": config.errors[403]})); }
@@ -509,6 +508,9 @@ service.post("/admin/addUser", function(req, res) {
 				return res.jsonp(req.soajs.buildResponse({"code": 413, "msg": config.errors[413]}));
 			}
 		}
+		if(req.soajs.inputmaskData['groups']) {
+			userRecord.groups = req.soajs.inputmaskData['groups'];
+		} 
 		//add record in db
 		mongo.insert(userCollectionName, userRecord, function(err) {
 			if(err) { return res.jsonp(req.soajs.buildResponse({"code": 403, "msg": config.errors[403]})); }
@@ -639,14 +641,14 @@ function updateUserRecord(req, complete, cb) {
 	});
 }
 
-service.post("/account/editProfile", function(req, res) {
+service.post("/account/editProfile", function(req, res) {	
 	updateUserRecord(req, false, function(error) {
 		if(error) { return res.jsonp(req.soajs.buildResponse({"code": error.code, "msg": error.msg})); }
 		return res.jsonp(req.soajs.buildResponse(null, true));
 	});
 });
 
-service.post("/admin/editUser", function(req, res) {
+service.post("/admin/editUser", function(req, res) {	
 	updateUserRecord(req, true, function(error) {
 		if(error) { return res.jsonp(req.soajs.buildResponse({"code": error.code, "msg": error.msg})); }
 		return res.jsonp(req.soajs.buildResponse(null, true));

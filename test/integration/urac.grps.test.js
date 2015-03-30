@@ -273,9 +273,48 @@ describe("urac group tests", function() {
 					mongo.findOne("users", {'username': 'user1'}, function(error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
-						//assert.deepEqual(userRecord.groups, []);
+						assert.deepEqual(userRecord.groups, []);
 						done();
 					});
+				});
+			});
+			it("SUCCESS - will add user account - with groups", function(done) {
+				var params = {
+					form: {
+						'firstName': 'user5',
+						'lastName': 'user5',
+						"email": "user5@domain.com",
+						'username': 'user5',
+						'status': 'active', 
+						"groups" : ['gold']
+					}
+				};
+				requester('admin/addUser', 'post', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body); assert.ok(body.data);
+					console.log(JSON.stringify(body));
+					mongo.findOne("users", {'username': 'user5'}, function(error, userRecord) {
+						assert.ifError(error);
+						assert.ok(userRecord);
+						console.log( userRecord );
+						assert.deepEqual(userRecord.groups, ['gold']);
+						done();
+					});
+				});
+			});
+			it("SUCCESS - will login user with no config obj", function(done) {
+				var params = {
+					form: {
+						"username": 'user1',
+						"password": '123456'
+					}
+				};
+				requester('login', 'post', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					done();
 				});
 			});
 		});
