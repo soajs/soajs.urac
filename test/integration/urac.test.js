@@ -101,15 +101,13 @@ describe("simple urac tests", function() {
 
 	describe("testing join API with validation", function() {
 		var token;
-		var tokenEliane;
+		var tokenlisa;
 		it("FAIL - missing param", function(done) {
 			var params = {
 				form: {
-					"username": 'mike123',
+					"username": 'john123',
 					"password": 'password',
-					//"firstName": 'mike',
-					//"lastName": 'hajj',
-					"email": 'mike@hajj.com'
+					"email": 'john@john.com'
 				}
 			};
 
@@ -126,10 +124,10 @@ describe("simple urac tests", function() {
 		it("SUCCESS - will join user", function(done) {
 			var params = {
 				form: {
-					"username": 'mike123',
+					"username": 'john123',
 					"password": 'password',
-					"firstName": 'mike',
-					"lastName": 'hajj',
+					"firstName": 'john',
+					"lastName": 'doe',
 					"email": 'john.doe@simplifycreation.com'
 				}
 			};
@@ -141,7 +139,7 @@ describe("simple urac tests", function() {
 				token = body.data;
 
 				setTimeout(function() {
-					mongo.findOne('users', {'username': 'mike123', status: 'pendingJoin'}, function(error, record) {
+					mongo.findOne('users', {'username': 'john123', status: 'pendingJoin'}, function(error, record) {
 						assert.ifError(error);
 						console.log(JSON.stringify(record));
 						assert.ok(record);
@@ -153,11 +151,11 @@ describe("simple urac tests", function() {
 		it("SUCCESS - will join another user", function(done) {
 			var params = {
 				form: {
-					"username": 'eliane2',
+					"username": 'lisa2',
 					"password": 'password',
-					"firstName": 'eliane 2',
-					"lastName": 'nassif 2',
-					"email": 'eliane2@simplifycreation.com'
+					"firstName": 'lisa 2',
+					"lastName": 'smith green',
+					"email": 'lisa2@simplifycreation.com'
 				}
 			};
 
@@ -165,9 +163,9 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				assert.ok(body);
 				assert.ok(body.data);
-				tokenEliane = body.data;
+				tokenlisa = body.data;
 				//update token record to expire
-				mongo.findOne('tokens', {'token': tokenEliane}, function(err, tokenRecord) {
+				mongo.findOne('tokens', {'token': tokenlisa}, function(err, tokenRecord) {
 					if(err || !tokenRecord) {
 					}
 					var t = new Date(1426087819320);
@@ -179,7 +177,7 @@ describe("simple urac tests", function() {
 					});
 				});
 
-				mongo.findOne('users', {'username': 'eliane2', status: 'pendingJoin'}, function(error, record) {
+				mongo.findOne('users', {'username': 'lisa2', status: 'pendingJoin'}, function(error, record) {
 					assert.ifError(error);
 					console.log(JSON.stringify(record));
 					assert.ok(record);
@@ -192,11 +190,11 @@ describe("simple urac tests", function() {
 		it("FAIL - user exists", function(done) {
 			var params = {
 				form: {
-					"username": 'mike123',
+					"username": 'john123',
 					"password": 'password',
-					"firstName": 'mike',
-					"lastName": 'hajj',
-					"email": 'mike@hajj.com'
+					"firstName": 'john',
+					"lastName": 'doe',
+					"email": 'john@doe.com'
 				}
 			};
 
@@ -245,7 +243,7 @@ describe("simple urac tests", function() {
 		it("Fail - will not validate join user", function(done) {
 			var params = {
 				qs: {
-					"token": tokenEliane
+					"token": tokenlisa
 				}
 			};
 
@@ -287,10 +285,10 @@ describe("simple urac tests", function() {
 		it("drop the collection and join the user again without validation", function(done) {
 			var params = {
 				form: {
-					"username": 'mike123',
+					"username": 'john123',
 					"password": 'password',
-					"firstName": 'mike',
-					"lastName": 'hajj',
+					"firstName": 'john',
+					"lastName": 'doe',
 					"email": 'john.doe@simplifycreation.com'
 				}
 			};
@@ -304,7 +302,7 @@ describe("simple urac tests", function() {
 						assert.ok(body.data);
 						console.log(body);
 
-						mongo.findOne('users', {'username': 'mike123', 'status': 'active'}, function(error, record) {
+						mongo.findOne('users', {'username': 'john123', 'status': 'active'}, function(error, record) {
 							assert.ifError(error);
 							assert.ok(record);
 							console.log(record);
@@ -321,7 +319,7 @@ describe("simple urac tests", function() {
 		it("FAIL - missing params", function(done) {
 			var params = {
 				form: {
-					"username": 'mike123'
+					"username": 'john123'
 					//"password": 'password'
 				}
 			};
@@ -354,7 +352,7 @@ describe("simple urac tests", function() {
 		it("FAIL - wrong login password", function(done) {
 			var params = {
 				form: {
-					"username": 'mike123',
+					"username": 'john123',
 					"password": 'paword12'
 				}
 			};
@@ -371,7 +369,7 @@ describe("simple urac tests", function() {
 		it("SUCCESS - will login user", function(done) {
 			var params = {
 				form: {
-					"username": 'mike123',
+					"username": 'john123',
 					"password": 'password'
 				}
 			};
@@ -434,7 +432,7 @@ describe("simple urac tests", function() {
 		it("SUCCESS - will logout user", function(done) {
 			var params = {
 				qs: {
-					"username": 'mike123'
+					"username": 'john123'
 				}
 			};
 
@@ -479,12 +477,12 @@ describe("simple urac tests", function() {
 
 	describe("testing add user API", function() {
 		var myNewToken;
-		var elianeAdd_Token;
+		var lisaAdd_Token;
 		it("FAIL - missing parameters", function(done) {
 			var params = {
 				form: {
-					'firstName': 'mike',
-					'lastName': 'hajj',
+					'firstName': 'john',
+					'lastName': 'doe',
 					'email': 'john.doe@simplifycreation.com'
 				}
 			};
@@ -500,9 +498,9 @@ describe("simple urac tests", function() {
 		it("SUCCESS - will add user", function(done) {
 			var params = {
 				form: {
-					'username': 'mikehajj',
-					'firstName': 'mike',
-					'lastName': 'hajj',
+					'username': 'johndoe',
+					'firstName': 'john',
+					'lastName': 'doe',
 					'email': 'john.doe@simplifycreation.com'
 				}
 			};
@@ -512,11 +510,11 @@ describe("simple urac tests", function() {
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
 				myNewToken = body.data;
-				mongo.findOne("users", {'username': 'mikehajj'}, function(error, userRecord) {
+				mongo.findOne("users", {'username': 'johndoe'}, function(error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
 					assert.equal(userRecord.status, 'pendingNew');
-					mongo.findOne('tokens', {'username': 'mikehajj'}, function(error, tokenRecord) {
+					mongo.findOne('tokens', {'username': 'johndoe'}, function(error, tokenRecord) {
 						assert.ifError(error);
 						assert.ok(tokenRecord);
 						console.log(tokenRecord);
@@ -534,10 +532,10 @@ describe("simple urac tests", function() {
 					'key': extKey_noMail
 				},
 				form: {
-					'username': 'eliane',
-					'firstName': 'eliane',
-					'lastName': 'nassif',
-					'email': 'nassif.eliane@gmail.com',
+					'username': 'lisa',
+					'firstName': 'lisa',
+					'lastName': 'smith',
+					'email': 'lisa.smith@simplifycreation.com',
 					'profile': '{"gender":"female", "age":25}'
 				}
 			};
@@ -546,12 +544,12 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
-				elianeAdd_Token = body.data;
-				mongo.findOne("users", {'username': 'eliane'}, function(error, userRecord) {
+				lisaAdd_Token = body.data;
+				mongo.findOne("users", {'username': 'lisa'}, function(error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
 					assert.equal(userRecord.status, 'pendingNew');
-					mongo.findOne('tokens', {'username': 'eliane'}, function(error, tokenRecord) {
+					mongo.findOne('tokens', {'username': 'lisa'}, function(error, tokenRecord) {
 						assert.ifError(error);
 						assert.ok(tokenRecord);
 						console.log(tokenRecord);
@@ -568,7 +566,7 @@ describe("simple urac tests", function() {
 					'key': extKey_noMail
 				},
 				qs: {
-					"token": elianeAdd_Token
+					"token": lisaAdd_Token
 				},
 				form: {
 					"password": "newPassword",
@@ -581,14 +579,14 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
-				mongo.findOne('tokens', {'username': 'eliane', 'service': 'addUser'}, function(error, tokenRecord) {
+				mongo.findOne('tokens', {'username': 'lisa', 'service': 'addUser'}, function(error, tokenRecord) {
 					assert.ifError(error);
 					assert.ok(tokenRecord);
 					console.log(tokenRecord);
 					assert.equal(tokenRecord.status, 'used');
 					assert.equal(tokenRecord.service, 'addUser');
 
-					mongo.findOne('users', {'username': 'eliane'}, function(error, userRecord) {
+					mongo.findOne('users', {'username': 'lisa'}, function(error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
 						console.log(userRecord);
@@ -602,10 +600,10 @@ describe("simple urac tests", function() {
 		it("FAIL - will try add user invalid JSON profile", function(done) {
 			var params = {
 				form: {
-					'username': 'eliane1',
-					'firstName': 'eliane',
-					'lastName': 'nassif',
-					'email': 'nassif.eliane@gmail.com',
+					'username': 'lisa1',
+					'firstName': 'lisa',
+					'lastName': 'smith',
+					'email': 'lisa.smith@simplifycreation.com',
 					'profile': '{"gender":"female"'
 				}
 			};
@@ -634,14 +632,14 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
-				mongo.findOne('tokens', {'username': 'mikehajj', 'service': 'addUser'}, function(error, tokenRecord) {
+				mongo.findOne('tokens', {'username': 'johndoe', 'service': 'addUser'}, function(error, tokenRecord) {
 					assert.ifError(error);
 					assert.ok(tokenRecord);
 					console.log(tokenRecord);
 					assert.equal(tokenRecord.status, 'used');
 					assert.equal(tokenRecord.service, 'addUser');
 
-					mongo.findOne('users', {'username': 'mikehajj'}, function(error, userRecord) {
+					mongo.findOne('users', {'username': 'johndoe'}, function(error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
 						console.log(userRecord);
@@ -655,9 +653,9 @@ describe("simple urac tests", function() {
 		it("FAIL - username exists for another account", function(done) {
 			var params = {
 				form: {
-					'username': 'mike123',
-					'firstName': 'mike',
-					'lastName': 'hajj',
+					'username': 'john123',
+					'firstName': 'john',
+					'lastName': 'doe',
 					'email': 'john.doe@simplifycreation.com'
 				}
 			};
@@ -674,11 +672,11 @@ describe("simple urac tests", function() {
 
 	describe("testing forgotPassword and resetPassword API", function() {
 		var token;
-		var fp_tokenEliane;
+		var fp_tokenlisa;
 		it("FAIL - forgotPassword missing params", function(done) {
 			var params = {
 				qs: {
-					"username": 'mike123'
+					"username": 'john123'
 				}
 			};
 
@@ -714,8 +712,8 @@ describe("simple urac tests", function() {
 					'key': extKey_noMail
 				},
 				qs: {
-					"username": 'eliane',
-					'email': 'nassif.eliane@gmail.com'
+					"username": 'lisa',
+					'email': 'lisa.smith@simplifycreation.com'
 				}
 			};
 
@@ -724,8 +722,8 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
-				fp_tokenEliane = body.data;
-				mongo.findOne('tokens', {'token': fp_tokenEliane}, function(err, tokenRecord) {
+				fp_tokenlisa = body.data;
+				mongo.findOne('tokens', {'token': fp_tokenlisa}, function(err, tokenRecord) {
 					if(err || !tokenRecord) {
 					}
 					var t = new Date(1426087819320);
@@ -744,7 +742,7 @@ describe("simple urac tests", function() {
 		it("SUCCESS - forgotPassword should start forgot password request", function(done) {
 			var params = {
 				qs: {
-					"username": 'mike123',
+					"username": 'john123',
 					'email': 'john.doe@simplifycreation.com'
 				}
 			};
@@ -762,7 +760,7 @@ describe("simple urac tests", function() {
 		it("SUCCESS - forgotPassword should redo forgot password request", function(done) {
 			var params = {
 				qs: {
-					"username": 'mike123',
+					"username": 'john123',
 					'email': 'john.doe@simplifycreation.com'
 				}
 			};
@@ -773,7 +771,7 @@ describe("simple urac tests", function() {
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
 				token = body.data;
-				mongo.find('tokens', {'username': 'mike123'}, {'sort': {'ts': 1}}, function(error, records) {
+				mongo.find('tokens', {'username': 'john123'}, {'sort': {'ts': 1}}, function(error, records) {
 					assert.ifError(error);
 					assert.ok(records);
 					console.log(records);
@@ -846,7 +844,7 @@ describe("simple urac tests", function() {
 		it("FAIL - resetPassword token expired", function(done) {
 			var params = {
 				qs: {
-					"token": fp_tokenEliane
+					"token": fp_tokenlisa
 				},
 				form: {
 					"password": "newPassword",
@@ -880,7 +878,7 @@ describe("simple urac tests", function() {
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
 				token = body.data;
-				mongo.find('tokens', {'username': 'mike123'}, {'sort': {'ts': 1}}, function(error, records) {
+				mongo.find('tokens', {'username': 'john123'}, {'sort': {'ts': 1}}, function(error, records) {
 					assert.ifError(error);
 					assert.ok(records);
 					console.log(records);
@@ -925,7 +923,7 @@ describe("simple urac tests", function() {
 		it("SUCCESS - returns user record", function(done) {
 			var params = {
 				qs: {
-					"username": 'mike123'
+					"username": 'john123'
 				}
 			};
 			requester('account/getUser', 'get', params, function(error, body) {
@@ -937,9 +935,9 @@ describe("simple urac tests", function() {
 				delete body.data.ts;
 				delete body.data._id;
 				assert.deepEqual(body.data, {
-					"username": "mike123",
-					"firstName": "mike",
-					"lastName": "hajj",
+					"username": "john123",
+					"firstName": "john",
+					"lastName": "doe",
 					"email": "john.doe@simplifycreation.com",
 					"status": "active",
 					"groups": [],
@@ -1139,7 +1137,7 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'email': 'mike2.hajj2@gmail.com'
+					'email': 'doe.john@simplifycreation.com'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1147,7 +1145,7 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				assert.ok(body.data);
 				console.log(JSON.stringify(body));
-				mongo.findOne('tokens', {'username': 'mike123', 'service': 'changeEmail', 'status': 'active'}, function(error, token) {
+				mongo.findOne('tokens', {'username': 'john123', 'service': 'changeEmail', 'status': 'active'}, function(error, token) {
 					assert.ifError(error);
 					assert.ok(token);
 					assert.equal(token.email, params.form.email);
@@ -1163,7 +1161,7 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'email': 'mike2.hajj2@gmail.com'
+					'email': 'doe.john@simplifycreation.com'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1172,7 +1170,7 @@ describe("simple urac tests", function() {
 				assert.ok(body.data);
 				console.log(JSON.stringify(body));
 				newToken = body.data;
-				mongo.find('tokens', {'username': 'mike123', 'service': 'changeEmail'}, {'sort': {'ts': 1}}, function(error, tokens) {
+				mongo.find('tokens', {'username': 'john123', 'service': 'changeEmail'}, {'sort': {'ts': 1}}, function(error, tokens) {
 					assert.ifError(error);
 					assert.ok(tokens);
 					assert.equal(tokens.length, 2);
@@ -1226,13 +1224,13 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				assert.ok(body.data);
 				console.log(JSON.stringify(body));
-				mongo.find('tokens', {'username': 'mike123', 'service': 'changeEmail'}, {'sort': {'ts': 1}}, function(error, tokens) {
+				mongo.find('tokens', {'username': 'john123', 'service': 'changeEmail'}, {'sort': {'ts': 1}}, function(error, tokens) {
 					assert.ifError(error);
 					assert.ok(tokens);
 					assert.equal(tokens.length, 2);
 					assert.equal(tokens[0].status, 'invalid');
 					assert.equal(tokens[1].status, 'used');
-					mongo.findOne('users', {'username': 'mike123'}, function(error, userRecord) {
+					mongo.findOne('users', {'username': 'john123'}, function(error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
 						assert.equal(userRecord.email, tokens[1].email);
@@ -1252,7 +1250,7 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'email': 'mike2.hajj2@simplifycreation.com'
+					'email': 'doe.john@simplifycreation.com'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1296,7 +1294,7 @@ describe("simple urac tests", function() {
 		});
 		
 		it('SUCCESS - manual reset of user email address to receive notifications from remaining APIs tests', function(done) {
-			mongo.findOne('users', {'username': 'mike123'}, function(error, userRecord) {
+			mongo.findOne('users', {'username': 'john123'}, function(error, userRecord) {
 				assert.ifError(error);
 				assert.ok(userRecord);
 				userRecord.email = "john.doe@simplifycreation.com";
@@ -1313,9 +1311,9 @@ describe("simple urac tests", function() {
 			var params = {
 				qs: {},
 				form: {
-					'username': 'mike1234',
-					'firstName': 'mike2',
-					'lastName': 'hajj2'
+					'username': 'john1234',
+					'firstName': 'john2',
+					'lastName': 'doe2'
 				}
 			};
 			requester('account/editProfile', 'post', params, function(error, body) {
@@ -1333,9 +1331,9 @@ describe("simple urac tests", function() {
 					'uId': 'aaabbbcccddd'
 				},
 				form: {
-					'username': 'mike123',
-					'firstName': 'mike2',
-					'lastName': 'hajj2'
+					'username': 'john123',
+					'firstName': 'john2',
+					'lastName': 'doe2'
 				}
 			};
 
@@ -1355,8 +1353,8 @@ describe("simple urac tests", function() {
 				},
 				form: {
 					'username': 'user2',
-					'firstName': 'mike2',
-					'lastName': 'hajj2'
+					'firstName': 'john2',
+					'lastName': 'doe2'
 				}
 			};
 			var secondUserRecord = {
@@ -1386,9 +1384,9 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'username': 'mike456',
-					'firstName': 'mike2',
-					'lastName': 'hajj2',
+					'username': 'john456',
+					'firstName': 'john2',
+					'lastName': 'doe2',
 					'profile': '{"age":30}'
 				}
 			};
@@ -1407,9 +1405,9 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'username': 'mike456',
-					'firstName': 'mike2',
-					'lastName': 'hajj2',
+					'username': 'john456',
+					'firstName': 'john2',
+					'lastName': 'doe2',
 					'profile': '{"age":30'
 				}
 			};
@@ -1428,10 +1426,10 @@ describe("simple urac tests", function() {
 		it("FAIL - missing params", function(done) {
 			var params = {
 				form: {
-					'firstName': 'mike',
-					'lastName': 'hajj',
+					'firstName': 'john',
+					'lastName': 'doe',
 					'email': 'john.doe@simplifycreation.com',
-					'username': 'mikehajj',
+					'username': 'johndoe',
 					'status': 'active'
 				}
 			};
@@ -1450,10 +1448,10 @@ describe("simple urac tests", function() {
 					'uId': 'aaaabbbbccccdddd'
 				},
 				form: {
-					'firstName': 'mike',
-					'lastName': 'hajj',
+					'firstName': 'john',
+					'lastName': 'doe',
 					'email': 'john.doe@simplifycreation.com',
-					'username': 'mikehajj',
+					'username': 'johndoe',
 					'status': 'active'
 				}
 			};
@@ -1472,10 +1470,10 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'firstName': 'mike',
-					'lastName': 'hajj',
+					'firstName': 'john',
+					'lastName': 'doe',
 					'email': 'john.doe@simplifycreation.com',
-					'username': 'mikehajj',
+					'username': 'johndoe',
 					'status': 'active'
 				}
 			};
@@ -1494,10 +1492,10 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'firstName': 'mike',
-					'lastName': 'hajj',
+					'firstName': 'john',
+					'lastName': 'doe',
 					'email': 'john.doe@simplifycreation.com',
-					'username': 'mike123',
+					'username': 'john123',
 					'status': 'active'
 				}
 			};
@@ -1506,17 +1504,17 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				assert.ok(body.data);
 				console.log(JSON.stringify(body));
-				mongo.findOne("users", {'username': 'mike123'}, function(error, userRecord) {
+				mongo.findOne("users", {'username': 'john123'}, function(error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
 					delete userRecord.password;
 					delete userRecord.ts;
 					userRecord._id = userRecord._id.toString();
 					assert.deepEqual(userRecord, {
-						'firstName': 'mike',
-						'lastName': 'hajj',
+						'firstName': 'john',
+						'lastName': 'doe',
 						'email': 'john.doe@simplifycreation.com',
-						'username': 'mike123',
+						'username': 'john123',
 						'status': 'active',
 						'_id': uId,
 						'groups': [],
