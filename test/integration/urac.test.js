@@ -128,7 +128,7 @@ describe("simple urac tests", function() {
 					"password": 'password',
 					"firstName": 'john',
 					"lastName": 'doe',
-					"email": 'john.doe@simplifycreation.com'
+					"email": 'john.doe@domain.com'
 				}
 			};
 
@@ -155,7 +155,7 @@ describe("simple urac tests", function() {
 					"password": 'password',
 					"firstName": 'lisa 2',
 					"lastName": 'smith green',
-					"email": 'lisa2@simplifycreation.com'
+					"email": 'lisa2@domain.com'
 				}
 			};
 
@@ -289,7 +289,7 @@ describe("simple urac tests", function() {
 					"password": 'password',
 					"firstName": 'john',
 					"lastName": 'doe',
-					"email": 'john.doe@simplifycreation.com'
+					"email": 'john.doe@domain.com'
 				}
 			};
 
@@ -384,7 +384,7 @@ describe("simple urac tests", function() {
 		it("SUCCESS - will login user with email instead of username", function(done) {
 			var params = {
 				form: {
-					"username": 'john.doe@simplifycreation.com',
+					"username": 'john.doe@domain.com',
 					"password": 'password'
 				}
 			};
@@ -448,7 +448,7 @@ describe("simple urac tests", function() {
 		it("SUCCESS - will logout user using email instead of username", function(done) {
 			var params1 = {
 				form: {
-					"username": 'john.doe@simplifycreation.com',
+					"username": 'john.doe@domain.com',
 					"password": 'password'
 				}
 			};
@@ -461,7 +461,7 @@ describe("simple urac tests", function() {
 
 				var params2 = {
 					qs: {
-						"username": 'john.doe@simplifycreation.com'
+						"username": 'john.doe@domain.com'
 					}
 				};
 				requester('logout', 'get', params2, function(error, body) {
@@ -483,7 +483,7 @@ describe("simple urac tests", function() {
 				form: {
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@simplifycreation.com'
+					'email': 'john.doe@domain.com'
 				}
 			};
 			requester('admin/addUser', 'post', params, function(error, body) {
@@ -501,7 +501,7 @@ describe("simple urac tests", function() {
 					'username': 'johndoe',
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@simplifycreation.com'
+					'email': 'john.doe@domain.com'
 				}
 			};
 			requester('admin/addUser', 'post', params, function(error, body) {
@@ -535,7 +535,7 @@ describe("simple urac tests", function() {
 					'username': 'lisa',
 					'firstName': 'lisa',
 					'lastName': 'smith',
-					'email': 'lisa.smith@simplifycreation.com',
+					'email': 'lisa.smith@domain.com',
 					'profile': '{"gender":"female", "age":25}'
 				}
 			};
@@ -603,7 +603,7 @@ describe("simple urac tests", function() {
 					'username': 'lisa1',
 					'firstName': 'lisa',
 					'lastName': 'smith',
-					'email': 'lisa.smith@simplifycreation.com',
+					'email': 'lisa.smith@domain.com',
 					'profile': '{"gender":"female"'
 				}
 			};
@@ -656,7 +656,7 @@ describe("simple urac tests", function() {
 					'username': 'john123',
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@simplifycreation.com'
+					'email': 'john.doe@domain.com'
 				}
 			};
 			requester('admin/addUser', 'post', params, function(error, body) {
@@ -693,7 +693,7 @@ describe("simple urac tests", function() {
 			var params = {
 				qs: {
 					"username": 'invaliduser',
-					'email': 'john.doe@simplifycreation.com'
+					'email': 'john.doe@domain.com'
 				}
 			};
 
@@ -713,7 +713,7 @@ describe("simple urac tests", function() {
 				},
 				qs: {
 					"username": 'lisa',
-					'email': 'lisa.smith@simplifycreation.com'
+					'email': 'lisa.smith@domain.com'
 				}
 			};
 
@@ -743,7 +743,7 @@ describe("simple urac tests", function() {
 			var params = {
 				qs: {
 					"username": 'john123',
-					'email': 'john.doe@simplifycreation.com'
+					'email': 'john.doe@domain.com'
 				}
 			};
 
@@ -761,7 +761,7 @@ describe("simple urac tests", function() {
 			var params = {
 				qs: {
 					"username": 'john123',
-					'email': 'john.doe@simplifycreation.com'
+					'email': 'john.doe@domain.com'
 				}
 			};
 
@@ -938,7 +938,7 @@ describe("simple urac tests", function() {
 					"username": "john123",
 					"firstName": "john",
 					"lastName": "doe",
-					"email": "john.doe@simplifycreation.com",
+					"email": "john.doe@domain.com",
 					"status": "active",
 					"groups": [],
 					'profile': {},
@@ -1083,7 +1083,7 @@ describe("simple urac tests", function() {
 		it("FAIL - missing params", function(done) {
 			var params = {
 				form: {
-					'email': 'john1.doe@simplifycreation.com'
+					'email': 'john1.doe@domain.com'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1101,7 +1101,7 @@ describe("simple urac tests", function() {
 					'uId': 'aaaccdddd'
 				},
 				form: {
-					'email': 'john1.doe@simplifycreation.com'
+					'email': 'john1.doe@domain.com'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1119,7 +1119,7 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'email': 'john.doe@simplifycreation.com'
+					'email': 'john.doe@domain.com'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1137,7 +1137,7 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'email': 'doe.john@simplifycreation.com'
+					'email': 'doe.john@domain.com'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1161,7 +1161,7 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'email': 'doe.john@simplifycreation.com'
+					'email': 'doe.john@domain.com'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1248,7 +1248,7 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'email': 'doe.john.123@simplifycreation.com'
+					'email': 'doe.john.123@domain.com'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1292,7 +1292,7 @@ describe("simple urac tests", function() {
 			mongo.findOne('users', {'username': 'john123'}, function(error, userRecord) {
 				assert.ifError(error);
 				assert.ok(userRecord);
-				userRecord.email = "john.doe@simplifycreation.com";
+				userRecord.email = "john.doe@domain.com";
 				mongo.save('users', userRecord, function(error) {
 					assert.ifError(error);
 					done();
@@ -1423,7 +1423,7 @@ describe("simple urac tests", function() {
 				form: {
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@simplifycreation.com',
+					'email': 'john.doe@domain.com',
 					'username': 'johndoe',
 					'status': 'active'
 				}
@@ -1445,7 +1445,7 @@ describe("simple urac tests", function() {
 				form: {
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@simplifycreation.com',
+					'email': 'john.doe@domain.com',
 					'username': 'johndoe',
 					'status': 'active'
 				}
@@ -1467,7 +1467,7 @@ describe("simple urac tests", function() {
 				form: {
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@simplifycreation.com',
+					'email': 'john.doe@domain.com',
 					'username': 'johndoe',
 					'status': 'active'
 				}
@@ -1489,7 +1489,7 @@ describe("simple urac tests", function() {
 				form: {
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@simplifycreation.com',
+					'email': 'john.doe@domain.com',
 					'username': 'john123',
 					'status': 'active'
 				}
@@ -1508,7 +1508,7 @@ describe("simple urac tests", function() {
 					assert.deepEqual(userRecord, {
 						'firstName': 'john',
 						'lastName': 'doe',
-						'email': 'john.doe@simplifycreation.com',
+						'email': 'john.doe@domain.com',
 						'username': 'john123',
 						'status': 'active',
 						'_id': uId,
