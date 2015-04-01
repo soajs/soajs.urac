@@ -230,8 +230,8 @@ describe("urac group tests", function() {
 					var params = {
 						qs: {'uId': uId},
 						form: {
-							'firstName': 'mike',
-							'lastName': 'hajj',
+							'firstName': 'david',
+							'lastName': 'smith',
 							"email": "user1@domain.com",
 							'username': 'user1',
 							'status': 'active', 
@@ -258,8 +258,8 @@ describe("urac group tests", function() {
 				var params = {
 					qs: {'uId': uId},
 					form: {
-						'firstName': 'mike',
-						'lastName': 'hajj',
+						'firstName': 'david',
+						'lastName': 'smith',
 						"email": "user1@domain.com",
 						'username': 'user1',
 						'status': 'active', 
