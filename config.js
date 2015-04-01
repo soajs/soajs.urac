@@ -53,7 +53,10 @@ module.exports = {
 			"username": {
 				"source": ['body.username'],
 				"required": true,
-				"validation": {"type": "string"}
+				"validation": {
+					"type": "string",
+					"pattern": /^[a-zA-Z0-9_-]+$/
+				}
 			},
 			"password": {
 				"source": ['body.password'],
@@ -176,7 +179,10 @@ module.exports = {
 			"username": {
 				"source": ['body.username'],
 				"required": true,
-				"validation": {"type": "string"}
+				"validation": {
+					"type": "string",
+					"pattern": /^[a-zA-Z0-9_-]+$/
+				}
 			},
 			"firstName": {
 				"source": ['body.firstName'],
@@ -198,7 +204,10 @@ module.exports = {
 			"username": {
 				"source": ['body.username'],
 				"required": true,
-				"validation": {"type": "string"}
+				"validation": {
+					"type": "string",
+					"pattern": /^[a-zA-Z0-9_-]+$/
+				}
 			},
 			"firstName": {
 				"source": ['body.firstName'],
@@ -253,7 +262,10 @@ module.exports = {
 			"username": {
 				"source": ['body.username'],
 				"required": true,
-				"validation": {"type": "string"}
+				"validation": {
+					"type": "string",
+					"pattern": /^[a-zA-Z0-9_-]+$/
+				}
 			},
 			"firstName": {
 				"source": ['body.firstName'],

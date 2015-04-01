@@ -1083,7 +1083,7 @@ describe("simple urac tests", function() {
 		it("FAIL - missing params", function(done) {
 			var params = {
 				form: {
-					'email': 'john.doe@simplifycreation.com'
+					'email': 'john1.doe@simplifycreation.com'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1098,10 +1098,10 @@ describe("simple urac tests", function() {
 		it("FAIL - invalid user provided", function(done) {
 			var params = {
 				qs: {
-					'uId': 'aaaabbbbccccdddd'
+					'uId': 'aaaccdddd'
 				},
 				form: {
-					'email': 'john.doe@simplifycreation.com'
+					'email': 'john1.doe@simplifycreation.com'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1183,8 +1183,6 @@ describe("simple urac tests", function() {
 			});
 		});
 
-
-
 		it("FAIL - do change email fail, missing params", function(done) {
 			var params = {
 				qs: {}
@@ -1201,7 +1199,7 @@ describe("simple urac tests", function() {
 		it("FAIL - do change email fail, invalid token", function(done) {
 			var params = {
 				qs: {
-					'token': 'aaaabbbbccccdddd'
+					'token': 'aaaa1ccdddd'
 				}
 			};
 			requester('changeEmail/validate', 'get', params, function(error, body) {
@@ -1221,9 +1219,9 @@ describe("simple urac tests", function() {
 			};
 			requester('changeEmail/validate', 'get', params, function(error, body) {
 				assert.ifError(error);
-				assert.ok(body);
-				assert.ok(body.data);
 				console.log(JSON.stringify(body));
+				assert.ok(body);
+				assert.ok(body.data);				
 				mongo.find('tokens', {'username': 'john123', 'service': 'changeEmail'}, {'sort': {'ts': 1}}, function(error, tokens) {
 					assert.ifError(error);
 					assert.ok(tokens);
@@ -1250,29 +1248,26 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'email': 'doe.john@simplifycreation.com'
+					'email': 'doe.john.123@simplifycreation.com'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(body);
+				console.log(JSON.stringify(body));
 				assert.ok(body.data);
 				changeEmailToken = body.data;
-
 				mongo.findOne('tokens', {'token': changeEmailToken}, function(error, tokenRecord) {
 					assert.ifError(error);
 					assert.ok(tokenRecord);
 					// expire
 					assert.equal(tokenRecord.email, params.form.email);
 					assert.equal(tokenRecord.status, 'active');
-					var t = new Date(1426087819320);
-					
+					var t = new Date(1426087819320);					
 					tokenRecord.expires = t;
 					mongo.save('tokens', tokenRecord, function(err) {
 						console.log(tokenRecord);
-					});
-					
+					});					
 				});
 				done();
 			});
@@ -1312,8 +1307,8 @@ describe("simple urac tests", function() {
 				qs: {},
 				form: {
 					'username': 'john1234',
-					'firstName': 'john2',
-					'lastName': 'doe2'
+					'firstName': 'john 2',
+					'lastName': 'doe 2'
 				}
 			};
 			requester('account/editProfile', 'post', params, function(error, body) {
