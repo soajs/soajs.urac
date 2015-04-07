@@ -11,6 +11,7 @@ var Hasher = require("./hasher.js");
 var userCollectionName = "users";
 var tokenCollectionName = "tokens";
 var groupsCollectionName = "groups";
+var lodash = require('lodash');
 
 var service = new soajs.server.service({
 	"oauth": false,
@@ -38,7 +39,19 @@ function login(req, cb) {
 					return cb(400);
 				}
 				delete record.password;
-				return cb(null, record);
+				record.grpPermissions= [];
+				if(record.groups){	
+					mongo.find(groupsCollectionName, {'code': {$in: record.groups}} , function(err, grpsRecords) {
+						if(err) { return res.jsonp(req.soajs.buildResponse({"code": 600, "msg": config.errors[600]})); }
+						var allPermissions = [];
+						grpsRecords.forEach(function(oneRecord) { 
+							allPermissions = lodash.union (allPermissions , oneRecord.permissions) ;							
+						});
+						record.grpPermissions = allPermissions;
+						return cb(null, record);
+					});
+				}
+				else return cb(null, record);
 			});
 		} else {
 			return cb(401);
@@ -88,10 +101,18 @@ service.post("/login", function(req, res) {
 				}
 				if(record.config && record.config.keys) {
 					delete record.config.keys;
-				}
+				}				
 				if(req.soajs.servicesConfig.dashboardui) {
 					if(!record.config) { record.config = {}; }
+					var a = []; 
+					if(req.soajs.servicesConfig.dashboardui.permissions) { 
+						a = lodash.union ( req.soajs.servicesConfig.dashboardui.permissions, record.grpPermissions ) ;						
+					}						
+					else{
+						a = record.grpPermissions;
+					}
 					record.config.dashboard = req.soajs.servicesConfig.dashboardui;
+					record.config.dashboard.permissions = a;					
 				}
 				return res.jsonp(req.soajs.buildResponse(null, record));
 			});
@@ -669,10 +690,15 @@ service.get("/admin/group/list", function(req, res) {
 
 service.post("/admin/group/add", function(req, res) {
 	var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
+	var g = [];
+	if (req.soajs.inputmaskData.permissions)
+		g = req.soajs.inputmaskData.permissions;
+	
 	var grpRecord = {
 		"code": req.soajs.inputmaskData['code'],
 		"name": req.soajs.inputmaskData['name'],
-		"description": req.soajs.inputmaskData['description']
+		"description": req.soajs.inputmaskData['description'],
+		'permissions': g
 	};
 	
 	mongo.count(groupsCollectionName, {'code': grpRecord.code}, function(error, count) {
@@ -699,11 +725,14 @@ service.post("/admin/group/edit", function(req, res) {
 	} catch(e) {
 		return res.jsonp(req.soajs.buildResponse({"code": 417, "msg": config.errors[417]}));
 	}
-
+	var g = [];
+	if (req.soajs.inputmaskData.permissions)
+		g = req.soajs.inputmaskData.permissions;
 	var s = {
 		'$set': {
 			'description': req.soajs.inputmaskData.description,
-			'name': req.soajs.inputmaskData.name
+			'name': req.soajs.inputmaskData.name,
+			'permissions': g
 		}
 	};
 	mongo.update(groupsCollectionName, {'_id': groupId}, s, {'upsert': false, 'safe': true}, function(error) {

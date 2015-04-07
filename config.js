@@ -318,6 +318,16 @@ module.exports = {
 				"source": ['body.description'],
 				"required": true,
 				"validation": {"type": "string"}
+			},
+			"permissions": {
+				"source": ['body.permissions'],
+				"required": false,
+				"validation": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
 			}
 		},
 		'/admin/group/edit': {
@@ -335,6 +345,16 @@ module.exports = {
 				"source": ['body.description'],
 				"required": true,
 				"validation": {"type": "string"}
+			},
+			"permissions": {
+				"source": ['body.permissions'],
+				"required": false,
+				"validation": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
 			}
 		},
 		'/admin/group/delete': {
@@ -356,8 +376,7 @@ module.exports = {
 				"validation": {
 					"type": "array",
 					"items": {
-						"type": "string",
-						'required': true
+						"type": "string"
 					}
 				}
 			}

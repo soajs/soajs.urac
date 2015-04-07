@@ -87,14 +87,17 @@ describe("urac group tests", function() {
 	
 	describe("testing groups API", function() {
 		
-		describe("testing create group API", function() {
-			
+		describe("testing create group API", function() {		
 			it("SUCCESS - will create new group", function(done) {
 				var params = {
 					form: {
 						'code': 'gold',
 						'name': 'Gold',
-						'description': 'grp description'
+						'description': 'grp description',
+						"permissions":["members",
+										"environments",
+										"productization", "productization_packages",
+										"multi-tenancy"]
 					}
 				};
 				requester('admin/group/add', 'post', params, function(error, body) {
@@ -133,7 +136,9 @@ describe("urac group tests", function() {
 					form: {
 						'code': 'silver',
 						'name': 'Silver Group',
-						'description': 'grp description'
+						'description': 'grp description',
+						"permissions":["productization", "productization_packages",
+										"multi-tenancy"]
 					}
 				};
 				requester('admin/group/add', 'post', params, function(error, body) {
@@ -153,7 +158,10 @@ describe("urac group tests", function() {
 					qs: {'gId': '5645'},
 					form: {
 						'name': 'gold 2',
-						'description': 'description 2 '
+						'description': 'description 2',
+						"permissions":["members",
+										"environments",
+										"productization"]
 					}
 				};				
 				requester('admin/group/edit', 'post', params, function(error, body) {
@@ -162,8 +170,7 @@ describe("urac group tests", function() {
 					console.log(JSON.stringify(body));
 					assert.deepEqual(body.errors.details[0], {"code": 417, "message": "Invalid group id provided"});		
 					done();
-				});
-			
+				});			
 			});
 			it("SUCCESS - will edit group", function(done) {
 				var params = {
@@ -172,7 +179,10 @@ describe("urac group tests", function() {
 					},
 					form: {
 						'name': 'gold name',
-						'description': 'description update'
+						'description': 'description update',
+						"permissions":["members",
+										"environments",
+										"productization"]
 					}
 				};			
 				requester('admin/group/edit', 'post', params, function(error, body) {
@@ -192,7 +202,7 @@ describe("urac group tests", function() {
 				var params = {
 					form: {
 						'groupCode': 'bronze',
-						'users': [ 'user1', 'user2']
+						'users': [ 'user1', 'user4']
 					}
 				};
 				requester('admin/group/addUsers', 'post', params, function(error, body) {
@@ -317,6 +327,37 @@ describe("urac group tests", function() {
 					done();
 				});
 			});
+			it("SUCCESS - will login user 3 with no grps arr", function(done) {
+				var params = {
+					form: {
+						"username": 'user3',
+						"password": '654321'
+					}
+				};
+				requester('login', 'post', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					done();
+				});
+			});
+			it("SUCCESS - login and get grps permission", function(done) {
+				var params = {
+					form: {
+						"username": 'user4',
+						"password": '654321'
+					}
+				};
+				requester('login', 'post', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					done();
+				});
+			});
+			
 		});
 		
 		describe("testing delete group API", function() {
