@@ -28,7 +28,6 @@
     "grunt-istanbul" : "0.3.0",
     "grunt-coveralls" : "*",
     "jshint" : "*",
-    "lodash": "*",
     "mocha" : "*",
     "request" : "*",
     "shelljs": "*"
@@ -36,6 +35,7 @@
   "dependencies": {
     "soajs": "0.0.*",
     "bcrypt": "*",
+    "lodash": "*",
     "node-uuid": "*"
   }
 }
