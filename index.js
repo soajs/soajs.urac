@@ -112,7 +112,8 @@ service.post("/login", function(req, res) {
 						a = record.grpPermissions;
 					}
 					record.config.dashboard = req.soajs.servicesConfig.dashboardui;
-					record.config.dashboard.permissions = a;					
+					record.config.dashboard.permissions = a;
+					delete record.grpPermissions;
 				}
 				return res.jsonp(req.soajs.buildResponse(null, record));
 			});
