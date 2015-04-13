@@ -22,7 +22,7 @@ var service = new soajs.server.service({
 	"config": config
 });
 
-function login(req, cb) {
+function login(req, res, cb) {
 	var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 	var criteria = {'username': req.soajs.inputmaskData['username'], 'status': 'active'};
 	var pattern = req.soajs.validator.SchemaPatterns.email;
@@ -88,7 +88,7 @@ function addTokenToLink(link, token) {
 }
 
 service.post("/login", function(req, res) {
-	login(req, function(err, record) {
+	login(req, res, function(err, record) {
 		if(err) {
 			return res.jsonp(req.soajs.buildResponse({"code": err, "msg": config.errors[err]}));
 		} else {
