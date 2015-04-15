@@ -22,7 +22,7 @@ var service = new soajs.server.service({
 	"config": config
 });
 
-function login(req, res, cb) {
+function login(req, cb) {
 	var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 	var criteria = {'username': req.soajs.inputmaskData['username'], 'status': 'active'};
 	var pattern = req.soajs.validator.SchemaPatterns.email;
@@ -42,7 +42,7 @@ function login(req, res, cb) {
 				record.grpPermissions= [];
 				if(record.groups){	
 					mongo.find(groupsCollectionName, {'code': {$in: record.groups}} , function(err, grpsRecords) {
-						if(err) { return res.jsonp(req.soajs.buildResponse({"code": 600, "msg": config.errors[600]})); }
+						if(err) { return cb(600); }
 						var allPermissions = [];
 						grpsRecords.forEach(function(oneRecord) { 
 							allPermissions = lodash.union (allPermissions , oneRecord.permissions) ;							
@@ -88,7 +88,7 @@ function addTokenToLink(link, token) {
 }
 
 service.post("/login", function(req, res) {
-	login(req, res, function(err, record) {
+	login(req, function(err, record) {
 		if(err) {
 			return res.jsonp(req.soajs.buildResponse({"code": err, "msg": config.errors[err]}));
 		} else {
