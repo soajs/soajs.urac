@@ -2,6 +2,8 @@
 module.exports = {
 	//maximum string limit used if no limit is passed to getRandomString
 	"serviceName": "urac",
+    servicePort: 401,
+    extKeyRequired: true,
 	"maxStringLimit": 30,
 	"errors": {
 		400: "Problem with the provided password.",
