@@ -73,7 +73,9 @@ describe("importing sample data", function() {
 			urac = helper.requireModule('./index');					
 			mongoSession.dropDatabase(function() {
 				console.log('starting tests ....');
-				done();
+                setTimeout(function () {
+                    done();
+                },500);
 			});
 		}, 1000);
 	});
