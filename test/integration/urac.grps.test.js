@@ -5,7 +5,6 @@ var helper = require("../helper.js");
 var shell = require('shelljs');
 
 var soajs = require('soajs');
-var controller = require("soajs.controller");
 var urac;
 
 var Mongo = soajs.mongo;
@@ -25,7 +24,7 @@ var extKey = 'aa39b5490c4a4ed0e56d7ec1232a428f771e8bb83cfcee16de14f735d0f5da587d
 
 function requester(apiName, method, params, cb) {
 	var options = {
-		uri: 'http://localhost:4000/urac/' + apiName,
+		uri: 'http://127.0.0.1:4001/' + apiName,
 		headers: {
 			key: extKey
 		},
@@ -81,7 +80,7 @@ describe("importing sample data", function() {
 	});
 });
 var gId = '';
-describe("urac group tests", function() {	
+describe("urac group tests", function() {
 	afterEach(function(done) {
 		console.log("=======================================");
 		done();

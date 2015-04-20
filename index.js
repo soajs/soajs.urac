@@ -81,7 +81,7 @@ service.init(function () {
         if (req.soajs.servicesConfig.urac.mail[apiName].content) {
             mailOptions.content = req.soajs.servicesConfig.urac.mail[apiName].content;
         } else {
-            mailOptions.path = req.soajs.registry.projectPath + 'templates/' + req.soajs.registry.services.urac.mail[apiName];
+            mailOptions.path = req.soajs.servicesConfig.urac.mail[apiName].path;
         }
         delete data.password;
         delete data._id;

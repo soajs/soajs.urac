@@ -2,10 +2,10 @@
 module.exports = {
 	//maximum string limit used if no limit is passed to getRandomString
 	"serviceName": "urac",
-    servicePort: 4001,
-    "hashIterations": 1024,
-    "seedLength": 32,
-    extKeyRequired: true,
+	"servicePort": 4001,
+	"hashIterations": 1024,
+	"seedLength": 32,
+	"extKeyRequired": true,
 	"maxStringLimit": 30,
 	"errors": {
 		400: "Problem with the provided password.",
@@ -38,6 +38,11 @@ module.exports = {
 
 	"schema": {
 		"/login": {
+			"_apiInfo":{
+				"l": "Login",
+				"group": "Guest",
+				"groupDefault": true
+			},
 			"username": {
 				"source": ['body.username'],
 				"required": true,
@@ -54,6 +59,10 @@ module.exports = {
 			}
 		},
 		'/join': {
+			"_apiInfo":{
+				"l": "Register",
+				"group": "Guest"
+			},
 			"username": {
 				"source": ['body.username'],
 				"required": true,
@@ -84,6 +93,10 @@ module.exports = {
 			}
 		},
 		'/join/validate': {
+			"_apiInfo":{
+				"l": "Validate Register",
+				"group": "Guest"
+			},
 			"token": {
 				"source": ['query.token'],
 				"required": true,
@@ -91,6 +104,10 @@ module.exports = {
 			}
 		},
 		'/logout': {
+			"_apiInfo":{
+				"l": "Logout",
+				"group": "Guest"
+			},
 			"username": {
 				"source": ['query.username'],
 				"required": true,
@@ -98,6 +115,10 @@ module.exports = {
 			}
 		},
 		'/forgotPassword': {
+			"_apiInfo":{
+				"l": "Forgot Password",
+				"group": "Guest"
+			},
 			"username": {
 				"source": ['query.username'],
 				"required": true,
@@ -110,6 +131,10 @@ module.exports = {
 			}
 		},
 		'/resetPassword': {
+			"_apiInfo":{
+				"l": "Reset Password",
+				"group": "Guest"
+			},
 			"token": {
 				"source": ['query.token'],
 				"required": true,
@@ -127,6 +152,10 @@ module.exports = {
 			}
 		},
 		'/changeEmail/validate': {
+			"_apiInfo":{
+				"l": "Validate Change Email",
+				"group": "Guest"
+			},
 			"token": {
 				"source": ['query.token'],
 				"required": true,
@@ -134,6 +163,11 @@ module.exports = {
 			}
 		},
 		'/account/getUser': {
+			"_apiInfo":{
+				"l": "Get User Info",
+				"group": "My Account",
+				"groupDefault": true
+			},
 			"username": {
 				"source": ['query.username'],
 				"required": true,
@@ -141,6 +175,10 @@ module.exports = {
 			}
 		},
 		'/account/changePassword': {
+			"_apiInfo":{
+				"l": "Change Password",
+				"group": "My Account"
+			},
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -163,6 +201,10 @@ module.exports = {
 			}
 		},
 		'/account/changeEmail': {
+			"_apiInfo":{
+				"l": "Change Email",
+				"group": "My Account"
+			},
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -175,6 +217,10 @@ module.exports = {
 			}
 		},
 		'/account/editProfile': {
+			"_apiInfo":{
+				"l": "Edit Profile",
+				"group": "My Account"
+			},
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -205,6 +251,10 @@ module.exports = {
 			}
 		},
 		'/admin/addUser': {
+			"_apiInfo":{
+				"l": "Add new User",
+				"group": "Administration"
+			},
 			"username": {
 				"source": ['body.username'],
 				"required": true,
@@ -245,6 +295,10 @@ module.exports = {
 			}
 		},
 		'/admin/changeUserStatus': {
+			"_apiInfo":{
+				"l": "Change User Status",
+				"group": "Administration"
+			},
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -256,8 +310,18 @@ module.exports = {
 				"validation": {"type": "string", enum: ['active', 'inactive']}
 			}
 		},
-		'/admin/listUsers': {},
+		'/admin/listUsers': {
+			"_apiInfo":{
+				"l": "List Users",
+				"group": "Administration",
+				"groupDefault": true
+			}
+		},
 		'/admin/editUser': {
+			"_apiInfo":{
+				"l": "Edit User Record",
+				"group": "Administration"
+			},
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -302,8 +366,17 @@ module.exports = {
 				"validation": {"type": "string", enum: ['active', 'inactive']}
 			}
 		},
-		'/admin/group/list': {},
+		'/admin/group/list': {
+			"_apiInfo":{
+				"l": "List Groups",
+				"group": "Administration"
+			}
+		},
 		'/admin/group/add': {
+			"_apiInfo":{
+				"l": "Add new Group",
+				"group": "Administration"
+			},
 			"code": {
 				"source": ['body.code'],
 				"required": true,
@@ -335,6 +408,10 @@ module.exports = {
 			}
 		},
 		'/admin/group/edit': {
+			"_apiInfo":{
+				"l": "Edit Group",
+				"group": "Administration"
+			},
 			"gId": {
 				"source": ['query.gId'],
 				"required": true,
@@ -362,6 +439,10 @@ module.exports = {
 			}
 		},
 		'/admin/group/delete': {
+			"_apiInfo":{
+				"l": "Delete Group",
+				"group": "Administration"
+			},
 			"gId": {
 				"source": ['query.gId'],
 				"required": true,
@@ -369,6 +450,10 @@ module.exports = {
 			}
 		},
 		"/admin/group/addUsers": {
+			"_apiInfo":{
+				"l": "Add Users to Group",
+				"group": "Administration"
+			},
 			"code": {
 				"source": ['body.groupCode'],
 				"required": true,
@@ -385,7 +470,12 @@ module.exports = {
 				}
 			}
 		},
-		"/admin/user/editGroups": {}
+		"/admin/user/editGroups": {
+			"_apiInfo":{
+				"l": "Edit Multiple Groups",
+				"group": "Administration"
+			}
+		}
 		
 	}
 };
