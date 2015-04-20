@@ -2,8 +2,6 @@
 var assert = require('assert');
 var request = require("request");
 var helper = require("../helper.js");
-var shell = require('shelljs');
-
 var soajs = require('soajs');
 var urac;
 
@@ -18,13 +16,12 @@ var uracConfig = dbConfig();
 uracConfig.name = "test_urac";
 var mongo = new Mongo(uracConfig);
 
-var sampleData = require("soajs.mongodb.data/modules/urac");
 
 var extKey = 'aa39b5490c4a4ed0e56d7ec1232a428f771e8bb83cfcee16de14f735d0f5da587d5968ec4f785e38570902fd24e0b522b46cb171872d1ea038e88328e7d973ff47d9392f72b2d49566209eb88eb60aed8534a965cf30072c39565bd8d72f68ac';
 
 function requester(apiName, method, params, cb) {
 	var options = {
-		uri: 'http://127.0.0.1:4001/' + apiName,
+		uri: 'http://127.0.0.1:4000/urac/' + apiName,
 		headers: {
 			key: extKey
 		},
@@ -52,35 +49,17 @@ function requester(apiName, method, params, cb) {
 	});
 }
 
-
-describe("importing sample data", function() {
-	it("do import", function(done) {
-		shell.pushd(sampleData.dir);
-		shell.exec("chmod +x " + sampleData.shell, function(code) {
-			assert.equal(code, 0);
-			shell.exec(sampleData.shell, function(code) {
-				assert.equal(code, 0);
-				shell.popd();
+var gId = '';
+describe("urac group tests", function() {
+	before(function(done){
+		mongoSession.dropDatabase(function() {
+			console.log('starting tests ....');
+			setTimeout(function () {
 				done();
-			});
+			},500);
 		});
 	});
 
-	after(function(done) {
-		setTimeout(function() {
-			console.log('test data imported.');
-			urac = helper.requireModule('./index');					
-			mongoSession.dropDatabase(function() {
-				console.log('starting tests ....');
-                setTimeout(function () {
-                    done();
-                },500);
-			});
-		}, 1000);
-	});
-});
-var gId = '';
-describe("urac group tests", function() {
 	afterEach(function(done) {
 		console.log("=======================================");
 		done();
