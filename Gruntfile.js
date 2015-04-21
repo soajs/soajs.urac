@@ -156,7 +156,7 @@ module.exports = function (grunt) {
           reporter: 'spec',
           timeout: 30000
         },
-        src: ['test/integration/*.js']
+        src: ['test/integration/_server.test.js']
       }
     },
 
