@@ -573,6 +573,24 @@ service.init(function() {
 		});
 	});
 
+	service.get("/admin/getUser", function(req, res) {
+		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
+		var userId;
+		try {
+			userId = mongo.ObjectId(req.soajs.inputmaskData['uId']);
+		} catch(e) {
+			return res.jsonp(req.soajs.buildResponse({"code": 411, "msg": config.errors[411]}));
+		}
+
+		mongo.findOne(userCollectionName,{'_id': userId}, function(err, userRecord) {
+			if(err || !userRecord) {
+				return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]}));
+			}
+			delete userRecord.password;
+			return res.jsonp(req.soajs.buildResponse(null, userRecord));
+		});
+	});
+
 	function getRandomString(length) {
 		function getLetter() {
 			var start = process.hrtime()[1] % 2 === 0 ? 97 : 65;

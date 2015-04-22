@@ -317,6 +317,17 @@ module.exports = {
 				"groupDefault": true
 			}
 		},
+		'/admin/getUser': {
+			"_apiInfo":{
+				"l": "Get User Record",
+				"group": "Administration"
+			},
+			"uId": {
+				"source": ['query.uId'],
+				"required": true,
+				"validation": {"type": "string"}
+			}
+		},
 		'/admin/editUser': {
 			"_apiInfo":{
 				"l": "Edit User Record",
@@ -456,6 +467,5 @@ module.exports = {
 				"group": "Administration"
 			}
 		}
-		
 	}
 };
