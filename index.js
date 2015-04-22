@@ -638,6 +638,7 @@ service.init(function() {
 				"lastName": req.soajs.inputmaskData['lastName'],
 				"email": req.soajs.inputmaskData['email'],
 				'status': 'pendingNew',
+				"config":{},
 				'ts': new Date().getTime()
 			};
 			if(req.soajs.inputmaskData['profile']) {
@@ -773,6 +774,9 @@ service.init(function() {
 					userRecord.email = req.soajs.inputmaskData['email'];
 					// cannot change status or groups of the locked user ??
 					if(!userRecord.locked) {
+						if(req.soajs.inputmaskData['config']) {
+							userRecord.config = req.soajs.inputmaskData['config'];
+						}
 						userRecord.status = req.soajs.inputmaskData['status'];
 						if(req.soajs.inputmaskData['groups']) {
 							userRecord.groups = req.soajs.inputmaskData['groups'];

@@ -371,6 +371,17 @@ module.exports = {
 					}
 				}
 			},
+			"config": {
+				"source": ['body.config'],
+				"required": false,
+				"validation": {
+					"type": "object",
+					"properties": {
+						"keys":{"type": "object"},
+						"packages":{"type": "object"}
+					}
+				}
+			},
 			"status": {
 				"source": ['body.status'],
 				"required": true,
