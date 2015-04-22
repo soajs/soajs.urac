@@ -859,7 +859,7 @@ describe("simple urac tests", function() {
 		});
 	});
 
-	describe("testing getUser API", function() {
+	describe("testing account getUser API", function() {
 		it("FAIL - missing params", function(done) {
 			var params = {
 				qs: {}
@@ -1607,6 +1607,36 @@ describe("simple urac tests", function() {
 
 	});
 
+	describe("testing admin get user API", function() {
+		it("Fail - missing param", function(done) {
+			var params = {
+				qs: {}
+			};
+			requester('admin/getUser', 'get', params, function(error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: uId"});
+				done();
+			});
+		});
+		it("Success", function(done) {
+			var params = {
+				qs: {
+					'uId': uId
+				}
+			};
+			requester('admin/getUser', 'get', params, function(error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.ok(body.data);
+				assert.equal(body.data._id, uId);
+				done();
+			});
+		});
+
+	});
 	describe("testing list users API", function() {
 		it("SUCCESS - will return user records", function(done) {
 			var params = {};
@@ -1635,8 +1665,5 @@ describe("simple urac tests", function() {
 		});
 	});
 	
-	describe("testing groups API", function() {
-		var gId = '';
-		
-	});
+
 });
