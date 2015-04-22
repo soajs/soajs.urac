@@ -73,11 +73,7 @@ describe("urac group tests", function() {
 					form: {
 						'code': 'gold',
 						'name': 'Gold',
-						'description': 'grp description',
-						"permissions":["members",
-										"environments",
-										"productization", "productization_packages",
-										"multi-tenancy"]
+						'description': 'grp description'
 					}
 				};
 				requester('admin/group/add', 'post', params, function(error, body) {
@@ -116,9 +112,7 @@ describe("urac group tests", function() {
 					form: {
 						'code': 'silver',
 						'name': 'Silver Group',
-						'description': 'grp description',
-						"permissions":["productization", "productization_packages",
-										"multi-tenancy"]
+						'description': 'grp description'
 					}
 				};
 				requester('admin/group/add', 'post', params, function(error, body) {
@@ -138,10 +132,7 @@ describe("urac group tests", function() {
 					qs: {'gId': '5645'},
 					form: {
 						'name': 'gold 2',
-						'description': 'description 2',
-						"permissions":["members",
-										"environments",
-										"productization"]
+						'description': 'description 2'
 					}
 				};				
 				requester('admin/group/edit', 'post', params, function(error, body) {
@@ -159,10 +150,7 @@ describe("urac group tests", function() {
 					},
 					form: {
 						'name': 'gold name',
-						'description': 'description update',
-						"permissions":["members",
-										"environments",
-										"productization"]
+						'description': 'description update'
 					}
 				};			
 				requester('admin/group/edit', 'post', params, function(error, body) {
@@ -322,22 +310,6 @@ describe("urac group tests", function() {
 					done();
 				});
 			});
-			it("SUCCESS - login and get grps permission", function(done) {
-				var params = {
-					form: {
-						"username": 'user4',
-						"password": '654321'
-					}
-				};
-				requester('login', 'post', params, function(error, body) {
-					assert.ifError(error);
-					assert.ok(body);
-					console.log(JSON.stringify(body));
-					assert.ok(body.data);
-					done();
-				});
-			});
-			
 		});
 		
 		describe("testing delete group API", function() {
