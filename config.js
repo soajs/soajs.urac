@@ -417,9 +417,9 @@ module.exports = {
 					}
 				}
 			},
-			"configObj": {
-				"source": ['body.mike'],
-				"required": true,
+			"config": {
+				"source": ['body.config'],
+				"required": false,
 				"validation": {
 					"type": "object",
 					"properties": {
@@ -428,7 +428,7 @@ module.exports = {
 						},
 						"packages":{
 							"type": "object",
-							"required": true,
+							"required": false,
 							"additionalProperties" : {
 								type:'object',
 								'additionalProperties': {

@@ -28,7 +28,8 @@ function requester(apiName, method, params, cb) {
 	var options = {
 		uri: 'http://127.0.0.1:4000/urac/' + apiName,
 		headers: {
-			key: extKey
+			key: extKey,
+			'Content-Type':'application/json'
 		},
 		json: true
 	};
@@ -45,7 +46,7 @@ function requester(apiName, method, params, cb) {
 	}
 
 	if(params.form) {
-		options.form = params.form;
+		options.body = params.form;
 	}
 
 	if(params.qs) {
@@ -1461,7 +1462,7 @@ describe("simple urac tests", function() {
 					'email': 'john.doe@domain.com',
 					'username': 'john123',
 					'status': 'active',
-					'mike':{
+					'config':{
 						'keys': {},
 						'packages':{
 							'TPROD_EX03':{
@@ -1473,8 +1474,7 @@ describe("simple urac tests", function() {
 					}
 				}
 			};
-			console.log("************************************************************** ************************************************ ");
-			console.log(params);
+
 			requester('admin/editUser', 'post', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);

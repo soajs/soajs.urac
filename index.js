@@ -775,11 +775,9 @@ service.init(function() {
 					// cannot change status or groups of the locked user
 					if(!userRecord.locked)
 					{
-						if( req.soajs.inputmaskData['configObj'] )
+						if( req.soajs.inputmaskData['config'] )
 						{
-
-
-							var configObj = req.soajs.inputmaskData['configObj'];
+							var configObj = req.soajs.inputmaskData['config'];
 							if( typeof(userRecord.config) !=='object')
 							{
 								userRecord.config={};
@@ -829,8 +827,6 @@ service.init(function() {
 	});
 
 	service.post("/admin/editUser", function(req, res) {
-		console.log( '***********  inputmaskData ');
-		console.log( req.soajs.inputmaskData );
 		updateUserRecord(req, true, function(error) {
 			if(error) {
 				return res.jsonp(req.soajs.buildResponse({"code": error.code, "msg": error.msg}));

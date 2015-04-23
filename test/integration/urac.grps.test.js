@@ -50,7 +50,7 @@ function requester(apiName, method, params, cb) {
 }
 
 var gId = '';
-describe.skip("urac group tests", function() {
+describe("urac group tests", function() {
 	before(function(done){
 		mongoSession.dropDatabase(function() {
 			console.log('starting tests ....');
