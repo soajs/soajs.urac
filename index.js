@@ -772,11 +772,24 @@ service.init(function() {
 
 				if(complete) {
 					userRecord.email = req.soajs.inputmaskData['email'];
-					// cannot change status or groups of the locked user ??
-					if(!userRecord.locked) {
-						if(req.soajs.inputmaskData['config']) {
-							userRecord.config = req.soajs.inputmaskData['config'];
+					// cannot change status or groups of the locked user
+					if(!userRecord.locked)
+					{
+						if( req.soajs.inputmaskData['configObj'] )
+						{
+
+
+							var configObj = req.soajs.inputmaskData['configObj'];
+							if( typeof(userRecord.config) !=='object')
+							{
+								userRecord.config={};
+							}
+							if(configObj.packages)
+							{
+								userRecord.config.packages = configObj.packages;
+							}
 						}
+
 						userRecord.status = req.soajs.inputmaskData['status'];
 						if(req.soajs.inputmaskData['groups']) {
 							userRecord.groups = req.soajs.inputmaskData['groups'];
@@ -791,7 +804,7 @@ service.init(function() {
 						userRecord.profile = JSON.parse(req.soajs.inputmaskData['profile']);
 					}
 					catch(e) {
-						return cb({"code": 413, "msg": config.errors[413]});
+						return cb( {"code": 413, "msg": config.errors[413]} );
 					}
 				}
 
@@ -816,6 +829,8 @@ service.init(function() {
 	});
 
 	service.post("/admin/editUser", function(req, res) {
+		console.log( '***********  inputmaskData ');
+		console.log( req.soajs.inputmaskData );
 		updateUserRecord(req, true, function(error) {
 			if(error) {
 				return res.jsonp(req.soajs.buildResponse({"code": error.code, "msg": error.msg}));

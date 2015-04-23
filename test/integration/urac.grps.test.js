@@ -50,7 +50,7 @@ function requester(apiName, method, params, cb) {
 }
 
 var gId = '';
-describe("urac group tests", function() {
+describe.skip("urac group tests", function() {
 	before(function(done){
 		mongoSession.dropDatabase(function() {
 			console.log('starting tests ....');
@@ -124,7 +124,6 @@ describe("urac group tests", function() {
 			});
 			
 		});
-	
 		
 		describe("testing edit group API", function() {		
 			it("FAIL - will NOT edit group - Invalid id", function(done) {

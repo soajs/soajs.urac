@@ -1,4 +1,46 @@
 'use strict';
+var accessSchema = {
+	"oneOf": [
+		{"type": "boolean", "required": false},
+		{"type": "array", "minItems": 1, "items": {"type": "string", "required": true}, "required": false}
+	]
+};
+var acl={
+	"type": "object",
+	"required": false,
+	"properties": {
+		"access": accessSchema,
+		"apisPermission": {"type": "string", "enum": ["restricted"], "required": false},
+		"apis": {
+			"type": "object",
+				"required": false,
+				"patternProperties": {
+				"^[_a-z\/][_a-zA-Z0-9\/:]*$": { //pattern to match an api route
+					"type": "object",
+						"required": true,
+						"properties": {
+						"access": accessSchema
+					},
+					"additionalProperties": false
+				}
+			}
+		},
+		"apisRegExp": {
+			"type": "array",
+				"required": false,
+				"minItems": 1,
+				"items": {
+				"type": "object",
+					"properties": {
+					"regExp": {"type": "pattern", required: true, "pattern": /\.+/},
+					"access": accessSchema
+				},
+				"additionalProperties": false
+			}
+		}
+	}
+};
+
 module.exports = {
 	//maximum string limit used if no limit is passed to getRandomString
 	"serviceName": "urac",
@@ -37,6 +79,10 @@ module.exports = {
 	},
 
 	"schema": {
+		"commonFields": {
+
+		},
+
 		"/login": {
 			"_apiInfo":{
 				"l": "Login",
@@ -371,21 +417,35 @@ module.exports = {
 					}
 				}
 			},
-			"config": {
-				"source": ['body.config'],
-				"required": false,
+			"configObj": {
+				"source": ['body.mike'],
+				"required": true,
 				"validation": {
 					"type": "object",
 					"properties": {
-						"keys":{"type": "object"},
-						"packages":{"type": "object"}
+						"keys":{
+							"type": "object"
+						},
+						"packages":{
+							"type": "object",
+							"required": true,
+							"additionalProperties" : {
+								type:'object',
+								'additionalProperties': {
+									'acl': acl
+								}
+							}
+						}
 					}
 				}
 			},
 			"status": {
 				"source": ['body.status'],
 				"required": true,
-				"validation": {"type": "string", enum: ['active', 'inactive']}
+				"validation": {
+					"type": "string",
+					enum: ['active', 'inactive', 'pendingNew']
+				}
 			}
 		},
 		'/admin/group/list': {

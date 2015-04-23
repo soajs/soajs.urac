@@ -1362,7 +1362,7 @@ describe("simple urac tests", function() {
 			});
 		});
 
-		it("FAIL - will update user profile - invalid JSON", function(done) {
+		it("FAIL - will NOT update user profile because of invalid JSON", function(done) {
 			var params = {
 				qs: {
 					'uId': uId
@@ -1374,6 +1374,7 @@ describe("simple urac tests", function() {
 					'profile': '{"age":30'
 				}
 			};
+
 			requester('account/editProfile', 'post', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1459,9 +1460,21 @@ describe("simple urac tests", function() {
 					'lastName': 'doe',
 					'email': 'john.doe@domain.com',
 					'username': 'john123',
-					'status': 'active'
+					'status': 'active',
+					'mike':{
+						'keys': {},
+						'packages':{
+							'TPROD_EX03':{
+								'acl':{
+									'example01':{}
+								}
+							}
+						}
+					}
 				}
 			};
+			console.log("************************************************************** ************************************************ ");
+			console.log(params);
 			requester('admin/editUser', 'post', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1485,7 +1498,13 @@ describe("simple urac tests", function() {
 							"age": 30
 						},
 						'config': {
-							'packages': {},
+							'packages': {
+								'TPROD_EX03':{
+									'acl':{
+										'example01':{}
+									}
+								}
+							},
 							'keys': {}
 						}
 					});
