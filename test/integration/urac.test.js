@@ -29,7 +29,7 @@ function requester(apiName, method, params, cb) {
 		uri: 'http://127.0.0.1:4000/urac/' + apiName,
 		headers: {
 			key: extKey,
-			'Content-Type':'application/json'
+			'Content-Type': 'application/json'
 		},
 		json: true
 	};
@@ -84,7 +84,10 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				assert.ok(body);
 				assert.ok(body.errors);
-				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: firstName, lastName"});
+				assert.deepEqual(body.errors.details[0], {
+					"code": 172,
+					"message": "Missing required field: firstName, lastName"
+				});
 				console.log(JSON.stringify(body));
 				done();
 			});
@@ -138,7 +141,7 @@ describe("simple urac tests", function() {
 					if(err || !tokenRecord) {
 					}
 					var t = new Date(1426087819320);
-					
+
 					tokenRecord.expires = t;
 					console.log(tokenRecord);
 					mongo.save('tokens', tokenRecord, function(err) {
@@ -208,7 +211,7 @@ describe("simple urac tests", function() {
 				done();
 			});
 		});
-		
+
 		it("Fail - will not validate join user", function(done) {
 			var params = {
 				qs: {
@@ -224,7 +227,7 @@ describe("simple urac tests", function() {
 				done();
 			});
 		});
-		
+
 	});
 
 	describe("testing join API without validation", function() {
@@ -313,7 +316,10 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 401, "message": "Unable to log in the user. User not found."});
+				assert.deepEqual(body.errors.details[0], {
+					"code": 401,
+					"message": "Unable to log in the user. User not found."
+				});
 				done();
 			});
 		});
@@ -349,7 +355,7 @@ describe("simple urac tests", function() {
 				assert.ok(body.data);
 				done();
 			});
-		});		
+		});
 		it("SUCCESS - will login user with email instead of username", function(done) {
 			var params = {
 				form: {
@@ -393,7 +399,10 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 404, "message": "Unable to logout the user. User not found."});
+				assert.deepEqual(body.errors.details[0], {
+					"code": 404,
+					"message": "Unable to logout the user. User not found."
+				});
 				done();
 			});
 		});
@@ -463,7 +472,7 @@ describe("simple urac tests", function() {
 				done();
 			});
 		});
-		
+
 		it("SUCCESS - will add user", function(done) {
 			var params = {
 				form: {
@@ -565,7 +574,7 @@ describe("simple urac tests", function() {
 				});
 			});
 		});
-		
+
 		it("FAIL - will try add user invalid JSON profile", function(done) {
 			var params = {
 				form: {
@@ -580,7 +589,10 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 413, "message": "Invalid profile field provided. Profile should be a stringified object."});
+				assert.deepEqual(body.errors.details[0], {
+					"code": 413,
+					"message": "Invalid profile field provided. Profile should be a stringified object."
+				});
 				done();
 			});
 		});
@@ -618,7 +630,7 @@ describe("simple urac tests", function() {
 				});
 			});
 		});
-		
+
 		it("FAIL - username exists for another account", function(done) {
 			var params = {
 				form: {
@@ -636,7 +648,7 @@ describe("simple urac tests", function() {
 				done();
 			});
 		});
-		
+
 	});
 
 	describe("testing forgotPassword and resetPassword API", function() {
@@ -696,14 +708,14 @@ describe("simple urac tests", function() {
 					if(err || !tokenRecord) {
 					}
 					var t = new Date(1426087819320);
-					
+
 					tokenRecord.expires = t;
 					console.log(tokenRecord);
 					mongo.save('tokens', tokenRecord, function(err) {
 						console.log(tokenRecord);
 					});
 				});
-				
+
 				done();
 			});
 		});
@@ -785,7 +797,10 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 408, "message": "The password and its confirmation do not match"});
+				assert.deepEqual(body.errors.details[0], {
+					"code": 408,
+					"message": "The password and its confirmation do not match"
+				});
 				done();
 			});
 		});
@@ -809,7 +824,7 @@ describe("simple urac tests", function() {
 				done();
 			});
 		});
-		
+
 		it("FAIL - resetPassword token expired", function(done) {
 			var params = {
 				qs: {
@@ -829,7 +844,7 @@ describe("simple urac tests", function() {
 				done();
 			});
 		});
-		
+
 		it("SUCCESS - resetPassword will reset the password", function(done) {
 			var params = {
 				qs: {
@@ -956,7 +971,10 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 408, "message": "The password and its confirmation do not match"});
+				assert.deepEqual(body.errors.details[0], {
+					"code": 408,
+					"message": "The password and its confirmation do not match"
+				});
 				done();
 			});
 		});
@@ -1095,7 +1113,10 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 412, "message": "You have provided the same existing email address"});
+				assert.deepEqual(body.errors.details[0], {
+					"code": 412,
+					"message": "You have provided the same existing email address"
+				});
 				done();
 			});
 		});
@@ -1114,7 +1135,11 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				assert.ok(body.data);
 				console.log(JSON.stringify(body));
-				mongo.findOne('tokens', {'username': 'john123', 'service': 'changeEmail', 'status': 'active'}, function(error, token) {
+				mongo.findOne('tokens', {
+					'username': 'john123',
+					'service': 'changeEmail',
+					'status': 'active'
+				}, function(error, token) {
 					assert.ifError(error);
 					assert.ok(token);
 					assert.equal(token.email, params.form.email);
@@ -1139,7 +1164,10 @@ describe("simple urac tests", function() {
 				assert.ok(body.data);
 				console.log(JSON.stringify(body));
 				newToken = body.data;
-				mongo.find('tokens', {'username': 'john123', 'service': 'changeEmail'}, {'sort': {'ts': 1}}, function(error, tokens) {
+				mongo.find('tokens', {
+					'username': 'john123',
+					'service': 'changeEmail'
+				}, {'sort': {'ts': 1}}, function(error, tokens) {
 					assert.ifError(error);
 					assert.ok(tokens);
 					assert.equal(tokens.length, 2);
@@ -1190,8 +1218,11 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				console.log(JSON.stringify(body));
 				assert.ok(body);
-				assert.ok(body.data);				
-				mongo.find('tokens', {'username': 'john123', 'service': 'changeEmail'}, {'sort': {'ts': 1}}, function(error, tokens) {
+				assert.ok(body.data);
+				mongo.find('tokens', {
+					'username': 'john123',
+					'service': 'changeEmail'
+				}, {'sort': {'ts': 1}}, function(error, tokens) {
 					assert.ifError(error);
 					assert.ok(tokens);
 					assert.equal(tokens.length, 2);
@@ -1232,16 +1263,16 @@ describe("simple urac tests", function() {
 					// expire
 					assert.equal(tokenRecord.email, params.form.email);
 					assert.equal(tokenRecord.status, 'active');
-					var t = new Date(1426087819320);					
+					var t = new Date(1426087819320);
 					tokenRecord.expires = t;
 					mongo.save('tokens', tokenRecord, function(err) {
 						console.log(tokenRecord);
-					});					
+					});
 				});
 				done();
 			});
 		});
-		
+
 		it("FAIL - do change email fail - expired token", function(done) {
 			var params = {
 				qs: {
@@ -1256,7 +1287,7 @@ describe("simple urac tests", function() {
 				done();
 			});
 		});
-		
+
 		it('SUCCESS - manual reset of user email address to receive notifications from remaining APIs tests', function(done) {
 			mongo.findOne('users', {'username': 'john123'}, function(error, userRecord) {
 				assert.ifError(error);
@@ -1310,7 +1341,7 @@ describe("simple urac tests", function() {
 			});
 		});
 
-		it("FAIL - username exists for another acount", function(done) {
+		it("FAIL - username exists for another account", function(done) {
 			var params = {
 				qs: {
 					'uId': uId
@@ -1336,7 +1367,10 @@ describe("simple urac tests", function() {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
-					assert.deepEqual(body.errors.details[0], {"code": 410, "message": "username taken, please choose another username"});
+					assert.deepEqual(body.errors.details[0], {
+						"code": 410,
+						"message": "username taken, please choose another username"
+					});
 					done();
 				});
 			});
@@ -1380,7 +1414,10 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 413, "message": "Invalid profile field provided. Profile should be a stringified object."});
+				assert.deepEqual(body.errors.details[0], {
+					"code": 413,
+					"message": "Invalid profile field provided. Profile should be a stringified object."
+				});
 				done();
 			});
 		});
@@ -1446,7 +1483,10 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 410, "message": "username taken, please choose another username"});
+				assert.deepEqual(body.errors.details[0], {
+					"code": 410,
+					"message": "username taken, please choose another username"
+				});
 				done();
 			});
 		});
@@ -1462,12 +1502,12 @@ describe("simple urac tests", function() {
 					'email': 'john.doe@domain.com',
 					'username': 'john123',
 					'status': 'active',
-					'config':{
+					'config': {
 						'keys': {},
-						'packages':{
-							'TPROD_EX03':{
-								'acl':{
-									'example01':{}
+						'packages': {
+							'TPROD_EX03': {
+								'acl': {
+									'example01': {}
 								}
 							}
 						}
@@ -1480,6 +1520,7 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				assert.ok(body.data);
 				console.log(JSON.stringify(body));
+
 				mongo.findOne("users", {'username': 'john123'}, function(error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
@@ -1499,9 +1540,9 @@ describe("simple urac tests", function() {
 						},
 						'config': {
 							'packages': {
-								'TPROD_EX03':{
-									'acl':{
-										'example01':{}
+								'TPROD_EX03': {
+									'acl': {
+										'example01': {}
 									}
 								}
 							},
@@ -1509,6 +1550,72 @@ describe("simple urac tests", function() {
 						}
 					});
 					done();
+				});
+
+
+			});
+		});
+
+		it("SUCCESS - will update user account user2", function(done) {
+			mongo.findOne("users", {'username': 'user2'}, function(error, userRecord) {
+				assert.ifError(error);
+				assert.ok(userRecord);
+				delete userRecord.password;
+				var id2 = userRecord._id.toString();
+				console.log(userRecord);
+				var params = {
+					qs: {
+						'uId': id2
+					},
+					form: {
+						"firstName": "user",
+						"lastName": "two",
+						'username': 'user2',
+						"email": "user@two.com",
+						'status': 'active',
+						'config': {
+							'keys': {},
+							'packages': {
+								'TPROD_EX03': {
+									'acl': {
+										'example01': {}
+									}
+								}
+							}
+						}
+					}
+				};
+				requester('admin/editUser', 'post', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					console.log(JSON.stringify(body));
+					mongo.findOne("users", {'username': 'user2'}, function(error, record) {
+						assert.ok(record);
+						delete record.password;
+						delete record.ts;
+						delete record.groups;
+						console.log(record);
+						delete record._id;
+						assert.deepEqual(record.config, {
+							'packages': {
+								'TPROD_EX03': {
+									'acl': {
+										'example01': {}
+									}
+								}
+							}
+						});
+						delete record.config;
+						assert.deepEqual(record, {
+							'username': 'user2',
+							"firstName": "user",
+							"lastName": "two",
+							"email": "user@two.com",
+							'status': 'active'
+						});
+						done();
+					});
 				});
 			});
 		});
@@ -1683,6 +1790,5 @@ describe("simple urac tests", function() {
 			});
 		});
 	});
-	
 
 });
