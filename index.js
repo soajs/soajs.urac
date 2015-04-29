@@ -33,6 +33,7 @@ service.init(function() {
 		}
 
 		mongo.findOne(userCollectionName, criteria, function(err, record) {
+			mongo.closeDb();
 			if(record) {
 				var hasher = new Hasher({
 
@@ -112,6 +113,7 @@ service.init(function() {
 			criteria.email = req.soajs.inputmaskData['username'];
 		}
 		mongo.findOne(userCollectionName, criteria, function(err, record) {
+			mongo.closeDb();
 			if(err) {
 				return res.jsonp(req.soajs.buildResponse({"code": 404, "msg": config.errors[404]}));
 			}
@@ -138,11 +140,8 @@ service.init(function() {
 			'status': 'active'
 		}, function(err, userRecord) {
 
-			if(err) {
-				return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
-			}
-
-			if(!userRecord) {
+			if(err || !userRecord) {
+				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
 			}
 
@@ -161,11 +160,12 @@ service.init(function() {
 				'status': 'active'
 			}, {'$set': {'status': 'invalid'}}, function(err) {
 				if(err) {
+					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 				}
 
 				mongo.insert(tokenCollectionName, tokenRecord, function(err) {
-
+					mongo.closeDb();
 					if(err) {
 						return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 					}
@@ -947,12 +947,14 @@ service.init(function() {
 		var grp = req.soajs.inputmaskData['code'];
 		mongo.update(userCollectionName, {groups: grp}, {$pull: {groups: grp}}, {multi: true}, function(err) {
 			if(err) {
+				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 600, "msg": config.errors[600]}));
 			}
 
 			var users = req.soajs.inputmaskData['users'];
 			if(users && users.length > 0) {
 				mongo.update(userCollectionName, {'username': {$in: users}}, {$push: {groups: grp}}, function(err) {
+					mongo.closeDb();
 					if(err) {
 						return res.jsonp(req.soajs.buildResponse({"code": 600, "msg": config.errors[600]}));
 					}
