@@ -19,6 +19,7 @@
   },
   "devDependencies":{
     "soajs.mongodb.data" : "0.1.*",
+    "soajs.controller": "0.1.*",
     "grunt":"0.4.5",
     "grunt-contrib-jshint":"0.10.0",
     "grunt-jsdoc" : "*",
