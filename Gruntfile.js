@@ -100,12 +100,14 @@ module.exports = function (grunt) {
       mochaTest: {
         // NODE_ENV: 'test',
         // APP_DIR: process.cwd(),
-        APP_DIR_FOR_CODE_COVERAGE: '../'
+        APP_DIR_FOR_CODE_COVERAGE: '../',
+        SOAJS_SRVIP: '127.0.0.1'
       },
       coverage: {
         // NODE_ENV: 'test',
         // APP_DIR: process.cwd(),
-        APP_DIR_FOR_CODE_COVERAGE: '../test/coverage/instrument/'
+        APP_DIR_FOR_CODE_COVERAGE: '../test/coverage/instrument/',
+        SOAJS_SRVIP: '127.0.0.1'
       }
     },
 
@@ -147,14 +149,14 @@ module.exports = function (grunt) {
       unit: {
         options: {
           reporter: 'spec',
-          timeout: 30000
+          timeout: 90000
         },
         src: ['test/unit/*.js']
       },
       integration: {
         options: {
           reporter: 'spec',
-          timeout: 30000
+          timeout: 90000
         },
         src: ['test/integration/_server.test.js']
       }
@@ -181,7 +183,7 @@ module.exports = function (grunt) {
   grunt.registerTask("default", ['jshint']);
   grunt.registerTask("integration", ['env:mochaTest','mochaTest:integration']);
   grunt.registerTask("unit", ['env:mochaTest','mochaTest:unit']);
-  grunt.registerTask("test", ['integration','unit']);
+  grunt.registerTask("test", ['clean', 'env:coverage',  'instrument', 'mochaTest:unit','mochaTest:integration']);
   grunt.registerTask("coverage", ['clean', 'env:coverage', 'instrument', 'mochaTest:unit', 'mochaTest:integration', 'storeCoverage', 'makeReport','coveralls']);
   //grunt.registerTask("coverage", ['clean', 'env:coverage', 'instrument', 'mochaTest:unit', 'mochaTest:integration', 'storeCoverage', 'makeReport']);
 
