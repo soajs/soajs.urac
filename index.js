@@ -11,7 +11,6 @@ var Hasher = require("./hasher.js");
 var userCollectionName = "users";
 var tokenCollectionName = "tokens";
 var groupsCollectionName = "groups";
-var lodash = require('lodash');
 
 var service = new soajs.server.service({
 	"oauth": false,
