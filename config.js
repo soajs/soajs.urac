@@ -45,6 +45,8 @@ module.exports = {
 	//maximum string limit used if no limit is passed to getRandomString
 	"serviceName": "urac",
 	"servicePort": 4001,
+	"requestTimeout": 30,
+	"requestTimeoutRenewal": 5,
 	"hashIterations": 1024,
 	"seedLength": 32,
 	"extKeyRequired": true,
