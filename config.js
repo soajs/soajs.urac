@@ -77,12 +77,22 @@ module.exports = {
 		
 		500: "This record in locked. You cannot delete it",
 
-		600: "Database connection error"
+		600: "Database connection error",
+		611: "invalid tenant id provided"
 	},
 
 	"schema": {
 		"commonFields": {
-
+			"tId": {
+				"source": ['body.tId','query.tId'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"tCode": {
+				"source": ['body.tCode','query.tCode'],
+				"required": true,
+				"validation": {"type": "string"}
+			}
 		},
 
 		"/login": {
@@ -303,6 +313,7 @@ module.exports = {
 				"l": "Add new User",
 				"group": "Administration"
 			},
+			"commonFields": ['tId','tCode'],
 			"username": {
 				"source": ['body.username'],
 				"required": true,
@@ -363,6 +374,11 @@ module.exports = {
 				"l": "List Users",
 				"group": "Administration",
 				"groupDefault": true
+			},
+			"tId": {
+				"source": ['body.tId','query.tId'],
+				"required": false,
+				"validation": {"type": "string"}
 			}
 		},
 		'/admin/getUser': {
@@ -381,6 +397,7 @@ module.exports = {
 				"l": "Edit User Record",
 				"group": "Administration"
 			},
+			"commonFields": ['tId'],
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -454,6 +471,11 @@ module.exports = {
 			"_apiInfo":{
 				"l": "List Groups",
 				"group": "Administration"
+			},
+			"tId": {
+				"source": ['body.tId','query.tId'],
+				"required": false,
+				"validation": {"type": "string"}
 			}
 		},
 		'/admin/group/add': {
@@ -461,6 +483,7 @@ module.exports = {
 				"l": "Add new Group",
 				"group": "Administration"
 			},
+			"commonFields": ['tId','tCode'],
 			"code": {
 				"source": ['body.code'],
 				"required": true,
@@ -518,6 +541,7 @@ module.exports = {
 				"l": "Add Users to Group",
 				"group": "Administration"
 			},
+			"commonFields": ['tId'],
 			"code": {
 				"source": ['body.groupCode'],
 				"required": true,
@@ -532,12 +556,6 @@ module.exports = {
 						"type": "string"
 					}
 				}
-			}
-		},
-		"/admin/user/editGroups": {
-			"_apiInfo":{
-				"l": "Edit Multiple Groups",
-				"group": "Administration"
 			}
 		}
 	}

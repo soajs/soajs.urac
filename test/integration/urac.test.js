@@ -468,7 +468,7 @@ describe("simple urac tests", function() {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: username"});
+				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: username, tId, tCode"});
 				done();
 			});
 		});
@@ -479,7 +479,9 @@ describe("simple urac tests", function() {
 					'username': 'johndoe',
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@domain.com'
+					'email': 'john.doe@domain.com',
+					'tId': '10d2cb5fc04ce51e06000001',
+					'tCode': 'test'
 				}
 			};
 			requester('admin/addUser', 'post', params, function(error, body) {
@@ -514,7 +516,9 @@ describe("simple urac tests", function() {
 					'firstName': 'lisa',
 					'lastName': 'smith',
 					'email': 'lisa.smith@domain.com',
-					'profile': '{"gender":"female", "age":25}'
+					'profile': '{"gender":"female", "age":25}',
+					'tId': '10d2cb5fc04ce51e06000001',
+					'tCode': 'test'
 				}
 			};
 			requester('admin/addUser', 'post', params, function(error, body) {
@@ -582,7 +586,9 @@ describe("simple urac tests", function() {
 					'firstName': 'lisa',
 					'lastName': 'smith',
 					'email': 'lisa.smith@domain.com',
-					'profile': '{"gender":"female"'
+					'profile': '{"gender":"female"',
+					'tId': '10d2cb5fc04ce51e06000001',
+					'tCode': 'test'
 				}
 			};
 			requester('admin/addUser', 'post', params, function(error, body) {
@@ -637,7 +643,9 @@ describe("simple urac tests", function() {
 					'username': 'john123',
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@domain.com'
+					'email': 'john.doe@domain.com',
+					'tId': '10d2cb5fc04ce51e06000001',
+					'tCode': 'test'
 				}
 			};
 			requester('admin/addUser', 'post', params, function(error, body) {
@@ -929,6 +937,10 @@ describe("simple urac tests", function() {
 					'config': {
 						'packages': {},
 						'keys': {}
+					},
+					'tenant':{
+						'id': '10d2cb5fc04ce51e06000001',
+						'code': 'test'
 					}
 				});
 				done();
@@ -1432,7 +1444,8 @@ describe("simple urac tests", function() {
 					'lastName': 'doe',
 					'email': 'john.doe@domain.com',
 					'username': 'johndoe',
-					'status': 'active'
+					'status': 'active',
+					'tId': '10d2cb5fc04ce51e06000001'
 				}
 			};
 			requester('admin/editUser', 'post', params, function(error, body) {
@@ -1454,7 +1467,8 @@ describe("simple urac tests", function() {
 					'lastName': 'doe',
 					'email': 'john.doe@domain.com',
 					'username': 'johndoe',
-					'status': 'active'
+					'status': 'active',
+					'tId': '10d2cb5fc04ce51e06000001'
 				}
 			};
 			requester('admin/editUser', 'post', params, function(error, body) {
@@ -1476,7 +1490,8 @@ describe("simple urac tests", function() {
 					'lastName': 'doe',
 					'email': 'john.doe@domain.com',
 					'username': 'johndoe',
-					'status': 'active'
+					'status': 'active',
+					'tId': '10d2cb5fc04ce51e06000001'
 				}
 			};
 			requester('admin/editUser', 'post', params, function(error, body) {
@@ -1511,7 +1526,8 @@ describe("simple urac tests", function() {
 								}
 							}
 						}
-					}
+					},
+					'tId': '10d2cb5fc04ce51e06000001'
 				}
 			};
 
@@ -1547,6 +1563,10 @@ describe("simple urac tests", function() {
 								}
 							},
 							'keys': {}
+						},
+						'tenant': {
+							'id':'10d2cb5fc04ce51e06000001',
+							'code': 'test'
 						}
 					});
 					done();
@@ -1582,7 +1602,8 @@ describe("simple urac tests", function() {
 									}
 								}
 							}
-						}
+						},
+						'tId': '10d2cb5fc04ce51e06000001'
 					}
 				};
 				requester('admin/editUser', 'post', params, function(error, body) {
@@ -1595,6 +1616,7 @@ describe("simple urac tests", function() {
 						delete record.password;
 						delete record.ts;
 						delete record.groups;
+						delete record.tenant;
 						console.log(record);
 						delete record._id;
 						assert.deepEqual(record.config, {
@@ -1776,6 +1798,18 @@ describe("simple urac tests", function() {
 			});
 		});
 
+		it("SUCCESS - will return user records", function(done) {
+			var params = { qs:{'tId': '10d2cb5fc04ce51e06000001'} };
+			requester('admin/listUsers', 'get', params, function(error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.ok(body.data);
+				assert.ok(body.data.length > 0);
+				done();
+			});
+		});
+
 		it("SUCCESS - will return empty array", function(done) {
 			mongo.dropCollection('users', function() {
 				var params = {};
@@ -1790,5 +1824,4 @@ describe("simple urac tests", function() {
 			});
 		});
 	});
-
 });

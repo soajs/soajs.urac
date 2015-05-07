@@ -73,7 +73,9 @@ describe("urac group tests", function() {
 					form: {
 						'code': 'gold',
 						'name': 'Gold',
-						'description': 'grp description'
+						'description': 'grp description',
+						'tId': '10d2cb5fc04ce51e06000001',
+						'tCode': 'test'
 					}
 				};
 				requester('admin/group/add', 'post', params, function(error, body) {
@@ -96,7 +98,9 @@ describe("urac group tests", function() {
 					form: {
 						'code': 'gold',
 						'name': 'gold',
-						'description': 'grp description'
+						'description': 'grp description',
+						'tId': '10d2cb5fc04ce51e06000001',
+						'tCode': 'test'
 					}
 				};
 				requester('admin/group/add', 'post', params, function(error, body) {
@@ -112,7 +116,9 @@ describe("urac group tests", function() {
 					form: {
 						'code': 'silver',
 						'name': 'Silver Group',
-						'description': 'grp description'
+						'description': 'grp description',
+						'tId': '10d2cb5fc04ce51e06000001',
+						'tCode': 'test'
 					}
 				};
 				requester('admin/group/add', 'post', params, function(error, body) {
@@ -163,13 +169,15 @@ describe("urac group tests", function() {
 			});		
 			
 		});
+
 		describe("testing mapping", function() {
 			var uId ='' ;
 			it("SUCCESS - will map grp to users", function(done) {
 				var params = {
 					form: {
 						'groupCode': 'bronze',
-						'users': [ 'user1', 'user4']
+						'users': [ 'user1', 'user4'],
+						'tId': '10d2cb5fc04ce51e06000001'
 					}
 				};
 				requester('admin/group/addUsers', 'post', params, function(error, body) {
@@ -185,7 +193,8 @@ describe("urac group tests", function() {
 				var params = {
 					form: {
 						'groupCode': 'silver',
-						'users': []
+						'users': [],
+						'tId': '10d2cb5fc04ce51e06000001'
 					}
 				};
 				requester('admin/group/addUsers', 'post', params, function(error, body) {
@@ -212,7 +221,8 @@ describe("urac group tests", function() {
 							"email": "user1@domain.com",
 							'username': 'user1',
 							'status': 'active', 
-							"groups" : ['silver', 'gold', 'bronze']
+							"groups" : ['silver', 'gold', 'bronze'],
+							'tId': '10d2cb5fc04ce51e06000001'
 						}
 					};
 					
@@ -240,7 +250,8 @@ describe("urac group tests", function() {
 						"email": "user1@domain.com",
 						'username': 'user1',
 						'status': 'active', 
-						"groups" : []
+						"groups" : [],
+						'tId': '10d2cb5fc04ce51e06000001'
 					}
 				};
 				requester('admin/editUser', 'post', params, function(error, body) {
@@ -263,7 +274,9 @@ describe("urac group tests", function() {
 						"email": "user5@domain.com",
 						'username': 'user5',
 						'status': 'active', 
-						"groups" : ['gold']
+						"groups" : ['gold'],
+						'tId': '10d2cb5fc04ce51e06000001',
+						'tCode': 'test'
 					}
 				};
 				requester('admin/addUser', 'post', params, function(error, body) {
@@ -374,7 +387,34 @@ describe("urac group tests", function() {
 					done();
 				});
 			});
-			
+
+			it("SUCCESS - will return grps records", function(done) {
+				var params = {qs:{'tId': '10d2cb5fc04ce51e06000001'}};
+				requester('admin/group/list', 'get', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					assert.ok(body.data.length > 0);
+					done();
+				});
+			});
+
+			it("SUCCESS - will return grps records", function(done) {
+				var params = {};
+				requester('admin/all', 'get', params, function(error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					assert.ok(body.data.users);
+					assert.ok(body.data.users.length > 0);
+					assert.ok(body.data.groups);
+					assert.ok(body.data.groups.length > 0);
+					done();
+				});
+			});
+
 			it("SUCCESS - will return empty records", function(done) {
 				mongo.dropCollection('groups', function() {
 					var params = {};
@@ -388,7 +428,6 @@ describe("urac group tests", function() {
 					});
 				});		
 			});
-		});	
-		
+		});
 	});
 });
