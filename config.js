@@ -557,6 +557,12 @@ module.exports = {
 					}
 				}
 			}
+		},
+		"/admin/all": {
+			"_apiInfo": {
+				"l": "Get all Users & Groups",
+				"group": "Administration"
+			}
 		}
 	}
 };
