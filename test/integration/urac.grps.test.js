@@ -221,8 +221,7 @@ describe("urac group tests", function() {
 							"email": "user1@domain.com",
 							'username': 'user1',
 							'status': 'active', 
-							"groups" : ['silver', 'gold', 'bronze'],
-							'tId': '10d2cb5fc04ce51e06000001'
+							"groups" : ['silver', 'gold', 'bronze']
 						}
 					};
 					

@@ -1371,7 +1371,11 @@ describe("simple urac tests", function() {
 				"lastName": "two",
 				"email": "user@two.com",
 				"status": "active",
-				"ts": new Date().getTime()
+				"ts": new Date().getTime(),
+				"tenant":{
+					"id" : "10d2cb5fc04ce51e06000001",
+					"code": "test"
+				}
 			};
 			mongo.insert('users', secondUserRecord, function(error) {
 				assert.ifError(error);
@@ -1444,8 +1448,7 @@ describe("simple urac tests", function() {
 					'lastName': 'doe',
 					'email': 'john.doe@domain.com',
 					'username': 'johndoe',
-					'status': 'active',
-					'tId': '10d2cb5fc04ce51e06000001'
+					'status': 'active'
 				}
 			};
 			requester('admin/editUser', 'post', params, function(error, body) {
@@ -1467,8 +1470,7 @@ describe("simple urac tests", function() {
 					'lastName': 'doe',
 					'email': 'john.doe@domain.com',
 					'username': 'johndoe',
-					'status': 'active',
-					'tId': '10d2cb5fc04ce51e06000001'
+					'status': 'active'
 				}
 			};
 			requester('admin/editUser', 'post', params, function(error, body) {
@@ -1490,8 +1492,7 @@ describe("simple urac tests", function() {
 					'lastName': 'doe',
 					'email': 'john.doe@domain.com',
 					'username': 'johndoe',
-					'status': 'active',
-					'tId': '10d2cb5fc04ce51e06000001'
+					'status': 'active'
 				}
 			};
 			requester('admin/editUser', 'post', params, function(error, body) {
@@ -1526,8 +1527,7 @@ describe("simple urac tests", function() {
 								}
 							}
 						}
-					},
-					'tId': '10d2cb5fc04ce51e06000001'
+					}
 				}
 			};
 
@@ -1602,8 +1602,7 @@ describe("simple urac tests", function() {
 									}
 								}
 							}
-						},
-						'tId': '10d2cb5fc04ce51e06000001'
+						}
 					}
 				};
 				requester('admin/editUser', 'post', params, function(error, body) {

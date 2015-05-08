@@ -397,7 +397,6 @@ module.exports = {
 				"l": "Edit User Record",
 				"group": "Administration"
 			},
-			"commonFields": ['tId'],
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,

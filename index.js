@@ -291,7 +291,7 @@ service.init(function() {
 					'packages': {},
 					'keys': {}
 				},
-				"tenant":{
+				"tenant": {
 					"id": req.soajs.tenant.id.toString(),
 					"code": req.soajs.tenant.code
 				}
@@ -659,7 +659,7 @@ service.init(function() {
 			return res.jsonp(req.soajs.buildResponse({"code": 611, "msg": config.errors[611]}));
 		}
 
-		var condition = { 'username': req.soajs.inputmaskData['username'] };
+		var condition = {'username': req.soajs.inputmaskData['username']};
 		mongo.findOne(userCollectionName, condition, function(err, record) {
 			if(err) {
 				mongo.closeDb();
@@ -804,90 +804,91 @@ service.init(function() {
 			return cb({"code": 411, "msg": config.errors[411]});
 		}
 
-		if(req.soajs.inputmaskData['groups'] && Array.isArray(req.soajs.inputmaskData['groups']) && req.soajs.inputmaskData['groups'].length > 0) {
-			mongo.find(groupsCollectionName, {"tenant.id": req.soajs.inputmaskData['tId'], "code": {"$in": req.soajs.inputmaskData['groups']}}, function(err, groups) {
-				if(err || !groups || groups.length === 0) { return cb({'code': 415, 'msg': config.errors[415]}); }
-				resumeEdit();
-			});
-		}
-		else {
-			resumeEdit();
-		}
+		mongo.findOne(userCollectionName, {'_id': userId}, function(err, userRecord) {
+			if(err || !userRecord) {
+				mongo.closeDb();
+				return cb({"code": 405, "msg": config.errors[405]});
+			}
 
-		function resumeEdit() {
-			mongo.findOne(userCollectionName, {'_id': userId}, function(err, userRecord) {
-				if(err || !userRecord) {
+			if(req.soajs.inputmaskData['groups'] && Array.isArray(req.soajs.inputmaskData['groups']) && req.soajs.inputmaskData['groups'].length > 0) {
+				mongo.find(groupsCollectionName, {"tenant.id": userRecord.tenant.id, "code": {"$in": req.soajs.inputmaskData['groups']}}, function(err, groups) {
+					if(err || !groups || groups.length === 0) { return cb({'code': 415, 'msg': config.errors[415]}); }
+					resumeEdit(userRecord);
+				});
+			}
+			else {
+				resumeEdit(userRecord);
+			}
+
+		});
+
+		function resumeEdit(userRecord) {
+			//check if username is taken by another account
+			var condition = {
+				'_id': {'$ne': userId},
+				'username': req.soajs.inputmaskData['username']
+			};
+			if(complete) {
+				condition['tenant.id'] = userRecord.tenant.id;
+			}
+			mongo.count(userCollectionName, condition, function(err, count) {
+				if(err) {
 					mongo.closeDb();
-					return cb({"code": 405, "msg": config.errors[405]});
+					return cb({"code": 407, "msg": config.errors[407]});
 				}
 
-				//check if username is taken by another account
-				var condition = {
-					'_id': {'$ne': userId},
-					'username': req.soajs.inputmaskData['username']
-				};
-				if(complete) {
-					condition['tenant.id'] = req.soajs.inputmaskData['tId'];
+				//if count > 0 then this username is taken by another account, return error
+				if(count > 0) {
+					mongo.closeDb();
+					return cb({"code": 410, "msg": config.errors[410]});
 				}
-				mongo.count(userCollectionName, condition, function(err, count) {
-					if(err) {
+
+				//update record entries
+				userRecord.username = req.soajs.inputmaskData['username'];
+				userRecord.firstName = req.soajs.inputmaskData['firstName'];
+				userRecord.lastName = req.soajs.inputmaskData['lastName'];
+				//console.log(req.soajs.inputmaskData);
+
+				if(complete) {
+					userRecord.email = req.soajs.inputmaskData['email'];
+					// cannot change status or groups of the locked user
+					if(!userRecord.locked) {
+						if(req.soajs.inputmaskData['config']) {
+							var configObj = req.soajs.inputmaskData['config'];
+							if(typeof(userRecord.config) !== 'object') {
+								userRecord.config = {};
+							}
+							if(configObj.packages) {
+								userRecord.config.packages = configObj.packages;
+							}
+						}
+
+						userRecord.status = req.soajs.inputmaskData['status'];
+						if(req.soajs.inputmaskData['groups']) {
+							userRecord.groups = req.soajs.inputmaskData['groups'];
+						} else {
+							userRecord.groups = [];
+						}
+					}
+				}
+
+				if(req.soajs.inputmaskData['profile']) {
+					try {
+						userRecord.profile = JSON.parse(req.soajs.inputmaskData['profile']);
+					}
+					catch(e) {
 						mongo.closeDb();
+						return cb({"code": 413, "msg": config.errors[413]});
+					}
+				}
+
+				//update record in the database
+				mongo.save(userCollectionName, userRecord, function(err) {
+					mongo.closeDb();
+					if(err) {
 						return cb({"code": 407, "msg": config.errors[407]});
 					}
-
-					//if count > 0 then this username is taken by another account, return error
-					if(count > 0) {
-						mongo.closeDb();
-						return cb({"code": 410, "msg": config.errors[410]});
-					}
-
-					//update record entries
-					userRecord.username = req.soajs.inputmaskData['username'];
-					userRecord.firstName = req.soajs.inputmaskData['firstName'];
-					userRecord.lastName = req.soajs.inputmaskData['lastName'];
-					//console.log(req.soajs.inputmaskData);
-
-					if(complete) {
-						userRecord.email = req.soajs.inputmaskData['email'];
-						// cannot change status or groups of the locked user
-						if(!userRecord.locked) {
-							if(req.soajs.inputmaskData['config']) {
-								var configObj = req.soajs.inputmaskData['config'];
-								if(typeof(userRecord.config) !== 'object') {
-									userRecord.config = {};
-								}
-								if(configObj.packages) {
-									userRecord.config.packages = configObj.packages;
-								}
-							}
-
-							userRecord.status = req.soajs.inputmaskData['status'];
-							if(req.soajs.inputmaskData['groups']) {
-								userRecord.groups = req.soajs.inputmaskData['groups'];
-							} else {
-								userRecord.groups = [];
-							}
-						}
-					}
-
-					if(req.soajs.inputmaskData['profile']) {
-						try {
-							userRecord.profile = JSON.parse(req.soajs.inputmaskData['profile']);
-						}
-						catch(e) {
-							mongo.closeDb();
-							return cb({"code": 413, "msg": config.errors[413]});
-						}
-					}
-
-					//update record in the database
-					mongo.save(userCollectionName, userRecord, function(err) {
-						mongo.closeDb();
-						if(err) {
-							return cb({"code": 407, "msg": config.errors[407]});
-						}
-						return cb(null, true);
-					});
+					return cb(null, true);
 				});
 			});
 		}
