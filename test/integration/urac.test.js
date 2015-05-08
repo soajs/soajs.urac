@@ -494,7 +494,7 @@ describe("simple urac tests", function() {
 					assert.ifError(error);
 					assert.ok(userRecord);
 					assert.equal(userRecord.status, 'pendingNew');
-					mongo.findOne('tokens', {'username': 'johndoe'}, function(error, tokenRecord) {
+					mongo.findOne('tokens', {'userId': userRecord._id.toString()}, function(error, tokenRecord) {
 						assert.ifError(error);
 						assert.ok(tokenRecord);
 						console.log(tokenRecord);
@@ -531,7 +531,7 @@ describe("simple urac tests", function() {
 					assert.ifError(error);
 					assert.ok(userRecord);
 					assert.equal(userRecord.status, 'pendingNew');
-					mongo.findOne('tokens', {'username': 'lisa'}, function(error, tokenRecord) {
+					mongo.findOne('tokens', {'userId': userRecord._id.toString()}, function(error, tokenRecord) {
 						assert.ifError(error);
 						assert.ok(tokenRecord);
 						console.log(tokenRecord);
@@ -561,18 +561,20 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
-				mongo.findOne('tokens', {'username': 'lisa', 'service': 'addUser'}, function(error, tokenRecord) {
+				mongo.findOne('users', {'username': 'lisa'}, function(error, userRecord) {
 					assert.ifError(error);
-					assert.ok(tokenRecord);
-					console.log(tokenRecord);
-					assert.equal(tokenRecord.status, 'used');
-					assert.equal(tokenRecord.service, 'addUser');
+					assert.ok(userRecord);
+					console.log(userRecord);
+					assert.equal(userRecord.status, 'active');
 
-					mongo.findOne('users', {'username': 'lisa'}, function(error, userRecord) {
+					mongo.findOne('tokens', {'userId': userRecord._id.toString(), 'service': 'addUser'}, function(error, tokenRecord) {
 						assert.ifError(error);
-						assert.ok(userRecord);
-						console.log(userRecord);
-						assert.equal(userRecord.status, 'active');
+						assert.ok(tokenRecord);
+						console.log(tokenRecord);
+						assert.equal(tokenRecord.status, 'used');
+						assert.equal(tokenRecord.service, 'addUser');
+
+
 						done();
 					});
 				});
@@ -619,18 +621,17 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
-				mongo.findOne('tokens', {'username': 'johndoe', 'service': 'addUser'}, function(error, tokenRecord) {
+				mongo.findOne('users', {'username': 'johndoe'}, function(error, userRecord) {
 					assert.ifError(error);
-					assert.ok(tokenRecord);
-					console.log(tokenRecord);
-					assert.equal(tokenRecord.status, 'used');
-					assert.equal(tokenRecord.service, 'addUser');
-
-					mongo.findOne('users', {'username': 'johndoe'}, function(error, userRecord) {
+					assert.ok(userRecord);
+					console.log(userRecord);
+					assert.equal(userRecord.status, 'active');
+					mongo.findOne('tokens', {'userId': userRecord._id.toString(), 'service': 'addUser'}, function(error, tokenRecord) {
 						assert.ifError(error);
-						assert.ok(userRecord);
-						console.log(userRecord);
-						assert.equal(userRecord.status, 'active');
+						assert.ok(tokenRecord);
+						console.log(tokenRecord);
+						assert.equal(tokenRecord.status, 'used');
+						assert.equal(tokenRecord.service, 'addUser');
 						done();
 					});
 				});
@@ -760,14 +761,18 @@ describe("simple urac tests", function() {
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
 				token = body.data;
-				mongo.find('tokens', {'username': 'john123'}, {'sort': {'ts': 1}}, function(error, records) {
+				mongo.findOne('users', {'username': 'john123'}, function(error, userRecord) {
 					assert.ifError(error);
-					assert.ok(records);
-					console.log(records);
-					assert.equal(records.length, 2);
-					assert.equal(records[0].status, 'invalid');
-					assert.equal(records[1].status, 'active');
-					done();
+					assert.ok(userRecord);
+					mongo.find('tokens', {'userId': userRecord._id.toString()}, {'sort': {'ts': 1}}, function(error, records) {
+						assert.ifError(error);
+						assert.ok(records);
+						console.log(records);
+						assert.equal(records.length, 2);
+						assert.equal(records[0].status, 'invalid');
+						assert.equal(records[1].status, 'active');
+						done();
+					});
 				});
 			});
 		});
@@ -870,14 +875,18 @@ describe("simple urac tests", function() {
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
 				token = body.data;
-				mongo.find('tokens', {'username': 'john123'}, {'sort': {'ts': 1}}, function(error, records) {
+				mongo.findOne('users', {'username': 'john123'}, function(error, userRecord) {
 					assert.ifError(error);
-					assert.ok(records);
-					console.log(records);
-					assert.equal(records.length, 2);
-					assert.equal(records[0].status, 'invalid');
-					assert.equal(records[1].status, 'used');
-					done();
+					assert.ok(userRecord);
+					mongo.find('tokens', {'userId': userRecord._id.toString()}, {'sort': {'ts': 1}}, function(error, records) {
+						assert.ifError(error);
+						assert.ok(records);
+						console.log(records);
+						assert.equal(records.length, 2);
+						assert.equal(records[0].status, 'invalid');
+						assert.equal(records[1].status, 'used');
+						done();
+					});
 				});
 			});
 		});
@@ -938,7 +947,7 @@ describe("simple urac tests", function() {
 						'packages': {},
 						'keys': {}
 					},
-					'tenant':{
+					'tenant': {
 						'id': '10d2cb5fc04ce51e06000001',
 						'code': 'test'
 					}
@@ -1147,17 +1156,22 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				assert.ok(body.data);
 				console.log(JSON.stringify(body));
-				mongo.findOne('tokens', {
-					'username': 'john123',
-					'service': 'changeEmail',
-					'status': 'active'
-				}, function(error, token) {
+				mongo.findOne('users', {"username": "john123"}, function(error, userRecord) {
 					assert.ifError(error);
-					assert.ok(token);
-					assert.equal(token.email, params.form.email);
-					assert.equal(token.status, 'active');
+					assert.ok(userRecord);
+
+					mongo.findOne('tokens', {
+						'userId': userRecord._id.toString(),
+						'service': 'changeEmail',
+						'status': 'active'
+					}, function(error, token) {
+						assert.ifError(error);
+						assert.ok(token);
+						assert.equal(token.email, params.form.email);
+						assert.equal(token.status, 'active');
+						done();
+					});
 				});
-				done();
 			});
 		});
 
@@ -1176,18 +1190,23 @@ describe("simple urac tests", function() {
 				assert.ok(body.data);
 				console.log(JSON.stringify(body));
 				newToken = body.data;
-				mongo.find('tokens', {
-					'username': 'john123',
-					'service': 'changeEmail'
-				}, {'sort': {'ts': 1}}, function(error, tokens) {
+				mongo.findOne('users', {"username": "john123"}, function(error, userRecord) {
 					assert.ifError(error);
-					assert.ok(tokens);
-					assert.equal(tokens.length, 2);
-					assert.equal(tokens[0].status, 'invalid');
-					assert.equal(tokens[0].email, params.form.email);
-					assert.equal(tokens[1].status, 'active');
-					assert.equal(tokens[1].email, params.form.email);
-					done();
+					assert.ok(userRecord);
+
+					mongo.find('tokens', {
+						'userId': userRecord._id.toString(),
+						'service': 'changeEmail'
+					}, {'sort': {'ts': 1}}, function(error, tokens) {
+						assert.ifError(error);
+						assert.ok(tokens);
+						assert.equal(tokens.length, 2);
+						assert.equal(tokens[0].status, 'invalid');
+						assert.equal(tokens[0].email, params.form.email);
+						assert.equal(tokens[1].status, 'active');
+						assert.equal(tokens[1].email, params.form.email);
+						done();
+					});
 				});
 			});
 		});
@@ -1231,18 +1250,19 @@ describe("simple urac tests", function() {
 				console.log(JSON.stringify(body));
 				assert.ok(body);
 				assert.ok(body.data);
-				mongo.find('tokens', {
-					'username': 'john123',
-					'service': 'changeEmail'
-				}, {'sort': {'ts': 1}}, function(error, tokens) {
+				mongo.findOne('users', {'username': 'john123'}, function(error, userRecord) {
 					assert.ifError(error);
-					assert.ok(tokens);
-					assert.equal(tokens.length, 2);
-					assert.equal(tokens[0].status, 'invalid');
-					assert.equal(tokens[1].status, 'used');
-					mongo.findOne('users', {'username': 'john123'}, function(error, userRecord) {
+					assert.ok(userRecord);
+
+					mongo.find('tokens', {
+						'userId': userRecord._id.toString(),
+						'service': 'changeEmail'
+					}, {'sort': {'ts': 1}}, function(error, tokens) {
 						assert.ifError(error);
-						assert.ok(userRecord);
+						assert.ok(tokens);
+						assert.equal(tokens.length, 2);
+						assert.equal(tokens[0].status, 'invalid');
+						assert.equal(tokens[1].status, 'used');
 						assert.equal(userRecord.email, tokens[1].email);
 						done();
 					});
@@ -1372,8 +1392,8 @@ describe("simple urac tests", function() {
 				"email": "user@two.com",
 				"status": "active",
 				"ts": new Date().getTime(),
-				"tenant":{
-					"id" : "10d2cb5fc04ce51e06000001",
+				"tenant": {
+					"id": "10d2cb5fc04ce51e06000001",
 					"code": "test"
 				}
 			};
@@ -1565,7 +1585,7 @@ describe("simple urac tests", function() {
 							'keys': {}
 						},
 						'tenant': {
-							'id':'10d2cb5fc04ce51e06000001',
+							'id': '10d2cb5fc04ce51e06000001',
 							'code': 'test'
 						}
 					});
@@ -1784,6 +1804,7 @@ describe("simple urac tests", function() {
 		});
 
 	});
+
 	describe("testing list users API", function() {
 		it("SUCCESS - will return user records", function(done) {
 			var params = {};
@@ -1798,7 +1819,7 @@ describe("simple urac tests", function() {
 		});
 
 		it("SUCCESS - will return user records", function(done) {
-			var params = { qs:{'tId': '10d2cb5fc04ce51e06000001'} };
+			var params = {qs: {'tId': '10d2cb5fc04ce51e06000001'}};
 			requester('admin/listUsers', 'get', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);

@@ -146,7 +146,7 @@ service.init(function() {
 			}
 
 			var tokenRecord = {
-				'username': userRecord.username,
+				'userId': userRecord._id.toString(),
 				'token': uuid.v4(),
 				'expires': new Date(new Date().getTime() + req.soajs.servicesConfig.urac.tokenExpiryTTL),
 				'status': 'active',
@@ -155,7 +155,7 @@ service.init(function() {
 			};
 
 			mongo.update(tokenCollectionName, {
-				'username': userRecord.username,
+				'userId': tokenRecord.userId,
 				'service': 'forgotPassword',
 				'status': 'active'
 			}, {'$set': {'status': 'invalid'}}, function(err) {
@@ -220,7 +220,7 @@ service.init(function() {
 			}
 
 			//get user record
-			mongo.findOne(userCollectionName, {'username': tokenRecord.username}, function(error, userRecord) {
+			mongo.findOne(userCollectionName, {'_id': mongo.ObjectId(tokenRecord.userId)}, function(error, userRecord) {
 				if(error || !userRecord) {
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
@@ -306,7 +306,7 @@ service.init(function() {
 				//no validation needed stop and return
 				if(requireValidation && req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.join) {
 					var tokenRecord = {
-						'username': userRecord.username,
+						'userId': record[0]._id.toString(),
 						'token': uuid.v4(),
 						'expires': new Date(new Date().getTime() + req.soajs.servicesConfig.urac.tokenExpiryTTL),
 						'status': 'active',
@@ -361,7 +361,7 @@ service.init(function() {
 
 			//get user record
 			mongo.findOne(userCollectionName, {
-				'username': tokenRecord.username,
+				'_id': mongo.ObjectId(tokenRecord.userId),
 				'status': 'pendingJoin'
 			}, function(error, userRecord) {
 				if(error || !userRecord) {
@@ -481,7 +481,7 @@ service.init(function() {
 
 			//create new token
 			var tokenRecord = {
-				'username': userRecord.username,
+				'userId': userRecord._id.toString(),
 				'token': uuid.v4(),
 				'expires': new Date(new Date().getTime() + req.soajs.servicesConfig.urac.tokenExpiryTTL),
 				'status': 'active',
@@ -492,7 +492,7 @@ service.init(function() {
 
 			//set the old tokens to invalid
 			mongo.update(tokenCollectionName, {
-				'username': userRecord.username,
+				'userId': tokenRecord.userId,
 				'service': 'changeEmail',
 				'status': 'active'
 			}, {'$set': {'status': 'invalid'}}, function(err) {
@@ -551,7 +551,7 @@ service.init(function() {
 			}
 
 			//get user record
-			mongo.findOne(userCollectionName, {'username': tokenRecord.username}, function(error, userRecord) {
+			mongo.findOne(userCollectionName, {'_id': mongo.ObjectId(tokenRecord.userId)}, function(error, userRecord) {
 				if(error || !userRecord) {
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
@@ -705,7 +705,7 @@ service.init(function() {
 				userRecord.groups = req.soajs.inputmaskData['groups'];
 			}
 			//add record in db
-			mongo.insert(userCollectionName, userRecord, function(err) {
+			mongo.insert(userCollectionName, userRecord, function(err, userDbRecord) {
 				if(err) {
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 403, "msg": config.errors[403]}));
@@ -713,7 +713,7 @@ service.init(function() {
 
 				//create notification email
 				var tokenRecord = {
-					'username': userRecord.username,
+					'userId': userDbRecord[0]._id.toString(),
 					'token': uuid.v4(),
 					'expires': new Date(new Date().getTime() + req.soajs.servicesConfig.urac.tokenExpiryTTL),
 					'status': 'active',
