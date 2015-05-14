@@ -75,7 +75,7 @@ module.exports = {
 		420: "Group name already exists. Choose another",
 		421: "Group code already exists. Choose another",
 		
-		500: "This record in locked. You cannot delete it",
+		500: "This record in locked. You cannot modify or delete it",
 
 		600: "Database connection error",
 		611: "invalid tenant id provided"

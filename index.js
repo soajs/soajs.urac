@@ -810,6 +810,9 @@ service.init(function() {
 				return cb({"code": 405, "msg": config.errors[405]});
 			}
 
+			if(complete && userRecord.locked){
+				return cb({"code": 500, "msg": config.errors[500]});
+			}
 			if(req.soajs.inputmaskData['groups'] && Array.isArray(req.soajs.inputmaskData['groups']) && req.soajs.inputmaskData['groups'].length > 0) {
 				mongo.find(groupsCollectionName, {"tenant.id": userRecord.tenant.id, "code": {"$in": req.soajs.inputmaskData['groups']}}, function(err, groups) {
 					if(err || !groups || groups.length === 0) { return cb({'code': 415, 'msg': config.errors[415]}); }
