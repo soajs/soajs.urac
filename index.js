@@ -667,7 +667,8 @@ service.init(function() {
 			}
 
 			//user exits
-			if(record && record.tenant.id === req.soajs.inputmaskData['tId'].toString()) {
+			//if(record && record.tenant.id === req.soajs.inputmaskData['tId'].toString()) {
+			if(record) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 402, "msg": config.errors[402]}));
 			}
@@ -831,9 +832,9 @@ service.init(function() {
 				'_id': {'$ne': userId},
 				'username': req.soajs.inputmaskData['username']
 			};
-			if(complete) {
-				condition['tenant.id'] = userRecord.tenant.id;
-			}
+			//if(complete) {
+			//	condition['tenant.id'] = userRecord.tenant.id;
+			//}
 			mongo.count(userCollectionName, condition, function(err, count) {
 				if(err) {
 					mongo.closeDb();

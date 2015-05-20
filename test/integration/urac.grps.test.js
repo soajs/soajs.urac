@@ -364,7 +364,7 @@ describe("urac group tests", function() {
 						assert.ok(body);
 						console.log(JSON.stringify(body));
 						assert.deepEqual(body.errors.details[0],
-								{"code": 500, "message": "This record in locked. You cannot delete it"});													
+								{"code": 500, "message": "This record in locked. You cannot modify or delete it"});
 						done();
 					});
 
