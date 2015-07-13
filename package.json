@@ -34,8 +34,10 @@
     "shelljs": "*"
   },
   "dependencies": {
-    "soajs": "0.1.*",
     "bcrypt": "*",
     "node-uuid": "*"
+  },
+  "peerDependencies": {
+    "soajs": "0.1.*"
   }
 }
