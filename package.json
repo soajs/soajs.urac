@@ -1,7 +1,7 @@
 {
   "name": "soajs.urac",
   "description": "soajs URAC service",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -38,6 +38,6 @@
     "node-uuid": "*"
   },
   "peerDependencies": {
-    "soajs": "0.1.*"
+    "soajs": "0.2.*"
   }
 }
