@@ -1706,7 +1706,7 @@ describe("simple urac tests", function() {
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.equal(body.errors.details[0].code, '173');
-				assert.equal(body.errors.details[0].message, "Validation failed for field: status -> The parameter 'status' is not one of enum values: active,inactive");
+				assert.equal(body.errors.details[0].message, "Validation failed for field: status -> The parameter 'status' failed due to: instance is not one of enum values: active,inactive");
 				done();
 			});
 		});
