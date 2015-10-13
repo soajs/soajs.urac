@@ -76,7 +76,7 @@ describe("simple urac tests", function() {
 				form: {
 					"username": 'john123',
 					"password": 'password',
-					"email": 'john@john.com'
+					"email": 'john@soajs.org'
 				}
 			};
 
@@ -100,7 +100,7 @@ describe("simple urac tests", function() {
 					"password": 'password',
 					"firstName": 'john',
 					"lastName": 'doe',
-					"email": 'john.doe@domain.com'
+					"email": 'john.doe@soajs.org'
 				}
 			};
 
@@ -127,7 +127,7 @@ describe("simple urac tests", function() {
 					"password": 'password',
 					"firstName": 'lisa 2',
 					"lastName": 'smith green',
-					"email": 'lisa2@domain.com'
+					"email": 'lisa2@soajs.org'
 				}
 			};
 
@@ -166,7 +166,7 @@ describe("simple urac tests", function() {
 					"password": 'password',
 					"firstName": 'john',
 					"lastName": 'doe',
-					"email": 'john@doe.com'
+					"email": 'john@soajs.org'
 				}
 			};
 
@@ -261,7 +261,7 @@ describe("simple urac tests", function() {
 					"password": 'password',
 					"firstName": 'john',
 					"lastName": 'doe',
-					"email": 'john.doe@domain.com'
+					"email": 'john.doe@soajs.org'
 				}
 			};
 
@@ -359,7 +359,7 @@ describe("simple urac tests", function() {
 		it("SUCCESS - will login user with email instead of username", function(done) {
 			var params = {
 				form: {
-					"username": 'john.doe@domain.com',
+					"username": 'john.doe@soajs.org',
 					"password": 'password'
 				}
 			};
@@ -426,7 +426,7 @@ describe("simple urac tests", function() {
 		it("SUCCESS - will logout user using email instead of username", function(done) {
 			var params1 = {
 				form: {
-					"username": 'john.doe@domain.com',
+					"username": 'john.doe@soajs.org',
 					"password": 'password'
 				}
 			};
@@ -439,7 +439,7 @@ describe("simple urac tests", function() {
 
 				var params2 = {
 					qs: {
-						"username": 'john.doe@domain.com'
+						"username": 'john.doe@soajs.org'
 					}
 				};
 				requester('logout', 'get', params2, function(error, body) {
@@ -461,7 +461,7 @@ describe("simple urac tests", function() {
 				form: {
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@domain.com'
+					'email': 'john.doe@soajs.org'
 				}
 			};
 			requester('admin/addUser', 'post', params, function(error, body) {
@@ -479,7 +479,7 @@ describe("simple urac tests", function() {
 					'username': 'johndoe',
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@domain.com',
+					'email': 'john.doe@soajs.org',
 					'tId': '10d2cb5fc04ce51e06000001',
 					'tCode': 'test'
 				}
@@ -515,7 +515,7 @@ describe("simple urac tests", function() {
 					'username': 'lisa',
 					'firstName': 'lisa',
 					'lastName': 'smith',
-					'email': 'lisa.smith@domain.com',
+					'email': 'lisa.smith@soajs.org',
 					'profile': '{"gender":"female", "age":25}',
 					'tId': '10d2cb5fc04ce51e06000001',
 					'tCode': 'test'
@@ -587,7 +587,7 @@ describe("simple urac tests", function() {
 					'username': 'lisa1',
 					'firstName': 'lisa',
 					'lastName': 'smith',
-					'email': 'lisa.smith@domain.com',
+					'email': 'lisa.smith@soajs.org',
 					'profile': '{"gender":"female"',
 					'tId': '10d2cb5fc04ce51e06000001',
 					'tCode': 'test'
@@ -644,7 +644,7 @@ describe("simple urac tests", function() {
 					'username': 'john123',
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@domain.com',
+					'email': 'john.doe@soajs.org',
 					'tId': '10d2cb5fc04ce51e06000001',
 					'tCode': 'test'
 				}
@@ -683,7 +683,7 @@ describe("simple urac tests", function() {
 			var params = {
 				qs: {
 					"username": 'invaliduser',
-					'email': 'john.doe@domain.com'
+					'email': 'john.doe@soajs.org'
 				}
 			};
 
@@ -703,7 +703,7 @@ describe("simple urac tests", function() {
 				},
 				qs: {
 					"username": 'lisa',
-					'email': 'lisa.smith@domain.com'
+					'email': 'lisa.smith@soajs.org'
 				}
 			};
 
@@ -733,7 +733,7 @@ describe("simple urac tests", function() {
 			var params = {
 				qs: {
 					"username": 'john123',
-					'email': 'john.doe@domain.com'
+					'email': 'john.doe@soajs.org'
 				}
 			};
 
@@ -751,7 +751,7 @@ describe("simple urac tests", function() {
 			var params = {
 				qs: {
 					"username": 'john123',
-					'email': 'john.doe@domain.com'
+					'email': 'john.doe@soajs.org'
 				}
 			};
 
@@ -939,7 +939,7 @@ describe("simple urac tests", function() {
 					"username": "john123",
 					"firstName": "john",
 					"lastName": "doe",
-					"email": "john.doe@domain.com",
+					"email": "john.doe@soajs.org",
 					"status": "active",
 					"groups": [],
 					'profile': {},
@@ -1091,7 +1091,7 @@ describe("simple urac tests", function() {
 		it("FAIL - missing params", function(done) {
 			var params = {
 				form: {
-					'email': 'john1.doe@domain.com'
+					'email': 'john1.doe@soajs.org'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1109,7 +1109,7 @@ describe("simple urac tests", function() {
 					'uId': 'aaaccdddd'
 				},
 				form: {
-					'email': 'john1.doe@domain.com'
+					'email': 'john1.doe@soajs.org'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1127,7 +1127,7 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'email': 'john.doe@domain.com'
+					'email': 'john.doe@soajs.org'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1148,7 +1148,7 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'email': 'doe.john@domain.com'
+					'email': 'doe.john@soajs.org'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1181,7 +1181,7 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'email': 'doe.john@domain.com'
+					'email': 'doe.john@soajs.org'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1280,7 +1280,7 @@ describe("simple urac tests", function() {
 					'uId': uId
 				},
 				form: {
-					'email': 'doe.john.123@domain.com'
+					'email': 'doe.john.123@soajs.org'
 				}
 			};
 			requester('account/changeEmail', 'post', params, function(error, body) {
@@ -1324,7 +1324,7 @@ describe("simple urac tests", function() {
 			mongo.findOne('users', {'username': 'john123'}, function(error, userRecord) {
 				assert.ifError(error);
 				assert.ok(userRecord);
-				userRecord.email = "john.doe@domain.com";
+				userRecord.email = "john.doe@soajs.org";
 				mongo.save('users', userRecord, function(error) {
 					assert.ifError(error);
 					done();
@@ -1389,7 +1389,7 @@ describe("simple urac tests", function() {
 				"password": "someEncryptedPassword",
 				"firstName": "user",
 				"lastName": "two",
-				"email": "user@two.com",
+				"email": "user@soajs.org",
 				"status": "active",
 				"ts": new Date().getTime(),
 				"tenant": {
@@ -1466,7 +1466,7 @@ describe("simple urac tests", function() {
 				form: {
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@domain.com',
+					'email': 'john.doe@soajs.org',
 					'username': 'johndoe',
 					'status': 'active'
 				}
@@ -1488,7 +1488,7 @@ describe("simple urac tests", function() {
 				form: {
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@domain.com',
+					'email': 'john.doe@soajs.org',
 					'username': 'johndoe',
 					'status': 'active'
 				}
@@ -1510,7 +1510,7 @@ describe("simple urac tests", function() {
 				form: {
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@domain.com',
+					'email': 'john.doe@soajs.org',
 					'username': 'johndoe',
 					'status': 'active'
 				}
@@ -1535,7 +1535,7 @@ describe("simple urac tests", function() {
 				form: {
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@domain.com',
+					'email': 'john.doe@soajs.org',
 					'username': 'john123',
 					'status': 'active',
 					'config': {
@@ -1566,7 +1566,7 @@ describe("simple urac tests", function() {
 					assert.deepEqual(userRecord, {
 						'firstName': 'john',
 						'lastName': 'doe',
-						'email': 'john.doe@domain.com',
+						'email': 'john.doe@soajs.org',
 						'username': 'john123',
 						'status': 'active',
 						'_id': uId,
@@ -1611,7 +1611,7 @@ describe("simple urac tests", function() {
 						"firstName": "user",
 						"lastName": "two",
 						'username': 'user2',
-						"email": "user@two.com",
+						"email": "user@soajs.org",
 						'status': 'active',
 						'config': {
 							'keys': {},
@@ -1652,7 +1652,7 @@ describe("simple urac tests", function() {
 							'username': 'user2',
 							"firstName": "user",
 							"lastName": "two",
-							"email": "user@two.com",
+							"email": "user@soajs.org",
 							'status': 'active'
 						});
 						done();

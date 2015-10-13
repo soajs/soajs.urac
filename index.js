@@ -57,7 +57,7 @@ service.init(function() {
 		var transportConfiguration = req.soajs.servicesConfig.mail.transport || null;
 		var mailer = new (soajs.mail)(transportConfiguration);
 
-		data.limit = req.soajs.servicesConfig.urac.tokenExpiryTTL / 3600;
+		data.limit = req.soajs.servicesConfig.urac.tokenExpiryTTL / (3600 * 1000);
 
 		var mailOptions = {
 			'to': data.email,
