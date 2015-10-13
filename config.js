@@ -181,12 +181,12 @@ module.exports = {
 				"source": ['query.username'],
 				"required": true,
 				"validation": {"type": "string"}
-			},
-			"email": {
-				"source": ['query.email'],
-				"required": true,
-				"validation": {"type": "string", format: "email"}
 			}
+			//"email": {
+			//	"source": ['query.email'],
+			//	"required": true,
+			//	"validation": {"type": "string", format: "email"}
+			//}
 		},
 		'/resetPassword': {
 			"_apiInfo":{

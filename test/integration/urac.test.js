@@ -665,16 +665,14 @@ describe("simple urac tests", function() {
 		var fp_tokenlisa;
 		it("FAIL - forgotPassword missing params", function(done) {
 			var params = {
-				qs: {
-					"username": 'john123'
-				}
+				qs: {}
 			};
 
 			requester('forgotPassword', 'get', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: email"});
+				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: username"});
 				done();
 			});
 		});
@@ -682,8 +680,7 @@ describe("simple urac tests", function() {
 		it("FAIL - forgotPassword invalid user", function(done) {
 			var params = {
 				qs: {
-					"username": 'invaliduser',
-					'email': 'john.doe@soajs.org'
+					"username": 'invaliduser'
 				}
 			};
 
@@ -702,8 +699,7 @@ describe("simple urac tests", function() {
 					'key': extKey_noMail
 				},
 				qs: {
-					"username": 'lisa',
-					'email': 'lisa.smith@soajs.org'
+					"username": 'lisa'
 				}
 			};
 
@@ -732,8 +728,7 @@ describe("simple urac tests", function() {
 		it("SUCCESS - forgotPassword should start forgot password request", function(done) {
 			var params = {
 				qs: {
-					"username": 'john123',
-					'email': 'john.doe@soajs.org'
+					"username": 'john123'
 				}
 			};
 
@@ -750,8 +745,7 @@ describe("simple urac tests", function() {
 		it("SUCCESS - forgotPassword should redo forgot password request", function(done) {
 			var params = {
 				qs: {
-					"username": 'john123',
-					'email': 'john.doe@soajs.org'
+					"username": 'john.doe@soajs.org'
 				}
 			};
 

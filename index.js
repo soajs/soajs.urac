@@ -21,27 +21,27 @@ var service = new soajs.server.service({
 	"config": config
 });
 
-service.init(function() {
+service.init(function () {
 
 	function login(req, cb) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		var criteria = {'username': req.soajs.inputmaskData['username'], 'status': 'active'};
 		var pattern = req.soajs.validator.SchemaPatterns.email;
-		if(pattern.test(req.soajs.inputmaskData['username'])) {
+		if (pattern.test(req.soajs.inputmaskData['username'])) {
 			delete criteria.username;
 			criteria.email = req.soajs.inputmaskData['username'];
 		}
 
-		mongo.findOne(userCollectionName, criteria, function(err, record) {
+		mongo.findOne(userCollectionName, criteria, function (err, record) {
 			mongo.closeDb();
-			if(record) {
+			if (record) {
 				var hasher = new Hasher({
 
 					"hashIterations": req.soajs.servicesConfig.urac.hashIterations || config.hashIterations,
 					"seedLength": req.soajs.servicesConfig.urac.seedLength || config.seedLength
 				});
-				hasher.compare(req.soajs.inputmaskData.password, record.password, function(err, response) {
-					if(err || !response) {
+				hasher.compare(req.soajs.inputmaskData.password, record.password, function (err, response) {
+					if (err || !response) {
 						return cb(400);
 					}
 					delete record.password;
@@ -65,7 +65,7 @@ service.init(function() {
 			'subject': req.soajs.servicesConfig.urac.mail[apiName].subject,
 			'data': data
 		};
-		if(req.soajs.servicesConfig.urac.mail[apiName].content) {
+		if (req.soajs.servicesConfig.urac.mail[apiName].content) {
 			mailOptions.content = req.soajs.servicesConfig.urac.mail[apiName].content;
 		} else {
 			mailOptions.path = req.soajs.servicesConfig.urac.mail[apiName].path;
@@ -81,21 +81,21 @@ service.init(function() {
 		return link;
 	}
 
-	service.post("/login", function(req, res) {
-		login(req, function(err, record) {
-			if(err) {
+	service.post("/login", function (req, res) {
+		login(req, function (err, record) {
+			if (err) {
 				return res.jsonp(req.soajs.buildResponse({"code": err, "msg": config.errors[err]}));
 			} else {
 				var cloneRecord = utils.cloneObj(record);
-				req.soajs.session.setURAC(cloneRecord, function(err) {
-					if(err) {
+				req.soajs.session.setURAC(cloneRecord, function (err) {
+					if (err) {
 						return res.jsonp(req.soajs.buildResponse({"code": 401, "msg": config.errors[401]}));
 					}
 
-					if(record.config && record.config.packages) {
+					if (record.config && record.config.packages) {
 						delete record.config.packages;
 					}
-					if(record.config && record.config.keys) {
+					if (record.config && record.config.keys) {
 						delete record.config.keys;
 					}
 					return res.jsonp(req.soajs.buildResponse(null, record));
@@ -104,26 +104,26 @@ service.init(function() {
 		});
 	});
 
-	service.get("/logout", function(req, res) {
+	service.get("/logout", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		var criteria = {'username': req.soajs.inputmaskData['username'], 'status': 'active'};
 		var pattern = req.soajs.validator.SchemaPatterns.email;
-		if(pattern.test(req.soajs.inputmaskData['username'])) {
+		if (pattern.test(req.soajs.inputmaskData['username'])) {
 			delete criteria.username;
 			criteria.email = req.soajs.inputmaskData['username'];
 		}
-		mongo.findOne(userCollectionName, criteria, function(err, record) {
+		mongo.findOne(userCollectionName, criteria, function (err, record) {
 			mongo.closeDb();
-			if(err) {
+			if (err) {
 				return res.jsonp(req.soajs.buildResponse({"code": 404, "msg": config.errors[404]}));
 			}
 
-			if(!record) {
+			if (!record) {
 				return res.jsonp(req.soajs.buildResponse({"code": 404, "msg": config.errors[404]}));
 			}
 
-			req.soajs.session.clearURAC(function(err) {
-				if(err) {
+			req.soajs.session.clearURAC(function (err) {
+				if (err) {
 					return res.jsonp(req.soajs.buildResponse({"code": 404, "msg": config.errors[404]}));
 				}
 
@@ -132,15 +132,17 @@ service.init(function() {
 		});
 	});
 
-	service.get("/forgotPassword", function(req, res) {
+	service.get("/forgotPassword", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		mongo.findOne(userCollectionName, {
-			'username': req.soajs.inputmaskData['username'],
-			'email': req.soajs.inputmaskData['email'],
+			'$or': [
+				{'username': req.soajs.inputmaskData['username']},
+				{'email': req.soajs.inputmaskData['username']}
+			],
 			'status': 'active'
-		}, function(err, userRecord) {
+		}, function (err, userRecord) {
 
-			if(err || !userRecord) {
+			if (err || !userRecord) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
 			}
@@ -158,27 +160,27 @@ service.init(function() {
 				'userId': tokenRecord.userId,
 				'service': 'forgotPassword',
 				'status': 'active'
-			}, {'$set': {'status': 'invalid'}}, function(err) {
-				if(err) {
+			}, {'$set': {'status': 'invalid'}}, function (err) {
+				if (err) {
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 				}
 
-				mongo.insert(tokenCollectionName, tokenRecord, function(err) {
+				mongo.insert(tokenCollectionName, tokenRecord, function (err) {
 					mongo.closeDb();
-					if(err) {
+					if (err) {
 						return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 					}
 
-					if(req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.forgotPassword) {
+					if (req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.forgotPassword) {
 						//send an email to the user
 						var data = userRecord;
 						data.link = {
 							forgotPassword: addTokenToLink(req.soajs.servicesConfig.urac.link.forgotPassword, tokenRecord.token)
 						};
 
-						sendMail('forgotPassword', req, data, function(error) {
-							if(error) {
+						sendMail('forgotPassword', req, data, function (error) {
+							if (error) {
 								req.soajs.log.error(error);
 							}
 							return res.jsonp(req.soajs.buildResponse(null, tokenRecord.token));
@@ -191,9 +193,9 @@ service.init(function() {
 		});
 	});
 
-	service.post("/resetPassword", function(req, res) {
+	service.post("/resetPassword", function (req, res) {
 		//validate that the password and its confirmation match
-		if(req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
+		if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
 			return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
 		}
 
@@ -207,21 +209,21 @@ service.init(function() {
 			'token': req.soajs.inputmaskData['token'],
 			'service': {'$in': ['forgotPassword', 'addUser']},
 			status: 'active'
-		}, function(err, tokenRecord) {
-			if(err || !tokenRecord) {
+		}, function (err, tokenRecord) {
+			if (err || !tokenRecord) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
 			}
 
 			//check if token expired
-			if(new Date(tokenRecord.expires).getTime() < new Date().getTime()) {
+			if (new Date(tokenRecord.expires).getTime() < new Date().getTime()) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
 			}
 
 			//get user record
-			mongo.findOne(userCollectionName, {'_id': mongo.ObjectId(tokenRecord.userId)}, function(error, userRecord) {
-				if(error || !userRecord) {
+			mongo.findOne(userCollectionName, {'_id': mongo.ObjectId(tokenRecord.userId)}, function (error, userRecord) {
+				if (error || !userRecord) {
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
 				}
@@ -234,16 +236,16 @@ service.init(function() {
 				userRecord.password = hasher.hashSync(req.soajs.inputmaskData['password']);
 
 				//save token in database
-				mongo.save(tokenCollectionName, tokenRecord, function(err) {
-					if(err) {
+				mongo.save(tokenCollectionName, tokenRecord, function (err) {
+					if (err) {
 						mongo.closeDb();
 						return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 					}
 
 					//save user record in database
-					mongo.save(userCollectionName, userRecord, function(err) {
+					mongo.save(userCollectionName, userRecord, function (err) {
 						mongo.closeDb();
-						if(err) {
+						if (err) {
 							return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 						}
 
@@ -254,18 +256,18 @@ service.init(function() {
 		});
 	});
 
-	service.post("/join", function(req, res) {
+	service.post("/join", function (req, res) {
 		var requireValidation = req.soajs.servicesConfig.urac.validateJoin;
 
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		mongo.findOne(userCollectionName, {$or: [{'username': req.soajs.inputmaskData['username']}, {'email': req.soajs.inputmaskData['email']}]}, function(err, record) {
-			if(err) {
+		mongo.findOne(userCollectionName, {$or: [{'username': req.soajs.inputmaskData['username']}, {'email': req.soajs.inputmaskData['email']}]}, function (err, record) {
+			if (err) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 403, "msg": config.errors[403]}));
 			}
 
 			//user exits
-			if(record) {
+			if (record) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 402, "msg": config.errors[402]}));
 			}
@@ -297,14 +299,14 @@ service.init(function() {
 				}
 			};
 			//add record in db
-			mongo.insert(userCollectionName, userRecord, function(err, record) {
-				if(err || !record) {
+			mongo.insert(userCollectionName, userRecord, function (err, record) {
+				if (err || !record) {
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 403, "msg": config.errors[403]}));
 				}
 
 				//no validation needed stop and return
-				if(requireValidation && req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.join) {
+				if (requireValidation && req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.join) {
 					var tokenRecord = {
 						'userId': record[0]._id.toString(),
 						'token': uuid.v4(),
@@ -313,9 +315,9 @@ service.init(function() {
 						'ts': new Date().getTime(),
 						'service': 'join'
 					};
-					mongo.insert(tokenCollectionName, tokenRecord, function(err) {
+					mongo.insert(tokenCollectionName, tokenRecord, function (err) {
 						mongo.closeDb();
-						if(err) {
+						if (err) {
 							return res.jsonp(req.soajs.buildResponse({"code": 403, "msg": config.errors[403]}));
 						}
 
@@ -324,8 +326,8 @@ service.init(function() {
 						data.link = {
 							join: addTokenToLink(req.soajs.servicesConfig.urac.link.join, tokenRecord.token)
 						};
-						sendMail('join', req, data, function(error) {
-							if(error) {
+						sendMail('join', req, data, function (error) {
+							if (error) {
 								req.soajs.log.error(error);
 							}
 							return res.jsonp(req.soajs.buildResponse(null, tokenRecord.token));
@@ -339,7 +341,7 @@ service.init(function() {
 		});
 	});
 
-	service.get("/join/validate", function(req, res) {
+	service.get("/join/validate", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 
 		//get token
@@ -347,14 +349,14 @@ service.init(function() {
 			'token': req.soajs.inputmaskData['token'],
 			'service': 'join',
 			status: 'active'
-		}, function(err, tokenRecord) {
-			if(err || !tokenRecord) {
+		}, function (err, tokenRecord) {
+			if (err || !tokenRecord) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
 			}
 
 			//check if token expired
-			if(new Date(tokenRecord.expires).getTime() < new Date().getTime()) {
+			if (new Date(tokenRecord.expires).getTime() < new Date().getTime()) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
 			}
@@ -363,8 +365,8 @@ service.init(function() {
 			mongo.findOne(userCollectionName, {
 				'_id': mongo.ObjectId(tokenRecord.userId),
 				'status': 'pendingJoin'
-			}, function(error, userRecord) {
-				if(error || !userRecord) {
+			}, function (error, userRecord) {
+				if (error || !userRecord) {
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
 				}
@@ -374,16 +376,16 @@ service.init(function() {
 				userRecord.status = 'active';
 
 				//save token in database
-				mongo.save(tokenCollectionName, tokenRecord, function(err) {
-					if(err) {
+				mongo.save(tokenCollectionName, tokenRecord, function (err) {
+					if (err) {
 						mongo.closeDb();
 						return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 					}
 
 					//save user record in database
-					mongo.save(userCollectionName, userRecord, function(err) {
+					mongo.save(userCollectionName, userRecord, function (err) {
 						mongo.closeDb();
-						if(err) {
+						if (err) {
 							return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 						}
 
@@ -394,14 +396,14 @@ service.init(function() {
 		});
 	});
 
-	service.get("/account/getUser", function(req, res) {
+	service.get("/account/getUser", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		mongo.findOne(userCollectionName, {
 			'username': req.soajs.inputmaskData['username'],
 			'status': 'active'
-		}, function(err, record) {
+		}, function (err, record) {
 			mongo.closeDb();
-			if(err || !record) {
+			if (err || !record) {
 				return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]}));
 			}
 
@@ -410,9 +412,9 @@ service.init(function() {
 		});
 	});
 
-	service.post("/account/changePassword", function(req, res) {
+	service.post("/account/changePassword", function (req, res) {
 		//validate that the password and its confirmation match
-		if(req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
+		if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
 			return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
 		}
 
@@ -421,13 +423,13 @@ service.init(function() {
 		var userId;
 		try {
 			userId = mongo.ObjectId(req.soajs.inputmaskData['uId']);
-		} catch(e) {
+		} catch (e) {
 			mongo.closeDb();
 			return res.jsonp(req.soajs.buildResponse({"code": 411, "msg": config.errors[411]}));
 		}
 
-		mongo.findOne(userCollectionName, {'_id': userId}, function(err, userRecord) {
-			if(err || !userRecord) {
+		mongo.findOne(userCollectionName, {'_id': userId}, function (err, userRecord) {
+			if (err || !userRecord) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]}));
 			}
@@ -437,17 +439,17 @@ service.init(function() {
 				"hashIterations": req.soajs.servicesConfig.urac.hashIterations || config.hashIterations,
 				"seedLength": req.soajs.servicesConfig.urac.seedLength || config.seedLength
 			});
-			hasher.compare(req.soajs.inputmaskData['oldPassword'], userRecord.password, function(err, response) {
-				if(err || !response) {
+			hasher.compare(req.soajs.inputmaskData['oldPassword'], userRecord.password, function (err, response) {
+				if (err || !response) {
 					req.soajs.log.error(err);
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 409, "msg": config.errors[409]}));
 				} else {
 					//hash new password, update record and save
 					userRecord.password = hasher.hashSync(req.soajs.inputmaskData['password']);
-					mongo.save(userCollectionName, userRecord, function(err) {
+					mongo.save(userCollectionName, userRecord, function (err) {
 						mongo.closeDb();
-						if(err) {
+						if (err) {
 							return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 						}
 
@@ -458,23 +460,23 @@ service.init(function() {
 		});
 	});
 
-	service.post("/account/changeEmail", function(req, res) {
+	service.post("/account/changeEmail", function (req, res) {
 		//check if user account is there
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		var userId;
 		try {
 			userId = mongo.ObjectId(req.soajs.inputmaskData['uId']);
-		} catch(e) {
+		} catch (e) {
 			mongo.closeDb();
 			return res.jsonp(req.soajs.buildResponse({"code": 411, "msg": config.errors[411]}));
 		}
-		mongo.findOne(userCollectionName, {'_id': userId}, function(err, userRecord) {
-			if(err || !userRecord) {
+		mongo.findOne(userCollectionName, {'_id': userId}, function (err, userRecord) {
+			if (err || !userRecord) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]}));
 			}
 
-			if(userRecord.email === req.soajs.inputmaskData['email']) {
+			if (userRecord.email === req.soajs.inputmaskData['email']) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 412, "msg": config.errors[412]}));
 			}
@@ -495,21 +497,21 @@ service.init(function() {
 				'userId': tokenRecord.userId,
 				'service': 'changeEmail',
 				'status': 'active'
-			}, {'$set': {'status': 'invalid'}}, function(err) {
-				if(err) {
+			}, {'$set': {'status': 'invalid'}}, function (err) {
+				if (err) {
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 				}
 
 				//insert newly created token
-				mongo.insert(tokenCollectionName, tokenRecord, function(err) {
+				mongo.insert(tokenCollectionName, tokenRecord, function (err) {
 					mongo.closeDb();
-					if(err) {
+					if (err) {
 						return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 					}
 
 					//email notification
-					if(req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.changeEmail) {
+					if (req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.changeEmail) {
 						//send an email to the user
 						var data = JSON.parse(JSON.stringify(userRecord));
 						data.email = req.soajs.inputmaskData['email'];
@@ -517,8 +519,8 @@ service.init(function() {
 							changeEmail: addTokenToLink(req.soajs.servicesConfig.urac.link.changeEmail, tokenRecord.token)
 						};
 
-						sendMail('changeEmail', req, data, function(error) {
-							if(error) {
+						sendMail('changeEmail', req, data, function (error) {
+							if (error) {
 								req.soajs.log.error(error);
 							}
 							return res.jsonp(req.soajs.buildResponse(null, tokenRecord.token));
@@ -531,28 +533,28 @@ service.init(function() {
 		});
 	});
 
-	service.get("/changeEmail/validate", function(req, res) {
+	service.get("/changeEmail/validate", function (req, res) {
 		//check if user account is there
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		mongo.findOne(tokenCollectionName, {
 			'token': req.soajs.inputmaskData['token'],
 			'service': 'changeEmail',
 			status: 'active'
-		}, function(err, tokenRecord) {
-			if(err || !tokenRecord) {
+		}, function (err, tokenRecord) {
+			if (err || !tokenRecord) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
 			}
 
 			//check if token expired
-			if(new Date(tokenRecord.expires).getTime() < new Date().getTime()) {
+			if (new Date(tokenRecord.expires).getTime() < new Date().getTime()) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
 			}
 
 			//get user record
-			mongo.findOne(userCollectionName, {'_id': mongo.ObjectId(tokenRecord.userId)}, function(error, userRecord) {
-				if(error || !userRecord) {
+			mongo.findOne(userCollectionName, {'_id': mongo.ObjectId(tokenRecord.userId)}, function (error, userRecord) {
+				if (error || !userRecord) {
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
 				}
@@ -564,16 +566,16 @@ service.init(function() {
 				userRecord.email = tokenRecord.email;
 
 				//save token in database
-				mongo.save(tokenCollectionName, tokenRecord, function(err) {
-					if(err) {
+				mongo.save(tokenCollectionName, tokenRecord, function (err) {
+					if (err) {
 						mongo.closeDb();
 						return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 					}
 
 					//save user record in database
-					mongo.save(userCollectionName, userRecord, function(err) {
+					mongo.save(userCollectionName, userRecord, function (err) {
 						mongo.closeDb();
-						if(err) {
+						if (err) {
 							return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 						}
 
@@ -584,25 +586,25 @@ service.init(function() {
 		});
 	});
 
-	service.get("/admin/listUsers", function(req, res) {
+	service.get("/admin/listUsers", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		var condition = {};
-		if(req.soajs.inputmaskData['tId']) {
+		if (req.soajs.inputmaskData['tId']) {
 			condition = {"tenant.id": req.soajs.inputmaskData['tId']};
 		}
-		mongo.find(userCollectionName, condition, {}, function(err, userRecords) {
+		mongo.find(userCollectionName, condition, {}, function (err, userRecords) {
 			mongo.closeDb();
-			if(err || !userRecords) {
+			if (err || !userRecords) {
 				return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]}));
 			}
 
 			//if no records return empty array
-			if(userRecords.length === 0) {
+			if (userRecords.length === 0) {
 				return res.jsonp(req.soajs.buildResponse(null, []));
 			}
 
 			//loop in records and remove the passwords
-			userRecords.forEach(function(oneUserRecord) {
+			userRecords.forEach(function (oneUserRecord) {
 				delete oneUserRecord.password;
 			});
 
@@ -610,19 +612,19 @@ service.init(function() {
 		});
 	});
 
-	service.get("/admin/getUser", function(req, res) {
+	service.get("/admin/getUser", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		var userId;
 		try {
 			userId = mongo.ObjectId(req.soajs.inputmaskData['uId']);
-		} catch(e) {
+		} catch (e) {
 			mongo.closeDb();
 			return res.jsonp(req.soajs.buildResponse({"code": 411, "msg": config.errors[411]}));
 		}
 
-		mongo.findOne(userCollectionName, {'_id': userId}, function(err, userRecord) {
+		mongo.findOne(userCollectionName, {'_id': userId}, function (err, userRecord) {
 			mongo.closeDb();
-			if(err || !userRecord) {
+			if (err || !userRecord) {
 				return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]}));
 			}
 			delete userRecord.password;
@@ -643,7 +645,7 @@ service.init(function() {
 		length = length || Math.ceil(Math.random() * config.maxStringLimit);
 		var qs = '';
 
-		while(length) {
+		while (length) {
 			qs += process.hrtime()[1] % 2 === 0 ? getLetter() : getNumber();
 			length--;
 		}
@@ -651,24 +653,24 @@ service.init(function() {
 		return qs.replace(/\s/g, '_');
 	}
 
-	service.post("/admin/addUser", function(req, res) {
+	service.post("/admin/addUser", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		try {
 			req.soajs.inputmaskData['tId'] = mongo.ObjectId(req.soajs.inputmaskData['tId']);
-		} catch(e) {
+		} catch (e) {
 			return res.jsonp(req.soajs.buildResponse({"code": 611, "msg": config.errors[611]}));
 		}
 
 		var condition = {'username': req.soajs.inputmaskData['username']};
-		mongo.findOne(userCollectionName, condition, function(err, record) {
-			if(err) {
+		mongo.findOne(userCollectionName, condition, function (err, record) {
+			if (err) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 414, "msg": config.errors[414]}));
 			}
 
 			//user exits
 			//if(record && record.tenant.id === req.soajs.inputmaskData['tId'].toString()) {
-			if(record) {
+			if (record) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 402, "msg": config.errors[402]}));
 			}
@@ -694,20 +696,20 @@ service.init(function() {
 				},
 				'ts': new Date().getTime()
 			};
-			if(req.soajs.inputmaskData['profile']) {
+			if (req.soajs.inputmaskData['profile']) {
 				try {
 					userRecord.profile = JSON.parse(req.soajs.inputmaskData['profile']);
 				}
-				catch(e) {
+				catch (e) {
 					return res.jsonp(req.soajs.buildResponse({"code": 413, "msg": config.errors[413]}));
 				}
 			}
-			if(req.soajs.inputmaskData['groups']) {
+			if (req.soajs.inputmaskData['groups']) {
 				userRecord.groups = req.soajs.inputmaskData['groups'];
 			}
 			//add record in db
-			mongo.insert(userCollectionName, userRecord, function(err, userDbRecord) {
-				if(err) {
+			mongo.insert(userCollectionName, userRecord, function (err, userDbRecord) {
+				if (err) {
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 403, "msg": config.errors[403]}));
 				}
@@ -721,21 +723,21 @@ service.init(function() {
 					'ts': new Date().getTime(),
 					'service': 'addUser'
 				};
-				mongo.insert(tokenCollectionName, tokenRecord, function(err) {
+				mongo.insert(tokenCollectionName, tokenRecord, function (err) {
 					mongo.closeDb();
-					if(err) {
+					if (err) {
 						return res.jsonp(req.soajs.buildResponse({"code": 403, "msg": config.errors[403]}));
 					}
 
-					if(req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.addUser) {
+					if (req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.addUser) {
 
 						var data = userRecord;
 						data.link = {
 							addUser: addTokenToLink(req.soajs.servicesConfig.urac.link.addUser, tokenRecord.token)
 						};
 
-						sendMail('addUser', req, data, function(error) {
-							if(error) {
+						sendMail('addUser', req, data, function (error) {
+							if (error) {
 								req.soajs.log.error(error);
 							}
 							return res.jsonp(req.soajs.buildResponse(null, tokenRecord.token));
@@ -748,13 +750,13 @@ service.init(function() {
 		});
 	});
 
-	service.get("/admin/changeUserStatus", function(req, res) {
+	service.get("/admin/changeUserStatus", function (req, res) {
 		//check if user account is there
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		var userId;
 		try {
 			userId = mongo.ObjectId(req.soajs.inputmaskData['uId']);
-		} catch(e) {
+		} catch (e) {
 			mongo.closeDb();
 			return res.jsonp(req.soajs.buildResponse({"code": 411, "msg": config.errors[411]}));
 		}
@@ -765,8 +767,8 @@ service.init(function() {
 		};
 		/* $ne selects the documents where the value of the field is not equal (i.e. !=) to the specified value.
 		 * This includes documents that do not contain the field. */
-		mongo.findOne(userCollectionName, criteria, function(err, userRecord) {
-			if(err || !userRecord) {
+		mongo.findOne(userCollectionName, criteria, function (err, userRecord) {
+			if (err || !userRecord) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]}));
 			}
@@ -774,15 +776,15 @@ service.init(function() {
 			userRecord.status = req.soajs.inputmaskData['status'];
 
 			//update record in the database
-			mongo.save(userCollectionName, userRecord, function(err) {
+			mongo.save(userCollectionName, userRecord, function (err) {
 				mongo.closeDb();
-				if(err) {
+				if (err) {
 					return res.jsonp(req.soajs.buildResponse({"code": 407, "msg": config.errors[407]}));
 				}
 
-				if(req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.changeUserStatus) {
-					sendMail('changeUserStatus', req, userRecord, function(error) {
-						if(error) {
+				if (req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.changeUserStatus) {
+					sendMail('changeUserStatus', req, userRecord, function (error) {
+						if (error) {
 							req.soajs.log.error(error);
 						}
 						return res.jsonp(req.soajs.buildResponse(null, true));
@@ -800,23 +802,28 @@ service.init(function() {
 		var userId;
 		try {
 			userId = mongo.ObjectId(req.soajs.inputmaskData['uId']);
-		} catch(e) {
+		} catch (e) {
 			mongo.closeDb();
 			return cb({"code": 411, "msg": config.errors[411]});
 		}
 
-		mongo.findOne(userCollectionName, {'_id': userId}, function(err, userRecord) {
-			if(err || !userRecord) {
+		mongo.findOne(userCollectionName, {'_id': userId}, function (err, userRecord) {
+			if (err || !userRecord) {
 				mongo.closeDb();
 				return cb({"code": 405, "msg": config.errors[405]});
 			}
 
-			if(complete && userRecord.locked){
+			if (complete && userRecord.locked) {
 				return cb({"code": 500, "msg": config.errors[500]});
 			}
-			if(req.soajs.inputmaskData['groups'] && Array.isArray(req.soajs.inputmaskData['groups']) && req.soajs.inputmaskData['groups'].length > 0) {
-				mongo.find(groupsCollectionName, {"tenant.id": userRecord.tenant.id, "code": {"$in": req.soajs.inputmaskData['groups']}}, function(err, groups) {
-					if(err || !groups || groups.length === 0) { return cb({'code': 415, 'msg': config.errors[415]}); }
+			if (req.soajs.inputmaskData['groups'] && Array.isArray(req.soajs.inputmaskData['groups']) && req.soajs.inputmaskData['groups'].length > 0) {
+				mongo.find(groupsCollectionName, {
+					"tenant.id": userRecord.tenant.id,
+					"code": {"$in": req.soajs.inputmaskData['groups']}
+				}, function (err, groups) {
+					if (err || !groups || groups.length === 0) {
+						return cb({'code': 415, 'msg': config.errors[415]});
+					}
 					resumeEdit(userRecord);
 				});
 			}
@@ -835,14 +842,14 @@ service.init(function() {
 			//if(complete) {
 			//	condition['tenant.id'] = userRecord.tenant.id;
 			//}
-			mongo.count(userCollectionName, condition, function(err, count) {
-				if(err) {
+			mongo.count(userCollectionName, condition, function (err, count) {
+				if (err) {
 					mongo.closeDb();
 					return cb({"code": 407, "msg": config.errors[407]});
 				}
 
 				//if count > 0 then this username is taken by another account, return error
-				if(count > 0) {
+				if (count > 0) {
 					mongo.closeDb();
 					return cb({"code": 410, "msg": config.errors[410]});
 				}
@@ -853,22 +860,22 @@ service.init(function() {
 				userRecord.lastName = req.soajs.inputmaskData['lastName'];
 				//console.log(req.soajs.inputmaskData);
 
-				if(complete) {
+				if (complete) {
 					userRecord.email = req.soajs.inputmaskData['email'];
 					// cannot change status or groups of the locked user
-					if(!userRecord.locked) {
-						if(req.soajs.inputmaskData['config']) {
+					if (!userRecord.locked) {
+						if (req.soajs.inputmaskData['config']) {
 							var configObj = req.soajs.inputmaskData['config'];
-							if(typeof(userRecord.config) !== 'object') {
+							if (typeof(userRecord.config) !== 'object') {
 								userRecord.config = {};
 							}
-							if(configObj.packages) {
+							if (configObj.packages) {
 								userRecord.config.packages = configObj.packages;
 							}
 						}
 
 						userRecord.status = req.soajs.inputmaskData['status'];
-						if(req.soajs.inputmaskData['groups']) {
+						if (req.soajs.inputmaskData['groups']) {
 							userRecord.groups = req.soajs.inputmaskData['groups'];
 						} else {
 							userRecord.groups = [];
@@ -876,20 +883,20 @@ service.init(function() {
 					}
 				}
 
-				if(req.soajs.inputmaskData['profile']) {
+				if (req.soajs.inputmaskData['profile']) {
 					try {
 						userRecord.profile = JSON.parse(req.soajs.inputmaskData['profile']);
 					}
-					catch(e) {
+					catch (e) {
 						mongo.closeDb();
 						return cb({"code": 413, "msg": config.errors[413]});
 					}
 				}
 
 				//update record in the database
-				mongo.save(userCollectionName, userRecord, function(err) {
+				mongo.save(userCollectionName, userRecord, function (err) {
 					mongo.closeDb();
-					if(err) {
+					if (err) {
 						return cb({"code": 407, "msg": config.errors[407]});
 					}
 					return cb(null, true);
@@ -898,38 +905,38 @@ service.init(function() {
 		}
 	}
 
-	service.post("/account/editProfile", function(req, res) {
-		updateUserRecord(req, false, function(error) {
-			if(error) {
+	service.post("/account/editProfile", function (req, res) {
+		updateUserRecord(req, false, function (error) {
+			if (error) {
 				return res.jsonp(req.soajs.buildResponse({"code": error.code, "msg": error.msg}));
 			}
 			return res.jsonp(req.soajs.buildResponse(null, true));
 		});
 	});
 
-	service.post("/admin/editUser", function(req, res) {
-		updateUserRecord(req, true, function(error) {
-			if(error) {
+	service.post("/admin/editUser", function (req, res) {
+		updateUserRecord(req, true, function (error) {
+			if (error) {
 				return res.jsonp(req.soajs.buildResponse({"code": error.code, "msg": error.msg}));
 			}
 			return res.jsonp(req.soajs.buildResponse(null, true));
 		});
 	});
 
-	service.get("/admin/group/list", function(req, res) {
+	service.get("/admin/group/list", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		var condition = {};
-		if(req.soajs.inputmaskData['tId']) {
+		if (req.soajs.inputmaskData['tId']) {
 			condition = {"tenant.id": req.soajs.inputmaskData['tId']};
 		}
-		mongo.find(groupsCollectionName, condition, {}, function(err, grpsRecords) {
+		mongo.find(groupsCollectionName, condition, {}, function (err, grpsRecords) {
 			mongo.closeDb();
-			if(err || !grpsRecords) {
+			if (err || !grpsRecords) {
 				return res.jsonp(req.soajs.buildResponse({"code": 415, "msg": config.errors[405]}));
 			}
 
 			//if no records return empty array
-			if(grpsRecords.length === 0) {
+			if (grpsRecords.length === 0) {
 				return res.jsonp(req.soajs.buildResponse(null, []));
 			}
 
@@ -937,11 +944,11 @@ service.init(function() {
 		});
 	});
 
-	service.post("/admin/group/add", function(req, res) {
+	service.post("/admin/group/add", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		try {
 			req.soajs.inputmaskData['tId'] = mongo.ObjectId(req.soajs.inputmaskData['tId']);
-		} catch(e) {
+		} catch (e) {
 			mongo.closeDb();
 			return res.jsonp(req.soajs.buildResponse({"code": 611, "msg": config.errors[611]}));
 		}
@@ -956,20 +963,23 @@ service.init(function() {
 			}
 		};
 
-		mongo.count(groupsCollectionName, {'code': grpRecord.code, 'tenant.id': grpRecord.tenant.id}, function(error, count) {
-			if(error) {
+		mongo.count(groupsCollectionName, {
+			'code': grpRecord.code,
+			'tenant.id': grpRecord.tenant.id
+		}, function (error, count) {
+			if (error) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 600, "msg": config.errors[600]}));
 			}
 
-			if(count > 0) {
+			if (count > 0) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 421, "msg": config.errors[421]}));
 			}
 
-			mongo.insert(groupsCollectionName, grpRecord, function(err) {
+			mongo.insert(groupsCollectionName, grpRecord, function (err) {
 				mongo.closeDb();
-				if(err) {
+				if (err) {
 					return res.jsonp(req.soajs.buildResponse({"code": 416, "msg": config.errors[416]}));
 				}
 				return res.jsonp(req.soajs.buildResponse(null, true));
@@ -978,13 +988,13 @@ service.init(function() {
 
 	});
 
-	service.post("/admin/group/edit", function(req, res) {
+	service.post("/admin/group/edit", function (req, res) {
 		//check if grp record is there
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		var groupId;
 		try {
 			groupId = mongo.ObjectId(req.soajs.inputmaskData['gId']);
-		} catch(e) {
+		} catch (e) {
 			mongo.closeDb();
 			return res.jsonp(req.soajs.buildResponse({"code": 417, "msg": config.errors[417]}));
 		}
@@ -995,47 +1005,50 @@ service.init(function() {
 				'name': req.soajs.inputmaskData.name
 			}
 		};
-		mongo.update(groupsCollectionName, {'_id': groupId}, s, {'upsert': false, 'safe': true}, function(error) {
+		mongo.update(groupsCollectionName, {'_id': groupId}, s, {'upsert': false, 'safe': true}, function (error) {
 			mongo.closeDb();
-			if(error) {
+			if (error) {
 				return res.jsonp(req.soajs.buildResponse({"code": 418, "msg": config.errors[418]}));
 			}
 			return res.jsonp(req.soajs.buildResponse(null, true));
 		});
 	});
 
-	service.get("/admin/group/delete", function(req, res) {
+	service.get("/admin/group/delete", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		var groupId;
 		try {
 			groupId = mongo.ObjectId(req.soajs.inputmaskData['gId']);
-		} catch(e) {
+		} catch (e) {
 			mongo.closeDb();
 			return res.jsonp(req.soajs.buildResponse({"code": 417, "msg": config.errors[417]}));
 		}
 
-		mongo.findOne(groupsCollectionName, {'_id': groupId}, function(error, record) {
-			if(error || !record) {
+		mongo.findOne(groupsCollectionName, {'_id': groupId}, function (error, record) {
+			if (error || !record) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 415, "msg": config.errors[415]}));
 			}
 
-			if(record.locked && record.locked === true) {
+			if (record.locked && record.locked === true) {
 				//return error msg that this record is locked
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 500, "msg": config.errors[500]}));
 			}
 			var grpCode = record.code;
 			var grpTenantId = record.tenant.id;
-			mongo.remove(groupsCollectionName, {'_id': groupId, 'locked': {$ne: true}}, function(error) {
-				if(error) {
+			mongo.remove(groupsCollectionName, {'_id': groupId, 'locked': {$ne: true}}, function (error) {
+				if (error) {
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 419, "msg": config.errors[419]}));
 				}
 
-				mongo.update(userCollectionName, {"groups": grpCode, "tenant.id": grpTenantId}, {$pull: {groups: grpCode}}, {multi: true}, function(err) {
+				mongo.update(userCollectionName, {
+					"groups": grpCode,
+					"tenant.id": grpTenantId
+				}, {$pull: {groups: grpCode}}, {multi: true}, function (err) {
 					mongo.closeDb();
-					if(err) {
+					if (err) {
 						return res.jsonp(req.soajs.buildResponse({"code": 600, "msg": config.errors[600]}));
 					}
 
@@ -1046,22 +1059,28 @@ service.init(function() {
 	});
 
 	// add multiple Users To Group
-	service.post("/admin/group/addUsers", function(req, res) {
+	service.post("/admin/group/addUsers", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 
 		// delete from all users
 		var grp = req.soajs.inputmaskData['code'];
-		mongo.update(userCollectionName, {groups: grp, "tenant.id": req.soajs.inputmaskData['tId']}, {$pull: {groups: grp}}, {multi: true}, function(err) {
-			if(err) {
+		mongo.update(userCollectionName, {
+			groups: grp,
+			"tenant.id": req.soajs.inputmaskData['tId']
+		}, {$pull: {groups: grp}}, {multi: true}, function (err) {
+			if (err) {
 				mongo.closeDb();
 				return res.jsonp(req.soajs.buildResponse({"code": 600, "msg": config.errors[600]}));
 			}
 
 			var users = req.soajs.inputmaskData['users'];
-			if(users && users.length > 0) {
-				mongo.update(userCollectionName, {'username': {$in: users}, 'tenant.id': req.soajs.inputmaskData['tId']}, {$push: {groups: grp}}, function(err) {
+			if (users && users.length > 0) {
+				mongo.update(userCollectionName, {
+					'username': {$in: users},
+					'tenant.id': req.soajs.inputmaskData['tId']
+				}, {$push: {groups: grp}}, function (err) {
 					mongo.closeDb();
-					if(err) {
+					if (err) {
 						return res.jsonp(req.soajs.buildResponse({"code": 600, "msg": config.errors[600]}));
 					}
 
@@ -1075,18 +1094,22 @@ service.init(function() {
 		});
 	});
 
-	service.get("/admin/all", function(req, res) {
+	service.get("/admin/all", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		mongo.find(userCollectionName, {}, {}, function(err, userRecords) {
-			if(err) { return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]})); }
-			if(userRecords.length > 0) {
-				userRecords.forEach(function(oneUserRecord) {
+		mongo.find(userCollectionName, {}, {}, function (err, userRecords) {
+			if (err) {
+				return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]}));
+			}
+			if (userRecords.length > 0) {
+				userRecords.forEach(function (oneUserRecord) {
 					delete oneUserRecord.password;
 				});
 			}
-			mongo.find(groupsCollectionName, {}, {}, function(err, grpRecords) {
+			mongo.find(groupsCollectionName, {}, {}, function (err, grpRecords) {
 				mongo.closeDb();
-				if(err) { return res.jsonp(req.soajs.buildResponse({"code": 415, "msg": config.errors[405]})); }
+				if (err) {
+					return res.jsonp(req.soajs.buildResponse({"code": 415, "msg": config.errors[405]}));
+				}
 
 				return res.jsonp(req.soajs.buildResponse(null, {'users': userRecords, 'groups': grpRecords}));
 			});
