@@ -35,11 +35,17 @@ service.init(function () {
 		mongo.findOne(userCollectionName, criteria, function (err, record) {
 			mongo.closeDb();
 			if (record) {
-				var hasher = new Hasher({
-
-					"hashIterations": req.soajs.servicesConfig.urac.hashIterations || config.hashIterations,
-					"seedLength": req.soajs.servicesConfig.urac.seedLength || config.seedLength
-				});
+				var hashConfig = {
+					"hashIterations": config.hashIterations,
+					"seedLength": config.seedLength
+				};
+				if(req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.hashIterations && req.soajs.servicesConfig.urac.seedLength){
+					hashConfig = {
+						"hashIterations": req.soajs.servicesConfig.urac.hashIterations,
+						"seedLength": req.soajs.servicesConfig.urac.seedLength
+					};
+				}
+				var hasher = new Hasher(hashConfig);
 				hasher.compare(req.soajs.inputmaskData.password, record.password, function (err, response) {
 					if (err || !response) {
 						return cb(400);
@@ -199,10 +205,17 @@ service.init(function () {
 			return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
 		}
 
-		var hasher = new Hasher({
-			"hashIterations": req.soajs.servicesConfig.urac.hashIterations || config.hashIterations,
-			"seedLength": req.soajs.servicesConfig.urac.seedLength || config.seedLength
-		});
+		var hashConfig = {
+			"hashIterations": config.hashIterations,
+			"seedLength": config.seedLength
+		};
+		if(req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.hashIterations && req.soajs.servicesConfig.urac.seedLength){
+			hashConfig = {
+				"hashIterations": req.soajs.servicesConfig.urac.hashIterations,
+				"seedLength": req.soajs.servicesConfig.urac.seedLength
+			};
+		}
+		var hasher = new Hasher(hashConfig);
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		//get token
 		mongo.findOne(tokenCollectionName, {
@@ -273,10 +286,17 @@ service.init(function () {
 			}
 
 			//add user
-			var hasher = new Hasher({
-				"hashIterations": req.soajs.servicesConfig.urac.hashIterations || config.hashIterations,
-				"seedLength": req.soajs.servicesConfig.urac.seedLength || config.seedLength
-			});
+			var hashConfig = {
+				"hashIterations": config.hashIterations,
+				"seedLength": config.seedLength
+			};
+			if(req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.hashIterations && req.soajs.servicesConfig.urac.seedLength){
+				hashConfig = {
+					"hashIterations": req.soajs.servicesConfig.urac.hashIterations,
+					"seedLength": req.soajs.servicesConfig.urac.seedLength
+				};
+			}
+			var hasher = new Hasher(hashConfig);
 			//hash the password
 
 			var userRecord = {
@@ -435,10 +455,17 @@ service.init(function () {
 			}
 
 			//check if old password matches db record
-			var hasher = new Hasher({
-				"hashIterations": req.soajs.servicesConfig.urac.hashIterations || config.hashIterations,
-				"seedLength": req.soajs.servicesConfig.urac.seedLength || config.seedLength
-			});
+			var hashConfig = {
+				"hashIterations": config.hashIterations,
+				"seedLength": config.seedLength
+			};
+			if(req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.hashIterations && req.soajs.servicesConfig.urac.seedLength){
+				hashConfig = {
+					"hashIterations": req.soajs.servicesConfig.urac.hashIterations,
+					"seedLength": req.soajs.servicesConfig.urac.seedLength
+				};
+			}
+			var hasher = new Hasher(hashConfig);
 			hasher.compare(req.soajs.inputmaskData['oldPassword'], userRecord.password, function (err, response) {
 				if (err || !response) {
 					req.soajs.log.error(err);
@@ -676,10 +703,17 @@ service.init(function () {
 			}
 
 			//add user
-			var hasher = new Hasher({
-				"hashIterations": req.soajs.servicesConfig.urac.hashIterations || config.hashIterations,
-				"seedLength": req.soajs.servicesConfig.urac.seedLength || config.seedLength
-			});
+			var hashConfig = {
+				"hashIterations": config.hashIterations,
+				"seedLength": config.seedLength
+			};
+			if(req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.hashIterations && req.soajs.servicesConfig.urac.seedLength){
+				hashConfig = {
+					"hashIterations": req.soajs.servicesConfig.urac.hashIterations,
+					"seedLength": req.soajs.servicesConfig.urac.seedLength
+				};
+			}
+			var hasher = new Hasher(hashConfig);
 			//hash the password
 
 			var userRecord = {
