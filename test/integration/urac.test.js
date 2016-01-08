@@ -473,6 +473,26 @@ describe("simple urac tests", function() {
 			});
 		});
 
+		it("FAIL - invalid tId", function(done) {
+			var params = {
+				form: {
+					'username': 'johndoe1',
+					'firstName': 'john1',
+					'lastName': 'doe1',
+					'email': 'john.doe1@soajs.org',
+					'tId': 'invalidTID',
+					'tCode': 'test'
+				}
+			};
+			requester('admin/addUser', 'post', params, function(error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.deepEqual(body.errors.details[0], {"code": 611, "message": "invalid tenant id provided"});
+				done();
+			});
+		});
+
 		it("SUCCESS - will add user", function(done) {
 			var params = {
 				form: {
@@ -484,6 +504,7 @@ describe("simple urac tests", function() {
 					'tCode': 'test'
 				}
 			};
+
 			requester('admin/addUser', 'post', params, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
