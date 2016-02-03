@@ -932,6 +932,14 @@ service.init(function () {
 			return res.jsonp(req.soajs.buildResponse(null, true));
 		});
 	});
+	service.post("/admin/editUserConfig", function (req, res) {
+		updateUserRecord(req, true, function (error) {
+			if (error) {
+				return res.jsonp(req.soajs.buildResponse({"code": error.code, "msg": error.msg}));
+			}
+			return res.jsonp(req.soajs.buildResponse(null, true));
+		});
+	});
 
 	service.get("/admin/group/list", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));

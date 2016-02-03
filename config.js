@@ -466,6 +466,39 @@ module.exports = {
 				}
 			}
 		},
+		'/admin/editUserConfig': {
+			"_apiInfo":{
+				"l": "Edit User Config",
+				"group": "Administration"
+			},
+			"uId": {
+				"source": ['query.uId'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"config": {
+				"source": ['body.config'],
+				"required": false,
+				"validation": {
+					"type": "object",
+					"properties": {
+						"keys":{
+							"type": "object"
+						},
+						"packages":{
+							"type": "object",
+							"required": false,
+							"additionalProperties" : {
+								type:'object',
+								'additionalProperties': {
+									'acl': acl
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		'/admin/group/list': {
 			"_apiInfo":{
 				"l": "List Groups",
