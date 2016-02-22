@@ -23,7 +23,9 @@ var service = new soajs.server.service({
 
 function checkIfError(req, res, data, flag, cb) {
 	if (data.error) {
-		req.soajs.log.error(data.error);
+		if (typeof (data.error) === 'object' && data.error.message) {
+			req.soajs.log.error(data.error);
+		}
 		if(flag){
 			data.mongo.closeDb();
 		}
