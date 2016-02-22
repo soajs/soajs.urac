@@ -165,11 +165,6 @@ module.exports = {
 			"_apiInfo":{
 				"l": "Logout",
 				"group": "Guest"
-			},
-			"username": {
-				"source": ['query.username'],
-				"required": true,
-				"validation": {"type": "string"}
 			}
 		},
 		'/forgotPassword': {

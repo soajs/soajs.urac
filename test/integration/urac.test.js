@@ -375,80 +375,13 @@ describe("simple urac tests", function() {
 	});
 
 	describe("testing logout API", function() {
-		it("FAIL - missing params", function(done) {
-			var params = {
-				qs: {}
-			};
-			requester('logout', 'get', params, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: username"});
-				done();
-			});
-		});
-
-		it("FAIL - user not found", function(done) {
-			var params = {
-				qs: {
-					"username": 'unknown'
-				}
-			};
-
-			requester('logout', 'get', params, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {
-					"code": 404,
-					"message": "Unable to logout the user. User not found."
-				});
-				done();
-			});
-		});
-
 		it("SUCCESS - will logout user", function(done) {
-			var params = {
-				qs: {
-					"username": 'john123'
-				}
-			};
-
-			requester('logout', 'get', params, function(error, body) {
+			requester('logout', 'get', {}, function(error, body) {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
 				done();
-			});
-		});
-
-		it("SUCCESS - will logout user using email instead of username", function(done) {
-			var params1 = {
-				form: {
-					"username": 'john.doe@soajs.org',
-					"password": 'password'
-				}
-			};
-
-			requester('login', 'post', params1, function(error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);
-
-				var params2 = {
-					qs: {
-						"username": 'john.doe@soajs.org'
-					}
-				};
-				requester('logout', 'get', params2, function(error, body) {
-					assert.ifError(error);
-					assert.ok(body);
-					console.log(JSON.stringify(body));
-					assert.ok(body.data);
-					done();
-				});
 			});
 		});
 	});
