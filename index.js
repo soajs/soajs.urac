@@ -128,27 +128,8 @@ service.init(function () {
 	});
 
 	service.get("/logout", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		var criteria = {'username': req.soajs.inputmaskData['username'], 'status': 'active'};
-		var pattern = req.soajs.validator.SchemaPatterns.email;
-		if (pattern.test(req.soajs.inputmaskData['username'])) {
-			delete criteria.username;
-			criteria.email = req.soajs.inputmaskData['username'];
-		}
-		mongo.findOne(userCollectionName, criteria, function (err, record) {
-			mongo.closeDb();
-			var data = {config: config, error: err, code: 404};
-			checkIfError(req, res, data, false, function () {
-				data.error = !record;
-				checkIfError(req, res, data, false, function () {
-					req.soajs.session.clearURAC(function (err) {
-						data.error = err;
-						checkIfError(req, res, data, false, function () {
-							return res.jsonp(req.soajs.buildResponse(null, true));
-						});
-					});
-				});
-			});
+		req.soajs.session.clearURAC(function () {
+			return res.jsonp(req.soajs.buildResponse(null, true));
 		});
 	});
 
