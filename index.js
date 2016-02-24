@@ -23,8 +23,10 @@ var service = new soajs.server.service({
 
 function checkIfError(req, res, data, flag, cb) {
 	if (data.error) {
-		req.soajs.log.error(data.error);
-		if (flag) {
+		if (typeof (data.error) === 'object' && data.error.message) {
+			req.soajs.log.error(data.error);
+		}
+		if(flag){
 			data.mongo.closeDb();
 		}
 		return res.jsonp(req.soajs.buildResponse({"code": data.code, "msg": data.config.errors[data.code]}));
@@ -91,8 +93,8 @@ service.init(function () {
 		delete data.password;
 		delete data._id;
 
-		mailer.send(mailOptions, function (error) {
-			if (error) {
+		mailer.send(mailOptions, function(error){
+			if(error){
 				req.soajs.log.error(error);
 			}
 			return cb(null, true);
@@ -111,8 +113,8 @@ service.init(function () {
 			} else {
 				var cloneRecord = utils.cloneObj(record);
 				req.soajs.session.setURAC(cloneRecord, function (err) {
-					var data = {config: config, error: err, code: 401};
-					checkIfError(req, res, data, false, function () {
+					var data= {config: config, error: err, code: 401};
+					checkIfError(req, res, data, false, function(){
 						if (record.config && record.config.packages) {
 							delete record.config.packages;
 						}
@@ -163,11 +165,11 @@ service.init(function () {
 				'status': 'active'
 			}, {'$set': {'status': 'invalid'}}, function (err) {
 				var data = {config: config, error: err, code: 407, mongo: mongo};
-				checkIfError(req, res, data, true, function () {
+				checkIfError(req, res, data, true, function (){
 					mongo.insert(tokenCollectionName, tokenRecord, function (err) {
 						mongo.closeDb();
-						data.error = err;
-						checkIfError(req, res, data, false, function () {
+						data.error= err;
+						checkIfError(req, res, data, false, function (){
 							if (req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.forgotPassword) {
 								//send an email to the user
 								var data = userRecord;
@@ -198,7 +200,7 @@ service.init(function () {
 			"hashIterations": config.hashIterations,
 			"seedLength": config.seedLength
 		};
-		if (req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.hashIterations && req.soajs.servicesConfig.urac.seedLength) {
+		if(req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.hashIterations && req.soajs.servicesConfig.urac.seedLength){
 			hashConfig = {
 				"hashIterations": req.soajs.servicesConfig.urac.hashIterations,
 				"seedLength": req.soajs.servicesConfig.urac.seedLength
@@ -226,7 +228,7 @@ service.init(function () {
 			//get user record
 			mongo.findOne(userCollectionName, {'_id': mongo.ObjectId(tokenRecord.userId)}, function (error, userRecord) {
 				var data = {config: config, error: error || !userRecord, code: 406, mongo: mongo};
-				checkIfError(req, res, data, true, function () {
+				checkIfError(req, res, data, true, function (){
 					//update token status
 					tokenRecord.status = 'used';
 
@@ -238,12 +240,12 @@ service.init(function () {
 					mongo.save(tokenCollectionName, tokenRecord, function (err) {
 						data.error = err;
 						data.code = 407;
-						checkIfError(req, res, data, true, function () {
+						checkIfError(req, res, data, true, function (){
 							//save user record in database
 							mongo.save(userCollectionName, userRecord, function (err) {
 								mongo.closeDb();
-								data.error = err;
-								checkIfError(req, res, data, true, function () {
+								data.error= err;
+								checkIfError(req, res, data, true, function (){
 									return res.jsonp(req.soajs.buildResponse(null, true))
 								});
 							});
@@ -260,7 +262,7 @@ service.init(function () {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		mongo.findOne(userCollectionName, {$or: [{'username': req.soajs.inputmaskData['username']}, {'email': req.soajs.inputmaskData['email']}]}, function (err, record) {
 			var data = {config: config, error: err, code: 403, mongo: mongo};
-			checkIfError(req, res, data, true, function () {
+			checkIfError(req, res, data, true, function (){
 				//user exits
 				if (record) {
 					mongo.closeDb();
@@ -272,7 +274,7 @@ service.init(function () {
 					"hashIterations": config.hashIterations,
 					"seedLength": config.seedLength
 				};
-				if (req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.hashIterations && req.soajs.servicesConfig.urac.seedLength) {
+				if(req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.hashIterations && req.soajs.servicesConfig.urac.seedLength){
 					hashConfig = {
 						"hashIterations": req.soajs.servicesConfig.urac.hashIterations,
 						"seedLength": req.soajs.servicesConfig.urac.seedLength
@@ -304,7 +306,7 @@ service.init(function () {
 				mongo.insert(userCollectionName, userRecord, function (err, record) {
 					data.error = err || !record;
 					data.code = 403;
-					checkIfError(req, res, data, true, function () {
+					checkIfError(req, res, data, true, function (){
 						//no validation needed stop and return
 						if (requireValidation && req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.join) {
 							var tokenRecord = {
@@ -318,7 +320,7 @@ service.init(function () {
 							mongo.insert(tokenCollectionName, tokenRecord, function (err) {
 								mongo.closeDb();
 								data.error = err;
-								checkIfError(req, res, data, false, function () {
+								checkIfError(req, res, data, false, function (){
 									//send an email to the user
 									var data = userRecord;
 									data.link = {
@@ -349,7 +351,7 @@ service.init(function () {
 			status: 'active'
 		}, function (err, tokenRecord) {
 			var data = {config: config, error: err || !tokenRecord, code: 406, mongo: mongo};
-			checkIfError(req, res, data, true, function () {
+			checkIfError(req, res, data, true, function (){
 				//check if token expired
 				if (new Date(tokenRecord.expires).getTime() < new Date().getTime()) {
 					mongo.closeDb();
@@ -362,7 +364,7 @@ service.init(function () {
 					'status': 'pendingJoin'
 				}, function (error, userRecord) {
 					data.error = error || !userRecord;
-					checkIfError(req, res, data, true, function () {
+					checkIfError(req, res, data, true, function (){
 						//update token status
 						tokenRecord.status = 'used';
 						userRecord.status = 'active';
@@ -371,12 +373,12 @@ service.init(function () {
 						mongo.save(tokenCollectionName, tokenRecord, function (err) {
 							data.error = err;
 							data.code = 407;
-							checkIfError(req, res, data, false, function () {
+							checkIfError(req, res, data, false, function(){
 								//save user record in database
 								mongo.save(userCollectionName, userRecord, function (err) {
 									mongo.closeDb();
 									data.error = err;
-									checkIfError(req, res, data, false, function () {
+									checkIfError(req, res, data, false, function(){
 										return res.jsonp(req.soajs.buildResponse(null, true));
 									});
 								});
@@ -431,7 +433,7 @@ service.init(function () {
 				"hashIterations": config.hashIterations,
 				"seedLength": config.seedLength
 			};
-			if (req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.hashIterations && req.soajs.servicesConfig.urac.seedLength) {
+			if(req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.hashIterations && req.soajs.servicesConfig.urac.seedLength){
 				hashConfig = {
 					"hashIterations": req.soajs.servicesConfig.urac.hashIterations,
 					"seedLength": req.soajs.servicesConfig.urac.seedLength
@@ -449,7 +451,7 @@ service.init(function () {
 					mongo.save(userCollectionName, userRecord, function (err) {
 						mongo.closeDb();
 						var data = {config: config, error: err, code: 407};
-						checkIfError(req, res, data, false, function () {
+						checkIfError(req, res, data, false, function(){
 							return res.jsonp(req.soajs.buildResponse(null, true));
 						});
 					});
@@ -470,7 +472,7 @@ service.init(function () {
 		}
 		mongo.findOne(userCollectionName, {'_id': userId}, function (err, userRecord) {
 			var data = {config: config, error: err, code: 405, mongo: mongo};
-			checkIfError(req, res, data, true, function () {
+			checkIfError(req, res, data, true, function(){
 				if (userRecord.email === req.soajs.inputmaskData['email']) {
 					mongo.closeDb();
 					return res.jsonp(req.soajs.buildResponse({"code": 412, "msg": config.errors[412]}));
@@ -495,13 +497,13 @@ service.init(function () {
 				}, {'$set': {'status': 'invalid'}}, function (err) {
 					data.error = err;
 					data.code = 407;
-					checkIfError(req, res, data, true, function () {
+					checkIfError(req, res, data, true, function(){
 
 						//insert newly created token
 						mongo.insert(tokenCollectionName, tokenRecord, function (err) {
 							mongo.closeDb();
 							data.error = err;
-							checkIfError(req, res, data, false, function () {
+							checkIfError(req, res, data, false, function(){
 
 								//email notification
 								if (req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.changeEmail) {
@@ -548,7 +550,7 @@ service.init(function () {
 			//get user record
 			mongo.findOne(userCollectionName, {'_id': mongo.ObjectId(tokenRecord.userId)}, function (error, userRecord) {
 				var data = {config: config, error: error || !userRecord, code: 406, mongo: mongo};
-				checkIfError(req, res, data, true, function () {
+				checkIfError(req, res, data, true, function(){
 
 					//update token status
 					tokenRecord.status = 'used';
@@ -560,13 +562,13 @@ service.init(function () {
 					mongo.save(tokenCollectionName, tokenRecord, function (err) {
 						data.error = err;
 						data.code = 407;
-						checkIfError(req, res, data, true, function () {
+						checkIfError(req, res, data, true, function(){
 
 							//save user record in database
 							mongo.save(userCollectionName, userRecord, function (err) {
 								mongo.closeDb();
 								data.error = err;
-								checkIfError(req, res, data, false, function () {
+								checkIfError(req, res, data, false, function() {
 									return res.jsonp(req.soajs.buildResponse(null, true));
 								});
 							});
@@ -586,7 +588,7 @@ service.init(function () {
 		mongo.find(userCollectionName, condition, {}, function (err, userRecords) {
 			mongo.closeDb();
 			var data = {config: config, error: err || !userRecords, code: 406, mongo: mongo};
-			checkIfError(req, res, data, false, function () {
+			checkIfError(req, res, data, false, function(){
 
 				//if no records return empty array
 				if (userRecords.length === 0) {
@@ -615,7 +617,7 @@ service.init(function () {
 		mongo.findOne(userCollectionName, {'_id': userId}, function (err, userRecord) {
 			mongo.closeDb();
 			var data = {config: config, error: err || !userRecord, code: 405};
-			checkIfError(req, res, data, false, function () {
+			checkIfError(req, res, data, false, function(){
 				delete userRecord.password;
 				return res.jsonp(req.soajs.buildResponse(null, userRecord));
 			});

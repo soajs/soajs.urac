@@ -44,6 +44,7 @@ var acl={
 module.exports = {
 	//maximum string limit used if no limit is passed to getRandomString
 	"serviceName": "urac",
+	"serviceGroup": "SOAJS Core Services",
 	"servicePort": 4001,
 	"requestTimeout": 30,
 	"requestTimeoutRenewal": 5,

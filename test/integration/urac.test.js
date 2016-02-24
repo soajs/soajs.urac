@@ -1246,10 +1246,11 @@ describe("simple urac tests", function() {
 					var t = new Date(1426087819320);
 					tokenRecord.expires = t;
 					mongo.save('tokens', tokenRecord, function(err) {
+						assert.ifError(err);
 						console.log(tokenRecord);
+						done();
 					});
 				});
-				done();
 			});
 		});
 
