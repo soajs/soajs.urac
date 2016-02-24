@@ -473,7 +473,7 @@ module.exports = {
 			},
 			"config": {
 				"source": ['body.config'],
-				"required": false,
+				"required": true,
 				"validation": {
 					"type": "object",
 					"properties": {
