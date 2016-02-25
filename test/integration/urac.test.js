@@ -1919,6 +1919,22 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
+
+		it("Fail - invalid id", function (done) {
+			var params = {
+				qs: {
+					'uId': '32434324'
+				}
+			};
+			requester('admin/getUser', 'get', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
+				done();
+			});
+		});
+
 		it("Success", function (done) {
 			var params = {
 				qs: {
