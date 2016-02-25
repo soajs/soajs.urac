@@ -68,6 +68,165 @@ describe("simple urac tests", function () {
 		done();
 	});
 
+	var u4 = '22d2cb5fc04ce51e06000001';
+
+	describe("testing locked accounts", function () {
+
+		it("FAIL - editUserConfig", function (done) {
+			var params = {
+				qs: {
+					'uId': u4
+				},
+				form: {
+					'config': {
+						'packages': {
+							'TPROD_EX03': {
+								'acl': {
+									'example01': {}
+								}
+							}
+						}
+					}
+				}
+			};
+			requester('admin/editUserConfig', 'post', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.equal(body.errors.details[0].code, 500);
+				done();
+			});
+		});
+
+		it("FAIL - editUser", function (done) {
+			var params = {
+				qs: {
+					'uId': u4
+				},
+				form: {
+					"username": "user4",
+					"firstName": "user",
+					"lastName": "four4",
+					"email": "user4@domain.com",
+					"status": "active",
+					"profile": {},
+					"config": {
+						"packages": {
+							'TPROD_EX03': {
+								'acl': {
+									'example01': {}
+								}
+							}
+						},
+						"keys": {}
+					}
+				}
+			};
+
+			requester('admin/editUser', 'post', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.equal(body.errors.details[0].code, 500);
+				done();
+
+			});
+		});
+
+	});
+
+	describe("testing edit user Config API", function () {
+
+		it("FAIL - invalid user account", function (done) {
+			var params = {
+				qs: {
+					'uId': 'aaaabbbbccccdddd'
+				},
+				form: {
+					'config': {}
+				}
+			};
+			requester('admin/editUserConfig', 'post', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
+				done();
+			});
+		});
+
+		var u1 = '54ee1a511856706c23639308';
+
+		it("SUCCESS - will update user1 config", function (done) {
+			var params = {
+				qs: {
+					'uId': u1
+				},
+				form: {
+					'config': {
+						'keys': {},
+						'packages': {
+							'TPROD_EX03': {
+								'acl': {
+									'example01': {}
+								}
+							}
+						}
+					}
+				}
+			};
+
+			requester('admin/editUserConfig', 'post', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.ok(body.data);
+				done();
+			});
+		});
+
+		it("SUCCESS - will update user config", function (done) {
+			var params = {
+				qs: {
+					'uId': u1
+				},
+				form: {
+					'config': {
+						'keys': {},
+						'packages': {
+							'TPROD_EX03': {
+								'acl': {
+									'example01': {}
+								}
+							}
+						}
+					}
+				}
+			};
+
+			requester('admin/editUserConfig', 'post', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.ok(body.data);
+				mongo.findOne("users", {'username': 'user1'}, function (error, userRecord) {
+					assert.ifError(error);
+					assert.ok(userRecord);
+					assert.deepEqual(userRecord.config.packages, {
+						'TPROD_EX03': {
+							'acl': {
+								'example01': {}
+							}
+						}
+					});
+					done();
+				});
+
+			});
+		});
+
+	});
+
 	describe("testing join API with validation", function () {
 		var token;
 		var tokenlisa;
@@ -1635,75 +1794,6 @@ describe("simple urac tests", function () {
 		});
 	});
 
-	describe("testing edit user Config API", function () {
-
-		it("FAIL - invalid user account", function (done) {
-			var params = {
-				qs: {
-					'uId': 'aaaabbbbccccdddd'
-				},
-				form: {
-					'config': {}
-				}
-			};
-			requester('admin/editUserConfig', 'post', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
-				done();
-			});
-		});
-
-		it("SUCCESS - will update user config", function (done) {
-			var params = {
-				qs: {
-					'uId': uId
-				},
-				form: {
-					'config': {
-						'keys': {},
-						'packages': {
-							'TPROD_EX03': {
-								'acl': {
-									'example01': {}
-								}
-							}
-						}
-					}
-				}
-			};
-
-			requester('admin/editUserConfig', 'post', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				assert.ok(body.data);
-				console.log(JSON.stringify(body));
-
-				mongo.findOne("users", {'username': 'john123'}, function (error, userRecord) {
-					assert.ifError(error);
-					assert.ok(userRecord);
-					delete userRecord.password;
-					delete userRecord.ts;
-					userRecord._id = userRecord._id.toString();
-					assert.deepEqual(userRecord.config, {
-						'packages': {
-							'TPROD_EX03': {
-								'acl': {
-									'example01': {}
-								}
-							}
-						},
-						'keys': {}
-					});
-					done();
-				});
-
-			});
-		});
-
-	});
-
 	describe("testing change user status API", function () {
 		it("FAIL - missing parameters", function (done) {
 			var params = {
@@ -1886,4 +1976,6 @@ describe("simple urac tests", function () {
 			});
 		});
 	});
+
+
 });

@@ -28,21 +28,22 @@ function requester(apiName, method, params, cb) {
 		json: true
 	};
 
-	if(params.headers) {
-		for(var h in params.headers) {
-			if(Object.hasOwnProperty.call(params.headers, h)) {
+	if (params.headers) {
+		for (var h in params.headers) {
+			if (Object.hasOwnProperty.call(params.headers, h)) {
 				options.headers[h] = params.headers[h];
 			}
-			else {}
+			else {
+			}
 		}
 	}
-	if(params.form) {
+	if (params.form) {
 		options.form = params.form;
 	}
-	if(params.qs) {
+	if (params.qs) {
 		options.qs = params.qs;
 	}
-	request[method](options, function(error, response, body) {
+	request[method](options, function (error, response, body) {
 		assert.ifError(error);
 		assert.ok(body);
 		return cb(null, body);
@@ -50,25 +51,25 @@ function requester(apiName, method, params, cb) {
 }
 
 var gId = '';
-describe("urac group tests", function() {
-	before(function(done){
-		mongoSession.dropDatabase(function() {
+describe("urac group tests", function () {
+	before(function (done) {
+		mongoSession.dropDatabase(function () {
 			console.log('starting tests ....');
 			setTimeout(function () {
 				done();
-			},500);
+			}, 500);
 		});
 	});
 
-	afterEach(function(done) {
+	afterEach(function (done) {
 		console.log("=======================================");
 		done();
 	});
 	
-	describe("testing groups API", function() {
+	describe("testing groups API", function () {
 		
-		describe("testing create group API", function() {		
-			it("SUCCESS - will create new group", function(done) {
+		describe("testing create group API", function () {
+			it("SUCCESS - will create new group", function (done) {
 				var params = {
 					form: {
 						'code': 'gold',
@@ -78,22 +79,22 @@ describe("urac group tests", function() {
 						'tCode': 'test'
 					}
 				};
-				requester('admin/group/add', 'post', params, function(error, body) {
+				requester('admin/group/add', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
 					assert.ok(body.data);
 					
-					mongo.findOne('groups', {'code': 'gold'}, function(error, record) {
+					mongo.findOne('groups', {'code': 'gold'}, function (error, record) {
 						assert.ifError(error);
 						assert.ok(record);
-						console.log(record);						
+						console.log(record);
 						gId = record._id.toString();// will be used by other test cases
 						done();
 					});
-				});											
+				});
 			});
-			it("FAIL - will NOT create group - code exists", function(done) {
+			it("FAIL - will NOT create group - code exists", function (done) {
 				var params = {
 					form: {
 						'code': 'gold',
@@ -103,15 +104,18 @@ describe("urac group tests", function() {
 						'tCode': 'test'
 					}
 				};
-				requester('admin/group/add', 'post', params, function(error, body) {
+				requester('admin/group/add', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
-					assert.deepEqual(body.errors.details[0], {"code": 421, "message": "Group code already exists. Choose another"});
-					done();				
-				});												
+					assert.deepEqual(body.errors.details[0], {
+						"code": 421,
+						"message": "Group code already exists. Choose another"
+					});
+					done();
+				});
 			});
-			it("SUCCESS - will create new group - silver", function(done) {
+			it("SUCCESS - will create new group - silver", function (done) {
 				var params = {
 					form: {
 						'code': 'silver',
@@ -121,34 +125,34 @@ describe("urac group tests", function() {
 						'tCode': 'test'
 					}
 				};
-				requester('admin/group/add', 'post', params, function(error, body) {
+				requester('admin/group/add', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
-					done();				
-				});												
+					done();
+				});
 			});
 			
 		});
 		
-		describe("testing edit group API", function() {		
-			it("FAIL - will NOT edit group - Invalid id", function(done) {
+		describe("testing edit group API", function () {
+			it("FAIL - will NOT edit group - Invalid id", function (done) {
 				var params = {
 					qs: {'gId': '5645'},
 					form: {
 						'name': 'gold 2',
 						'description': 'description 2'
 					}
-				};				
-				requester('admin/group/edit', 'post', params, function(error, body) {
+				};
+				requester('admin/group/edit', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
-					assert.deepEqual(body.errors.details[0], {"code": 417, "message": "Invalid group id provided"});		
+					assert.deepEqual(body.errors.details[0], {"code": 417, "message": "Invalid group id provided"});
 					done();
-				});			
+				});
 			});
-			it("SUCCESS - will edit group", function(done) {
+			it("SUCCESS - will edit group", function (done) {
 				var params = {
 					qs: {
 						'gId': gId
@@ -157,39 +161,39 @@ describe("urac group tests", function() {
 						'name': 'gold name',
 						'description': 'description update'
 					}
-				};			
-				requester('admin/group/edit', 'post', params, function(error, body) {
+				};
+				requester('admin/group/edit', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
-					assert.ok(body.data);				
+					assert.ok(body.data);
 					done();
 				});
-			
-			});		
+
+			});
 			
 		});
 
-		describe("testing mapping", function() {
-			var uId ='' ;
-			it("SUCCESS - will map grp to users", function(done) {
+		describe("testing mapping", function () {
+			var uId = '';
+			it("SUCCESS - will map grp to users", function (done) {
 				var params = {
 					form: {
 						'groupCode': 'bronze',
-						'users': [ 'user1', 'user4'],
+						'users': ['user1', 'user4'],
 						'tId': '10d2cb5fc04ce51e06000001'
 					}
 				};
-				requester('admin/group/addUsers', 'post', params, function(error, body) {
+				requester('admin/group/addUsers', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
-					assert.ok(body.data);				
+					assert.ok(body.data);
 					done();
 				});
 			});
 			
-			it("SUCCESS - will map grp to users - empty array", function(done) {
+			it("SUCCESS - will map grp to users - empty array", function (done) {
 				var params = {
 					form: {
 						'groupCode': 'silver',
@@ -197,21 +201,21 @@ describe("urac group tests", function() {
 						'tId': '10d2cb5fc04ce51e06000001'
 					}
 				};
-				requester('admin/group/addUsers', 'post', params, function(error, body) {
+				requester('admin/group/addUsers', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
-					assert.ok(body.data);				
+					assert.ok(body.data);
 					done();
 				});
 			});
 			
-			it("SUCCESS - will update user account", function(done) {
-				mongo.findOne("users", {'username': 'user1'}, function(error, userRecord) {
+			it("SUCCESS - will update user account", function (done) {
+				mongo.findOne("users", {'username': 'user1'}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
-					console.log('userRecord') ; 
-					console.log(userRecord) ; 
+					console.log('userRecord');
+					console.log(userRecord);
 					uId = userRecord._id.toString();
 					var params = {
 						qs: {'uId': uId},
@@ -220,16 +224,17 @@ describe("urac group tests", function() {
 							'lastName': 'smith',
 							"email": "user1@domain.com",
 							'username': 'user1',
-							'status': 'active', 
-							"groups" : ['silver', 'gold', 'bronze']
+							'status': 'active',
+							"groups": ['silver', 'gold', 'bronze']
 						}
 					};
 					
-					requester('admin/editUser', 'post', params, function(error, body) {
+					requester('admin/editUser', 'post', params, function (error, body) {
 						assert.ifError(error);
-						assert.ok(body); assert.ok(body.data);
+						assert.ok(body);
+						assert.ok(body.data);
 						console.log(JSON.stringify(body));
-						mongo.findOne("users", {'username': 'user1'}, function(error, userRecord) {
+						mongo.findOne("users", {'username': 'user1'}, function (error, userRecord) {
 							assert.ifError(error);
 							assert.ok(userRecord);
 							assert.deepEqual(userRecord.groups, ['silver', 'gold', 'bronze']);
@@ -240,7 +245,7 @@ describe("urac group tests", function() {
 				});
 				
 			});
-			it("SUCCESS - will update user account - no groups", function(done) {
+			it("SUCCESS - will update user account - no groups", function (done) {
 				var params = {
 					qs: {'uId': uId},
 					form: {
@@ -248,16 +253,17 @@ describe("urac group tests", function() {
 						'lastName': 'smith',
 						"email": "user1@domain.com",
 						'username': 'user1',
-						'status': 'active', 
-						"groups" : [],
+						'status': 'active',
+						"groups": [],
 						'tId': '10d2cb5fc04ce51e06000001'
 					}
 				};
-				requester('admin/editUser', 'post', params, function(error, body) {
+				requester('admin/editUser', 'post', params, function (error, body) {
 					assert.ifError(error);
-					assert.ok(body); assert.ok(body.data);
+					assert.ok(body);
+					assert.ok(body.data);
 					console.log(JSON.stringify(body));
-					mongo.findOne("users", {'username': 'user1'}, function(error, userRecord) {
+					mongo.findOne("users", {'username': 'user1'}, function (error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
 						assert.deepEqual(userRecord.groups, []);
@@ -265,40 +271,41 @@ describe("urac group tests", function() {
 					});
 				});
 			});
-			it("SUCCESS - will add user account - with groups", function(done) {
+			it("SUCCESS - will add user account - with groups", function (done) {
 				var params = {
 					form: {
 						'firstName': 'user5',
 						'lastName': 'user5',
 						"email": "user5@domain.com",
 						'username': 'user5',
-						'status': 'active', 
-						"groups" : ['gold'],
+						'status': 'active',
+						"groups": ['gold'],
 						'tId': '10d2cb5fc04ce51e06000001',
 						'tCode': 'test'
 					}
 				};
-				requester('admin/addUser', 'post', params, function(error, body) {
+				requester('admin/addUser', 'post', params, function (error, body) {
 					assert.ifError(error);
-					assert.ok(body); assert.ok(body.data);
+					assert.ok(body);
+					assert.ok(body.data);
 					console.log(JSON.stringify(body));
-					mongo.findOne("users", {'username': 'user5'}, function(error, userRecord) {
+					mongo.findOne("users", {'username': 'user5'}, function (error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
-						console.log( userRecord );
+						console.log(userRecord);
 						assert.deepEqual(userRecord.groups, ['gold']);
 						done();
 					});
 				});
 			});
-			it("SUCCESS - will login user with no config obj", function(done) {
+			it("SUCCESS - will login user with no config obj", function (done) {
 				var params = {
 					form: {
 						"username": 'user1',
 						"password": '123456'
 					}
 				};
-				requester('login', 'post', params, function(error, body) {
+				requester('login', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
@@ -306,14 +313,14 @@ describe("urac group tests", function() {
 					done();
 				});
 			});
-			it("SUCCESS - will login user 3 with no grps arr", function(done) {
+			it("SUCCESS - will login user 3 with no grps arr", function (done) {
 				var params = {
 					form: {
 						"username": 'user3',
 						"password": '654321'
 					}
 				};
-				requester('login', 'post', params, function(error, body) {
+				requester('login', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
@@ -323,61 +330,63 @@ describe("urac group tests", function() {
 			});
 		});
 		
-		describe("testing delete group API", function() {
-			it("FAIL - will not delete group", function(done) {
+		describe("testing delete group API", function () {
+			it("FAIL - will not delete group", function (done) {
 				var params = {
 					qs: {'gId': 'gfdg56'}
-				};			
-				requester('admin/group/delete', 'get', params, function(error, body) {
+				};
+				requester('admin/group/delete', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
-					assert.deepEqual(body.errors.details[0], {"code": 417, "message": "Invalid group id provided"});				
+					assert.deepEqual(body.errors.details[0], {"code": 417, "message": "Invalid group id provided"});
 					done();
-				});	
+				});
 			});
-			it("SUCCESS - will delete group gold", function(done) {
+			it("SUCCESS - will delete group gold", function (done) {
 				var params = {
 					qs: {
 						'gId': gId
 					}
 				};
-				requester('admin/group/delete', 'get', params, function(error, body) {
+				requester('admin/group/delete', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
-					assert.ok(body.data);				
+					assert.ok(body.data);
 					done();
-				});		
+				});
 			});
-			it("FAIL - will not delete locked group", function(done) {			
-				mongo.findOne('groups', {'name': 'administrator'}, function(error, record) {
+			it("FAIL - will not delete locked group", function (done) {
+				mongo.findOne('groups', {'name': 'administrator'}, function (error, record) {
 					assert.ifError(error);
 					assert.ok(record);
 					//console.log(record);						
 					var Id = record._id.toString();
 					var params = {
 						qs: {'gId': Id}
-					};			
-					requester('admin/group/delete', 'get', params, function(error, body) {
+					};
+					requester('admin/group/delete', 'get', params, function (error, body) {
 						assert.ifError(error);
 						assert.ok(body);
 						console.log(JSON.stringify(body));
-						assert.deepEqual(body.errors.details[0],
-								{"code": 500, "message": "This record in locked. You cannot modify or delete it"});
+						assert.deepEqual(body.errors.details[0], {
+							"code": 500,
+							"message": "This record in locked. You cannot modify or delete it"
+						});
 						done();
 					});
 
 				});
-			
+
 			});
 			
 		});
-	
-		describe("testing list group API", function() {
-			it("SUCCESS - will return grps records", function(done) {
+
+		describe("testing list group API", function () {
+			it("SUCCESS - will return grps records", function (done) {
 				var params = {};
-				requester('admin/group/list', 'get', params, function(error, body) {
+				requester('admin/group/list', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
@@ -387,9 +396,9 @@ describe("urac group tests", function() {
 				});
 			});
 
-			it("SUCCESS - will return grps records", function(done) {
-				var params = {qs:{'tId': '10d2cb5fc04ce51e06000001'}};
-				requester('admin/group/list', 'get', params, function(error, body) {
+			it("SUCCESS - will return grps records", function (done) {
+				var params = {qs: {'tId': '10d2cb5fc04ce51e06000001'}};
+				requester('admin/group/list', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
@@ -399,9 +408,9 @@ describe("urac group tests", function() {
 				});
 			});
 
-			it("SUCCESS - will return grps records", function(done) {
+			it("SUCCESS - will return grps records", function (done) {
 				var params = {};
-				requester('admin/all', 'get', params, function(error, body) {
+				requester('admin/all', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
@@ -414,10 +423,10 @@ describe("urac group tests", function() {
 				});
 			});
 
-			it("SUCCESS - will return empty records", function(done) {
-				mongo.dropCollection('groups', function() {
+			it("SUCCESS - will return empty records", function (done) {
+				mongo.dropCollection('groups', function () {
 					var params = {};
-					requester('admin/group/list', 'get', params, function(error, body) {
+					requester('admin/group/list', 'get', params, function (error, body) {
 						assert.ifError(error);
 						assert.ok(body);
 						console.log(JSON.stringify(body));
@@ -425,7 +434,7 @@ describe("urac group tests", function() {
 						assert.equal(body.data.length, 0);
 						done();
 					});
-				});		
+				});
 			});
 		});
 	});
