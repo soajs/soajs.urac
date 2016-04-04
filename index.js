@@ -47,7 +47,6 @@ service.init(function () {
 		}
 
 		mongo.findOne(userCollectionName, criteria, function (err, record) {
-			mongo.closeDb();
 			if (record) {
 				var hashConfig = {
 					"hashIterations": config.hashIterations,
@@ -62,12 +61,32 @@ service.init(function () {
 				var hasher = new Hasher(hashConfig);
 				hasher.compare(req.soajs.inputmaskData.password, record.password, function (err, response) {
 					if (err || !response) {
+						mongo.closeDb();
 						return cb(400);
 					}
 					delete record.password;
-					return cb(null, record);
+
+					//Get Groups config
+					if (record.groups && Array.isArray(record.groups) && record.groups.length > 0) {
+						mongo.find(groupsCollectionName, {
+							"code": {"$in": record.groups}
+						}, function (err, groups) {
+							mongo.closeDb();
+							record.groupsConfig = null;
+							if (err)
+								req.soajs.log.error(err);
+							else
+								record.groupsConfig = groups;
+							return cb(null, record);
+						});
+					}
+					else {
+						mongo.closeDb();
+						return cb(null, record);
+					}
 				});
 			} else {
+				mongo.closeDb();
 				return cb(401);
 			}
 		});
