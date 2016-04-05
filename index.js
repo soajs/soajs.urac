@@ -12,14 +12,7 @@ var userCollectionName = "users";
 var tokenCollectionName = "tokens";
 var groupsCollectionName = "groups";
 
-var service = new soajs.server.service({
-	"oauth": false,
-	"session": true,
-	"security": true,
-	"multitenant": true,
-	"acl": true,
-	"config": config
-});
+var service = new soajs.server.service(config);
 
 function checkIfError(req, res, data, flag, cb) {
 	if (data.error) {

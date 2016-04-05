@@ -1,7 +1,7 @@
 {
   "name": "soajs.urac",
   "description": "soajs URAC service",
-  "version": "0.1.4",
+  "version": "0.2.1",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -20,24 +20,23 @@
   "devDependencies":{
     "soajs.mongodb.data" : "0.1.*",
     "soajs.controller": "0.1.*",
-    "grunt":"0.4.5",
-    "grunt-contrib-jshint":"0.10.0",
+    "grunt":"*",
+    "grunt-contrib-jshint":"*",
     "grunt-jsdoc" : "*",
     "grunt-contrib-clean" : "*",
     "grunt-mocha-test" : "*",
     "grunt-env" : "*",
-    "grunt-istanbul" : "0.3.0",
+    "grunt-istanbul" : "*",
     "grunt-coveralls" : "*",
     "jshint" : "*",
-    "mocha" : "*",
+    "lodash": "*",
+    "mocha": "*",
     "request" : "*",
     "shelljs": "*"
   },
   "dependencies": {
     "bcrypt": "*",
-    "node-uuid": "*"
-  },
-  "peerDependencies": {
-    "soajs": "0.2.*"
+    "node-uuid": "*",
+    "soajs": "0.3.*"
   }
 }

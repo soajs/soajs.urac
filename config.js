@@ -42,7 +42,12 @@ var acl={
 };
 
 module.exports = {
-	//maximum string limit used if no limit is passed to getRandomString
+	type: 'service',
+	prerequisites: {
+		cpu: '',
+		memory: ''
+	},
+	"serviceVersion": 1,
 	"serviceName": "urac",
 	"serviceGroup": "SOAJS Core Services",
 	"servicePort": 4001,
@@ -51,6 +56,9 @@ module.exports = {
 	"hashIterations": 1024,
 	"seedLength": 32,
 	"extKeyRequired": true,
+	"oauth": false,
+	"session": true,
+
 	"maxStringLimit": 30,
 	"errors": {
 		400: "Problem with the provided password.",
