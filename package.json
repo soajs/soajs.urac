@@ -37,6 +37,6 @@
   "dependencies": {
     "bcrypt": "*",
     "node-uuid": "*",
-    "soajs": "0.2.*"
+    "soajs": "https://github.com/soajs/soajs.git#develop"
   }
 }
