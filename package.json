@@ -34,9 +34,11 @@
     "request" : "*",
     "shelljs": "*"
   },
+  "peerDependencies": {
+    "soajs": "0.2.x"
+  },
   "dependencies": {
     "bcrypt": "*",
-    "node-uuid": "*",
-    "soajs": "https://github.com/soajs/soajs.git#develop"
+    "node-uuid": "*"
   }
 }
