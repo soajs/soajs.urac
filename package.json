@@ -37,6 +37,6 @@
   "dependencies": {
     "bcrypt": "*",
     "node-uuid": "*",
-    "soajs": "0.3.*"
+    "soajs": "0.2.*"
   }
 }
