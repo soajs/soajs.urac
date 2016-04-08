@@ -279,6 +279,7 @@ describe("simple urac tests", function () {
 				}, 500);
 			});
 		});
+
 		it("SUCCESS - will join another user", function (done) {
 			var params = {
 				form: {
@@ -518,6 +519,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
+
 		it("SUCCESS - will login user with email instead of username", function (done) {
 			var params = {
 				form: {
@@ -1592,158 +1594,84 @@ describe("simple urac tests", function () {
 
 	});
 
-	describe("testing edit user API", function () {
-		it("FAIL - missing params", function (done) {
-			var params = {
-				form: {
-					'firstName': 'john',
-					'lastName': 'doe',
-					'email': 'john.doe@soajs.org',
-					'username': 'johndoe',
-					'status': 'active'
-				}
-			};
-			requester('admin/editUser', 'post', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: uId"});
-				done();
-			});
-		});
-
-		it("FAIL - invalid user account", function (done) {
-			var params = {
-				qs: {
-					'uId': 'aaaabbbbccccdddd'
-				},
-				form: {
-					'firstName': 'john',
-					'lastName': 'doe',
-					'email': 'john.doe@soajs.org',
-					'username': 'johndoe',
-					'status': 'active'
-				}
-			};
-			requester('admin/editUser', 'post', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
-				done();
-			});
-		});
-
-		it("FAIL - username exists for another account", function (done) {
-			var params = {
-				qs: {
-					'uId': uId
-				},
-				form: {
-					'firstName': 'john',
-					'lastName': 'doe',
-					'email': 'john.doe@soajs.org',
-					'username': 'johndoe',
-					'status': 'active'
-				}
-			};
-			requester('admin/editUser', 'post', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {
-					"code": 410,
-					"message": "username taken, please choose another username"
-				});
-				done();
-			});
-		});
-
-		it("SUCCESS - will update user account", function (done) {
-			var params = {
-				qs: {
-					'uId': uId
-				},
-				form: {
-					'firstName': 'john',
-					'lastName': 'doe',
-					'email': 'john.doe@soajs.org',
-					'username': 'john123',
-					'status': 'active',
-					'config': {
-						'keys': {},
-						'packages': {
-							'TPROD_EX03': {
-								'acl': {
-									'example01': {}
-								}
-							}
-						}
+	describe("testing admin API", function () {
+		describe("testing edit user API", function () {
+			it("FAIL - missing params", function (done) {
+				var params = {
+					form: {
+						'firstName': 'john',
+						'lastName': 'doe',
+						'email': 'john.doe@soajs.org',
+						'username': 'johndoe',
+						'status': 'active'
 					}
-				}
-			};
-
-			requester('admin/editUser', 'post', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				assert.ok(body.data);
-				console.log(JSON.stringify(body));
-
-				mongo.findOne("users", {'username': 'john123'}, function (error, userRecord) {
+				};
+				requester('admin/editUser', 'post', params, function (error, body) {
 					assert.ifError(error);
-					assert.ok(userRecord);
-					delete userRecord.password;
-					delete userRecord.ts;
-					userRecord._id = userRecord._id.toString();
-					assert.deepEqual(userRecord, {
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: uId"});
+					done();
+				});
+			});
+
+			it("FAIL - invalid user account", function (done) {
+				var params = {
+					qs: {
+						'uId': 'aaaabbbbccccdddd'
+					},
+					form: {
+						'firstName': 'john',
+						'lastName': 'doe',
+						'email': 'john.doe@soajs.org',
+						'username': 'johndoe',
+						'status': 'active'
+					}
+				};
+				requester('admin/editUser', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
+					done();
+				});
+			});
+
+			it("FAIL - username exists for another account", function (done) {
+				var params = {
+					qs: {
+						'uId': uId
+					},
+					form: {
+						'firstName': 'john',
+						'lastName': 'doe',
+						'email': 'john.doe@soajs.org',
+						'username': 'johndoe',
+						'status': 'active'
+					}
+				};
+				requester('admin/editUser', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.deepEqual(body.errors.details[0], {
+						"code": 410,
+						"message": "username taken, please choose another username"
+					});
+					done();
+				});
+			});
+
+			it("SUCCESS - will update user account", function (done) {
+				var params = {
+					qs: {
+						'uId': uId
+					},
+					form: {
 						'firstName': 'john',
 						'lastName': 'doe',
 						'email': 'john.doe@soajs.org',
 						'username': 'john123',
-						'status': 'active',
-						'_id': uId,
-						'groups': [],
-						'profile': {
-							"age": 30
-						},
-						'config': {
-							'packages': {
-								'TPROD_EX03': {
-									'acl': {
-										'example01': {}
-									}
-								}
-							},
-							'keys': {}
-						},
-						'tenant': {
-							'id': '10d2cb5fc04ce51e06000001',
-							'code': 'test'
-						}
-					});
-					done();
-				});
-
-
-			});
-		});
-
-		it("SUCCESS - will update user account user2", function (done) {
-			mongo.findOne("users", {'username': 'user2'}, function (error, userRecord) {
-				assert.ifError(error);
-				assert.ok(userRecord);
-				delete userRecord.password;
-				var id2 = userRecord._id.toString();
-				console.log(userRecord);
-				var params = {
-					qs: {
-						'uId': id2
-					},
-					form: {
-						"firstName": "user",
-						"lastName": "two",
-						'username': 'user2',
-						"email": "user@soajs.org",
 						'status': 'active',
 						'config': {
 							'keys': {},
@@ -1757,241 +1685,319 @@ describe("simple urac tests", function () {
 						}
 					}
 				};
+
 				requester('admin/editUser', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					assert.ok(body.data);
 					console.log(JSON.stringify(body));
-					mongo.findOne("users", {'username': 'user2'}, function (error, record) {
-						assert.ok(record);
-						delete record.password;
-						delete record.ts;
-						delete record.groups;
-						delete record.tenant;
-						console.log(record);
-						delete record._id;
-						assert.deepEqual(record.config, {
-							'packages': {
-								'TPROD_EX03': {
-									'acl': {
-										'example01': {}
+
+					mongo.findOne("users", {'username': 'john123'}, function (error, userRecord) {
+						assert.ifError(error);
+						assert.ok(userRecord);
+						delete userRecord.password;
+						delete userRecord.ts;
+						userRecord._id = userRecord._id.toString();
+						assert.deepEqual(userRecord, {
+							'firstName': 'john',
+							'lastName': 'doe',
+							'email': 'john.doe@soajs.org',
+							'username': 'john123',
+							'status': 'active',
+							'_id': uId,
+							'groups': [],
+							'profile': {
+								"age": 30
+							},
+							'config': {
+								'packages': {
+									'TPROD_EX03': {
+										'acl': {
+											'example01': {}
+										}
+									}
+								},
+								'keys': {}
+							},
+							'tenant': {
+								'id': '10d2cb5fc04ce51e06000001',
+								'code': 'test'
+							}
+						});
+						done();
+					});
+
+
+				});
+			});
+
+			it("SUCCESS - will update user account user2", function (done) {
+				mongo.findOne("users", {'username': 'user2'}, function (error, userRecord) {
+					assert.ifError(error);
+					assert.ok(userRecord);
+					delete userRecord.password;
+					var id2 = userRecord._id.toString();
+					console.log(userRecord);
+					var params = {
+						qs: {
+							'uId': id2
+						},
+						form: {
+							"firstName": "user",
+							"lastName": "two",
+							'username': 'user2',
+							"email": "user@soajs.org",
+							'status': 'active',
+							'config': {
+								'keys': {},
+								'packages': {
+									'TPROD_EX03': {
+										'acl': {
+											'example01': {}
+										}
 									}
 								}
 							}
+						}
+					};
+					requester('admin/editUser', 'post', params, function (error, body) {
+						assert.ifError(error);
+						assert.ok(body);
+						assert.ok(body.data);
+						console.log(JSON.stringify(body));
+						mongo.findOne("users", {'username': 'user2'}, function (error, record) {
+							assert.ok(record);
+							delete record.password;
+							delete record.ts;
+							delete record.groups;
+							delete record.tenant;
+							console.log(record);
+							delete record._id;
+							assert.deepEqual(record.config, {
+								'packages': {
+									'TPROD_EX03': {
+										'acl': {
+											'example01': {}
+										}
+									}
+								}
+							});
+							delete record.config;
+							assert.deepEqual(record, {
+								'username': 'user2',
+								"firstName": "user",
+								"lastName": "two",
+								"email": "user@soajs.org",
+								'status': 'active'
+							});
+							done();
 						});
-						delete record.config;
-						assert.deepEqual(record, {
-							'username': 'user2',
-							"firstName": "user",
-							"lastName": "two",
-							"email": "user@soajs.org",
-							'status': 'active'
-						});
-						done();
 					});
 				});
 			});
 		});
-	});
 
-	describe("testing change user status API", function () {
-		it("FAIL - missing parameters", function (done) {
-			var params = {
-				qs: {
-					'uId': uId
-				}
-			};
-			requester('admin/changeUserStatus', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: status"});
-				done();
-			});
-		});
-
-		it("FAIL - invalid user account", function (done) {
-			var params = {
-				qs: {
-					'uId': 'dfds',
-					'status': 'active'
-				}
-			};
-			requester('admin/changeUserStatus', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
-				done();
-			});
-		});
-
-		it("FAIL - will approve user", function (done) {
-			var params = {
-				qs: {
-					'uId': uId,
-					'status': 'pending'//invalid status
-				}
-			};
-			requester('admin/changeUserStatus', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.equal(body.errors.details[0].code, '173');
-				assert.equal(body.errors.details[0].message, "Validation failed for field: status -> The parameter 'status' failed due to: instance is not one of enum values: active,inactive");
-				done();
-			});
-		});
-
-		it("SUCCESS - will approve user", function (done) {
-			var params = {
-				qs: {
-					'uId': uId,
-					'status': 'active'
-				}
-			};
-			requester('admin/changeUserStatus', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);
-				mongo.findOne('users', {'_id': mongo.ObjectId(uId)}, function (error, userRecord) {
+		describe("testing change user status API", function () {
+			it("FAIL - missing parameters", function (done) {
+				var params = {
+					qs: {
+						'uId': uId
+					}
+				};
+				requester('admin/changeUserStatus', 'get', params, function (error, body) {
 					assert.ifError(error);
-					assert.ok(userRecord);
-					assert.equal(userRecord.status, 'active');
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.deepEqual(body.errors.details[0], {
+						"code": 172,
+						"message": "Missing required field: status"
+					});
 					done();
 				});
 			});
-		});
 
-		it("SUCCESS - will inactivate user", function (done) {
-			var params = {
-				qs: {
-					'uId': uId,
-					'status': 'inactive'
-				}
-			};
-			requester('admin/changeUserStatus', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);
-				mongo.findOne('users', {'_id': mongo.ObjectId(uId)}, function (error, userRecord) {
+			it("FAIL - invalid user account", function (done) {
+				var params = {
+					qs: {
+						'uId': 'dfds',
+						'status': 'active'
+					}
+				};
+				requester('admin/changeUserStatus', 'get', params, function (error, body) {
 					assert.ifError(error);
-					assert.ok(userRecord);
-					assert.equal(userRecord.status, 'inactive');
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
 					done();
 				});
 			});
-		});
 
-		it("SUCCESS - will activate user - no mail", function (done) {
-			var params = {
-				headers: {
-					'key': extKey_noMail
-				},
-				qs: {
-					'uId': uId,
-					'status': 'active'
-				}
-			};
-			requester('admin/changeUserStatus', 'get', params, function (error, body) {
-				assert.ifError(error);
-				console.log(JSON.stringify(body));
-				assert.ok(body);
-				assert.ok(body.data);
-				done();
+			it("FAIL - will approve user", function (done) {
+				var params = {
+					qs: {
+						'uId': uId,
+						'status': 'pending'//invalid status
+					}
+				};
+				requester('admin/changeUserStatus', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.equal(body.errors.details[0].code, '173');
+					assert.equal(body.errors.details[0].message, "Validation failed for field: status -> The parameter 'status' failed due to: instance is not one of enum values: active,inactive");
+					done();
+				});
 			});
-		});
 
-	});
-
-	describe("testing admin get user API", function () {
-		it("Fail - missing param", function (done) {
-			var params = {
-				qs: {}
-			};
-			requester('admin/getUser', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: uId"});
-				done();
+			it("SUCCESS - will approve user", function (done) {
+				var params = {
+					qs: {
+						'uId': uId,
+						'status': 'active'
+					}
+				};
+				requester('admin/changeUserStatus', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					mongo.findOne('users', {'_id': mongo.ObjectId(uId)}, function (error, userRecord) {
+						assert.ifError(error);
+						assert.ok(userRecord);
+						assert.equal(userRecord.status, 'active');
+						done();
+					});
+				});
 			});
-		});
 
-		it("Fail - invalid id", function (done) {
-			var params = {
-				qs: {
-					'uId': '32434324'
-				}
-			};
-			requester('admin/getUser', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
-				done();
+			it("SUCCESS - will inactivate user", function (done) {
+				var params = {
+					qs: {
+						'uId': uId,
+						'status': 'inactive'
+					}
+				};
+				requester('admin/changeUserStatus', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					mongo.findOne('users', {'_id': mongo.ObjectId(uId)}, function (error, userRecord) {
+						assert.ifError(error);
+						assert.ok(userRecord);
+						assert.equal(userRecord.status, 'inactive');
+						done();
+					});
+				});
 			});
-		});
 
-		it("Success", function (done) {
-			var params = {
-				qs: {
-					'uId': uId
-				}
-			};
-			requester('admin/getUser', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);
-				assert.equal(body.data._id, uId);
-				done();
+			it("SUCCESS - will activate user - no mail", function (done) {
+				var params = {
+					headers: {
+						'key': extKey_noMail
+					},
+					qs: {
+						'uId': uId,
+						'status': 'active'
+					}
+				};
+				requester('admin/changeUserStatus', 'get', params, function (error, body) {
+					assert.ifError(error);
+					console.log(JSON.stringify(body));
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
 			});
+
 		});
 
-	});
-
-	describe("testing list users API", function () {
-		it("SUCCESS - will return user records", function (done) {
-			var params = {};
-			requester('admin/listUsers', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);
-				assert.ok(body.data.length > 0);
-				done();
+		describe("testing admin get user API", function () {
+			it("Fail - missing param", function (done) {
+				var params = {
+					qs: {}
+				};
+				requester('admin/getUser', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: uId"});
+					done();
+				});
 			});
-		});
 
-		it("SUCCESS - will return user records", function (done) {
-			var params = {qs: {'tId': '10d2cb5fc04ce51e06000001'}};
-			requester('admin/listUsers', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);
-				assert.ok(body.data.length > 0);
-				done();
+			it("Fail - invalid id", function (done) {
+				var params = {
+					qs: {
+						'uId': '32434324'
+					}
+				};
+				requester('admin/getUser', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
+					done();
+				});
 			});
+
+			it("Success", function (done) {
+				var params = {
+					qs: {
+						'uId': uId
+					}
+				};
+				requester('admin/getUser', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					assert.equal(body.data._id, uId);
+					done();
+				});
+			});
+
 		});
 
-		it("SUCCESS - will return empty array", function (done) {
-			mongo.dropCollection('users', function () {
+		describe("testing list users API", function () {
+			it("SUCCESS - will return user records", function (done) {
 				var params = {};
 				requester('admin/listUsers', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
 					assert.ok(body.data);
-					assert.equal(body.data.length, 0);
+					assert.ok(body.data.length > 0);
 					done();
+				});
+			});
+
+			it("SUCCESS - will return user records", function (done) {
+				var params = {qs: {'tId': '10d2cb5fc04ce51e06000001'}};
+				requester('admin/listUsers', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					assert.ok(body.data.length > 0);
+					done();
+				});
+			});
+
+			it("SUCCESS - will return empty array", function (done) {
+				mongo.dropCollection('users', function () {
+					var params = {};
+					requester('admin/listUsers', 'get', params, function (error, body) {
+						assert.ifError(error);
+						assert.ok(body);
+						console.log(JSON.stringify(body));
+						assert.ok(body.data);
+						assert.equal(body.data.length, 0);
+						done();
+					});
 				});
 			});
 		});
 	});
-
 
 });

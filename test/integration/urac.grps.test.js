@@ -65,7 +65,23 @@ describe("urac group tests", function () {
 		console.log("=======================================");
 		done();
 	});
-	
+
+	it("Testing login user2 and get groups", function (done) {
+		var params = {
+			form: {
+				"username": 'user2',
+				"password": '123456'
+			}
+		};
+		requester('login', 'post', params, function (error, body) {
+			assert.ifError(error);
+			assert.ok(body);
+			console.log(JSON.stringify(body));
+			assert.ok(body.data);
+			done();
+		});
+	});
+
 	describe("testing groups API", function () {
 		
 		describe("testing create group API", function () {
@@ -459,4 +475,5 @@ describe("urac group tests", function () {
 			});
 		});
 	});
+
 });
