@@ -58,7 +58,6 @@ service.init(function () {
 						return cb(400);
 					}
 					delete record.password;
-
 					//Get Groups config
 					if (record.groups && Array.isArray(record.groups) && record.groups.length > 0) {
 						mongo.find(groupsCollectionName, {
@@ -66,10 +65,12 @@ service.init(function () {
 						}, function (err, groups) {
 							mongo.closeDb();
 							record.groupsConfig = null;
-							if (err)
+							if (err) {
 								req.soajs.log.error(err);
-							else
+							}
+							else {
 								record.groupsConfig = groups;
+							}
 							return cb(null, record);
 						});
 					}
