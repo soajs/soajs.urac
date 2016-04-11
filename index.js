@@ -551,6 +551,7 @@ service.init(function () {
 		}, function (err, tokenRecord) {
 			if (err || !tokenRecord) {
 				mongo.closeDb();
+				req.soajs.log.error('Invalid Token');
 				return res.jsonp(req.soajs.buildResponse({"code": 406, "msg": config.errors[406]}));
 			}
 
@@ -564,7 +565,6 @@ service.init(function () {
 			mongo.findOne(userCollectionName, {'_id': mongo.ObjectId(tokenRecord.userId)}, function (error, userRecord) {
 				var data = {config: config, error: error || !userRecord, code: 406, mongo: mongo};
 				checkIfError(req, res, data, true, function () {
-
 					//update token status
 					tokenRecord.status = 'used';
 
