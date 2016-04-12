@@ -20,7 +20,7 @@
   "devDependencies":{
     "soajs.mongodb.data" : "0.1.*",
     "soajs.controller": "0.1.*",
-    "grunt":"*",
+    "grunt":"0.4.5",
     "grunt-contrib-jshint":"*",
     "grunt-jsdoc" : "*",
     "grunt-contrib-clean" : "*",
@@ -37,6 +37,6 @@
   "dependencies": {
     "bcrypt": "*",
     "node-uuid": "*",
-    "soajs": "git+https://github.com/soajs/soajs.git#develop"
+    "soajs": "0.3.*"
   }
 }
