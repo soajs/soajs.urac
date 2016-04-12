@@ -42,14 +42,25 @@ var acl={
 };
 
 module.exports = {
-	//maximum string limit used if no limit is passed to getRandomString
+	type: 'service',
+	prerequisites: {
+		cpu: '',
+		memory: ''
+	},
+	"serviceVersion": 1,
 	"serviceName": "urac",
+	"serviceGroup": "SOAJS Core Services",
 	"servicePort": 4001,
 	"requestTimeout": 30,
 	"requestTimeoutRenewal": 5,
 	"hashIterations": 1024,
 	"seedLength": 32,
 	"extKeyRequired": true,
+	"oauth": false,
+	"session": true,
+
+	"cmd": ["/etc/init.d/postfix start"],
+
 	"maxStringLimit": 30,
 	"errors": {
 		400: "Problem with the provided password.",
@@ -165,11 +176,6 @@ module.exports = {
 			"_apiInfo":{
 				"l": "Logout",
 				"group": "Guest"
-			},
-			"username": {
-				"source": ['query.username'],
-				"required": true,
-				"validation": {"type": "string"}
 			}
 		},
 		'/forgotPassword': {
@@ -463,6 +469,39 @@ module.exports = {
 				"validation": {
 					"type": "string",
 					enum: ['active', 'inactive', 'pendingNew']
+				}
+			}
+		},
+		'/admin/editUserConfig': {
+			"_apiInfo":{
+				"l": "Edit User Config",
+				"group": "Administration"
+			},
+			"uId": {
+				"source": ['query.uId'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"config": {
+				"source": ['body.config'],
+				"required": true,
+				"validation": {
+					"type": "object",
+					"properties": {
+						"keys":{
+							"type": "object"
+						},
+						"packages":{
+							"type": "object",
+							"required": false,
+							"additionalProperties" : {
+								type:'object',
+								'additionalProperties': {
+									'acl': acl
+								}
+							}
+						}
+					}
 				}
 			}
 		},
