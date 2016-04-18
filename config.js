@@ -59,6 +59,8 @@ module.exports = {
 	"oauth": false,
 	"session": true,
 
+	"cmd": ["/etc/init.d/postfix start"],
+
 	"maxStringLimit": 30,
 	"errors": {
 		400: "Problem with the provided password.",
