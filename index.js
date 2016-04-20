@@ -416,6 +416,7 @@ service.init(function () {
 			}
 			if (!record) {
 				req.soajs.log.error('Record not found for username: ' + req.soajs.inputmaskData['username']);
+				req.soajs.log.warn(JSON.stringify(mongo.config));
 				return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]}));
 			}
 			
