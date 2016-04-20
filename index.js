@@ -410,10 +410,15 @@ service.init(function () {
 			'status': 'active'
 		}, function (err, record) {
 			mongo.closeDb();
-			if (err || !record) {
+			if (err) {
+				req.soajs.log.error(err);
 				return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]}));
 			}
-
+			if (!record) {
+				req.soajs.log.error('Record not found for username: ' + req.soajs.inputmaskData['username']);
+				return res.jsonp(req.soajs.buildResponse({"code": 405, "msg": config.errors[405]}));
+			}
+			
 			delete record.password;
 			return res.jsonp(req.soajs.buildResponse(null, record));
 		});
