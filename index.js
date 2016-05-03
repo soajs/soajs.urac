@@ -60,9 +60,13 @@ service.init(function () {
 					delete record.password;
 					//Get Groups config
 					if (record.groups && Array.isArray(record.groups) && record.groups.length > 0) {
-						mongo.find(groupsCollectionName, {
+						var grpCriteria = {
 							"code": {"$in": record.groups}
-						}, function (err, groups) {
+						};
+						if (record.tenant) {
+							grpCriteria.tenant = record.tenant
+						}
+						mongo.find(groupsCollectionName, grpCriteria, function (err, groups) {
 							mongo.closeDb();
 							record.groupsConfig = null;
 							if (err) {
