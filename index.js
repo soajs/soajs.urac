@@ -895,13 +895,7 @@ service.init(function () {
 				}
 
 				if (req.soajs.inputmaskData['profile']) {
-					try {
-						userRecord.profile = JSON.parse(req.soajs.inputmaskData['profile']);
-					}
-					catch (e) {
-						mongo.closeDb();
-						return cb({"code": 413, "msg": config.errors[413]});
-					}
+					userRecord.profile = req.soajs.inputmaskData['profile'];
 				}
 
 				//update record in the database
