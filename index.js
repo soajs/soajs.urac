@@ -718,12 +718,7 @@ service.init(function () {
 					'ts': new Date().getTime()
 				};
 				if (req.soajs.inputmaskData['profile']) {
-					try {
-						userRecord.profile = JSON.parse(req.soajs.inputmaskData['profile']);
-					}
-					catch (e) {
-						return res.jsonp(req.soajs.buildResponse({"code": 413, "msg": config.errors[413]}));
-					}
+					userRecord.profile = req.soajs.inputmaskData['profile'];
 				}
 				if (req.soajs.inputmaskData['groups']) {
 					userRecord.groups = req.soajs.inputmaskData['groups'];
