@@ -227,6 +227,39 @@ describe("simple urac tests", function () {
 
 	});
 
+	describe("testing check Username Exists", function () {
+
+		it("SUCCESS - user exists", function (done) {
+			var params = {
+				qs: {
+					"username": 'user1'
+				}
+			};
+
+			requester('checkUsername', 'get', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				assert.equal(body.data, true);
+				done();
+			});
+		});
+
+		it("SUCCESS - user doesn't exist", function (done) {
+			var params = {
+				qs: {
+					"username": 'invalidusername'
+				}
+			};
+
+			requester('checkUsername', 'get', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				assert.ok(!body.data);
+				done();
+			});
+		});
+	});
+
 	describe("testing join API with validation", function () {
 		var token;
 		var tokenlisa;

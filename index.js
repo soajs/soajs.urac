@@ -64,7 +64,7 @@ service.init(function () {
 							"code": {"$in": record.groups}
 						};
 						if (record.tenant) {
-							grpCriteria.tenant = record.tenant
+							grpCriteria.tenant = record.tenant;
 						}
 						mongo.find(groupsCollectionName, grpCriteria, function (err, groups) {
 							mongo.closeDb();
@@ -263,12 +263,29 @@ service.init(function () {
 								mongo.closeDb();
 								data.error = err;
 								checkIfError(req, res, data, true, function () {
-									return res.jsonp(req.soajs.buildResponse(null, true))
+									return res.jsonp(req.soajs.buildResponse(null, true));
 								});
 							});
 						});
 					});
 				});
+			});
+		});
+	});
+
+	service.get("/checkUsername", function (req, res) {
+
+		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
+
+		mongo.count(userCollectionName, { 'username': req.soajs.inputmaskData['username'] }, function (err, userRecord) {
+			mongo.closeDb();
+			checkIfError(req, res, {
+				error: err,
+				code: 600,
+				config: config
+			}, false, function () {
+				var status = (userRecord > 0);
+				return res.jsonp(req.soajs.buildResponse(null, status));
 			});
 		});
 	});

@@ -215,6 +215,17 @@ module.exports = {
 				"validation": {"type": "string"}
 			}
 		},
+		'/checkUsername': {
+			"_apiInfo":{
+				"l": "Check If Username Exists",
+				"group": "Guest"
+			},
+			"username": {
+				"source": ['query.username'],
+				"required": true,
+				"validation": {"type": "string"}
+			}
+		},
 		'/changeEmail/validate': {
 			"_apiInfo":{
 				"l": "Validate Change Email",
