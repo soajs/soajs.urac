@@ -663,6 +663,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
+
 		it("SUCCESS - will validate second user and set a password", function (done) {
 			var params = {
 				headers: {
@@ -702,30 +703,6 @@ describe("simple urac tests", function () {
 						done();
 					});
 				});
-			});
-		});
-
-		it.skip("FAIL - will try add user invalid JSON profile", function (done) {
-			var params = {
-				form: {
-					'username': 'lisa1',
-					'firstName': 'lisa',
-					'lastName': 'smith',
-					'email': 'lisa.smith@soajs.org',
-					//'profile': '{"gender":"female"',
-					'tId': '10d2cb5fc04ce51e06000001',
-					'tCode': 'test'
-				}
-			};
-			requester('admin/addUser', 'post', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {
-					"code": 413,
-					"message": "Invalid profile field provided. Profile should be a stringified object."
-				});
-				done();
 			});
 		});
 
@@ -1563,31 +1540,6 @@ describe("simple urac tests", function () {
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
-				done();
-			});
-		});
-
-		it.skip("FAIL - will NOT update user profile because of invalid JSON", function (done) {
-			var params = {
-				qs: {
-					'uId': uId
-				},
-				form: {
-					'username': 'john456',
-					'firstName': 'john2',
-					'lastName': 'doe2',
-					//'profile': {"age":30'
-				}
-			};
-
-			requester('account/editProfile', 'post', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {
-					"code": 413,
-					"message": "Invalid profile field provided. Profile should be a stringified object."
-				});
 				done();
 			});
 		});
