@@ -311,7 +311,7 @@ module.exports = {
 			"profile": {
 				"source": ['body.profile'],
 				"required": false,
-				"validation": {"type": "string"}
+				"validation": {"type": "object"}
 			}
 		},
 		'/admin/addUser': {
