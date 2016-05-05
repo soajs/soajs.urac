@@ -318,7 +318,9 @@ describe("urac group tests", function () {
 						'status': 'active',
 						"groups": ['gold'],
 						'tId': '10d2cb5fc04ce51e06000001',
-						'tCode': 'test'
+						'tCode': 'test',
+						'password': '123',
+						'confirmation': '123'
 					}
 				};
 				requester('admin/addUser', 'post', params, function (error, body) {

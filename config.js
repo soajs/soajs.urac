@@ -85,7 +85,8 @@ module.exports = {
 		419: "Unable to delete Group.",
 		420: "Group name already exists. Choose another",
 		421: "Group code already exists. Choose another",
-		
+		424: "Invalid Request, cannot add a pending user account and provide a password at the same time.",
+
 		500: "This record in locked. You cannot modify or delete it",
 
 		600: "Database connection error",
@@ -368,6 +369,22 @@ module.exports = {
 						"type": "string"
 					}
 				}
+			},
+			"status": {
+				"source": ['body.status'],
+				"default": "pendingNew",
+				"required": false,
+				"validation": {"type": "string", enum: ['active', 'inactive']}
+			},
+			"password": {
+				"source": ['body.password'],
+				"required": false,
+				"validation": {"type": "string"}
+			},
+			"confirmation": {
+				"source": ['body.confirmation'],
+				"required": false,
+				"validation": {"type": "string"}
 			}
 		},
 		'/admin/changeUserStatus': {

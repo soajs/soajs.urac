@@ -686,6 +686,21 @@ service.init(function () {
 	}
 
 	service.post("/admin/addUser", function (req, res) {
+
+		if(req.soajs.inputmaskData['status'] === 'pendingNew' && req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== ''){
+			return res.jsonp(req.soajs.buildResponse({"code": 424, "msg": config.errors[424]}));
+		}
+
+		if(req.soajs.inputmaskData['status'] !== 'pendingNew' && (!req.soajs.inputmaskData['password'] || req.soajs.inputmaskData['password'] === '')){
+			return res.jsonp(req.soajs.buildResponse({"code": 424, "msg": config.errors[424]}));
+		}
+
+		if(req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '' ){
+			if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
+				return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
+			}
+		}
+
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		try {
 			req.soajs.inputmaskData['tId'] = mongo.ObjectId(req.soajs.inputmaskData['tId']);
@@ -717,16 +732,21 @@ service.init(function () {
 						"seedLength": req.soajs.servicesConfig.urac.seedLength
 					};
 				}
+
 				var hasher = new Hasher(hashConfig);
 				//hash the password
+				var pwd = hasher.hashSync(getRandomString(12)); //encrypt a random password
+				if(req.soajs.inputmaskData['status'] === 'active' && req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== ''){
+					pwd = req.soajs.inputmaskData['password'];
+				}
 
 				var userRecord = {
 					"username": req.soajs.inputmaskData['username'],
-					"password": hasher.hashSync(getRandomString(12)), //encrypt a random password
+					"password": pwd,
 					"firstName": req.soajs.inputmaskData['firstName'],
 					"lastName": req.soajs.inputmaskData['lastName'],
 					"email": req.soajs.inputmaskData['email'],
-					'status': 'pendingNew',
+					'status': req.soajs.inputmaskData['status'],
 					"config": {},
 					"tenant": {
 						"id": req.soajs.inputmaskData['tId'].toString(),
@@ -745,6 +765,10 @@ service.init(function () {
 					data.code = 403;
 					data.error = err;
 					checkIfError(req, res, data, true, function () {
+						if(userDbRecord[0].status !== 'pendingNew'){
+							mongo.closeDb();
+							return res.jsonp(req.soajs.buildResponse(null, true));
+						}
 
 						//create notification email
 						var tokenRecord = {
@@ -984,6 +1008,7 @@ service.init(function () {
 			return res.jsonp(req.soajs.buildResponse(null, true));
 		});
 	});
+
 	service.post("/admin/editUserConfig", function (req, res) {
 		updateUserAclRecord(req, function (error) {
 			if (error) {

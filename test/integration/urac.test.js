@@ -774,6 +774,111 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
+		
+		it("SUCCESS - will add user with a password", function (done) {
+			var params = {
+				form: {
+					'username': 'activeuser',
+					'firstName': 'john',
+					'lastName': 'doe',
+					'email': 'john.doe@soajs.org',
+					'tId': '10d2cb5fc04ce51e06000001',
+					'tCode': 'test',
+					'status': 'active',
+					'password': '123',
+					'confirmation': '123'
+				}
+			};
+
+			requester('admin/addUser', 'post', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.ok(body.data);
+				mongo.findOne("users", {'username': 'activeuser'}, function (error, userRecord) {
+					assert.ifError(error);
+					assert.ok(userRecord);
+					assert.equal(userRecord.status, 'active');
+					mongo.findOne('tokens', {'userId': userRecord._id.toString()}, function (error, tokenRecord) {
+						assert.ifError(error);
+						assert.ok(!tokenRecord);
+						done();
+					});
+				});
+			});
+		});
+
+		it("FAIL - will not add user with a pending status and password", function (done) {
+			var params = {
+				form: {
+					'username': 'activeuser',
+					'firstName': 'john',
+					'lastName': 'doe',
+					'email': 'john.doe@soajs.org',
+					'tId': '10d2cb5fc04ce51e06000001',
+					'tCode': 'test',
+					'status': 'active'
+				}
+			};
+
+			requester('admin/addUser', 'post', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.ok(body.errors);
+				assert.equal(body.errors.codes[0], 424);
+				done();
+			});
+		});
+
+		it("FAIL - will not add user with a pending status and password", function (done) {
+			var params = {
+				form: {
+					'username': 'activeuser',
+					'firstName': 'john',
+					'lastName': 'doe',
+					'email': 'john.doe@soajs.org',
+					'tId': '10d2cb5fc04ce51e06000001',
+					'tCode': 'test',
+					'password': '123',
+					'confirmation': '123'
+				}
+			};
+
+			requester('admin/addUser', 'post', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.ok(body.errors);
+				assert.equal(body.errors.codes[0], 424);
+				done();
+			});
+		});
+
+		it("FAIL - will not add user with a password and confirmation mismatch", function (done) {
+			var params = {
+				form: {
+					'username': 'activeuser',
+					'firstName': 'john',
+					'lastName': 'doe',
+					'email': 'john.doe@soajs.org',
+					'tId': '10d2cb5fc04ce51e06000001',
+					'tCode': 'test',
+					'status': 'active',
+					'password': '123',
+					'confirmation': '456'
+				}
+			};
+
+			requester('admin/addUser', 'post', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.ok(body.errors);
+				assert.equal(body.errors.codes[0], 408);
+				done();
+			});
+		});
 
 		it("FAIL - username exists for another account", function (done) {
 			var params = {
