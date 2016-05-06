@@ -498,6 +498,21 @@ module.exports = {
 					"type": "string",
 					enum: ['active', 'inactive', 'pendingNew']
 				}
+			},
+			"profile": {
+				"source": ['body.profile'],
+				"required": false,
+				"validation": {"type": "object"}
+			},
+			"password": {
+				"source": ['body.password'],
+				"required": false,
+				"validation": {"type": "string"}
+			},
+			"confirmation": {
+				"source": ['body.confirmation'],
+				"required": false,
+				"validation": {"type": "string"}
 			}
 		},
 		'/admin/editUserConfig': {

@@ -1838,6 +1838,11 @@ describe("simple urac tests", function () {
 							'username': 'user2',
 							"email": "user@soajs.org",
 							'status': 'active',
+							"profile": {
+								"sex": "male"
+							},
+							"password":"123",
+							"confirmation":"123",
 							'config': {
 								'keys': {},
 								'packages': {
@@ -1878,10 +1883,56 @@ describe("simple urac tests", function () {
 								"firstName": "user",
 								"lastName": "two",
 								"email": "user@soajs.org",
-								'status': 'active'
+								'status': 'active',
+								"profile": {
+									"sex": "male"
+								}
 							});
 							done();
 						});
+					});
+				});
+			});
+
+			it("FAIL - password and its confirmation do not match", function (done) {
+				mongo.findOne("users", {'username': 'user2'}, function (error, userRecord) {
+					assert.ifError(error);
+					assert.ok(userRecord);
+					delete userRecord.password;
+					var id2 = userRecord._id.toString();
+					var params = {
+						qs: {
+							'uId': id2
+						},
+						form: {
+							"firstName": "user",
+							"lastName": "two",
+							'username': 'user2',
+							"email": "user@soajs.org",
+							'status': 'active',
+							"profile": {
+								"sex": "male"
+							},
+							"password":"123",
+							"confirmation":"456",
+							'config': {
+								'keys': {},
+								'packages': {
+									'TPROD_EX03': {
+										'acl': {
+											'example01': {}
+										}
+									}
+								}
+							}
+						}
+					};
+					requester('admin/editUser', 'post', params, function (error, body) {
+						assert.ifError(error);
+						assert.ok(body);
+						assert.ok(body.errors);
+						assert.deepEqual(body.errors.codes[0], 408);
+						done();
 					});
 				});
 			});

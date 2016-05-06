@@ -738,6 +738,9 @@ service.init(function () {
 				var pwd = hasher.hashSync(getRandomString(12)); //encrypt a random password
 				if(req.soajs.inputmaskData['status'] === 'active' && req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== ''){
 					pwd = req.soajs.inputmaskData['password'];
+					if(req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.encryptPWDonAdd){
+						pwd = hasher.hashSync(pwd);
+					}
 				}
 
 				var userRecord = {
@@ -933,6 +936,26 @@ service.init(function () {
 							userRecord.groups = [];
 						}
 					}
+
+					if(req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== ''){
+						var hashConfig = {
+							"hashIterations": config.hashIterations,
+							"seedLength": config.seedLength
+						};
+						if(req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.hashIterations && req.soajs.servicesConfig.urac.seedLength) {
+							hashConfig = {
+								"hashIterations": req.soajs.servicesConfig.urac.hashIterations,
+								"seedLength": req.soajs.servicesConfig.urac.seedLength
+							};
+						}
+
+						var hasher = new Hasher(hashConfig);
+
+						userRecord.password = req.soajs.inputmaskData['password'];
+						if(req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.encryptPWDonAdd){
+							userRecord.password = hasher.hashSync(userRecord.password);
+						}
+					}
 				}
 
 				if (req.soajs.inputmaskData['profile']) {
@@ -1001,6 +1024,12 @@ service.init(function () {
 	});
 
 	service.post("/admin/editUser", function (req, res) {
+		if(req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '' ){
+			if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
+				return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
+			}
+		}
+
 		updateUserRecord(req, true, function (error) {
 			if (error) {
 				return res.jsonp(req.soajs.buildResponse({"code": error.code, "msg": error.msg}));
