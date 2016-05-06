@@ -738,7 +738,11 @@ service.init(function () {
 				var pwd = hasher.hashSync(getRandomString(12)); //encrypt a random password
 				if(req.soajs.inputmaskData['status'] === 'active' && req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== ''){
 					pwd = req.soajs.inputmaskData['password'];
+					var encrypt = config.encryptPWDonAdd;
 					if(req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.encryptPWDonAdd){
+						encrypt = req.soajs.servicesConfig.urac.encryptPWDonAdd;
+					}
+					if(encrypt){
 						pwd = hasher.hashSync(pwd);
 					}
 				}
@@ -952,7 +956,11 @@ service.init(function () {
 						var hasher = new Hasher(hashConfig);
 
 						userRecord.password = req.soajs.inputmaskData['password'];
+						var encrypt = config.encryptPWDonAdd;
 						if(req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.encryptPWDonAdd){
+							encrypt = req.soajs.servicesConfig.urac.encryptPWDonAdd;
+						}
+						if(encrypt){
 							userRecord.password = hasher.hashSync(userRecord.password);
 						}
 					}

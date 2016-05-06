@@ -54,6 +54,7 @@ module.exports = {
 	"requestTimeout": 30,
 	"requestTimeoutRenewal": 5,
 	"hashIterations": 1024,
+	"encryptPWDonAdd": true,
 	"seedLength": 32,
 	"extKeyRequired": true,
 	"oauth": false,
