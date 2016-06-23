@@ -23,12 +23,13 @@ function checkIfError(req, res, data, flag, cb) {
 			data.mongo.closeDb();
 		}
 		return res.jsonp(req.soajs.buildResponse({"code": data.code, "msg": data.config.errors[data.code]}));
-	} else {
+	}
+	else {
 		return cb();
 	}
 }
 
-function encryptPwd(servicesConfig, pwd){
+function encryptPwd(servicesConfig, pwd) {
 	var hashConfig = {
 		"hashIterations": config.hashIterations,
 		"seedLength": config.seedLength
@@ -42,7 +43,7 @@ function encryptPwd(servicesConfig, pwd){
 
 	var hasher = new Hasher(hashConfig);
 
-	if(servicesConfig.optionalAlgorithm && servicesConfig.optionalAlgorithm !== ''){
+	if (servicesConfig.optionalAlgorithm && servicesConfig.optionalAlgorithm !== '') {
 		var crypto = require("crypto");
 		var hash = crypto.createHash(servicesConfig.optionalAlgorithm);
 		pwd = hash.update(pwd).digest('hex');
@@ -51,7 +52,7 @@ function encryptPwd(servicesConfig, pwd){
 	return hasher.hashSync(pwd);
 }
 
-function comparePwd(servicesConfig, pwd, cypher, cb){
+function comparePwd(servicesConfig, pwd, cypher, cb) {
 	var hashConfig = {
 		"hashIterations": config.hashIterations,
 		"seedLength": config.seedLength
@@ -65,7 +66,7 @@ function comparePwd(servicesConfig, pwd, cypher, cb){
 
 	var hasher = new Hasher(hashConfig);
 
-	if(servicesConfig.optionalAlgorithm && servicesConfig.optionalAlgorithm !== ''){
+	if (servicesConfig.optionalAlgorithm && servicesConfig.optionalAlgorithm !== '') {
 		var crypto = require("crypto");
 		var hash = crypto.createHash(servicesConfig.optionalAlgorithm);
 		pwd = hash.update(pwd).digest('hex');
@@ -302,7 +303,7 @@ service.init(function () {
 
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 
-		mongo.count(userCollectionName, { 'username': req.soajs.inputmaskData['username'] }, function (err, userRecord) {
+		mongo.count(userCollectionName, {'username': req.soajs.inputmaskData['username']}, function (err, userRecord) {
 			mongo.closeDb();
 			checkIfError(req, res, {
 				error: err,
@@ -624,20 +625,15 @@ service.init(function () {
 		if (req.soajs.inputmaskData['tId']) {
 			condition = {"tenant.id": req.soajs.inputmaskData['tId']};
 		}
-		mongo.find(userCollectionName, condition, {}, function (err, userRecords) {
+		var fields = {'password': 0};
+		mongo.find(userCollectionName, condition, fields, function (err, userRecords) {
 			mongo.closeDb();
 			var data = {config: config, error: err || !userRecords, code: 406, mongo: mongo};
 			checkIfError(req, res, data, false, function () {
-
 				//if no records return empty array
 				if (userRecords.length === 0) {
 					return res.jsonp(req.soajs.buildResponse(null, []));
 				}
-
-				//loop in records and remove the passwords
-				userRecords.forEach(function (oneUserRecord) {
-					delete oneUserRecord.password;
-				});
 
 				return res.jsonp(req.soajs.buildResponse(null, userRecords));
 			});
@@ -686,15 +682,15 @@ service.init(function () {
 
 	service.post("/admin/addUser", function (req, res) {
 
-		if(req.soajs.inputmaskData['status'] === 'pendingNew' && req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== ''){
+		if (req.soajs.inputmaskData['status'] === 'pendingNew' && req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '') {
 			return res.jsonp(req.soajs.buildResponse({"code": 424, "msg": config.errors[424]}));
 		}
 
-		if(req.soajs.inputmaskData['status'] !== 'pendingNew' && (!req.soajs.inputmaskData['password'] || req.soajs.inputmaskData['password'] === '')){
+		if (req.soajs.inputmaskData['status'] !== 'pendingNew' && (!req.soajs.inputmaskData['password'] || req.soajs.inputmaskData['password'] === '')) {
 			return res.jsonp(req.soajs.buildResponse({"code": 424, "msg": config.errors[424]}));
 		}
 
-		if(req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '' ){
+		if (req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '') {
 			if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
 				return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
 			}
@@ -723,7 +719,7 @@ service.init(function () {
 
 				//hash the password
 				var pwd = getRandomString(12);
-				if(req.soajs.inputmaskData['status'] === 'active' && req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== ''){
+				if (req.soajs.inputmaskData['status'] === 'active' && req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '') {
 					pwd = req.soajs.inputmaskData['password'];
 				}
 				pwd = encryptPwd(req.soajs.servicesConfig.urac, pwd);
@@ -753,7 +749,7 @@ service.init(function () {
 					data.code = 403;
 					data.error = err;
 					checkIfError(req, res, data, true, function () {
-						if(userDbRecord[0].status !== 'pendingNew'){
+						if (userDbRecord[0].status !== 'pendingNew') {
 							mongo.closeDb();
 							return res.jsonp(req.soajs.buildResponse(null, true));
 						}
@@ -922,7 +918,7 @@ service.init(function () {
 						}
 					}
 
-					if(req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== ''){
+					if (req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '') {
 						userRecord.password = encryptPwd(req.soajs.servicesConfig.urac, req.soajs.inputmaskData['password']);
 					}
 				}
@@ -993,7 +989,7 @@ service.init(function () {
 	});
 
 	service.post("/admin/editUser", function (req, res) {
-		if(req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '' ){
+		if (req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '') {
 			if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
 				return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
 			}
@@ -1183,14 +1179,10 @@ service.init(function () {
 
 	service.get("/admin/all", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		mongo.find(userCollectionName, {}, {}, function (err, userRecords) {
+
+		mongo.find(userCollectionName, {}, {'password': 0}, function (err, userRecords) {
 			var data = {config: config, error: err, code: 405, mongo: mongo};
 			checkIfError(req, res, data, false, function () {
-				if (userRecords.length > 0) {
-					userRecords.forEach(function (oneUserRecord) {
-						delete oneUserRecord.password;
-					});
-				}
 				mongo.find(groupsCollectionName, {}, {}, function (err, grpRecords) {
 					mongo.closeDb();
 					data.code = 415;
