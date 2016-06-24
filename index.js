@@ -14,6 +14,8 @@ var groupsCollectionName = "groups";
 
 var service = new soajs.server.service(config);
 
+var uracService = require('./lib/urac.js');
+
 function checkIfError(req, res, data, flag, cb) {
 	if (data.error) {
 		if (typeof (data.error) === 'object' && data.error.message) {
@@ -73,6 +75,13 @@ function comparePwd(servicesConfig, pwd, cypher, cb) {
 	}
 
 	hasher.compare(pwd, cypher, cb);
+}
+
+var coreMongo;
+function checkForCoreMongo(req) {
+	if (!coreMongo) {
+		coreMongo = new Mongo(req.soajs.registry.coreDB.provision);
+	}
 }
 
 service.init(function () {
@@ -625,19 +634,21 @@ service.init(function () {
 		if (req.soajs.inputmaskData['tId']) {
 			condition = {"tenant.id": req.soajs.inputmaskData['tId']};
 		}
-		var fields = {'password': 0};
-		mongo.find(userCollectionName, condition, fields, function (err, userRecords) {
-			mongo.closeDb();
-			var data = {config: config, error: err || !userRecords, code: 406, mongo: mongo};
-			checkIfError(req, res, data, false, function () {
-				//if no records return empty array
-				if (userRecords.length === 0) {
-					return res.jsonp(req.soajs.buildResponse(null, []));
-				}
-
-				return res.jsonp(req.soajs.buildResponse(null, userRecords));
-			});
-		});
+		uracService.admin.listUsers(config, mongo, req, res);
+		
+		// var fields = {'password': 0};
+		// mongo.find(userCollectionName, condition, fields, function (err, userRecords) {
+		// 	mongo.closeDb();
+		// 	var data = {config: config, error: err || !userRecords, code: 406, mongo: mongo};
+		// 	checkIfError(req, res, data, false, function () {
+		// 		//if no records return empty array
+		// 		if (userRecords.length === 0) {
+		// 			return res.jsonp(req.soajs.buildResponse(null, []));
+		// 		}
+		//
+		// 		return res.jsonp(req.soajs.buildResponse(null, userRecords));
+		// 	});
+		// });
 	});
 
 	service.get("/admin/getUser", function (req, res) {
@@ -1149,19 +1160,26 @@ service.init(function () {
 
 		// delete from all users
 		var grp = req.soajs.inputmaskData['code'];
-		mongo.update(userCollectionName, {
-			groups: grp,
-			"tenant.id": req.soajs.inputmaskData['tId']
-		}, {$pull: {groups: grp}}, {multi: true}, function (err) {
+		var grpCondition = {
+			'groups': grp
+		};
+		if (req.soajs.inputmaskData['tId']) {
+			grpCondition['tenant.id'] = req.soajs.inputmaskData['tId'];
+		}
+		mongo.update(userCollectionName, grpCondition, {$pull: {groups: grp}}, {multi: true}, function (err) {
 			var data = {config: config, error: err, code: 600, mongo: mongo};
 			checkIfError(req, res, data, true, function () {
 
 				var users = req.soajs.inputmaskData['users'];
 				if (users && users.length > 0) {
-					mongo.update(userCollectionName, {
-						'username': {$in: users},
-						'tenant.id': req.soajs.inputmaskData['tId']
-					}, {$push: {groups: grp}}, function (err) {
+					var conditionUsers = {
+						'username': {$in: users}
+					};
+					if (req.soajs.inputmaskData['tId']) {
+						conditionUsers['tenant.id'] = req.soajs.inputmaskData['tId'];
+					}
+					console.log(conditionUsers);
+					mongo.update(userCollectionName, conditionUsers, {$push: {groups: grp}}, function (err) {
 						mongo.closeDb();
 						data.error = err;
 						checkIfError(req, res, data, false, function () {
@@ -1193,6 +1211,22 @@ service.init(function () {
 				});
 			});
 		});
+	});
+
+	service.get("/owner/admin/listUsers", function (req, res) {
+		// load tenant
+		checkForCoreMongo(req);
+		coreMongo.findOne('tenants', {'code': req.soajs.inputmaskData.tCode}, function (error, record) {
+			var data = {config: config, error: error, code: 406};
+			checkIfError(req, res, data, false, function () {
+				if (record) {
+					req.soajs.log.warn(record.description);
+				}
+				var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
+				uracService.admin.listUsers(config, mongo, req, res);
+			});
+		});
+
 	});
 
 	service.start();

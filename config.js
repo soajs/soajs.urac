@@ -5,7 +5,7 @@ var accessSchema = {
 		{"type": "array", "minItems": 1, "items": {"type": "string", "required": true}, "required": false}
 	]
 };
-var acl={
+var acl = {
 	"type": "object",
 	"required": false,
 	"properties": {
@@ -13,12 +13,12 @@ var acl={
 		"apisPermission": {"type": "string", "enum": ["restricted"], "required": false},
 		"apis": {
 			"type": "object",
-				"required": false,
-				"patternProperties": {
+			"required": false,
+			"patternProperties": {
 				"^[_a-z\/][_a-zA-Z0-9\/:]*$": { //pattern to match an api route
 					"type": "object",
-						"required": true,
-						"properties": {
+					"required": true,
+					"properties": {
 						"access": accessSchema
 					},
 					"additionalProperties": false
@@ -27,11 +27,11 @@ var acl={
 		},
 		"apisRegExp": {
 			"type": "array",
-				"required": false,
-				"minItems": 1,
-				"items": {
+			"required": false,
+			"minItems": 1,
+			"items": {
 				"type": "object",
-					"properties": {
+				"properties": {
 					"regExp": {"type": "pattern", required: true, "pattern": /\.+/},
 					"access": accessSchema
 				},
@@ -59,9 +59,9 @@ module.exports = {
 	"extKeyRequired": true,
 	"oauth": false,
 	"session": true,
-
+	
 	"cmd": ["/etc/init.d/postfix start"],
-
+	
 	"maxStringLimit": 30,
 	"errors": {
 		400: "Problem with the provided password.",
@@ -87,29 +87,29 @@ module.exports = {
 		420: "Group name already exists. Choose another",
 		421: "Group code already exists. Choose another",
 		424: "Invalid Request, cannot add a pending user account and provide a password at the same time.",
-
+		
 		500: "This record in locked. You cannot modify or delete it",
-
+		
 		600: "Database connection error",
 		611: "invalid tenant id provided"
 	},
-
+	
 	"schema": {
 		"commonFields": {
 			"tId": {
-				"source": ['body.tId','query.tId'],
+				"source": ['body.tId', 'query.tId'],
 				"required": true,
 				"validation": {"type": "string"}
 			},
 			"tCode": {
-				"source": ['body.tCode','query.tCode'],
+				"source": ['body.tCode', 'query.tCode'],
 				"required": true,
 				"validation": {"type": "string"}
 			}
 		},
-
+		
 		"/login": {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Login",
 				"group": "Guest",
 				"groupDefault": true
@@ -130,7 +130,7 @@ module.exports = {
 			}
 		},
 		'/join': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Register",
 				"group": "Guest"
 			},
@@ -164,7 +164,7 @@ module.exports = {
 			}
 		},
 		'/join/validate': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Validate Register",
 				"group": "Guest"
 			},
@@ -175,13 +175,13 @@ module.exports = {
 			}
 		},
 		'/logout': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Logout",
 				"group": "Guest"
 			}
 		},
 		'/forgotPassword': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Forgot Password",
 				"group": "Guest"
 			},
@@ -197,7 +197,7 @@ module.exports = {
 			//}
 		},
 		'/resetPassword': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Reset Password",
 				"group": "Guest"
 			},
@@ -218,7 +218,7 @@ module.exports = {
 			}
 		},
 		'/checkUsername': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Check If Username Exists",
 				"group": "Guest"
 			},
@@ -229,7 +229,7 @@ module.exports = {
 			}
 		},
 		'/changeEmail/validate': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Validate Change Email",
 				"group": "Guest"
 			},
@@ -240,7 +240,7 @@ module.exports = {
 			}
 		},
 		'/account/getUser': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Get User Info",
 				"group": "My Account",
 				"groupDefault": true
@@ -252,7 +252,7 @@ module.exports = {
 			}
 		},
 		'/account/changePassword': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Change Password",
 				"group": "My Account"
 			},
@@ -278,7 +278,7 @@ module.exports = {
 			}
 		},
 		'/account/changeEmail': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Change Email",
 				"group": "My Account"
 			},
@@ -294,7 +294,7 @@ module.exports = {
 			}
 		},
 		'/account/editProfile': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Edit Profile",
 				"group": "My Account"
 			},
@@ -328,11 +328,11 @@ module.exports = {
 			}
 		},
 		'/admin/addUser': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Add new User",
 				"group": "Administration"
 			},
-			"commonFields": ['tId','tCode'],
+			"commonFields": ['tId', 'tCode'],
 			"username": {
 				"source": ['body.username'],
 				"required": true,
@@ -389,7 +389,7 @@ module.exports = {
 			}
 		},
 		'/admin/changeUserStatus': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Change User Status",
 				"group": "Administration"
 			},
@@ -405,19 +405,19 @@ module.exports = {
 			}
 		},
 		'/admin/listUsers': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "List Users",
 				"group": "Administration",
 				"groupDefault": true
 			},
 			"tId": {
-				"source": ['body.tId','query.tId'],
+				"source": ['body.tId', 'query.tId'],
 				"required": false,
 				"validation": {"type": "string"}
 			}
 		},
 		'/admin/getUser': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Get User Record",
 				"group": "Administration"
 			},
@@ -428,7 +428,7 @@ module.exports = {
 			}
 		},
 		'/admin/editUser': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Edit User Record",
 				"group": "Administration"
 			},
@@ -476,14 +476,14 @@ module.exports = {
 				"validation": {
 					"type": "object",
 					"properties": {
-						"keys":{
+						"keys": {
 							"type": "object"
 						},
-						"packages":{
+						"packages": {
 							"type": "object",
 							"required": false,
-							"additionalProperties" : {
-								type:'object',
+							"additionalProperties": {
+								type: 'object',
 								'additionalProperties': {
 									'acl': acl
 								}
@@ -517,7 +517,7 @@ module.exports = {
 			}
 		},
 		'/admin/editUserConfig': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Edit User Config",
 				"group": "Administration"
 			},
@@ -532,14 +532,14 @@ module.exports = {
 				"validation": {
 					"type": "object",
 					"properties": {
-						"keys":{
+						"keys": {
 							"type": "object"
 						},
-						"packages":{
+						"packages": {
 							"type": "object",
 							"required": false,
-							"additionalProperties" : {
-								type:'object',
+							"additionalProperties": {
+								type: 'object',
 								'additionalProperties': {
 									'acl': acl
 								}
@@ -550,22 +550,22 @@ module.exports = {
 			}
 		},
 		'/admin/group/list': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "List Groups",
 				"group": "Administration"
 			},
 			"tId": {
-				"source": ['body.tId','query.tId'],
+				"source": ['body.tId', 'query.tId'],
 				"required": false,
 				"validation": {"type": "string"}
 			}
 		},
 		'/admin/group/add': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Add new Group",
 				"group": "Administration"
 			},
-			"commonFields": ['tId','tCode'],
+			"commonFields": ['tId', 'tCode'],
 			"code": {
 				"source": ['body.code'],
 				"required": true,
@@ -587,7 +587,7 @@ module.exports = {
 			}
 		},
 		'/admin/group/edit': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Edit Group",
 				"group": "Administration"
 			},
@@ -608,7 +608,7 @@ module.exports = {
 			}
 		},
 		'/admin/group/delete': {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Delete Group",
 				"group": "Administration"
 			},
@@ -619,7 +619,7 @@ module.exports = {
 			}
 		},
 		"/admin/group/addUsers": {
-			"_apiInfo":{
+			"_apiInfo": {
 				"l": "Add Users to Group",
 				"group": "Administration"
 			},
@@ -644,6 +644,19 @@ module.exports = {
 			"_apiInfo": {
 				"l": "Get all Users & Groups",
 				"group": "Administration"
+			}
+		},
+		
+		'/owner/admin/listUsers': {
+			"_apiInfo": {
+				"l": "List Users",
+				"group": "Owner",
+				"groupDefault": true
+			},
+			"tCode": {
+				"source": ['query.tCode'],
+				"required": true,
+				"validation": {"type": "string"}
 			}
 		}
 	}
