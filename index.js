@@ -1178,8 +1178,7 @@ service.init(function () {
 					if (req.soajs.inputmaskData['tId']) {
 						conditionUsers['tenant.id'] = req.soajs.inputmaskData['tId'];
 					}
-					console.log(conditionUsers);
-					mongo.update(userCollectionName, conditionUsers, {$push: {groups: grp}}, function (err) {
+					mongo.update(userCollectionName, conditionUsers, {$push: {groups: grp}}, {multi: true}, function (err) {
 						mongo.closeDb();
 						data.error = err;
 						checkIfError(req, res, data, false, function () {
