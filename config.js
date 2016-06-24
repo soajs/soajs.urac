@@ -102,7 +102,7 @@ module.exports = {
 				"validation": {"type": "string"}
 			},
 			"tCode": {
-				"source": ['body.tCode', 'query.tCode'],
+				"source": ['query.tCode', 'body.tCode'],
 				"required": true,
 				"validation": {"type": "string"}
 			}
@@ -646,17 +646,282 @@ module.exports = {
 				"group": "Administration"
 			}
 		},
-		
+
+		'/owner/admin/addUser': {
+			"_apiInfo": {
+				"l": "Add new User",
+				"group": "Owner"
+			},
+			"commonFields": ['tCode'],
+			"username": {
+				"source": ['body.username'],
+				"required": true,
+				"validation": {
+					"type": "string",
+					"pattern": /^[a-zA-Z0-9_-]+$/
+				}
+			},
+			"firstName": {
+				"source": ['body.firstName'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"lastName": {
+				"source": ['body.lastName'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"email": {
+				"source": ['body.email'],
+				"required": true,
+				"validation": {"type": "string", format: "email"}
+			},
+			"profile": {
+				"source": ['body.profile'],
+				"required": false,
+				"validation": {"type": "object"}
+			},
+			"groups": {
+				"source": ['body.groups'],
+				"required": false,
+				"validation": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"status": {
+				"source": ['body.status'],
+				"default": "pendingNew",
+				"required": false,
+				"validation": {"type": "string", enum: ['active', 'inactive']}
+			},
+			"password": {
+				"source": ['body.password'],
+				"required": false,
+				"validation": {"type": "string"}
+			},
+			"confirmation": {
+				"source": ['body.confirmation'],
+				"required": false,
+				"validation": {"type": "string"}
+			}
+		},
 		'/owner/admin/listUsers': {
 			"_apiInfo": {
 				"l": "List Users",
 				"group": "Owner",
 				"groupDefault": true
 			},
-			"tCode": {
-				"source": ['query.tCode'],
+			"commonFields":["tCode"]
+		},
+		'/owner/admin/changeUserStatus': {
+			"_apiInfo": {
+				"l": "Change User Status",
+				"group": "Owner"
+			},
+			"commonFields":["tCode"],
+			"uId": {
+				"source": ['query.uId'],
 				"required": true,
 				"validation": {"type": "string"}
+			},
+			"status": {
+				"source": ['query.status'],
+				"required": true,
+				"validation": {"type": "string", enum: ['active', 'inactive']}
+			}
+		},
+		'/owner/admin/getUser': {
+			"_apiInfo": {
+				"l": "Get User Record",
+				"group": "Owner"
+			},
+			"commonFields":["tCode"],
+			"uId": {
+				"source": ['query.uId'],
+				"required": true,
+				"validation": {"type": "string"}
+			}
+		},
+		'/owner/admin/editUser': {
+			"_apiInfo": {
+				"l": "Edit User Record",
+				"group": "Owner"
+			},
+			"commonFields":["tCode"],
+			"uId": {
+				"source": ['query.uId'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"username": {
+				"source": ['body.username'],
+				"required": true,
+				"validation": {
+					"type": "string",
+					"pattern": /^[a-zA-Z0-9_-]+$/
+				}
+			},
+			"firstName": {
+				"source": ['body.firstName'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"lastName": {
+				"source": ['body.lastName'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"email": {
+				"source": ['body.email'],
+				"required": true,
+				"validation": {"type": "string", 'format': 'email'}
+			},
+			"groups": {
+				"source": ['body.groups'],
+				"required": false,
+				"validation": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"config": {
+				"source": ['body.config'],
+				"required": false,
+				"validation": {
+					"type": "object",
+					"properties": {
+						"keys": {
+							"type": "object"
+						},
+						"packages": {
+							"type": "object",
+							"required": false,
+							"additionalProperties": {
+								type: 'object',
+								'additionalProperties': {
+									'acl': acl
+								}
+							}
+						}
+					}
+				}
+			},
+			"status": {
+				"source": ['body.status'],
+				"required": true,
+				"validation": {
+					"type": "string",
+					enum: ['active', 'inactive', 'pendingNew']
+				}
+			},
+			"profile": {
+				"source": ['body.profile'],
+				"required": false,
+				"validation": {"type": "object"}
+			},
+			"password": {
+				"source": ['body.password'],
+				"required": false,
+				"validation": {"type": "string"}
+			},
+			"confirmation": {
+				"source": ['body.confirmation'],
+				"required": false,
+				"validation": {"type": "string"}
+			}
+		},
+		'/owner/admin/group/list': {
+			"_apiInfo": {
+				"l": "List Groups",
+				"group": "Owner"
+			},
+			"commonFields":["tCode"]
+		},
+		'/owner/admin/group/add': {
+			"_apiInfo": {
+				"l": "Add new Group",
+				"group": "Owner"
+			},
+			"commonFields": ['tCode'],
+			"code": {
+				"source": ['body.code'],
+				"required": true,
+				"validation": {
+					"type": "string",
+					"format": "alphanumeric",
+					"maxLength": 20
+				}
+			},
+			"name": {
+				"source": ['body.name'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"description": {
+				"source": ['body.description'],
+				"required": true,
+				"validation": {"type": "string"}
+			}
+		},
+		'/owner/admin/group/edit': {
+			"_apiInfo": {
+				"l": "Edit Group",
+				"group": "Owner"
+			},
+			"commonFields":["tCode"],
+			"gId": {
+				"source": ['query.gId'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"name": {
+				"source": ['body.name'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"description": {
+				"source": ['body.description'],
+				"required": true,
+				"validation": {"type": "string"}
+			}
+		},
+		'/owner/admin/group/delete': {
+			"_apiInfo": {
+				"l": "Delete Group",
+				"group": "Owner"
+			},
+			"commonFields":["tCode"],
+			"gId": {
+				"source": ['query.gId'],
+				"required": true,
+				"validation": {"type": "string"}
+			}
+		},
+		"/owner/admin/group/addUsers": {
+			"_apiInfo": {
+				"l": "Add Users to Group",
+				"group": "Owner"
+			},
+			"commonFields":["tCode"],
+			"code": {
+				"source": ['body.groupCode'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"users": {
+				"source": ['body.users'],
+				"required": false,
+				"validation": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
 			}
 		}
 	}
