@@ -27,6 +27,7 @@ describe("importing sample data", function () {
                 require("./db.config.test.js");
                 require("./urac.grps.test.js");
                 require("./urac.test.js");
+	            require("./urac.test.owner.js");
                 done();
             }, 1000);
         }, 1000);
