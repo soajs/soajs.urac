@@ -107,6 +107,11 @@ service.init(function () {
 		uracService.admin.listUsers(config, mongo, req, res);
 	});
 	
+	service.get("/admin/users/count", function (req, res) {
+		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
+		uracService.admin.countUsers(config, mongo, req, res);
+	});
+	
 	service.get("/admin/getUser", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		uracService.admin.getUser(config, mongo, req, res);
@@ -186,19 +191,17 @@ service.init(function () {
 	service.get("/owner/admin/listUsers", function (req, res) {
 		// load tenant
 		checkForCoreMongo(req);
-		coreMongo.findOne('tenants', {'code': req.soajs.inputmaskData.tCode}, function (error, record) {
-			var data = {config: config, error: error, code: 406};
-			checkIfError(req, res, data, false, function () {
-				if (record) {
-					req.soajs.log.warn(record.description);
-				}
-				var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-				uracService.admin.listUsers(config, mongo, req, res);
-			});
-		});
-		
+		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
+		uracService.admin.listUsers(config, mongo, req, res);
 	});
-
+	
+	service.get("/owner/admin/users/count", function (req, res) {
+		// load tenant
+		checkForCoreMongo(req);
+		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
+		uracService.admin.countUsers(config, mongo, req, res);
+	});
+	
 	service.post("/owner/admin/addUser", function (req, res) {
 		// load tenant
 		checkForCoreMongo(req);

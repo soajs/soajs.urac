@@ -91,7 +91,7 @@ module.exports = {
 		500: "This record in locked. You cannot modify or delete it",
 		
 		600: "Database connection error",
-		611: "invalid tenant id provided"
+		611: "Invalid tenant id provided"
 	},
 	
 	"schema": {
@@ -105,6 +105,24 @@ module.exports = {
 				"source": ['query.tCode', 'body.tCode'],
 				"required": true,
 				"validation": {"type": "string"}
+			},
+			"start": {
+				"required": false,
+				"source": ["query.start"],
+				"default": 0,
+				"validation": {
+					"type": "integer",
+					"min": 0
+				}
+			},
+			"limit": {
+				"required": false,
+				"source": ["query.limit"],
+				"default": 1000,
+				"validation": {
+					"type": "integer",
+					"max": 1000
+				}
 			}
 		},
 		
@@ -327,6 +345,7 @@ module.exports = {
 				"validation": {"type": "object"}
 			}
 		},
+		
 		'/admin/addUser': {
 			"_apiInfo": {
 				"l": "Add new User",
@@ -410,8 +429,20 @@ module.exports = {
 				"group": "Administration",
 				"groupDefault": true
 			},
+			"commonFields": ["start", "limit"],
 			"tId": {
 				"source": ['body.tId', 'query.tId'],
+				"required": false,
+				"validation": {"type": "string"}
+			}
+		},
+		'/admin/users/count': {
+			"_apiInfo": {
+				"l": "Total Users Count",
+				"group": "Administration"
+			},
+			"tId": {
+				"source": ['query.tId'],
 				"required": false,
 				"validation": {"type": "string"}
 			}
@@ -646,7 +677,14 @@ module.exports = {
 				"group": "Administration"
 			}
 		},
-
+		
+		'/owner/admin/users/count': {
+			"_apiInfo": {
+				"l": "Total Users Count",
+				"group": "Administration"
+			},
+			"commonFields": ['tCode']
+		},
 		'/owner/admin/addUser': {
 			"_apiInfo": {
 				"l": "Add new User",
@@ -714,14 +752,14 @@ module.exports = {
 				"group": "Owner",
 				"groupDefault": true
 			},
-			"commonFields":["tCode"]
+			"commonFields": ["tCode", "start", "limit"]
 		},
 		'/owner/admin/changeUserStatus': {
 			"_apiInfo": {
 				"l": "Change User Status",
 				"group": "Owner"
 			},
-			"commonFields":["tCode"],
+			"commonFields": ["tCode"],
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -738,7 +776,7 @@ module.exports = {
 				"l": "Get User Record",
 				"group": "Owner"
 			},
-			"commonFields":["tCode"],
+			"commonFields": ["tCode"],
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -750,7 +788,7 @@ module.exports = {
 				"l": "Edit User Record",
 				"group": "Owner"
 			},
-			"commonFields":["tCode"],
+			"commonFields": ["tCode"],
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -841,7 +879,7 @@ module.exports = {
 				"l": "List Groups",
 				"group": "Owner"
 			},
-			"commonFields":["tCode"]
+			"commonFields": ["tCode"]
 		},
 		'/owner/admin/group/add': {
 			"_apiInfo": {
@@ -874,7 +912,7 @@ module.exports = {
 				"l": "Edit Group",
 				"group": "Owner"
 			},
-			"commonFields":["tCode"],
+			"commonFields": ["tCode"],
 			"gId": {
 				"source": ['query.gId'],
 				"required": true,
@@ -896,7 +934,7 @@ module.exports = {
 				"l": "Delete Group",
 				"group": "Owner"
 			},
-			"commonFields":["tCode"],
+			"commonFields": ["tCode"],
 			"gId": {
 				"source": ['query.gId'],
 				"required": true,
@@ -908,7 +946,7 @@ module.exports = {
 				"l": "Add Users to Group",
 				"group": "Owner"
 			},
-			"commonFields":["tCode"],
+			"commonFields": ["tCode"],
 			"code": {
 				"source": ['body.groupCode'],
 				"required": true,
