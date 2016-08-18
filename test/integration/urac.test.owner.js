@@ -2,7 +2,6 @@
 var assert = require('assert');
 var request = require("request");
 var helper = require("../helper.js");
-
 var soajs = require('soajs');
 var urac;
 
@@ -11,11 +10,9 @@ var dbConfig = require("./db.config.test.js");
 
 var provisioningConfig = dbConfig();
 provisioningConfig.name = "core_provision";
-var mongoProvisioning = new Mongo(provisioningConfig);
 
 var sessionConfig = dbConfig();
 sessionConfig.name = "core_session";
-var mongoSession = new Mongo(sessionConfig);
 
 var uracConfig = dbConfig();
 uracConfig.name = "test_urac";

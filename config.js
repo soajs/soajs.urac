@@ -835,6 +835,7 @@ module.exports = {
 				"validation": {"type": "string"}
 			}
 		},
+		
 		'/owner/admin/group/list': {
 			"_apiInfo": {
 				"l": "List Groups",

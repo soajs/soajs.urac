@@ -3,7 +3,6 @@ var soajs = require('soajs');
 var Mongo = soajs.mongo;
 
 var config = require('./config.js');
-
 var service = new soajs.server.service(config);
 
 var uracService = require('./lib/urac.js');
