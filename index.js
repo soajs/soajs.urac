@@ -7,28 +7,6 @@ var service = new soajs.server.service(config);
 
 var uracService = require('./lib/urac.js');
 
-function checkIfError(req, res, data, flag, cb) {
-	if (data.error) {
-		if (typeof (data.error) === 'object' && data.error.message) {
-			req.soajs.log.error(data.error);
-		}
-		if (flag) {
-			data.mongo.closeDb();
-		}
-		return res.jsonp(req.soajs.buildResponse({"code": data.code, "msg": data.config.errors[data.code]}));
-	}
-	else {
-		return cb();
-	}
-}
-
-var coreMongo;
-function checkForCoreMongo(req) {
-	if (!coreMongo) {
-		coreMongo = new Mongo(req.soajs.registry.coreDB.provision);
-	}
-}
-
 service.init(function () {
 	
 	service.post("/login", function (req, res) {
@@ -104,17 +82,17 @@ service.init(function () {
 	
 	service.get("/admin/listUsers", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		uracService.admin.listUsers(config, mongo, req, res);
+		uracService.admin.user.listUsers(config, mongo, req, res);
 	});
 	
 	service.get("/admin/users/count", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		uracService.admin.countUsers(config, mongo, req, res);
+		uracService.admin.user.countUsers(config, mongo, req, res);
 	});
 	
 	service.get("/admin/getUser", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		uracService.admin.getUser(config, mongo, req, res);
+		uracService.admin.user.getUser(config, mongo, req, res);
 	});
 	
 	service.post("/admin/addUser", function (req, res) {
@@ -134,12 +112,12 @@ service.init(function () {
 		}
 		
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		uracService.admin.addUser(config, mongo, req, res);
+		uracService.admin.user.addUser(config, mongo, req, res);
 	});
 	
 	service.get("/admin/changeUserStatus", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		uracService.admin.changeUserStatus(config, mongo, req, res);
+		uracService.admin.user.changeStatus(config, mongo, req, res);
 	});
 	
 	service.post("/admin/editUser", function (req, res) {
@@ -149,12 +127,12 @@ service.init(function () {
 			}
 		}
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		uracService.admin.editUser(config, mongo, req, res);
+		uracService.admin.user.editUser(config, mongo, req, res);
 	});
 	
 	service.post("/admin/editUserConfig", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		uracService.admin.editUserConfig(config, mongo, req, res);
+		uracService.admin.user.editConfig(config, mongo, req, res);
 	});
 	
 	service.get("/admin/group/list", function (req, res) {
@@ -189,81 +167,33 @@ service.init(function () {
 	});
 	
 	service.get("/owner/admin/listUsers", function (req, res) {
-		// load tenant
-		checkForCoreMongo(req);
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		uracService.admin.listUsers(config, mongo, req, res);
+		uracService.admin.user.listUsers(config, mongo, req, res);
 	});
 	
 	service.get("/owner/admin/users/count", function (req, res) {
-		// load tenant
-		checkForCoreMongo(req);
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		uracService.admin.countUsers(config, mongo, req, res);
+		uracService.admin.user.countUsers(config, mongo, req, res);
 	});
 	
 	service.post("/owner/admin/addUser", function (req, res) {
-		// load tenant
-		checkForCoreMongo(req);
-		coreMongo.findOne('tenants', {'code': req.soajs.inputmaskData.tCode}, function (error, record) {
-			var data = {config: config, error: error, code: 406};
-			checkIfError(req, res, data, false, function () {
-				if (record) {
-					req.soajs.log.warn(record.description);
-				}
-				var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-				uracService.admin.addUser(config, mongo, req, res);
-			});
-		});
-
+		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
+		uracService.admin.user.addUser(config, mongo, req, res);
 	});
 
 	service.post("/owner/admin/editUser", function (req, res) {
-		// load tenant
-		checkForCoreMongo(req);
-		coreMongo.findOne('tenants', {'code': req.soajs.inputmaskData.tCode}, function (error, record) {
-			var data = {config: config, error: error, code: 406};
-			checkIfError(req, res, data, false, function () {
-				if (record) {
-					req.soajs.log.warn(record.description);
-				}
-				var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-				uracService.admin.editUser(config, mongo, req, res);
-			});
-		});
-
+		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
+		uracService.admin.user.editUser(config, mongo, req, res);
 	});
 
 	service.get("/owner/admin/getUser", function (req, res) {
-		// load tenant
-		checkForCoreMongo(req);
-		coreMongo.findOne('tenants', {'code': req.soajs.inputmaskData.tCode}, function (error, record) {
-			var data = {config: config, error: error, code: 406};
-			checkIfError(req, res, data, false, function () {
-				if (record) {
-					req.soajs.log.warn(record.description);
-				}
-				var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-				uracService.admin.getUser(config, mongo, req, res);
-			});
-		});
-
+		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
+		uracService.admin.user.getUser(config, mongo, req, res);
 	});
 
 	service.get("/owner/admin/changeUserStatus", function (req, res) {
-		// load tenant
-		checkForCoreMongo(req);
-		coreMongo.findOne('tenants', {'code': req.soajs.inputmaskData.tCode}, function (error, record) {
-			var data = {config: config, error: error, code: 406};
-			checkIfError(req, res, data, false, function () {
-				if (record) {
-					req.soajs.log.warn(record.description);
-				}
-				var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-				uracService.admin.changeUserStatus(config, mongo, req, res);
-			});
-		});
-
+		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
+		uracService.admin.user.changeStatus(config, mongo, req, res);
 	});
 
 	service.get("/owner/admin/group/list", function (req, res) {
@@ -283,7 +213,7 @@ service.init(function () {
 	
 	service.get("/owner/admin/group/delete", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		uracService.admin.group.add(config, mongo, req, res);
+		uracService.admin.group.delete(config, mongo, req, res);
 	});
 	
 	service.post("/owner/admin/group/addUsers", function (req, res) {
