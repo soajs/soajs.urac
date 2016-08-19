@@ -681,7 +681,7 @@ module.exports = {
 		'/owner/admin/users/count': {
 			"_apiInfo": {
 				"l": "Total Users Count",
-				"group": "Administration"
+				"group": "Owner"
 			},
 			"commonFields": ['tCode']
 		},
