@@ -126,7 +126,7 @@ describe("urac group tests", function () {
 					assert.ok(body);
 					assert.deepEqual(body.errors.details[0], {
 						"code": 611,
-						"message": "invalid tenant id provided"
+						"message": "Invalid tenant id provided"
 					});
 					done();
 				});

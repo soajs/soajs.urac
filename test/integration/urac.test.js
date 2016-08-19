@@ -622,7 +622,7 @@ describe("simple urac tests", function () {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 611, "message": "invalid tenant id provided"});
+				assert.deepEqual(body.errors.details[0], {"code": 611, "message": "Invalid tenant id provided"});
 				done();
 			});
 		});

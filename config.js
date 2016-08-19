@@ -106,6 +106,11 @@ module.exports = {
 				"required": true,
 				"validation": {"type": "string"}
 			},
+			"keywords": {
+				"source": ['query.keywords', 'body.keywords'],
+				"required": false,
+				"validation": {"type": "string"}
+			},
 			"start": {
 				"required": false,
 				"source": ["query.start"],
@@ -429,7 +434,7 @@ module.exports = {
 				"group": "Administration",
 				"groupDefault": true
 			},
-			"commonFields": ["start", "limit"],
+			"commonFields": ["start", "limit", "keywords"],
 			"tId": {
 				"source": ['body.tId', 'query.tId'],
 				"required": false,
@@ -441,6 +446,7 @@ module.exports = {
 				"l": "Total Users Count",
 				"group": "Administration"
 			},
+			"commonFields": ["keywords"],
 			"tId": {
 				"source": ['query.tId'],
 				"required": false,
@@ -683,7 +689,7 @@ module.exports = {
 				"l": "Total Users Count",
 				"group": "Owner"
 			},
-			"commonFields": ['tCode']
+			"commonFields": ['tCode', 'keywords']
 		},
 		'/owner/admin/addUser': {
 			"_apiInfo": {
@@ -752,7 +758,7 @@ module.exports = {
 				"group": "Owner",
 				"groupDefault": true
 			},
-			"commonFields": ["tCode", "start", "limit"]
+			"commonFields": ["tCode", "start", "limit", "keywords"]
 		},
 		'/owner/admin/changeUserStatus': {
 			"_apiInfo": {
