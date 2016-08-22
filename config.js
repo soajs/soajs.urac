@@ -126,7 +126,7 @@ module.exports = {
 				"default": 1000,
 				"validation": {
 					"type": "integer",
-					"max": 1000
+					"max": 2000
 				}
 			}
 		},
@@ -879,7 +879,41 @@ module.exports = {
 				"validation": {"type": "string"}
 			}
 		},
-		
+		'/owner/admin/editUserConfig': {
+			"_apiInfo": {
+				"l": "Edit User Config",
+				"group": "Owner"
+			},
+			"commonFields": ["tCode"],
+			"uId": {
+				"source": ['query.uId'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
+			"config": {
+				"source": ['body.config'],
+				"required": true,
+				"validation": {
+					"type": "object",
+					"properties": {
+						"keys": {
+							"type": "object"
+						},
+						"packages": {
+							"type": "object",
+							"required": false,
+							"additionalProperties": {
+								type: 'object',
+								'additionalProperties': {
+									'acl': acl
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+
 		'/owner/admin/group/list': {
 			"_apiInfo": {
 				"l": "List Groups",

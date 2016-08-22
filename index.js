@@ -185,7 +185,12 @@ service.init(function () {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
 		uracService.admin.user.editUser(config, mongo, req, res);
 	});
-
+	
+	service.post("/owner/admin/editUserConfig", function (req, res) {
+		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
+		uracService.admin.user.editConfig(config, mongo, req, res);
+	});
+	
 	service.get("/owner/admin/getUser", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
 		uracService.admin.user.getUser(config, mongo, req, res);
