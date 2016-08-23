@@ -34,26 +34,26 @@ function requester(apiName, method, params, cb) {
 		},
 		json: true
 	};
-
+	
 	if (params.headers) {
 		for (var h in params.headers) {
 			if (Object.hasOwnProperty.call(params.headers, h)) {
 				options.headers[h] = params.headers[h];
 			}
 			else {
-
+				
 			}
 		}
 	}
-
+	
 	if (params.form) {
 		options.body = params.form;
 	}
-
+	
 	if (params.qs) {
 		options.qs = params.qs;
 	}
-
+	
 	request[method](options, function (error, response, body) {
 		assert.ifError(error);
 		assert.ok(body);
@@ -63,16 +63,16 @@ function requester(apiName, method, params, cb) {
 
 describe("simple urac tests", function () {
 	var uId;
-
+	
 	afterEach(function (done) {
 		console.log("=======================================");
 		done();
 	});
-
+	
 	var u4 = '22d2cb5fc04ce51e06000001';
-
+	
 	describe("testing locked accounts", function () {
-
+		
 		it("FAIL - editUserConfig", function (done) {
 			var params = {
 				qs: {
@@ -98,7 +98,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - editUser", function (done) {
 			var params = {
 				qs: {
@@ -112,32 +112,26 @@ describe("simple urac tests", function () {
 					"status": "active",
 					"profile": {},
 					"config": {
-						"packages": {
-							'TPROD_EX03': {
-								'acl': {
-									'example01': {}
-								}
-							}
-						},
+						"packages": {},
 						"keys": {}
 					}
 				}
 			};
-
+			
 			requester('admin/editUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.equal(body.errors.details[0].code, 500);
 				done();
-
+				
 			});
 		});
-
+		
 	});
-
+	
 	describe("testing edit user Config API", function () {
-
+		
 		it("FAIL - invalid user account", function (done) {
 			var params = {
 				qs: {
@@ -155,9 +149,9 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		var u1 = '54ee1a511856706c23639308';
-
+		
 		it("SUCCESS - will update user1 config", function (done) {
 			var params = {
 				qs: {
@@ -176,39 +170,10 @@ describe("simple urac tests", function () {
 					}
 				}
 			};
-
+			
 			requester('admin/editUserConfig', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
-				assert.ok(body.data);
-				done();
-			});
-		});
-
-		it("SUCCESS - will update user config", function (done) {
-			var params = {
-				qs: {
-					'uId': u1
-				},
-				form: {
-					'config': {
-						'keys': {},
-						'packages': {
-							'TPROD_EX03': {
-								'acl': {
-									'example01': {}
-								}
-							}
-						}
-					}
-				}
-			};
-
-			requester('admin/editUserConfig', 'post', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				console.log(JSON.stringify(body));
 				assert.ok(body.data);
 				mongo.findOne("users", {'username': 'user1'}, function (error, userRecord) {
 					assert.ifError(error);
@@ -222,21 +187,21 @@ describe("simple urac tests", function () {
 					});
 					done();
 				});
-
+				
 			});
 		});
-
+		
 	});
-
+	
 	describe("testing check Username Exists", function () {
-
+		
 		it("SUCCESS - user exists", function (done) {
 			var params = {
 				qs: {
 					"username": 'user1'
 				}
 			};
-
+			
 			requester('checkUsername', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -244,14 +209,14 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - user doesn't exist", function (done) {
 			var params = {
 				qs: {
 					"username": 'invalidusername'
 				}
 			};
-
+			
 			requester('checkUsername', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -260,7 +225,7 @@ describe("simple urac tests", function () {
 			});
 		});
 	});
-
+	
 	describe("testing join API with validation", function () {
 		var token;
 		var tokenlisa;
@@ -272,7 +237,7 @@ describe("simple urac tests", function () {
 					"email": 'john@soajs.org'
 				}
 			};
-
+			
 			requester('join', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -285,7 +250,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - will join user", function (done) {
 			var params = {
 				form: {
@@ -296,13 +261,13 @@ describe("simple urac tests", function () {
 					"email": 'john.doe@soajs.org'
 				}
 			};
-
+			
 			requester('join', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
 				assert.ok(body.data);
 				token = body.data;
-
+				
 				setTimeout(function () {
 					mongo.findOne('users', {'username': 'john123', status: 'pendingJoin'}, function (error, record) {
 						assert.ifError(error);
@@ -313,7 +278,7 @@ describe("simple urac tests", function () {
 				}, 500);
 			});
 		});
-
+		
 		it("SUCCESS - will join another user", function (done) {
 			var params = {
 				form: {
@@ -324,7 +289,7 @@ describe("simple urac tests", function () {
 					"email": 'lisa2@soajs.org'
 				}
 			};
-
+			
 			requester('join', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -335,24 +300,24 @@ describe("simple urac tests", function () {
 					if (err || !tokenRecord) {
 					}
 					var t = new Date(1426087819320);
-
+					
 					tokenRecord.expires = t;
 					console.log(tokenRecord);
 					mongo.save('tokens', tokenRecord, function (err) {
 						console.log(tokenRecord);
 					});
 				});
-
+				
 				mongo.findOne('users', {'username': 'lisa2', status: 'pendingJoin'}, function (error, record) {
 					assert.ifError(error);
 					console.log(JSON.stringify(record));
 					assert.ok(record);
 					done();
 				});
-
+				
 			});
 		});
-
+		
 		it("FAIL - user exists", function (done) {
 			var params = {
 				form: {
@@ -363,7 +328,7 @@ describe("simple urac tests", function () {
 					"email": 'john@soajs.org'
 				}
 			};
-
+			
 			requester('join', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -373,12 +338,12 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - missing validation params", function (done) {
 			var params = {
 				qs: {}
 			};
-
+			
 			requester('join/validate', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -388,14 +353,14 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - will validate join user", function (done) {
 			var params = {
 				qs: {
 					"token": token
 				}
 			};
-
+			
 			requester('join/validate', 'get', params, function (error, body) {
 				assert.ifError(error);
 				console.log(JSON.stringify(body));
@@ -405,14 +370,14 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("Fail - will not validate join user", function (done) {
 			var params = {
 				qs: {
 					"token": tokenlisa
 				}
 			};
-
+			
 			requester('join/validate', 'get', params, function (error, body) {
 				assert.ifError(error);
 				console.log(JSON.stringify(body));
@@ -421,9 +386,9 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 	});
-
+	
 	describe("testing join API without validation", function () {
 		it("change service tenant configuration, set validate to false", function (done) {
 			var options = {
@@ -432,11 +397,11 @@ describe("simple urac tests", function () {
 					key: extKey
 				}
 			};
-
+			
 			mongoProvisioning.findOne('tenants', {'applications.keys.extKeys.extKey': extKey}, function (error, provisioning) {
 				assert.ifError(error);
 				provisioning.applications[0].keys[0].config.dev.urac.validateJoin = false;
-
+				
 				mongoProvisioning.save('tenants', provisioning, function (error) {
 					assert.ifError(error);
 					request.get(options, function (error, response, body) {
@@ -447,7 +412,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-
+		
 		it("drop the collection and join the user again without validation", function (done) {
 			var params = {
 				form: {
@@ -458,16 +423,16 @@ describe("simple urac tests", function () {
 					"email": 'john.doe@soajs.org'
 				}
 			};
-
+			
 			mongo.dropCollection('users', function () {
 				mongo.dropCollection('tokens', function () {
-
+					
 					requester('join', 'post', params, function (error, body) {
 						assert.ifError(error);
 						assert.ok(body);
 						assert.ok(body.data);
 						console.log(body);
-
+						
 						mongo.findOne('users', {'username': 'john123', 'status': 'active'}, function (error, record) {
 							assert.ifError(error);
 							assert.ok(record);
@@ -480,7 +445,7 @@ describe("simple urac tests", function () {
 			});
 		});
 	});
-
+	
 	describe("testing login API", function () {
 		it("FAIL - missing params", function (done) {
 			var params = {
@@ -497,7 +462,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - user not found", function (done) {
 			var params = {
 				form: {
@@ -505,7 +470,7 @@ describe("simple urac tests", function () {
 					"password": 'password'
 				}
 			};
-
+			
 			requester('login', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -517,7 +482,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - wrong login password", function (done) {
 			var params = {
 				form: {
@@ -525,7 +490,7 @@ describe("simple urac tests", function () {
 					"password": 'paword12'
 				}
 			};
-
+			
 			requester('login', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -537,7 +502,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - will login user", function (done) {
 			var params = {
 				form: {
@@ -553,7 +518,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - will login user with email instead of username", function (done) {
 			var params = {
 				form: {
@@ -561,7 +526,7 @@ describe("simple urac tests", function () {
 					"password": 'password'
 				}
 			};
-
+			
 			requester('login', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -571,7 +536,7 @@ describe("simple urac tests", function () {
 			});
 		});
 	});
-
+	
 	describe("testing logout API", function () {
 		it("SUCCESS - will logout user", function (done) {
 			requester('logout', 'get', {}, function (error, body) {
@@ -583,7 +548,7 @@ describe("simple urac tests", function () {
 			});
 		});
 	});
-
+	
 	describe("testing add user API", function () {
 		var myNewToken;
 		var lisaAdd_Token;
@@ -606,7 +571,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - invalid tId", function (done) {
 			var params = {
 				form: {
@@ -626,7 +591,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - will add user", function (done) {
 			var params = {
 				form: {
@@ -638,7 +603,7 @@ describe("simple urac tests", function () {
 					'tCode': 'test'
 				}
 			};
-
+			
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -660,7 +625,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-
+		
 		it("SUCCESS - will add user with profile - no mail ", function (done) {
 			var params = {
 				headers: {
@@ -697,7 +662,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-
+		
 		it("SUCCESS - will validate second user and set a password", function (done) {
 			var params = {
 				headers: {
@@ -711,7 +676,7 @@ describe("simple urac tests", function () {
 					"confirmation": "newPassword"
 				}
 			};
-
+			
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -722,7 +687,7 @@ describe("simple urac tests", function () {
 					assert.ok(userRecord);
 					console.log(userRecord);
 					assert.equal(userRecord.status, 'active');
-
+					
 					mongo.findOne('tokens', {
 						'userId': userRecord._id.toString(),
 						'service': 'addUser'
@@ -732,14 +697,14 @@ describe("simple urac tests", function () {
 						console.log(tokenRecord);
 						assert.equal(tokenRecord.status, 'used');
 						assert.equal(tokenRecord.service, 'addUser');
-
-
+						
+						
 						done();
 					});
 				});
 			});
 		});
-
+		
 		it("SUCCESS - will validate add user and set a password", function (done) {
 			var params = {
 				qs: {
@@ -750,7 +715,7 @@ describe("simple urac tests", function () {
 					"confirmation": "newPassword"
 				}
 			};
-
+			
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -793,7 +758,7 @@ describe("simple urac tests", function () {
 					'confirmation': '123'
 				}
 			};
-
+			
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -811,7 +776,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-
+		
 		it("SUCCESS - will login with user just added above", function (done) {
 			var params = {
 				headers: {
@@ -822,7 +787,7 @@ describe("simple urac tests", function () {
 					'password': '123'
 				}
 			};
-
+			
 			requester('login', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -830,7 +795,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - will not add user with a pending status and password", function (done) {
 			var params = {
 				form: {
@@ -843,7 +808,7 @@ describe("simple urac tests", function () {
 					'status': 'active'
 				}
 			};
-
+			
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -853,7 +818,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - will not add user with a pending status and password", function (done) {
 			var params = {
 				form: {
@@ -867,7 +832,7 @@ describe("simple urac tests", function () {
 					'confirmation': '123'
 				}
 			};
-
+			
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -877,7 +842,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - will not add user with a password and confirmation mismatch", function (done) {
 			var params = {
 				form: {
@@ -892,7 +857,7 @@ describe("simple urac tests", function () {
 					'confirmation': '456'
 				}
 			};
-
+			
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -902,7 +867,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - username exists for another account", function (done) {
 			var params = {
 				form: {
@@ -922,9 +887,9 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 	});
-
+	
 	describe("testing forgotPassword and resetPassword API", function () {
 		var token;
 		var fp_tokenlisa;
@@ -932,7 +897,7 @@ describe("simple urac tests", function () {
 			var params = {
 				qs: {}
 			};
-
+			
 			requester('forgotPassword', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -941,14 +906,14 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - forgotPassword invalid user", function (done) {
 			var params = {
 				qs: {
 					"username": 'invaliduser'
 				}
 			};
-
+			
 			requester('forgotPassword', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -957,7 +922,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - forgotPassword - forgot password request - no mail", function (done) {
 			var params = {
 				headers: {
@@ -967,7 +932,7 @@ describe("simple urac tests", function () {
 					"username": 'lisa'
 				}
 			};
-
+			
 			requester('forgotPassword', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -978,25 +943,25 @@ describe("simple urac tests", function () {
 					if (err || !tokenRecord) {
 					}
 					var t = new Date(1426087819320);
-
+					
 					tokenRecord.expires = t;
 					console.log(tokenRecord);
 					mongo.save('tokens', tokenRecord, function (err) {
 						console.log(tokenRecord);
 					});
 				});
-
+				
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - forgotPassword should start forgot password request", function (done) {
 			var params = {
 				qs: {
 					"username": 'john123'
 				}
 			};
-
+			
 			requester('forgotPassword', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1006,14 +971,14 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - forgotPassword should redo forgot password request", function (done) {
 			var params = {
 				qs: {
 					"username": 'john.doe@soajs.org'
 				}
 			};
-
+			
 			requester('forgotPassword', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1035,8 +1000,8 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-
-
+		
+		
 		it("FAIL - resetPassword missing params", function (done) {
 			var params = {
 				qs: {
@@ -1044,7 +1009,7 @@ describe("simple urac tests", function () {
 				},
 				form: {"password": "newPassword"}
 			};
-
+			
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1056,7 +1021,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - resetPassword passsword mismatch", function (done) {
 			var params = {
 				qs: {
@@ -1067,7 +1032,7 @@ describe("simple urac tests", function () {
 					"confirmation": "password"
 				}
 			};
-
+			
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1079,7 +1044,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - resetPassword invalid token", function (done) {
 			var params = {
 				qs: {
@@ -1090,7 +1055,7 @@ describe("simple urac tests", function () {
 					"confirmation": "newPassword"
 				}
 			};
-
+			
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1099,7 +1064,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - resetPassword token expired", function (done) {
 			var params = {
 				qs: {
@@ -1110,7 +1075,7 @@ describe("simple urac tests", function () {
 					"confirmation": "newPassword"
 				}
 			};
-
+			
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1119,7 +1084,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - resetPassword will reset the password", function (done) {
 			var params = {
 				qs: {
@@ -1130,7 +1095,7 @@ describe("simple urac tests", function () {
 					"confirmation": "newPassword"
 				}
 			};
-
+			
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1153,7 +1118,7 @@ describe("simple urac tests", function () {
 			});
 		});
 	});
-
+	
 	describe("testing account getUser API", function () {
 		it("FAIL - missing params", function (done) {
 			var params = {
@@ -1167,7 +1132,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - invalid account", function (done) {
 			var params = {
 				qs: {
@@ -1185,7 +1150,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - returns user record", function (done) {
 			var params = {
 				qs: {
@@ -1221,7 +1186,7 @@ describe("simple urac tests", function () {
 			});
 		});
 	});
-
+	
 	describe("testing change password API", function () {
 		it("FAIL - missing parameters", function (done) {
 			var params = {
@@ -1240,7 +1205,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - password mismatch", function (done) {
 			var params = {
 				qs: {
@@ -1252,7 +1217,7 @@ describe("simple urac tests", function () {
 					'confirmation': 'somethingElse'
 				}
 			};
-
+			
 			requester('account/changePassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1264,7 +1229,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - invalid user id", function (done) {
 			var params = {
 				qs: {
@@ -1276,7 +1241,7 @@ describe("simple urac tests", function () {
 					'confirmation': 'myPassword'
 				}
 			};
-
+			
 			requester('account/changePassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1285,7 +1250,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - invalid user account", function (done) {
 			var params = {
 				qs: {
@@ -1297,7 +1262,7 @@ describe("simple urac tests", function () {
 					'confirmation': 'myPassword'
 				}
 			};
-
+			
 			requester('account/changePassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1309,7 +1274,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - old password mismatch", function (done) {
 			var params = {
 				qs: {
@@ -1321,7 +1286,7 @@ describe("simple urac tests", function () {
 					'confirmation': 'myPassword'
 				}
 			};
-
+			
 			requester('account/changePassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1330,7 +1295,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - will update user password", function (done) {
 			var params = {
 				qs: {
@@ -1342,7 +1307,7 @@ describe("simple urac tests", function () {
 					'confirmation': 'myPassword'
 				}
 			};
-
+			
 			requester('account/changePassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1352,7 +1317,7 @@ describe("simple urac tests", function () {
 			});
 		});
 	});
-
+	
 	describe("testing change email API", function () {
 		var newToken;
 		var changeEmailToken;
@@ -1370,7 +1335,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - invalid user provided", function (done) {
 			var params = {
 				qs: {
@@ -1388,7 +1353,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - same email provided", function (done) {
 			var params = {
 				qs: {
@@ -1409,7 +1374,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - change email request created", function (done) {
 			var params = {
 				qs: {
@@ -1427,7 +1392,7 @@ describe("simple urac tests", function () {
 				mongo.findOne('users', {"username": "john123"}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
-
+					
 					mongo.findOne('tokens', {
 						'userId': userRecord._id.toString(),
 						'service': 'changeEmail',
@@ -1442,7 +1407,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-
+		
 		it("SUCCESS - change email request again", function (done) {
 			var params = {
 				qs: {
@@ -1461,7 +1426,7 @@ describe("simple urac tests", function () {
 				mongo.findOne('users', {"username": "john123"}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
-
+					
 					mongo.find('tokens', {
 						'userId': userRecord._id.toString(),
 						'service': 'changeEmail'
@@ -1478,7 +1443,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-
+		
 		it("FAIL - do change email fail, missing params", function (done) {
 			var params = {
 				qs: {}
@@ -1491,7 +1456,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - do change email fail, invalid token", function (done) {
 			var params = {
 				qs: {
@@ -1506,7 +1471,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("SUCCESS - do change email verified", function (done) {
 			var params = {
 				qs: {
@@ -1521,7 +1486,7 @@ describe("simple urac tests", function () {
 				mongo.findOne('users', {'username': 'john123'}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
-
+					
 					mongo.find('tokens', {
 						'userId': userRecord._id.toString(),
 						'service': 'changeEmail'
@@ -1537,8 +1502,8 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-
-
+		
+		
 		it("SUCCESS - change email request created - no mail sent", function (done) {
 			var params = {
 				headers: {
@@ -1573,7 +1538,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-
+		
 		it("FAIL - do change email fail - expired token", function (done) {
 			var params = {
 				qs: {
@@ -1588,7 +1553,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it('SUCCESS - manual reset of user email address to receive notifications from remaining APIs tests', function (done) {
 			mongo.findOne('users', {'username': 'john123'}, function (error, userRecord) {
 				assert.ifError(error);
@@ -1601,7 +1566,7 @@ describe("simple urac tests", function () {
 			});
 		});
 	});
-
+	
 	describe("testing edit profile API", function () {
 		it("FAIL - missing parameters", function (done) {
 			var params = {
@@ -1620,7 +1585,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - invalid user account", function (done) {
 			var params = {
 				qs: {
@@ -1632,7 +1597,7 @@ describe("simple urac tests", function () {
 					'lastName': 'doe2'
 				}
 			};
-
+			
 			requester('account/editProfile', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1644,7 +1609,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 		it("FAIL - username exists for another account", function (done) {
 			var params = {
 				qs: {
@@ -1683,7 +1648,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-
+		
 		it("SUCCESS - will update user profile", function (done) {
 			var params = {
 				qs: {
@@ -1704,9 +1669,9 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 	});
-
+	
 	describe("testing admin API", function () {
 		describe("testing edit user API", function () {
 			it("FAIL - missing params", function (done) {
@@ -1727,7 +1692,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-
+			
 			it("FAIL - invalid user account", function (done) {
 				var params = {
 					qs: {
@@ -1749,7 +1714,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-
+			
 			it("FAIL - username exists for another account", function (done) {
 				var params = {
 					qs: {
@@ -1774,7 +1739,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-
+			
 			it("SUCCESS - will update user account", function (done) {
 				var params = {
 					qs: {
@@ -1798,13 +1763,13 @@ describe("simple urac tests", function () {
 						}
 					}
 				};
-
+				
 				requester('admin/editUser', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					assert.ok(body.data);
 					console.log(JSON.stringify(body));
-
+					
 					mongo.findOne("users", {'username': 'john123'}, function (error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
@@ -1839,11 +1804,11 @@ describe("simple urac tests", function () {
 						});
 						done();
 					});
-
-
+					
+					
 				});
 			});
-
+			
 			it("SUCCESS - will update user account user2", function (done) {
 				mongo.findOne("users", {'username': 'user2'}, function (error, userRecord) {
 					assert.ifError(error);
@@ -1864,8 +1829,8 @@ describe("simple urac tests", function () {
 							"profile": {
 								"sex": "male"
 							},
-							"password":"123",
-							"confirmation":"123",
+							"password": "123",
+							"confirmation": "123",
 							'config': {
 								'keys': {},
 								'packages': {
@@ -1916,7 +1881,7 @@ describe("simple urac tests", function () {
 					});
 				});
 			});
-
+			
 			it("FAIL - password and its confirmation do not match", function (done) {
 				mongo.findOne("users", {'username': 'user2'}, function (error, userRecord) {
 					assert.ifError(error);
@@ -1936,8 +1901,8 @@ describe("simple urac tests", function () {
 							"profile": {
 								"sex": "male"
 							},
-							"password":"123",
-							"confirmation":"456",
+							"password": "123",
+							"confirmation": "456",
 							'config': {
 								'keys': {},
 								'packages': {
@@ -1960,7 +1925,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-
+		
 		describe("testing change user status API", function () {
 			it("FAIL - missing parameters", function (done) {
 				var params = {
@@ -1979,7 +1944,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-
+			
 			it("FAIL - invalid user account", function (done) {
 				var params = {
 					qs: {
@@ -1995,7 +1960,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-
+			
 			it("FAIL - will approve user", function (done) {
 				var params = {
 					qs: {
@@ -2012,7 +1977,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-
+			
 			it("SUCCESS - will approve user", function (done) {
 				var params = {
 					qs: {
@@ -2033,7 +1998,7 @@ describe("simple urac tests", function () {
 					});
 				});
 			});
-
+			
 			it("SUCCESS - will inactivate user", function (done) {
 				var params = {
 					qs: {
@@ -2054,7 +2019,7 @@ describe("simple urac tests", function () {
 					});
 				});
 			});
-
+			
 			it("SUCCESS - will activate user - no mail", function (done) {
 				var params = {
 					headers: {
@@ -2073,9 +2038,9 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-
+			
 		});
-
+		
 		describe("testing admin get user API", function () {
 			it("Fail - missing param", function (done) {
 				var params = {
@@ -2089,7 +2054,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-
+			
 			it("Fail - invalid id", function (done) {
 				var params = {
 					qs: {
@@ -2104,7 +2069,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-
+			
 			it("Success", function (done) {
 				var params = {
 					qs: {
@@ -2120,24 +2085,57 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-
+			
 		});
-
+		
+		describe("testing count users API", function () {
+			
+			it("SUCCESS - will return user count", function (done) {
+				var params = {};
+				requester('admin/users/count', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(body);
+					done();
+				});
+			});
+			
+			it("SUCCESS - search keywords", function (done) {
+				var params = {
+					qs: {
+						keywords: 'smith'
+					}
+				};
+				requester('admin/users/count', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+			
+		});
+		
 		describe("testing list users API", function () {
+			
 			it("SUCCESS - will return user records", function (done) {
 				var params = {};
 				requester('admin/listUsers', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					//console.log(JSON.stringify(body));
 					assert.ok(body.data);
 					assert.ok(body.data.length > 0);
 					done();
 				});
 			});
-
-			it("SUCCESS - will return user records", function (done) {
-				var params = {qs: {'tId': '10d2cb5fc04ce51e06000001'}};
+			
+			it("SUCCESS - search keywords", function (done) {
+				var params = {
+					qs: {
+						keywords: 'smith'
+					}
+				};
 				requester('admin/listUsers', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
@@ -2147,7 +2145,19 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-
+			
+			it("SUCCESS - will return user records", function (done) {
+				var params = {qs: {'tId': '10d2cb5fc04ce51e06000001'}};
+				requester('admin/listUsers', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					//console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					assert.ok(body.data.length > 0);
+					done();
+				});
+			});
+			
 			it("SUCCESS - will return empty array", function (done) {
 				mongo.dropCollection('users', function () {
 					var params = {};
@@ -2163,5 +2173,5 @@ describe("simple urac tests", function () {
 			});
 		});
 	});
-
+	
 });

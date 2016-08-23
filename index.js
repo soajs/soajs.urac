@@ -177,6 +177,17 @@ service.init(function () {
 	});
 	
 	service.post("/owner/admin/addUser", function (req, res) {
+		if (req.soajs.inputmaskData['status'] !== 'pendingNew') {
+			if (!req.soajs.inputmaskData['password'] || req.soajs.inputmaskData['password'] === '') {
+				return res.jsonp(req.soajs.buildResponse({"code": 424, "msg": config.errors[424]}));
+			}
+		}
+		else if (req.soajs.inputmaskData['status'] === 'pendingNew') {
+			if (req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '') {
+				return res.jsonp(req.soajs.buildResponse({"code": 424, "msg": config.errors[424]}));
+			}
+		}
+		
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
 		uracService.admin.user.addUser(config, mongo, req, res);
 	});

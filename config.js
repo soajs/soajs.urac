@@ -399,7 +399,10 @@ module.exports = {
 				"source": ['body.status'],
 				"default": "pendingNew",
 				"required": false,
-				"validation": {"type": "string", enum: ['active', 'inactive']}
+				"validation": {
+					"type": "string",
+					"enum": ['active', 'inactive', 'pendingNew']
+				}
 			},
 			"password": {
 				"source": ['body.password'],
@@ -425,7 +428,7 @@ module.exports = {
 			"status": {
 				"source": ['query.status'],
 				"required": true,
-				"validation": {"type": "string", enum: ['active', 'inactive']}
+				"validation": {"type": "string", "enum": ['active', 'inactive']}
 			}
 		},
 		'/admin/listUsers': {
@@ -534,7 +537,7 @@ module.exports = {
 				"required": true,
 				"validation": {
 					"type": "string",
-					enum: ['active', 'inactive', 'pendingNew']
+					"enum": ['active', 'inactive', 'pendingNew']
 				}
 			},
 			"profile": {
@@ -739,7 +742,7 @@ module.exports = {
 				"source": ['body.status'],
 				"default": "pendingNew",
 				"required": false,
-				"validation": {"type": "string", enum: ['active', 'inactive']}
+				"validation": {"type": "string", "enum": ['active', 'inactive', 'pendingNew']}
 			},
 			"password": {
 				"source": ['body.password'],
@@ -774,7 +777,7 @@ module.exports = {
 			"status": {
 				"source": ['query.status'],
 				"required": true,
-				"validation": {"type": "string", enum: ['active', 'inactive']}
+				"validation": {"type": "string", "enum": ['active', 'inactive']}
 			}
 		},
 		'/owner/admin/getUser': {
@@ -860,7 +863,7 @@ module.exports = {
 				"required": true,
 				"validation": {
 					"type": "string",
-					enum: ['active', 'inactive', 'pendingNew']
+					"enum": ['active', 'inactive', 'pendingNew']
 				}
 			},
 			"profile": {

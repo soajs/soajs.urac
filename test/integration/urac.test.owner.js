@@ -11,11 +11,8 @@ var dbConfig = require("./db.config.test.js");
 var provisioningConfig = dbConfig();
 provisioningConfig.name = "core_provision";
 
-var sessionConfig = dbConfig();
-sessionConfig.name = "core_session";
-
 var uracConfig = dbConfig();
-uracConfig.name = "test_urac";
+uracConfig.name = "temp_urac";
 var mongo = new Mongo(uracConfig);
 
 var extKey = 'aa39b5490c4a4ed0e56d7ec1232a428f771e8bb83cfcee16de14f735d0f5da587d5968ec4f785e38570902fd24e0b522b46cb171872d1ea038e88328e7d973ff47d9392f72b2d49566209eb88eb60aed8534a965cf30072c39565bd8d72f68ac';
@@ -56,21 +53,77 @@ function requester(apiName, method, params, cb) {
 	});
 }
 
-describe("admin urac tests", function () {
+describe("Owner admin tests", function () {
 	var uId;
+	var gId;
+	var tCode = 'temp';
+	
+	before(function (done) {
+		mongo.dropCollection('users', function () {
+			mongo.dropCollection('groups', function () {
+				done();
+			});
+		});
+	});
 	
 	afterEach(function (done) {
-		console.log("=======================================");
+		console.log("======================================= ===================================");
 		done();
 	});
-	var gId;
-
+	
 	describe("testing admin user API", function () {
 		describe("testing add user API", function () {
+			
+			it("Fail - Active missing password", function (done) {
+				var params = {
+					qs: {
+						'tCode': tCode
+					},
+					form: {
+						'firstName': 'john',
+						'lastName': 'smith',
+						'email': 'john.smith@soajs.org',
+						'username': 'smith123',
+						'status': 'active'
+					}
+				};
+
+				requester('owner/admin/addUser', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.errors);
+					assert.equal(body.errors.codes[0], 424);
+					done();
+				});
+			});
+
+			it("Fail - Pending with password", function (done) {
+				var params = {
+					qs: {
+						'tCode': tCode
+					},
+					form: {
+						'firstName': 'john',
+						'lastName': 'smith',
+						'email': 'john.smith@soajs.org',
+						'username': 'smith123',
+						'password': 'password'
+					}
+				};
+
+				requester('owner/admin/addUser', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.errors);
+					assert.equal(body.errors.codes[0], 424);
+					done();
+				});
+			});
+
 			it("SUCCESS - will add user account", function (done) {
 				var params = {
 					qs: {
-						'tCode': 'test'
+						'tCode': tCode
 					},
 					form: {
 						'firstName': 'john',
@@ -78,16 +131,15 @@ describe("admin urac tests", function () {
 						'email': 'john.smith@soajs.org',
 						'username': 'smith123',
 						'status': 'active',
+						'password': 'password',
 						'config': {}
 					}
 				};
-
+				
 				requester('owner/admin/addUser', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					assert.ok(body.data);
-					console.log(JSON.stringify(body));
-
 					mongo.findOne("users", {'username': 'smith123'}, function (error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
@@ -96,24 +148,45 @@ describe("admin urac tests", function () {
 						uId = userRecord._id.toString();
 						done();
 					});
-
+					
 				});
 			});
-		});
 
+		});
+		
 		describe("testing edit user API", function () {
+			
 			it("SUCCESS - will update user account", function (done) {
 				var params = {
 					qs: {
 						'uId': uId,
-						'tCode': 'test'
+						'tCode': tCode
 					},
 					form: {
-						'firstName': 'john',
+						'firstName': 'john-jack',
 						'lastName': 'smith',
 						'email': 'john.smith@soajs.org',
 						'username': 'smith123',
 						'status': 'active',
+						'config': {}
+					}
+				};
+				
+				requester('owner/admin/editUser', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+			
+			it("SUCCESS - will update user config", function (done) {
+				var params = {
+					qs: {
+						'uId': uId,
+						'tCode': tCode
+					},
+					form: {
 						'config': {
 							'keys': {},
 							'packages': {
@@ -127,12 +200,23 @@ describe("admin urac tests", function () {
 					}
 				};
 				
-				requester('owner/admin/editUser', 'post', params, function (error, body) {
+				requester('owner/admin/editUserConfig', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					assert.ok(body.data);
-					console.log(JSON.stringify(body));
-					done();
+					mongo.findOne("users", {'username': 'smith123'}, function (error, userRecord) {
+						assert.ifError(error);
+						assert.ok(userRecord);
+						assert.deepEqual(userRecord.config.packages, {
+							'TPROD_EX03': {
+								'acl': {
+									'example01': {}
+								}
+							}
+						});
+						done();
+					});
+					
 				});
 			});
 		});
@@ -143,7 +227,7 @@ describe("admin urac tests", function () {
 				var params = {
 					qs: {
 						'uId': uId,
-						'tCode': 'test',
+						'tCode': tCode,
 						'status': 'inactive'
 					}
 				};
@@ -164,11 +248,12 @@ describe("admin urac tests", function () {
 		});
 		
 		describe("testing admin get user API", function () {
+			
 			it("Success", function (done) {
 				var params = {
 					qs: {
 						'uId': uId,
-						'tCode': 'test'
+						'tCode': tCode
 					}
 				};
 				requester('owner/admin/getUser', 'get', params, function (error, body) {
@@ -184,30 +269,82 @@ describe("admin urac tests", function () {
 		});
 		
 		describe("testing list users API", function () {
+			
 			it("SUCCESS - will return user records", function (done) {
 				var params = {
 					qs: {
-						'tCode': 'test'
+						'tCode': tCode
 					}
 				};
 				requester('owner/admin/listUsers', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					//console.log(JSON.stringify(body));
 					assert.ok(body.data);
 					assert.ok(body.data.length > 0);
 					done();
 				});
 			});
+			
+			it("SUCCESS - search keywords", function (done) {
+				var params = {
+					qs: {
+						'tCode': tCode,
+						'keywords': 'john'
+					}
+				};
+				requester('owner/admin/listUsers', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					//console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					assert.ok(body.data.length > 0);
+					done();
+				});
+			});
+			
+		});
+		
+		describe("testing count users API", function () {
+			
+			it("SUCCESS - will return user count", function (done) {
+				var params = {
+					qs: {
+						'tCode': tCode
+					}
+				};
+				requester('owner/admin/users/count', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(body);
+					done();
+				});
+			});
+			
+			it("SUCCESS - with keywords", function (done) {
+				var params = {
+					qs: {
+						'tCode': tCode,
+						'keywords': 'john'
+					}
+				};
+				requester('owner/admin/users/count', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(body);
+					done();
+				});
+			});
+			
 		});
 	});
-
+	
 	describe("testing admin group API", function () {
 		describe("testing add group API", function () {
 			it("SUCCESS - will create new group", function (done) {
 				var params = {
 					qs: {
-						'tCode': 'test'
+						'tCode': tCode
 					},
 					form: {
 						'code': 'gold',
@@ -220,7 +357,7 @@ describe("admin urac tests", function () {
 					assert.ok(body);
 					console.log(JSON.stringify(body));
 					assert.ok(body.data);
-
+					
 					mongo.findOne('groups', {'code': 'gold'}, function (error, record) {
 						assert.ifError(error);
 						assert.ok(record);
@@ -231,14 +368,14 @@ describe("admin urac tests", function () {
 				});
 			});
 		});
-
+		
 		describe("testing edit group API", function () {
-
+			
 			it("SUCCESS - will edit group", function (done) {
 				var params = {
 					qs: {
 						'gId': gId,
-						'tCode': 'test'
+						'tCode': tCode
 					},
 					form: {
 						'name': 'gold name',
@@ -252,16 +389,16 @@ describe("admin urac tests", function () {
 					assert.ok(body.data);
 					done();
 				});
-
+				
 			});
 		});
-
+		
 		describe("testing assign users API", function () {
-
+			
 			it("SUCCESS - will map grp to users", function (done) {
 				var params = {
 					qs: {
-						'tCode': 'test'
+						'tCode': tCode
 					},
 					form: {
 						'groupCode': 'gold',
@@ -276,15 +413,15 @@ describe("admin urac tests", function () {
 					done();
 				});
 			});
-
+			
 		});
-
+		
 		describe("testing list groups API", function () {
-
+			
 			it("SUCCESS - will return grps records", function (done) {
 				var params = {
 					qs: {
-						'tCode': 'test'
+						'tCode': tCode
 					}
 				};
 				requester('owner/admin/group/list', 'get', params, function (error, body) {
@@ -296,16 +433,16 @@ describe("admin urac tests", function () {
 					done();
 				});
 			});
-
-
+			
+			
 		});
-
+		
 		describe("testing delete group API", function () {
 			it("SUCCESS - will delete group gold", function (done) {
 				var params = {
 					qs: {
 						'gId': gId,
-						'tCode': 'test'
+						'tCode': tCode
 					}
 				};
 				requester('owner/admin/group/delete', 'get', params, function (error, body) {
@@ -316,7 +453,7 @@ describe("admin urac tests", function () {
 					done();
 				});
 			});
-
+			
 		});
 	});
 	
