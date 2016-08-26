@@ -313,7 +313,7 @@ module.exports = {
 			"email": {
 				"source": ['body.email'],
 				"required": true,
-				"validation": {"type": "string"}
+				"validation": {"type": "string", format: "email"}
 			}
 		},
 		'/account/editProfile': {
