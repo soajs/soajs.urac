@@ -127,6 +127,34 @@ describe("Owner admin tests", function () {
 					},
 					form: {
 						'firstName': 'john',
+						'lastName': 'black',
+						'email': 'john.black@soajs.org',
+						'username': 'black_123',
+						'config': {}
+					}
+				};
+
+				requester('owner/admin/addUser', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					console.log(body);
+					mongo.findOne("users", {'username': 'black_123'}, function (error, userRecord) {
+						assert.ifError(error);
+						assert.ok(userRecord);
+						done();
+					});
+
+				});
+			});
+
+			it("SUCCESS - will add user account with password", function (done) {
+				var params = {
+					qs: {
+						'tCode': tCode
+					},
+					form: {
+						'firstName': 'john',
 						'lastName': 'smith',
 						'email': 'john.smith@soajs.org',
 						'username': 'smith123',
@@ -140,6 +168,7 @@ describe("Owner admin tests", function () {
 					assert.ifError(error);
 					assert.ok(body);
 					assert.ok(body.data);
+					console.log(body);
 					mongo.findOne("users", {'username': 'smith123'}, function (error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);

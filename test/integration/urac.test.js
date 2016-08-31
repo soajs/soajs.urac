@@ -13,9 +13,8 @@ var provisioningConfig = dbConfig();
 provisioningConfig.name = "core_provision";
 var mongoProvisioning = new Mongo(provisioningConfig);
 
-var sessionConfig = dbConfig();
-sessionConfig.name = "core_session";
-var mongoSession = new Mongo(sessionConfig);
+//var sessionConfig = dbConfig();
+//sessionConfig.name = "core_session";
 
 var uracConfig = dbConfig();
 uracConfig.name = "test_urac";
@@ -266,8 +265,8 @@ describe("simple urac tests", function () {
 				assert.ifError(error);
 				assert.ok(body);
 				assert.ok(body.data);
-				token = body.data;
-				
+				token = body.data.token;
+				//console.log(body);
 				setTimeout(function () {
 					mongo.findOne('users', {'username': 'john123', status: 'pendingJoin'}, function (error, record) {
 						assert.ifError(error);
@@ -275,7 +274,7 @@ describe("simple urac tests", function () {
 						assert.ok(record);
 						done();
 					});
-				}, 500);
+				}, 100);
 			});
 		});
 		
@@ -294,17 +293,16 @@ describe("simple urac tests", function () {
 				assert.ifError(error);
 				assert.ok(body);
 				assert.ok(body.data);
-				tokenlisa = body.data;
+				tokenlisa = body.data.token;
 				//update token record to expire
 				mongo.findOne('tokens', {'token': tokenlisa}, function (err, tokenRecord) {
 					if (err || !tokenRecord) {
 					}
 					var t = new Date(1426087819320);
-					
 					tokenRecord.expires = t;
 					console.log(tokenRecord);
 					mongo.save('tokens', tokenRecord, function (err) {
-						console.log(tokenRecord);
+						//console.log(tokenRecord);
 					});
 				});
 				
@@ -609,7 +607,7 @@ describe("simple urac tests", function () {
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
-				myNewToken = body.data;
+				myNewToken = body.data.token;
 				mongo.findOne("users", {'username': 'johndoe'}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
@@ -646,7 +644,7 @@ describe("simple urac tests", function () {
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
-				lisaAdd_Token = body.data;
+				lisaAdd_Token = body.data.token;
 				mongo.findOne("users", {'username': 'lisa'}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
@@ -697,8 +695,6 @@ describe("simple urac tests", function () {
 						console.log(tokenRecord);
 						assert.equal(tokenRecord.status, 'used');
 						assert.equal(tokenRecord.service, 'addUser');
-						
-						
 						done();
 					});
 				});
@@ -939,19 +935,19 @@ describe("simple urac tests", function () {
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
 				fp_tokenlisa = body.data;
+				
 				mongo.findOne('tokens', {'token': fp_tokenlisa}, function (err, tokenRecord) {
 					if (err || !tokenRecord) {
 					}
 					var t = new Date(1426087819320);
 					
 					tokenRecord.expires = t;
-					console.log(tokenRecord);
 					mongo.save('tokens', tokenRecord, function (err) {
 						console.log(tokenRecord);
+						done();
 					});
 				});
 				
-				done();
 			});
 		});
 		
