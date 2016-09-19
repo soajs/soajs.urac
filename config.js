@@ -59,6 +59,7 @@ module.exports = {
 	"extKeyRequired": true,
 	"oauth": false,
 	"session": true,
+	"model": 'mongo',
 	
 	"cmd": ["/etc/init.d/postfix start"],
 	
@@ -91,6 +92,7 @@ module.exports = {
 		500: "This record in locked. You cannot modify or delete it",
 		
 		600: "Database connection error",
+		601: "Model not found",
 		611: "Invalid tenant id provided"
 	},
 	
@@ -127,6 +129,14 @@ module.exports = {
 				"validation": {
 					"type": "integer",
 					"max": 2000
+				}
+			},
+			"isOwner": {
+				"required": false,
+				"source": ["servicesConfig.isOwner"],
+				"default": true,
+				"validation": {
+					"type": "boolean"
 				}
 			}
 		},
@@ -692,14 +702,14 @@ module.exports = {
 				"l": "Total Users Count",
 				"group": "Owner"
 			},
-			"commonFields": ['tCode', 'keywords']
+			"commonFields": ['tCode', 'keywords', "isOwner"]
 		},
 		'/owner/admin/addUser': {
 			"_apiInfo": {
 				"l": "Add new User",
 				"group": "Owner"
 			},
-			"commonFields": ['tCode'],
+			"commonFields": ['tCode', "isOwner"],
 			"username": {
 				"source": ['body.username'],
 				"required": true,
@@ -761,14 +771,14 @@ module.exports = {
 				"group": "Owner",
 				"groupDefault": true
 			},
-			"commonFields": ["tCode", "start", "limit", "keywords"]
+			"commonFields": ["tCode", "start", "limit", "keywords", "isOwner"]
 		},
 		'/owner/admin/changeUserStatus': {
 			"_apiInfo": {
 				"l": "Change User Status",
 				"group": "Owner"
 			},
-			"commonFields": ["tCode"],
+			"commonFields": ["tCode", "isOwner"],
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -785,7 +795,7 @@ module.exports = {
 				"l": "Get User Record",
 				"group": "Owner"
 			},
-			"commonFields": ["tCode"],
+			"commonFields": ["tCode", "isOwner"],
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -797,7 +807,7 @@ module.exports = {
 				"l": "Edit User Record",
 				"group": "Owner"
 			},
-			"commonFields": ["tCode"],
+			"commonFields": ["tCode", "isOwner"],
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -887,7 +897,7 @@ module.exports = {
 				"l": "Edit User Config",
 				"group": "Owner"
 			},
-			"commonFields": ["tCode"],
+			"commonFields": ["tCode", "isOwner"],
 			"uId": {
 				"source": ['query.uId'],
 				"required": true,
@@ -916,20 +926,20 @@ module.exports = {
 				}
 			}
 		},
-
+		
 		'/owner/admin/group/list': {
 			"_apiInfo": {
 				"l": "List Groups",
 				"group": "Owner"
 			},
-			"commonFields": ["tCode"]
+			"commonFields": ["tCode", "isOwner"]
 		},
 		'/owner/admin/group/add': {
 			"_apiInfo": {
 				"l": "Add new Group",
 				"group": "Owner"
 			},
-			"commonFields": ['tCode'],
+			"commonFields": ['tCode', "isOwner"],
 			"code": {
 				"source": ['body.code'],
 				"required": true,
@@ -955,7 +965,7 @@ module.exports = {
 				"l": "Edit Group",
 				"group": "Owner"
 			},
-			"commonFields": ["tCode"],
+			"commonFields": ["tCode", "isOwner"],
 			"gId": {
 				"source": ['query.gId'],
 				"required": true,
@@ -977,7 +987,7 @@ module.exports = {
 				"l": "Delete Group",
 				"group": "Owner"
 			},
-			"commonFields": ["tCode"],
+			"commonFields": ["tCode", "isOwner"],
 			"gId": {
 				"source": ['query.gId'],
 				"required": true,
@@ -989,7 +999,7 @@ module.exports = {
 				"l": "Add Users to Group",
 				"group": "Owner"
 			},
-			"commonFields": ["tCode"],
+			"commonFields": ["tCode", "isOwner"],
 			"code": {
 				"source": ['body.groupCode'],
 				"required": true,

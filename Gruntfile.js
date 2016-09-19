@@ -123,7 +123,7 @@ module.exports = function (grunt) {
 		},
 		
 		instrument: {
-			files: ['index.js', 'config.js', 'hasher.js', 'lib/*.js'],
+			files: ['index.js', 'config.js', 'hasher.js', 'lib/*.js', 'model/*.js'],
 			//files: ['**/*.js'],
 			options: {
 				lazy: false,
@@ -175,7 +175,7 @@ module.exports = function (grunt) {
 			},
 			your_target: {
 				// Target-specific LCOV coverage file
-				src: 'test/coverage/reports/lcov.info',
+				src: 'test/coverage/reports/lcov.info'
 			}
 		}
 	});
