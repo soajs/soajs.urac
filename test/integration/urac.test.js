@@ -264,9 +264,9 @@ describe("simple urac tests", function () {
 			requester('join', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
+				console.log(body);
 				assert.ok(body.data);
 				token = body.data.token;
-				//console.log(body);
 				setTimeout(function () {
 					mongo.findOne('users', {'username': 'john123', status: 'pendingJoin'}, function (error, record) {
 						assert.ifError(error);
@@ -1226,7 +1226,7 @@ describe("simple urac tests", function () {
 			});
 		});
 		
-		it("FAIL - invalid user id", function (done) {
+		it("FAIL changePassword - invalid user id", function (done) {
 			var params = {
 				qs: {
 					uId: 'something'
@@ -1736,7 +1736,7 @@ describe("simple urac tests", function () {
 				});
 			});
 			
-			it("SUCCESS - will update user account", function (done) {
+			it("SUCCESS - will update user account - john123", function (done) {
 				var params = {
 					qs: {
 						'uId': uId
@@ -2066,7 +2066,7 @@ describe("simple urac tests", function () {
 				});
 			});
 			
-			it("Success", function (done) {
+			it("Success - get user", function (done) {
 				var params = {
 					qs: {
 						'uId': uId

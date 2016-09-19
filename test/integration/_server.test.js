@@ -25,7 +25,6 @@ describe("importing sample data", function () {
 		setTimeout(function () {
 			urac = helper.requireModule('./index');
 			setTimeout(function () {
-				//require("./db.config.test.js");
 				require("./urac.grps.test.js");
 				require("./urac.test.js");
 				require("./urac.test.owner.js");

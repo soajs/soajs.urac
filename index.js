@@ -1,7 +1,5 @@
 'use strict';
 var soajs = require('soajs');
-var Mongo = soajs.mongo;
-
 var config = require('./config.js');
 var service = new soajs.server.service(config);
 
@@ -26,11 +24,9 @@ function initBLModel(req, res, cb) {
 service.init(function () {
 	
 	service.post("/login", function (req, res) {
-		req.soajs.inputmaskData.tCode = req.soajs.tenant.code;
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.guest.login(config, mongo, req, res);
+			BLInstance.guest.login(req, res);
 		});
 	});
 	
@@ -41,11 +37,9 @@ service.init(function () {
 	});
 	
 	service.get("/forgotPassword", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.guest.forgotPassword(config, mongo, req, res);
+			BLInstance.guest.forgotPassword(req, res);
 		});
 	});
 	
@@ -55,57 +49,45 @@ service.init(function () {
 			return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
 		}
 		
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.guest.resetPassword(config, mongo, req, res);
+			BLInstance.guest.resetPassword(req, res);
 		});
 	});
 	
 	service.get("/checkUsername", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.guest.checkUsername(config, mongo, req, res);
+			BLInstance.guest.checkUsername(req, res);
 		});
 	});
 	
 	service.post("/join", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.guest.join(config, mongo, req, res);
+			BLInstance.guest.join(req, res);
 		});
 	});
 	
 	service.get("/join/validate", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.guest.joinValidate(config, mongo, req, res);
+			BLInstance.guest.joinValidate(req, res);
 		});
 	});
 	
 	service.get("/changeEmail/validate", function (req, res) {
 		//check if user account is there
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.guest.changeEmailValidate(config, mongo, req, res);
+			BLInstance.guest.changeEmailValidate(req, res);
 		});
 	});
 	
 	service.get("/account/getUser", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.account.getUser(config, mongo, req, res);
+			BLInstance.account.getUser(req, res);
 		});
 	});
 	
@@ -114,56 +96,45 @@ service.init(function () {
 		if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
 			return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
 		}
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.account.changePassword(config, mongo, req, res);
+			BLInstance.account.changePassword(req, res);
 		});
 	});
 	
 	service.post("/account/changeEmail", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.account.changeEmail(config, mongo, req, res);
+			BLInstance.account.changeEmail(req, res);
 		});
 	});
 	
 	service.post("/account/editProfile", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.account.editProfile(config, mongo, req, res);
+			BLInstance.account.editProfile(req, res);
 		});
 	});
 	
 	service.get("/admin/listUsers", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.listUsers(config, mongo, req, res);
+			BLInstance.admin.user.listUsers(req, res);
 		});
 	});
 	
 	service.get("/admin/users/count", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.countUsers(config, mongo, req, res);
+			BLInstance.admin.user.countUsers(req, res);
 		});
 	});
 	
 	service.get("/admin/getUser", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.getUser(config, mongo, req, res);
+			BLInstance.admin.user.getUser(req, res);
 		});
 	});
 	
@@ -183,20 +154,16 @@ service.init(function () {
 			}
 		}
 		
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.addUser(config, mongo, req, res);
+			BLInstance.admin.user.addUser(req, res);
 		});
 	});
 	
 	service.get("/admin/changeUserStatus", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.changeStatus(config, mongo, req, res);
+			BLInstance.admin.user.changeStatus(req, res);
 		});
 	});
 	
@@ -206,93 +173,74 @@ service.init(function () {
 				return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
 			}
 		}
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
 		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.editUser(config, mongo, req, res);
+			BLInstance.admin.user.editUser(req, res);
 		});
 	});
 	
 	service.post("/admin/editUserConfig", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.editConfig(config, mongo, req, res);
+			BLInstance.admin.user.editConfig(req, res);
 		});
 	});
 	
 	service.get("/admin/group/list", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.list(config, mongo, req, res);
+			BLInstance.admin.group.list(req, res);
 		});
 	});
 	
 	service.post("/admin/group/add", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.add(config, mongo, req, res);
+			BLInstance.admin.group.add(req, res);
 		});
 	});
 	
 	service.post("/admin/group/edit", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.edit(config, mongo, req, res);
+			BLInstance.admin.group.edit(req, res);
 		});
 	});
 	
 	service.get("/admin/group/delete", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.delete(config, mongo, req, res);
+			BLInstance.admin.group.delete(req, res);
 		});
 	});
 	
 	// add multiple Users To Group
 	service.post("/admin/group/addUsers", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.addUsers(config, mongo, req, res);
+			BLInstance.admin.group.addUsers(req, res);
 		});
 	});
 	
 	service.get("/admin/all", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
-
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.listAll(config, mongo, req, res);
+			BLInstance.admin.listAll(req, res);
 		});
 	});
 	
 	service.get("/owner/admin/listUsers", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.listUsers(config, mongo, req, res);
+			BLInstance.admin.user.listUsers(req, res);
 		});
 	});
 	
 	service.get("/owner/admin/users/count", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.countUsers(config, mongo, req, res);
+			BLInstance.admin.user.countUsers(req, res);
 		});
 	});
 	
@@ -308,92 +256,72 @@ service.init(function () {
 			}
 		}
 		
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.addUser(config, mongo, req, res);
+			BLInstance.admin.user.addUser(req, res);
 		});
 	});
 	
 	service.post("/owner/admin/editUser", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.editUser(config, mongo, req, res);
+			BLInstance.admin.user.editUser(req, res);
 		});
 	});
 	
 	service.post("/owner/admin/editUserConfig", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.editConfig(config, mongo, req, res);
+			BLInstance.admin.user.editConfig(req, res);
 		});
 	});
 	
 	service.get("/owner/admin/getUser", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.getUser(config, mongo, req, res);
+			BLInstance.admin.user.getUser(req, res);
 		});
 	});
 	
 	service.get("/owner/admin/changeUserStatus", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.changeStatus(config, mongo, req, res);
+			BLInstance.admin.user.changeStatus(req, res);
 		});
 	});
 	
 	service.get("/owner/admin/group/list", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.list(config, mongo, req, res);
+			BLInstance.admin.group.list(req, res);
 		});
 	});
 	
 	service.post("/owner/admin/group/add", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.add(config, mongo, req, res);
+			BLInstance.admin.group.add(req, res);
 		});
 	});
 	
 	service.post("/owner/admin/group/edit", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.edit(config, mongo, req, res);
+			BLInstance.admin.group.edit(req, res);
 		});
 	});
 	
 	service.get("/owner/admin/group/delete", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.delete(config, mongo, req, res);
+			BLInstance.admin.group.delete(req, res);
 		});
 	});
 	
 	service.post("/owner/admin/group/addUsers", function (req, res) {
-		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.addUsers(config, mongo, req, res);
+			BLInstance.admin.group.addUsers(req, res);
 		});
 	});
 	

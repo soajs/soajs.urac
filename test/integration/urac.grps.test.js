@@ -27,7 +27,7 @@ function requester(apiName, method, params, cb) {
 		},
 		json: true
 	};
-
+	
 	if (params.headers) {
 		for (var h in params.headers) {
 			if (Object.hasOwnProperty.call(params.headers, h)) {
@@ -60,12 +60,12 @@ describe("urac group tests", function () {
 			}, 500);
 		});
 	});
-
+	
 	afterEach(function (done) {
 		console.log("=======================================");
 		done();
 	});
-
+	
 	it("Testing login user2 and get groups", function (done) {
 		var params = {
 			form: {
@@ -81,7 +81,7 @@ describe("urac group tests", function () {
 			done();
 		});
 	});
-
+	
 	describe("testing groups API", function () {
 		
 		describe("testing create group API", function () {
@@ -110,7 +110,7 @@ describe("urac group tests", function () {
 					});
 				});
 			});
-
+			
 			it("FAIL - invalid tenant id", function (done) {
 				var params = {
 					form: {
@@ -131,7 +131,7 @@ describe("urac group tests", function () {
 					done();
 				});
 			});
-
+			
 			it("FAIL - will NOT create group - code exists", function (done) {
 				var params = {
 					form: {
@@ -152,7 +152,7 @@ describe("urac group tests", function () {
 					done();
 				});
 			});
-
+			
 			it("SUCCESS - will create new group - silver", function (done) {
 				var params = {
 					form: {
@@ -190,7 +190,7 @@ describe("urac group tests", function () {
 					done();
 				});
 			});
-
+			
 			it("SUCCESS - will edit group", function (done) {
 				var params = {
 					qs: {
@@ -208,11 +208,11 @@ describe("urac group tests", function () {
 					assert.ok(body.data);
 					done();
 				});
-
+				
 			});
 			
 		});
-
+		
 		describe("testing mapping", function () {
 			var uId = '';
 			it("SUCCESS - will map grp to users", function (done) {
@@ -415,15 +415,15 @@ describe("urac group tests", function () {
 						});
 						done();
 					});
-
+					
 				});
-
+				
 			});
 			
 		});
-
+		
 		describe("testing list group API", function () {
-			it("SUCCESS - will return grps records", function (done) {
+			it("SUCCESS - will return all grps records", function (done) {
 				var params = {};
 				requester('admin/group/list', 'get', params, function (error, body) {
 					assert.ifError(error);
@@ -434,9 +434,13 @@ describe("urac group tests", function () {
 					done();
 				});
 			});
-
-			it("SUCCESS - will return grps records", function (done) {
-				var params = {qs: {'tId': '10d2cb5fc04ce51e06000001'}};
+			
+			it("SUCCESS - will return grps records for tenant", function (done) {
+				var params = {
+					qs: {
+						'tId': '10d2cb5fc04ce51e06000001'
+					}
+				};
 				requester('admin/group/list', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
@@ -446,8 +450,8 @@ describe("urac group tests", function () {
 					done();
 				});
 			});
-
-			it("SUCCESS - will return grps records", function (done) {
+			
+			it("SUCCESS - will return All records", function (done) {
 				var params = {};
 				requester('admin/all', 'get', params, function (error, body) {
 					assert.ifError(error);
@@ -461,7 +465,7 @@ describe("urac group tests", function () {
 					done();
 				});
 			});
-
+			
 			it("SUCCESS - will return empty records", function (done) {
 				mongo.dropCollection('groups', function () {
 					var params = {};
@@ -477,5 +481,5 @@ describe("urac group tests", function () {
 			});
 		});
 	});
-
+	
 });
