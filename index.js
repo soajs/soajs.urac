@@ -225,14 +225,11 @@ service.init(function () {
 	
 	service.get("/admin/group/list", function (req, res) {
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.tenant.code));
+
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			
 			BLInstance.admin.group.list(config, mongo, req, res);
-			
 		});
-		
-		
 	});
 	
 	service.post("/admin/group/add", function (req, res) {
@@ -312,11 +309,10 @@ service.init(function () {
 		}
 		
 		var mongo = new Mongo(req.soajs.meta.tenantDB(req.soajs.registry.tenantMetaDB, config.serviceName, req.soajs.inputmaskData.tCode));
-		BLModule.admin.user.addUser(config, mongo, req, res);
-		
+
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.changeStatus(config, mongo, req, res);
+			BLInstance.admin.user.addUser(config, mongo, req, res);
 		});
 	});
 	

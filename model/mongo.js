@@ -34,6 +34,7 @@ module.exports = {
 			return cb(null, id1);
 		}
 		catch (e) {
+			soajs.log.error(e);
 			return cb(e);
 		}
 	},
@@ -55,7 +56,7 @@ module.exports = {
 	},
 	
 	"insertEntry": function (soajs, combo, cb) {
-		soajs.mongoDb.save(combo.collection, combo.record, cb);
+		soajs.mongoDb.insert(combo.collection, combo.record, cb);
 	},
 	
 	"removeEntry": function (soajs, condition, cb) {
