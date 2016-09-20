@@ -1024,7 +1024,7 @@ module.exports = {
 				"l": "List Tokens",
 				"group": "Owner"
 			},
-			"commonFields": ["tCode", "isOwner"]
+			"commonFields": ["tCode", "isOwner", "start", "limit"]
 		},
 		"/owner/admin/tokens/delete": {
 			"_apiInfo": {
