@@ -88,6 +88,8 @@ module.exports = {
 		420: "Group name already exists. Choose another",
 		421: "Group code already exists. Choose another",
 		424: "Invalid Request, cannot add a pending user account and provide a password at the same time.",
+		425: "Unable to find record.",
+		426: "Invalid id provided",
 		
 		500: "This record in locked. You cannot modify or delete it",
 		
@@ -1014,6 +1016,26 @@ module.exports = {
 						"type": "string"
 					}
 				}
+			}
+		},
+		
+		"/owner/admin/tokens/list": {
+			"_apiInfo": {
+				"l": "List Tokens",
+				"group": "Owner"
+			},
+			"commonFields": ["tCode", "isOwner"]
+		},
+		"/owner/admin/tokens/delete": {
+			"_apiInfo": {
+				"l": "Delete Token",
+				"group": "Owner"
+			},
+			"commonFields": ["tCode", "isOwner"],
+			"tokenId": {
+				"source": ['query.tokenId'],
+				"required": true,
+				"validation": {"type": "string"}
 			}
 		}
 	}

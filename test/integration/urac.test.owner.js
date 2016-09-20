@@ -486,4 +486,48 @@ describe("Owner admin tests", function () {
 		});
 	});
 	
+	describe("testing admin tokens API", function () {
+		var tokenId;
+		describe("testing list tokens API", function () {
+			it("SUCCESS - will get all", function (done) {
+				var params = {
+					qs: {
+						'tCode': tCode
+					}
+				};
+				requester('owner/admin/tokens/list', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					tokenId = body.data[0]._id.toString();
+					console.log(tokenId);
+					done();
+				});
+			});
+		});
+		
+		describe("testing delete Token API", function () {
+			
+			it("SUCCESS - will delete token", function (done) {
+				var params = {
+					qs: {
+						'tokenId': tokenId,
+						'tCode': tCode
+					}
+				};
+				requester('owner/admin/tokens/delete', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					done();
+				});
+				
+			});
+		});
+		
+		
+	});
+	
 });

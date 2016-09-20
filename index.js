@@ -325,5 +325,19 @@ service.init(function () {
 		});
 	});
 	
+	service.get("/owner/admin/tokens/list", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.tokens.list(req, res);
+		});
+	});
+	
+	service.get("/owner/admin/tokens/delete", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.tokens.delete(req, res);
+		});
+	});
+	
 	service.start();
 });
