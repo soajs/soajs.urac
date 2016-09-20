@@ -500,8 +500,8 @@ describe("Owner admin tests", function () {
 					assert.ok(body);
 					console.log(JSON.stringify(body));
 					assert.ok(body.data);
-					tokenId = body.data[0]._id.toString();
-					console.log(tokenId);
+					assert.ok(body.data.totalCount);
+					tokenId = body.data.records[0]._id.toString();
 					done();
 				});
 			});
