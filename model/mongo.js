@@ -48,8 +48,8 @@ module.exports = {
 		soajs.mongoDb.insert(combo.collection, combo.record, cb);
 	},
 	
-	"removeEntry": function (soajs, condition, cb) {
-		soajs.mongoDb.remove(usersCollection, condition, cb);
+	"removeEntry": function (soajs, combo, cb) {
+		soajs.mongoDb.remove(combo.collection, combo.condition, cb);
 	},
 	
 	"updateEntry": function (soajs, combo, cb) {
