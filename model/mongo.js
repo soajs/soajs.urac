@@ -2,17 +2,6 @@
 var core = require("soajs");
 var Mongo = core.mongo;
 
-var usersCollection = 'users';
-
-function checkForMongo(soajs, mongo) {
-	if (soajs.inputmaskData.isOwner) {
-		mongo = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, soajs.config.serviceName, soajs.inputmaskData.tCode));
-	}
-	else {
-		mongo = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, soajs.config.serviceName, soajs.tenant.code));
-	}
-}
-
 module.exports = {
 	"initConnection": function (soajs) {
 		if (soajs.inputmaskData.isOwner) {
