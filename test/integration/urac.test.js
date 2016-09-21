@@ -422,8 +422,8 @@ describe("simple urac tests", function () {
 				}
 			};
 			
-			mongo.dropCollection('users', function () {
-				mongo.dropCollection('tokens', function () {
+			mongo.remove('users', {}, function () {
+				mongo.remove('tokens', {}, function () {
 					
 					requester('join', 'post', params, function (error, body) {
 						assert.ifError(error);
@@ -555,7 +555,7 @@ describe("simple urac tests", function () {
 				form: {
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@soajs.org'
+					'email': 'john.doe.1@soajs.org'
 				}
 			};
 			requester('admin/addUser', 'post', params, function (error, body) {
@@ -593,10 +593,10 @@ describe("simple urac tests", function () {
 		it("SUCCESS - will add user", function (done) {
 			var params = {
 				form: {
-					'username': 'johndoe',
+					'username': 'john_smith',
 					'firstName': 'john',
-					'lastName': 'doe',
-					'email': 'john.doe@soajs.org',
+					'lastName': 'smith',
+					'email': 'john.smith@soajs.org',
 					'tId': '10d2cb5fc04ce51e06000001',
 					'tCode': 'test'
 				}
@@ -608,7 +608,7 @@ describe("simple urac tests", function () {
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
 				myNewToken = body.data.token;
-				mongo.findOne("users", {'username': 'johndoe'}, function (error, userRecord) {
+				mongo.findOne("users", {'username': 'john_smith'}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
 					assert.equal(userRecord.status, 'pendingNew');
@@ -717,7 +717,7 @@ describe("simple urac tests", function () {
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.ok(body.data);
-				mongo.findOne('users', {'username': 'johndoe'}, function (error, userRecord) {
+				mongo.findOne('users', {'username': 'john_smith'}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
 					console.log(userRecord);
@@ -746,7 +746,7 @@ describe("simple urac tests", function () {
 					'username': 'activeuser',
 					'firstName': 'john',
 					'lastName': 'doe',
-					'email': 'john.doe@soajs.org',
+					'email': 'john.black@soajs.org',
 					'tId': '10d2cb5fc04ce51e06000001',
 					'tCode': 'test',
 					'status': 'active',
@@ -1720,7 +1720,7 @@ describe("simple urac tests", function () {
 						'firstName': 'john',
 						'lastName': 'doe',
 						'email': 'john.doe@soajs.org',
-						'username': 'johndoe',
+						'username': 'activeuser',
 						'status': 'active'
 					}
 				};
