@@ -78,7 +78,7 @@ module.exports = {
 		410: "username taken, please choose another username",
 		411: "invalid user id provided",
 		412: "You have provided the same existing email address",
-		413: "Invalid profile field provided. Profile should be a stringified object.",
+
 		414: "Unable to add user.",
 		415: "Unable to find group.",
 		416: "Unable to create Group.",
