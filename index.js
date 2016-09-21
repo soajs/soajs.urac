@@ -208,7 +208,7 @@ service.init(function () {
 		});
 	});
 	
-	service.get("/admin/group/delete", function (req, res) {
+	service.delete("/admin/group/delete", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.group.delete(req, res);
@@ -311,7 +311,7 @@ service.init(function () {
 		});
 	});
 	
-	service.get("/owner/admin/group/delete", function (req, res) {
+	service.delete("/owner/admin/group/delete", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.group.delete(req, res);
@@ -332,7 +332,7 @@ service.init(function () {
 		});
 	});
 	
-	service.get("/owner/admin/tokens/delete", function (req, res) {
+	service.delete("/owner/admin/tokens/delete", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.tokens.delete(req, res);

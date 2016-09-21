@@ -16,8 +16,8 @@ var uracConfig = dbConfig();
 uracConfig.name = "test_urac";
 var mongo = new Mongo(uracConfig);
 
-
 var extKey = 'aa39b5490c4a4ed0e56d7ec1232a428f771e8bb83cfcee16de14f735d0f5da587d5968ec4f785e38570902fd24e0b522b46cb171872d1ea038e88328e7d973ff47d9392f72b2d49566209eb88eb60aed8534a965cf30072c39565bd8d72f68ac';
+
 
 function requester(apiName, method, params, cb) {
 	var options = {
@@ -25,6 +25,7 @@ function requester(apiName, method, params, cb) {
 		headers: {
 			key: extKey
 		},
+		method: method.toUpperCase(),
 		json: true
 	};
 	
@@ -43,11 +44,20 @@ function requester(apiName, method, params, cb) {
 	if (params.qs) {
 		options.qs = params.qs;
 	}
-	request[method](options, function (error, response, body) {
-		assert.ifError(error);
-		assert.ok(body);
-		return cb(null, body);
-	});
+	if (method === 'delete') {
+		request.del(options, function (error, response, body) {
+			assert.ifError(error);
+			assert.ok(body);
+			return cb(null, body);
+		});
+	}
+	else {
+		request[method](options, function (error, response, body) {
+			assert.ifError(error);
+			assert.ok(body);
+			return cb(null, body);
+		});
+	}
 }
 
 var gId = '';
@@ -374,7 +384,8 @@ describe("urac group tests", function () {
 				var params = {
 					qs: {'gId': 'gfdg56'}
 				};
-				requester('admin/group/delete', 'get', params, function (error, body) {
+
+				requester('admin/group/delete', 'delete', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
@@ -388,7 +399,7 @@ describe("urac group tests", function () {
 						'gId': gId
 					}
 				};
-				requester('admin/group/delete', 'get', params, function (error, body) {
+				requester('admin/group/delete', 'delete', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
@@ -405,7 +416,7 @@ describe("urac group tests", function () {
 					var params = {
 						qs: {'gId': Id}
 					};
-					requester('admin/group/delete', 'get', params, function (error, body) {
+					requester('admin/group/delete', 'delete', params, function (error, body) {
 						assert.ifError(error);
 						assert.ok(body);
 						console.log(JSON.stringify(body));

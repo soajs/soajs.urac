@@ -101,7 +101,7 @@ module.exports = {
 	"schema": {
 		"commonFields": {
 			"tId": {
-				"source": ['body.tId', 'query.tId'],
+				"source": ['query.tId', 'body.tId'],
 				"required": true,
 				"validation": {"type": "string"}
 			},
@@ -142,901 +142,903 @@ module.exports = {
 				}
 			}
 		},
-		
-		"/login": {
-			"_apiInfo": {
-				"l": "Login",
-				"group": "Guest",
-				"groupDefault": true
-			},
-			"username": {
-				"source": ['body.username'],
-				"required": true,
-				"validation": {
-					"type": "string"
+
+		"get": {
+			'/join/validate': {
+				"_apiInfo": {
+					"l": "Validate Register",
+					"group": "Guest"
+				},
+				"token": {
+					"source": ['query.token'],
+					"required": true,
+					"validation": {"type": "string"}
 				}
 			},
-			"password": {
-				"source": ['body.password'],
-				"required": true,
-				"validation": {
-					"type": "string"
-				}
-			}
-		},
-		'/join': {
-			"_apiInfo": {
-				"l": "Register",
-				"group": "Guest"
-			},
-			"username": {
-				"source": ['body.username'],
-				"required": true,
-				"validation": {
-					"type": "string",
-					"pattern": /^[a-zA-Z0-9_-]+$/
+			'/logout': {
+				"_apiInfo": {
+					"l": "Logout",
+					"group": "Guest"
 				}
 			},
-			"password": {
-				"source": ['body.password'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"firstName": {
-				"source": ['body.firstName'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"lastName": {
-				"source": ['body.lastName'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"email": {
-				"source": ['body.email'],
-				"required": true,
-				"validation": {"type": "string", format: "email"}
-			}
-		},
-		'/join/validate': {
-			"_apiInfo": {
-				"l": "Validate Register",
-				"group": "Guest"
-			},
-			"token": {
-				"source": ['query.token'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		'/logout': {
-			"_apiInfo": {
-				"l": "Logout",
-				"group": "Guest"
-			}
-		},
-		'/forgotPassword': {
-			"_apiInfo": {
-				"l": "Forgot Password",
-				"group": "Guest"
-			},
-			"username": {
-				"source": ['query.username'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-			//"email": {
-			//	"source": ['query.email'],
-			//	"required": true,
-			//	"validation": {"type": "string", format: "email"}
-			//}
-		},
-		'/resetPassword': {
-			"_apiInfo": {
-				"l": "Reset Password",
-				"group": "Guest"
-			},
-			"token": {
-				"source": ['query.token'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"password": {
-				"source": ['body.password'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"confirmation": {
-				"source": ['body.confirmation'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		'/checkUsername': {
-			"_apiInfo": {
-				"l": "Check If Username Exists",
-				"group": "Guest"
-			},
-			"username": {
-				"source": ['query.username'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		'/changeEmail/validate': {
-			"_apiInfo": {
-				"l": "Validate Change Email",
-				"group": "Guest"
-			},
-			"token": {
-				"source": ['query.token'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		'/account/getUser': {
-			"_apiInfo": {
-				"l": "Get User Info",
-				"group": "My Account",
-				"groupDefault": true
-			},
-			"username": {
-				"source": ['query.username'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		'/account/changePassword': {
-			"_apiInfo": {
-				"l": "Change Password",
-				"group": "My Account"
-			},
-			"uId": {
-				"source": ['query.uId'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"oldPassword": {
-				"source": ['body.oldPassword'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"password": {
-				"source": ['body.password'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"confirmation": {
-				"source": ['body.confirmation'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		'/account/changeEmail': {
-			"_apiInfo": {
-				"l": "Change Email",
-				"group": "My Account"
-			},
-			"uId": {
-				"source": ['query.uId'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"email": {
-				"source": ['body.email'],
-				"required": true,
-				"validation": {"type": "string", format: "email"}
-			}
-		},
-		'/account/editProfile': {
-			"_apiInfo": {
-				"l": "Edit Profile",
-				"group": "My Account"
-			},
-			"uId": {
-				"source": ['query.uId'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"username": {
-				"source": ['body.username'],
-				"required": true,
-				"validation": {
-					"type": "string",
-					"pattern": /^[a-zA-Z0-9_-]+$/
+			'/forgotPassword': {
+				"_apiInfo": {
+					"l": "Forgot Password",
+					"group": "Guest"
+				},
+				"username": {
+					"source": ['query.username'],
+					"required": true,
+					"validation": {"type": "string"}
 				}
 			},
-			"firstName": {
-				"source": ['body.firstName'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"lastName": {
-				"source": ['body.lastName'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"profile": {
-				"source": ['body.profile'],
-				"required": false,
-				"validation": {"type": "object"}
-			}
-		},
-		
-		'/admin/addUser': {
-			"_apiInfo": {
-				"l": "Add new User",
-				"group": "Administration"
-			},
-			"commonFields": ['tId', 'tCode'],
-			"username": {
-				"source": ['body.username'],
-				"required": true,
-				"validation": {
-					"type": "string",
-					"pattern": /^[a-zA-Z0-9_-]+$/
+			'/checkUsername': {
+				"_apiInfo": {
+					"l": "Check If Username Exists",
+					"group": "Guest"
+				},
+				"username": {
+					"source": ['query.username'],
+					"required": true,
+					"validation": {"type": "string"}
 				}
 			},
-			"firstName": {
-				"source": ['body.firstName'],
-				"required": true,
-				"validation": {"type": "string"}
+			'/changeEmail/validate': {
+				"_apiInfo": {
+					"l": "Validate Change Email",
+					"group": "Guest"
+				},
+				"token": {
+					"source": ['query.token'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
 			},
-			"lastName": {
-				"source": ['body.lastName'],
-				"required": true,
-				"validation": {"type": "string"}
+			'/account/getUser': {
+				"_apiInfo": {
+					"l": "Get User Info",
+					"group": "My Account",
+					"groupDefault": true
+				},
+				"username": {
+					"source": ['query.username'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
 			},
-			"email": {
-				"source": ['body.email'],
-				"required": true,
-				"validation": {"type": "string", format: "email"}
+			'/admin/changeUserStatus': {
+				"_apiInfo": {
+					"l": "Change User Status",
+					"group": "Administration"
+				},
+				"uId": {
+					"source": ['query.uId'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"status": {
+					"source": ['query.status'],
+					"required": true,
+					"validation": {"type": "string", "enum": ['active', 'inactive']}
+				}
 			},
-			"profile": {
-				"source": ['body.profile'],
-				"required": false,
-				"validation": {"type": "object"}
+			'/admin/listUsers': {
+				"_apiInfo": {
+					"l": "List Users",
+					"group": "Administration",
+					"groupDefault": true
+				},
+				"commonFields": ["start", "limit", "keywords"],
+				"tId": {
+					"source": ['query.tId'],
+					"required": false,
+					"validation": {"type": "string"}
+				}
 			},
-			"groups": {
-				"source": ['body.groups'],
-				"required": false,
-				"validation": {
-					"type": "array",
-					"items": {
+			'/admin/users/count': {
+				"_apiInfo": {
+					"l": "Total Users Count",
+					"group": "Administration"
+				},
+				"commonFields": ["keywords"],
+				"tId": {
+					"source": ['query.tId'],
+					"required": false,
+					"validation": {"type": "string"}
+				}
+			},
+			'/admin/getUser': {
+				"_apiInfo": {
+					"l": "Get User Record",
+					"group": "Administration"
+				},
+				"uId": {
+					"source": ['query.uId'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
+			},
+			'/admin/group/list': {
+				"_apiInfo": {
+					"l": "List Groups",
+					"group": "Administration"
+				},
+				"tId": {
+					"source": ['query.tId'],
+					"required": false,
+					"validation": {"type": "string"}
+				}
+			},
+
+			"/admin/all": {
+				"_apiInfo": {
+					"l": "Get all Users & Groups",
+					"group": "Administration"
+				}
+			},
+			'/owner/admin/users/count': {
+				"_apiInfo": {
+					"l": "Total Users Count",
+					"group": "Owner"
+				},
+				"commonFields": ['tCode', 'keywords', "isOwner"]
+			},
+			'/owner/admin/listUsers': {
+				"_apiInfo": {
+					"l": "List Users",
+					"group": "Owner",
+					"groupDefault": true
+				},
+				"commonFields": ["tCode", "start", "limit", "keywords", "isOwner"]
+			},
+			'/owner/admin/changeUserStatus': {
+				"_apiInfo": {
+					"l": "Change User Status",
+					"group": "Owner"
+				},
+				"commonFields": ["tCode", "isOwner"],
+				"uId": {
+					"source": ['query.uId'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"status": {
+					"source": ['query.status'],
+					"required": true,
+					"validation": {"type": "string", "enum": ['active', 'inactive']}
+				}
+			},
+			'/owner/admin/getUser': {
+				"_apiInfo": {
+					"l": "Get User Record",
+					"group": "Owner"
+				},
+				"commonFields": ["tCode", "isOwner"],
+				"uId": {
+					"source": ['query.uId'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
+			},
+			'/owner/admin/group/list': {
+				"_apiInfo": {
+					"l": "List Groups",
+					"group": "Owner"
+				},
+				"commonFields": ["tCode", "isOwner"]
+			},
+			"/owner/admin/tokens/list": {
+				"_apiInfo": {
+					"l": "List Tokens",
+					"group": "Owner"
+				},
+				"commonFields": ["tCode", "isOwner", "start", "limit"]
+			}
+		},
+		"post": {
+			"/login": {
+				"_apiInfo": {
+					"l": "Login",
+					"group": "Guest",
+					"groupDefault": true
+				},
+				"username": {
+					"source": ['body.username'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"password": {
+					"source": ['body.password'],
+					"required": true,
+					"validation": {
 						"type": "string"
 					}
 				}
 			},
-			"status": {
-				"source": ['body.status'],
-				"default": "pendingNew",
-				"required": false,
-				"validation": {
-					"type": "string",
-					"enum": ['active', 'inactive', 'pendingNew']
-				}
-			},
-			"password": {
-				"source": ['body.password'],
-				"required": false,
-				"validation": {"type": "string"}
-			},
-			"confirmation": {
-				"source": ['body.confirmation'],
-				"required": false,
-				"validation": {"type": "string"}
-			}
-		},
-		'/admin/changeUserStatus': {
-			"_apiInfo": {
-				"l": "Change User Status",
-				"group": "Administration"
-			},
-			"uId": {
-				"source": ['query.uId'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"status": {
-				"source": ['query.status'],
-				"required": true,
-				"validation": {"type": "string", "enum": ['active', 'inactive']}
-			}
-		},
-		'/admin/listUsers': {
-			"_apiInfo": {
-				"l": "List Users",
-				"group": "Administration",
-				"groupDefault": true
-			},
-			"commonFields": ["start", "limit", "keywords"],
-			"tId": {
-				"source": ['body.tId', 'query.tId'],
-				"required": false,
-				"validation": {"type": "string"}
-			}
-		},
-		'/admin/users/count': {
-			"_apiInfo": {
-				"l": "Total Users Count",
-				"group": "Administration"
-			},
-			"commonFields": ["keywords"],
-			"tId": {
-				"source": ['query.tId'],
-				"required": false,
-				"validation": {"type": "string"}
-			}
-		},
-		'/admin/getUser': {
-			"_apiInfo": {
-				"l": "Get User Record",
-				"group": "Administration"
-			},
-			"uId": {
-				"source": ['query.uId'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		'/admin/editUser': {
-			"_apiInfo": {
-				"l": "Edit User Record",
-				"group": "Administration"
-			},
-			"uId": {
-				"source": ['query.uId'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"username": {
-				"source": ['body.username'],
-				"required": true,
-				"validation": {
-					"type": "string",
-					"pattern": /^[a-zA-Z0-9_-]+$/
-				}
-			},
-			"firstName": {
-				"source": ['body.firstName'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"lastName": {
-				"source": ['body.lastName'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"email": {
-				"source": ['body.email'],
-				"required": true,
-				"validation": {"type": "string", 'format': 'email'}
-			},
-			"groups": {
-				"source": ['body.groups'],
-				"required": false,
-				"validation": {
-					"type": "array",
-					"items": {
-						"type": "string"
+			'/join': {
+				"_apiInfo": {
+					"l": "Register",
+					"group": "Guest"
+				},
+				"username": {
+					"source": ['body.username'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"pattern": /^[a-zA-Z0-9_-]+$/
 					}
+				},
+				"password": {
+					"source": ['body.password'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"firstName": {
+					"source": ['body.firstName'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"lastName": {
+					"source": ['body.lastName'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"email": {
+					"source": ['body.email'],
+					"required": true,
+					"validation": {"type": "string", format: "email"}
 				}
 			},
-			"config": {
-				"source": ['body.config'],
-				"required": false,
-				"validation": {
-					"type": "object",
-					"properties": {
-						"keys": {
-							"type": "object"
-						},
-						"packages": {
-							"type": "object",
-							"required": false,
-							"additionalProperties": {
-								type: 'object',
-								'additionalProperties': {
-									'acl': acl
+			'/resetPassword': {
+				"_apiInfo": {
+					"l": "Reset Password",
+					"group": "Guest"
+				},
+				"token": {
+					"source": ['query.token'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"password": {
+					"source": ['body.password'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"confirmation": {
+					"source": ['body.confirmation'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
+			},
+			'/account/changePassword': {
+				"_apiInfo": {
+					"l": "Change Password",
+					"group": "My Account"
+				},
+				"uId": {
+					"source": ['query.uId'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"oldPassword": {
+					"source": ['body.oldPassword'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"password": {
+					"source": ['body.password'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"confirmation": {
+					"source": ['body.confirmation'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
+			},
+			'/account/changeEmail': {
+				"_apiInfo": {
+					"l": "Change Email",
+					"group": "My Account"
+				},
+				"uId": {
+					"source": ['query.uId'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"email": {
+					"source": ['body.email'],
+					"required": true,
+					"validation": {"type": "string", format: "email"}
+				}
+			},
+			'/account/editProfile': {
+				"_apiInfo": {
+					"l": "Edit Profile",
+					"group": "My Account"
+				},
+				"uId": {
+					"source": ['query.uId'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"username": {
+					"source": ['body.username'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"pattern": /^[a-zA-Z0-9_-]+$/
+					}
+				},
+				"firstName": {
+					"source": ['body.firstName'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"lastName": {
+					"source": ['body.lastName'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"profile": {
+					"source": ['body.profile'],
+					"required": false,
+					"validation": {"type": "object"}
+				}
+			},
+			'/admin/addUser': {
+				"_apiInfo": {
+					"l": "Add new User",
+					"group": "Administration"
+				},
+				"commonFields": ['tId', 'tCode'],
+				"username": {
+					"source": ['body.username'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"pattern": /^[a-zA-Z0-9_-]+$/
+					}
+				},
+				"firstName": {
+					"source": ['body.firstName'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"lastName": {
+					"source": ['body.lastName'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"email": {
+					"source": ['body.email'],
+					"required": true,
+					"validation": {"type": "string", format: "email"}
+				},
+				"profile": {
+					"source": ['body.profile'],
+					"required": false,
+					"validation": {"type": "object"}
+				},
+				"groups": {
+					"source": ['body.groups'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"status": {
+					"source": ['body.status'],
+					"default": "pendingNew",
+					"required": false,
+					"validation": {
+						"type": "string",
+						"enum": ['active', 'inactive', 'pendingNew']
+					}
+				},
+				"password": {
+					"source": ['body.password'],
+					"required": false,
+					"validation": {"type": "string"}
+				},
+				"confirmation": {
+					"source": ['body.confirmation'],
+					"required": false,
+					"validation": {"type": "string"}
+				}
+			},
+			'/admin/editUser': {
+				"_apiInfo": {
+					"l": "Edit User Record",
+					"group": "Administration"
+				},
+				"uId": {
+					"source": ['query.uId'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"username": {
+					"source": ['body.username'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"pattern": /^[a-zA-Z0-9_-]+$/
+					}
+				},
+				"firstName": {
+					"source": ['body.firstName'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"lastName": {
+					"source": ['body.lastName'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"email": {
+					"source": ['body.email'],
+					"required": true,
+					"validation": {"type": "string", 'format': 'email'}
+				},
+				"groups": {
+					"source": ['body.groups'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"config": {
+					"source": ['body.config'],
+					"required": false,
+					"validation": {
+						"type": "object",
+						"properties": {
+							"keys": {
+								"type": "object"
+							},
+							"packages": {
+								"type": "object",
+								"required": false,
+								"additionalProperties": {
+									type: 'object',
+									'additionalProperties': {
+										'acl': acl
+									}
+								}
+							}
+						}
+					}
+				},
+				"status": {
+					"source": ['body.status'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ['active', 'inactive', 'pendingNew']
+					}
+				},
+				"profile": {
+					"source": ['body.profile'],
+					"required": false,
+					"validation": {"type": "object"}
+				},
+				"password": {
+					"source": ['body.password'],
+					"required": false,
+					"validation": {"type": "string"}
+				},
+				"confirmation": {
+					"source": ['body.confirmation'],
+					"required": false,
+					"validation": {"type": "string"}
+				}
+			},
+			'/admin/editUserConfig': {
+				"_apiInfo": {
+					"l": "Edit User Config",
+					"group": "Administration"
+				},
+				"uId": {
+					"source": ['query.uId'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"config": {
+					"source": ['body.config'],
+					"required": true,
+					"validation": {
+						"type": "object",
+						"properties": {
+							"keys": {
+								"type": "object"
+							},
+							"packages": {
+								"type": "object",
+								"required": false,
+								"additionalProperties": {
+									type: 'object',
+									'additionalProperties': {
+										'acl': acl
+									}
 								}
 							}
 						}
 					}
 				}
 			},
-			"status": {
-				"source": ['body.status'],
-				"required": true,
-				"validation": {
-					"type": "string",
-					"enum": ['active', 'inactive', 'pendingNew']
+			'/admin/group/add': {
+				"_apiInfo": {
+					"l": "Add new Group",
+					"group": "Administration"
+				},
+				"commonFields": ['tId', 'tCode'],
+				"code": {
+					"source": ['body.code'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"format": "alphanumeric",
+						"maxLength": 20
+					}
+				},
+				"name": {
+					"source": ['body.name'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"description": {
+					"source": ['body.description'],
+					"required": true,
+					"validation": {"type": "string"}
 				}
 			},
-			"profile": {
-				"source": ['body.profile'],
-				"required": false,
-				"validation": {"type": "object"}
+			'/admin/group/edit': {
+				"_apiInfo": {
+					"l": "Edit Group",
+					"group": "Administration"
+				},
+				"gId": {
+					"source": ['query.gId'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"name": {
+					"source": ['body.name'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"description": {
+					"source": ['body.description'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
 			},
-			"password": {
-				"source": ['body.password'],
-				"required": false,
-				"validation": {"type": "string"}
+			"/admin/group/addUsers": {
+				"_apiInfo": {
+					"l": "Add Users to Group",
+					"group": "Administration"
+				},
+				"commonFields": ['tId'],
+				"code": {
+					"source": ['body.groupCode'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"users": {
+					"source": ['body.users'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				}
 			},
-			"confirmation": {
-				"source": ['body.confirmation'],
-				"required": false,
-				"validation": {"type": "string"}
-			}
-		},
-		'/admin/editUserConfig': {
-			"_apiInfo": {
-				"l": "Edit User Config",
-				"group": "Administration"
+
+			'/owner/admin/addUser': {
+				"_apiInfo": {
+					"l": "Add new User",
+					"group": "Owner"
+				},
+				"commonFields": ['tCode', "isOwner"],
+				"username": {
+					"source": ['body.username'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"pattern": /^[a-zA-Z0-9_-]+$/
+					}
+				},
+				"firstName": {
+					"source": ['body.firstName'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"lastName": {
+					"source": ['body.lastName'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"email": {
+					"source": ['body.email'],
+					"required": true,
+					"validation": {"type": "string", format: "email"}
+				},
+				"profile": {
+					"source": ['body.profile'],
+					"required": false,
+					"validation": {"type": "object"}
+				},
+				"groups": {
+					"source": ['body.groups'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"status": {
+					"source": ['body.status'],
+					"default": "pendingNew",
+					"required": false,
+					"validation": {"type": "string", "enum": ['active', 'inactive', 'pendingNew']}
+				},
+				"password": {
+					"source": ['body.password'],
+					"required": false,
+					"validation": {"type": "string"}
+				},
+				"confirmation": {
+					"source": ['body.confirmation'],
+					"required": false,
+					"validation": {"type": "string"}
+				}
 			},
-			"uId": {
-				"source": ['query.uId'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"config": {
-				"source": ['body.config'],
-				"required": true,
-				"validation": {
-					"type": "object",
-					"properties": {
-						"keys": {
-							"type": "object"
-						},
-						"packages": {
-							"type": "object",
-							"required": false,
-							"additionalProperties": {
-								type: 'object',
-								'additionalProperties': {
-									'acl': acl
+			'/owner/admin/editUser': {
+				"_apiInfo": {
+					"l": "Edit User Record",
+					"group": "Owner"
+				},
+				"commonFields": ["tCode", "isOwner"],
+				"uId": {
+					"source": ['query.uId'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"username": {
+					"source": ['body.username'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"pattern": /^[a-zA-Z0-9_-]+$/
+					}
+				},
+				"firstName": {
+					"source": ['body.firstName'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"lastName": {
+					"source": ['body.lastName'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"email": {
+					"source": ['body.email'],
+					"required": true,
+					"validation": {"type": "string", 'format': 'email'}
+				},
+				"groups": {
+					"source": ['body.groups'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"config": {
+					"source": ['body.config'],
+					"required": false,
+					"validation": {
+						"type": "object",
+						"properties": {
+							"keys": {
+								"type": "object"
+							},
+							"packages": {
+								"type": "object",
+								"required": false,
+								"additionalProperties": {
+									type: 'object',
+									'additionalProperties': {
+										'acl': acl
+									}
 								}
 							}
 						}
 					}
-				}
-			}
-		},
-		'/admin/group/list': {
-			"_apiInfo": {
-				"l": "List Groups",
-				"group": "Administration"
-			},
-			"tId": {
-				"source": ['body.tId', 'query.tId'],
-				"required": false,
-				"validation": {"type": "string"}
-			}
-		},
-		'/admin/group/add': {
-			"_apiInfo": {
-				"l": "Add new Group",
-				"group": "Administration"
-			},
-			"commonFields": ['tId', 'tCode'],
-			"code": {
-				"source": ['body.code'],
-				"required": true,
-				"validation": {
-					"type": "string",
-					"format": "alphanumeric",
-					"maxLength": 20
-				}
-			},
-			"name": {
-				"source": ['body.name'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"description": {
-				"source": ['body.description'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		'/admin/group/edit': {
-			"_apiInfo": {
-				"l": "Edit Group",
-				"group": "Administration"
-			},
-			"gId": {
-				"source": ['query.gId'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"name": {
-				"source": ['body.name'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"description": {
-				"source": ['body.description'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		'/admin/group/delete': {
-			"_apiInfo": {
-				"l": "Delete Group",
-				"group": "Administration"
-			},
-			"gId": {
-				"source": ['query.gId'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		"/admin/group/addUsers": {
-			"_apiInfo": {
-				"l": "Add Users to Group",
-				"group": "Administration"
-			},
-			"commonFields": ['tId'],
-			"code": {
-				"source": ['body.groupCode'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"users": {
-				"source": ['body.users'],
-				"required": false,
-				"validation": {
-					"type": "array",
-					"items": {
-						"type": "string"
+				},
+				"status": {
+					"source": ['body.status'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ['active', 'inactive', 'pendingNew']
 					}
-				}
-			}
-		},
-		"/admin/all": {
-			"_apiInfo": {
-				"l": "Get all Users & Groups",
-				"group": "Administration"
-			}
-		},
-		
-		'/owner/admin/users/count': {
-			"_apiInfo": {
-				"l": "Total Users Count",
-				"group": "Owner"
-			},
-			"commonFields": ['tCode', 'keywords', "isOwner"]
-		},
-		'/owner/admin/addUser': {
-			"_apiInfo": {
-				"l": "Add new User",
-				"group": "Owner"
-			},
-			"commonFields": ['tCode', "isOwner"],
-			"username": {
-				"source": ['body.username'],
-				"required": true,
-				"validation": {
-					"type": "string",
-					"pattern": /^[a-zA-Z0-9_-]+$/
+				},
+				"profile": {
+					"source": ['body.profile'],
+					"required": false,
+					"validation": {"type": "object"}
+				},
+				"password": {
+					"source": ['body.password'],
+					"required": false,
+					"validation": {"type": "string"}
+				},
+				"confirmation": {
+					"source": ['body.confirmation'],
+					"required": false,
+					"validation": {"type": "string"}
 				}
 			},
-			"firstName": {
-				"source": ['body.firstName'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"lastName": {
-				"source": ['body.lastName'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"email": {
-				"source": ['body.email'],
-				"required": true,
-				"validation": {"type": "string", format: "email"}
-			},
-			"profile": {
-				"source": ['body.profile'],
-				"required": false,
-				"validation": {"type": "object"}
-			},
-			"groups": {
-				"source": ['body.groups'],
-				"required": false,
-				"validation": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				}
-			},
-			"status": {
-				"source": ['body.status'],
-				"default": "pendingNew",
-				"required": false,
-				"validation": {"type": "string", "enum": ['active', 'inactive', 'pendingNew']}
-			},
-			"password": {
-				"source": ['body.password'],
-				"required": false,
-				"validation": {"type": "string"}
-			},
-			"confirmation": {
-				"source": ['body.confirmation'],
-				"required": false,
-				"validation": {"type": "string"}
-			}
-		},
-		'/owner/admin/listUsers': {
-			"_apiInfo": {
-				"l": "List Users",
-				"group": "Owner",
-				"groupDefault": true
-			},
-			"commonFields": ["tCode", "start", "limit", "keywords", "isOwner"]
-		},
-		'/owner/admin/changeUserStatus': {
-			"_apiInfo": {
-				"l": "Change User Status",
-				"group": "Owner"
-			},
-			"commonFields": ["tCode", "isOwner"],
-			"uId": {
-				"source": ['query.uId'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"status": {
-				"source": ['query.status'],
-				"required": true,
-				"validation": {"type": "string", "enum": ['active', 'inactive']}
-			}
-		},
-		'/owner/admin/getUser': {
-			"_apiInfo": {
-				"l": "Get User Record",
-				"group": "Owner"
-			},
-			"commonFields": ["tCode", "isOwner"],
-			"uId": {
-				"source": ['query.uId'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		'/owner/admin/editUser': {
-			"_apiInfo": {
-				"l": "Edit User Record",
-				"group": "Owner"
-			},
-			"commonFields": ["tCode", "isOwner"],
-			"uId": {
-				"source": ['query.uId'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"username": {
-				"source": ['body.username'],
-				"required": true,
-				"validation": {
-					"type": "string",
-					"pattern": /^[a-zA-Z0-9_-]+$/
-				}
-			},
-			"firstName": {
-				"source": ['body.firstName'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"lastName": {
-				"source": ['body.lastName'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"email": {
-				"source": ['body.email'],
-				"required": true,
-				"validation": {"type": "string", 'format': 'email'}
-			},
-			"groups": {
-				"source": ['body.groups'],
-				"required": false,
-				"validation": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				}
-			},
-			"config": {
-				"source": ['body.config'],
-				"required": false,
-				"validation": {
-					"type": "object",
-					"properties": {
-						"keys": {
-							"type": "object"
-						},
-						"packages": {
-							"type": "object",
-							"required": false,
-							"additionalProperties": {
-								type: 'object',
-								'additionalProperties': {
-									'acl': acl
+			'/owner/admin/editUserConfig': {
+				"_apiInfo": {
+					"l": "Edit User Config",
+					"group": "Owner"
+				},
+				"commonFields": ["tCode", "isOwner"],
+				"uId": {
+					"source": ['query.uId'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"config": {
+					"source": ['body.config'],
+					"required": true,
+					"validation": {
+						"type": "object",
+						"properties": {
+							"keys": {
+								"type": "object"
+							},
+							"packages": {
+								"type": "object",
+								"required": false,
+								"additionalProperties": {
+									type: 'object',
+									'additionalProperties': {
+										'acl': acl
+									}
 								}
 							}
 						}
 					}
 				}
 			},
-			"status": {
-				"source": ['body.status'],
-				"required": true,
-				"validation": {
-					"type": "string",
-					"enum": ['active', 'inactive', 'pendingNew']
+
+			'/owner/admin/group/add': {
+				"_apiInfo": {
+					"l": "Add new Group",
+					"group": "Owner"
+				},
+				"commonFields": ['tCode', "isOwner"],
+				"code": {
+					"source": ['body.code'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"format": "alphanumeric",
+						"maxLength": 20
+					}
+				},
+				"name": {
+					"source": ['body.name'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"description": {
+					"source": ['body.description'],
+					"required": true,
+					"validation": {"type": "string"}
 				}
 			},
-			"profile": {
-				"source": ['body.profile'],
-				"required": false,
-				"validation": {"type": "object"}
+			'/owner/admin/group/edit': {
+				"_apiInfo": {
+					"l": "Edit Group",
+					"group": "Owner"
+				},
+				"commonFields": ["tCode", "isOwner"],
+				"gId": {
+					"source": ['query.gId'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"name": {
+					"source": ['body.name'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"description": {
+					"source": ['body.description'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
 			},
-			"password": {
-				"source": ['body.password'],
-				"required": false,
-				"validation": {"type": "string"}
-			},
-			"confirmation": {
-				"source": ['body.confirmation'],
-				"required": false,
-				"validation": {"type": "string"}
-			}
-		},
-		'/owner/admin/editUserConfig': {
-			"_apiInfo": {
-				"l": "Edit User Config",
-				"group": "Owner"
-			},
-			"commonFields": ["tCode", "isOwner"],
-			"uId": {
-				"source": ['query.uId'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"config": {
-				"source": ['body.config'],
-				"required": true,
-				"validation": {
-					"type": "object",
-					"properties": {
-						"keys": {
-							"type": "object"
-						},
-						"packages": {
-							"type": "object",
-							"required": false,
-							"additionalProperties": {
-								type: 'object',
-								'additionalProperties': {
-									'acl': acl
-								}
-							}
+			"/owner/admin/group/addUsers": {
+				"_apiInfo": {
+					"l": "Add Users to Group",
+					"group": "Owner"
+				},
+				"commonFields": ["tCode", "isOwner"],
+				"code": {
+					"source": ['body.groupCode'],
+					"required": true,
+					"validation": {"type": "string"}
+				},
+				"users": {
+					"source": ['body.users'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"items": {
+							"type": "string"
 						}
 					}
 				}
 			}
 		},
-		
-		'/owner/admin/group/list': {
-			"_apiInfo": {
-				"l": "List Groups",
-				"group": "Owner"
-			},
-			"commonFields": ["tCode", "isOwner"]
-		},
-		'/owner/admin/group/add': {
-			"_apiInfo": {
-				"l": "Add new Group",
-				"group": "Owner"
-			},
-			"commonFields": ['tCode', "isOwner"],
-			"code": {
-				"source": ['body.code'],
-				"required": true,
-				"validation": {
-					"type": "string",
-					"format": "alphanumeric",
-					"maxLength": 20
+		"put": {},
+		"delete": {
+			'/admin/group/delete': {
+				"_apiInfo": {
+					"l": "Delete Group",
+					"group": "Administration"
+				},
+				"gId": {
+					"source": ['query.gId'],
+					"required": true,
+					"validation": {"type": "string"}
 				}
 			},
-			"name": {
-				"source": ['body.name'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"description": {
-				"source": ['body.description'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		'/owner/admin/group/edit': {
-			"_apiInfo": {
-				"l": "Edit Group",
-				"group": "Owner"
-			},
-			"commonFields": ["tCode", "isOwner"],
-			"gId": {
-				"source": ['query.gId'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"name": {
-				"source": ['body.name'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"description": {
-				"source": ['body.description'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		'/owner/admin/group/delete': {
-			"_apiInfo": {
-				"l": "Delete Group",
-				"group": "Owner"
-			},
-			"commonFields": ["tCode", "isOwner"],
-			"gId": {
-				"source": ['query.gId'],
-				"required": true,
-				"validation": {"type": "string"}
-			}
-		},
-		"/owner/admin/group/addUsers": {
-			"_apiInfo": {
-				"l": "Add Users to Group",
-				"group": "Owner"
-			},
-			"commonFields": ["tCode", "isOwner"],
-			"code": {
-				"source": ['body.groupCode'],
-				"required": true,
-				"validation": {"type": "string"}
-			},
-			"users": {
-				"source": ['body.users'],
-				"required": false,
-				"validation": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
+			'/owner/admin/group/delete': {
+				"_apiInfo": {
+					"l": "Delete Group",
+					"group": "Owner"
+				},
+				"commonFields": ["tCode", "isOwner"],
+				"gId": {
+					"source": ['query.gId'],
+					"required": true,
+					"validation": {"type": "string"}
 				}
-			}
-		},
-		
-		"/owner/admin/tokens/list": {
-			"_apiInfo": {
-				"l": "List Tokens",
-				"group": "Owner"
 			},
-			"commonFields": ["tCode", "isOwner", "start", "limit"]
-		},
-		"/owner/admin/tokens/delete": {
-			"_apiInfo": {
-				"l": "Delete Token",
-				"group": "Owner"
-			},
-			"commonFields": ["tCode", "isOwner"],
-			"tokenId": {
-				"source": ['query.tokenId'],
-				"required": true,
-				"validation": {"type": "string"}
+			"/owner/admin/tokens/delete": {
+				"_apiInfo": {
+					"l": "Delete Token",
+					"group": "Owner"
+				},
+				"commonFields": ["tCode", "isOwner"],
+				"tokenId": {
+					"source": ['query.tokenId'],
+					"required": true,
+					"validation": {"type": "string"}
+				}
 			}
 		}
+
 	}
 };

@@ -24,6 +24,7 @@ function requester(apiName, method, params, cb) {
 			key: extKey,
 			'Content-Type': 'application/json'
 		},
+		method: method.toUpperCase(),
 		json: true
 	};
 	
@@ -33,7 +34,6 @@ function requester(apiName, method, params, cb) {
 				options.headers[h] = params.headers[h];
 			}
 			else {
-				
 			}
 		}
 	}
@@ -87,7 +87,7 @@ describe("Owner admin tests", function () {
 						'status': 'active'
 					}
 				};
-
+				
 				requester('owner/admin/addUser', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
@@ -96,7 +96,7 @@ describe("Owner admin tests", function () {
 					done();
 				});
 			});
-
+			
 			it("Fail - Pending with password", function (done) {
 				var params = {
 					qs: {
@@ -110,7 +110,7 @@ describe("Owner admin tests", function () {
 						'password': 'password'
 					}
 				};
-
+				
 				requester('owner/admin/addUser', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
@@ -119,7 +119,7 @@ describe("Owner admin tests", function () {
 					done();
 				});
 			});
-
+			
 			it("SUCCESS - will add user account", function (done) {
 				var params = {
 					qs: {
@@ -133,7 +133,7 @@ describe("Owner admin tests", function () {
 						'config': {}
 					}
 				};
-
+				
 				requester('owner/admin/addUser', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
@@ -144,10 +144,10 @@ describe("Owner admin tests", function () {
 						assert.ok(userRecord);
 						done();
 					});
-
+					
 				});
 			});
-
+			
 			it("SUCCESS - will add user account with password", function (done) {
 				var params = {
 					qs: {
@@ -180,7 +180,7 @@ describe("Owner admin tests", function () {
 					
 				});
 			});
-
+			
 		});
 		
 		describe("testing edit user API", function () {
@@ -474,7 +474,7 @@ describe("Owner admin tests", function () {
 						'tCode': tCode
 					}
 				};
-				requester('owner/admin/group/delete', 'get', params, function (error, body) {
+				requester('owner/admin/group/delete', 'del', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
@@ -516,7 +516,7 @@ describe("Owner admin tests", function () {
 						'tCode': tCode
 					}
 				};
-				requester('owner/admin/tokens/delete', 'get', params, function (error, body) {
+				requester('owner/admin/tokens/delete', 'del', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
