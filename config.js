@@ -68,7 +68,7 @@ module.exports = {
 		400: "Database connection error",
 		401: "Unable to log in the user. User not found.",
 		402: "User account already exists.",
-		403: "Unable to register user. please try again.",
+		
 		404: "Unable to logout the user. User not found.",
 		405: "Unable to find User. Please try again.",
 		406: "Invalid or token has expired.",
