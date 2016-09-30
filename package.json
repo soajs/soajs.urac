@@ -35,7 +35,6 @@
     "shelljs": "*"
   },
   "dependencies": {
-    "bcrypt": "*",
     "node-uuid": "*",
     "soajs": "0.3.*"
   }
