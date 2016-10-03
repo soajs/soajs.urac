@@ -494,7 +494,7 @@ describe("simple urac tests", function () {
 				assert.ok(body);
 				console.log(JSON.stringify(body));
 				assert.deepEqual(body.errors.details[0], {
-					"code": 400,
+					"code": 413,
 					"message": "Problem with the provided password."
 				});
 				done();

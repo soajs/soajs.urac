@@ -65,10 +65,10 @@ module.exports = {
 	
 	"maxStringLimit": 30,
 	"errors": {
-		400: "Problem with the provided password.",
+		400: "Database connection error",
 		401: "Unable to log in the user. User not found.",
 		402: "User account already exists.",
-		403: "Unable to register user. please try again.",
+		
 		404: "Unable to logout the user. User not found.",
 		405: "Unable to find User. Please try again.",
 		406: "Invalid or token has expired.",
@@ -78,7 +78,7 @@ module.exports = {
 		410: "username taken, please choose another username",
 		411: "invalid user id provided",
 		412: "You have provided the same existing email address",
-
+		413: "Problem with the provided password.",
 		414: "Unable to add user.",
 		415: "Unable to find group.",
 		416: "Unable to create Group.",
@@ -93,7 +93,6 @@ module.exports = {
 		
 		500: "This record in locked. You cannot modify or delete it",
 		
-		600: "Database connection error",
 		601: "Model not found",
 		611: "Invalid tenant id provided"
 	},
