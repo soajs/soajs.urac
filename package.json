@@ -10,32 +10,37 @@
     "type": "git",
     "url": "git@github.com:soajs/soajs.urac.git"
   },
-  "license" : "Apache-2.0",
+  "license": "Apache-2.0",
   "engines": {
     "node": "*"
   },
   "scripts": {
     "test": "grunt test"
   },
-  "devDependencies":{
-    "soajs.mongodb.data" : "0.2.*",
+  "devDependencies": {
+    "soajs.mongodb.data": "0.2.*",
     "soajs.controller": "0.2.*",
-    "grunt":"0.4.5",
-    "grunt-contrib-jshint":"*",
-    "grunt-jsdoc" : "*",
-    "grunt-contrib-clean" : "*",
-    "grunt-mocha-test" : "*",
-    "grunt-env" : "*",
-    "grunt-istanbul" : "*",
-    "grunt-coveralls" : "*",
-    "jshint" : "*",
+    "grunt": "0.4.5",
+    "grunt-contrib-jshint": "*",
+    "grunt-jsdoc": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-mocha-test": "*",
+    "grunt-env": "*",
+    "grunt-istanbul": "*",
+    "grunt-coveralls": "*",
+    "jshint": "*",
     "lodash": "*",
     "mocha": "*",
-    "request" : "*",
+    "request": "*",
     "shelljs": "*"
   },
   "dependencies": {
     "node-uuid": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "passport-facebook": "*",
+    "passport-google-oauth": "*",
+    "passport-twitter": "*",
     "soajs": "0.3.*"
   }
 }

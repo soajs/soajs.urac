@@ -65,10 +65,11 @@ module.exports = {
 	
 	"maxStringLimit": 30,
 	"errors": {
+		399: "Missing Service config. Contact system Admin",
 		400: "Database connection error",
 		401: "Unable to log in the user. User not found.",
 		402: "User account already exists.",
-		
+		403: "User Not Found!",
 		404: "Unable to logout the user. User not found.",
 		405: "Unable to find User. Please try again.",
 		406: "Invalid or token has expired.",
@@ -141,8 +142,118 @@ module.exports = {
 				}
 			}
 		},
-
+		
 		"get": {
+			"/passport/login/:strategy": {
+				"_apiInfo": {
+					"l": "Login Through Passport",
+					"group": "Guest"
+				},
+				"uracConfig": {
+					"source": ['servicesConfig.urac'],
+					"required": true,
+					"validation": {
+						"type": "object",
+						"properties": {
+							"passportLogin": {
+								"type": "object",
+								"required": true,
+								"properties": {
+									"facebook": {
+										"type": "object",
+										"properties": {
+											"clientID": {
+												"type": "string",
+												"required": true
+											},
+											"clientSecret": {
+												"type": "string",
+												"required": true
+											},
+											"callbackURL": {
+												"type": "string",
+												"required": true
+											}
+										}
+									},
+									"twitter": {
+										"type": "object",
+										"properties": {
+											"clientID": {
+												"type": "string",
+												"required": true
+											},
+											"clientSecret": {
+												"type": "string",
+												"required": true
+											},
+											"callbackURL": {
+												"type": "string",
+												"required": true
+											}
+										}
+									},
+									"google": {
+										"type": "object",
+										"properties": {
+											"clientID": {
+												"type": "string",
+												"required": true
+											},
+											"clientSecret": {
+												"type": "string",
+												"required": true
+											},
+											"callbackURL": {
+												"type": "string",
+												"required": true
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"strategy": {
+					"source": ['params.strategy'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ["facebook", "google", "twitter"]
+					}
+				}
+			},
+			
+			"/passport/validate/:strategy": {
+				"_apiInfo": {
+					"l": "Login Through Passport Validate",
+					"group": "Guest"
+				},
+				"strategy": {
+					"source": ['params.strategy'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"enum": ["facebook", "google", "twitter"]
+					}
+				},
+				"oauth_token": {
+					"source": ['query.oauth_token'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"oauth_verifier": {
+					"source": ['query.oauth_verifier'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				}
+			},
+			
 			'/join/validate': {
 				"_apiInfo": {
 					"l": "Validate Register",
@@ -197,7 +308,7 @@ module.exports = {
 				"_apiInfo": {
 					"l": "Get User Info",
 					"group": "My Account",
-					"groupDefault": true
+					"groupMain": true
 				},
 				"username": {
 					"source": ['query.username'],
@@ -225,7 +336,7 @@ module.exports = {
 				"_apiInfo": {
 					"l": "List Users",
 					"group": "Administration",
-					"groupDefault": true
+					"groupMain": true
 				},
 				"commonFields": ["start", "limit", "keywords"],
 				"tId": {
@@ -268,7 +379,7 @@ module.exports = {
 					"validation": {"type": "string"}
 				}
 			},
-
+			
 			"/admin/all": {
 				"_apiInfo": {
 					"l": "Get all Users & Groups",
@@ -286,7 +397,7 @@ module.exports = {
 				"_apiInfo": {
 					"l": "List Users",
 					"group": "Owner",
-					"groupDefault": true
+					"groupMain": true
 				},
 				"commonFields": ["tCode", "start", "limit", "keywords", "isOwner"]
 			},
@@ -339,7 +450,7 @@ module.exports = {
 				"_apiInfo": {
 					"l": "Login",
 					"group": "Guest",
-					"groupDefault": true
+					"groupMain": true
 				},
 				"username": {
 					"source": ['body.username'],
@@ -742,7 +853,7 @@ module.exports = {
 					}
 				}
 			},
-
+			
 			'/owner/admin/addUser': {
 				"_apiInfo": {
 					"l": "Add new User",
@@ -928,7 +1039,7 @@ module.exports = {
 					}
 				}
 			},
-
+			
 			'/owner/admin/group/add': {
 				"_apiInfo": {
 					"l": "Add new Group",
@@ -1038,6 +1149,6 @@ module.exports = {
 				}
 			}
 		}
-
+		
 	}
 };

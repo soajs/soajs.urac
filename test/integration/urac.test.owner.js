@@ -5,6 +5,9 @@ var helper = require("../helper.js");
 var soajs = require('soajs');
 var urac;
 
+var config = helper.requireModule('./config');
+var errorCodes = config.errors;
+
 var Mongo = soajs.mongo;
 var dbConfig = require("./db.config.test.js");
 
@@ -246,6 +249,35 @@ describe("Owner admin tests", function () {
 						done();
 					});
 					
+				});
+			});
+
+			it("Fail - invalid id", function (done) {
+				var params = {
+					qs: {
+						'uId': "581b6947f2eb001e4db64285",
+						'tCode': tCode
+					},
+					form: {
+						'config': {
+							'keys': {},
+							'packages': {
+								'TPROD_EX03': {
+									'acl': {
+										'example01': {}
+									}
+								}
+							}
+						}
+					}
+				};
+
+				requester('owner/admin/editUserConfig', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.equal(body.result, false);
+					done();
+
 				});
 			});
 		});
@@ -505,10 +537,41 @@ describe("Owner admin tests", function () {
 					done();
 				});
 			});
+			it("SUCCESS - will get next", function (done) {
+				var params = {
+					qs: {
+						'tCode': tCode,
+						'start': 10
+					}
+				};
+				requester('owner/admin/tokens/list', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.ok(body.data);
+					done();
+				});
+			});
 		});
 		
 		describe("testing delete Token API", function () {
 			
+			it("Fail - wrong token id", function (done) {
+				var params = {
+					qs: {
+						'tokenId': "123456789",
+						'tCode': tCode
+					}
+				};
+				requester('owner/admin/tokens/delete', 'del', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body));
+					assert.deepEqual(body.errors.details[0], {"code": 426, "message": errorCodes[426]});
+					done();
+				});
+			});
+
 			it("SUCCESS - will delete token", function (done) {
 				var params = {
 					qs: {
@@ -523,7 +586,26 @@ describe("Owner admin tests", function () {
 					assert.ok(body.data);
 					done();
 				});
-				
+			});
+
+			it("SUCCESS - will get none", function (done) {
+				var params = {
+					qs: {
+						'tCode': tCode
+					}
+				};
+				console.log(mongo);
+				mongo.remove("tokens", {}, function (error) {
+					assert.ifError(error);
+					requester('owner/admin/tokens/list', 'get', params, function (error, body) {
+						assert.ifError(error);
+						assert.ok(body);
+						console.log(JSON.stringify(body));
+						assert.ok(body.data);
+						done();
+					});
+				});
+
 			});
 		});
 		

@@ -2,11 +2,15 @@
 var soajs = require('soajs');
 var config = require('./config.js');
 var service = new soajs.server.service(config);
+var passportLib = require('./lib/passport.js');
 
 var BLModule = require('./lib/urac.js');
 
 function initBLModel(req, res, cb) {
-	var modelName = req.soajs.servicesConfig.model || config.model;
+	var modelName = config.model;
+	if (req.soajs.servicesConfig && req.soajs.servicesConfig.model) {
+		modelName = req.soajs.servicesConfig.model
+	}
 	if (process.env.SOAJS_TEST && req.soajs.inputmaskData.model) {
 		modelName = req.soajs.inputmaskData.model;
 	}
@@ -336,6 +340,21 @@ service.init(function () {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.tokens.delete(req, res);
+		});
+	});
+	
+	service.get('/passport/login/:strategy', function (req, res) {
+		req.soajs.config = config;
+		passportLib.init(req, res, function (passport) {
+			passportLib.initAuth(req, res, passport);
+		});
+		
+	});
+	
+	service.get('/passport/validate/:strategy', function (req, res) {
+		passportLib.init(req, res, function (passport) {
+			req.soajs.config = config;
+			passportLib.authenticate(req, res, passport, initBLModel);
 		});
 	});
 	
