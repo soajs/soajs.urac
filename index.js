@@ -1,5 +1,5 @@
 'use strict';
-var uuid = require('node-uuid');
+var uuid = require('uuid');
 
 var soajs = require('soajs');
 var utils = require('soajs/lib/').utils;
