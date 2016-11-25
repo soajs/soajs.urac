@@ -64,8 +64,7 @@ describe("simple urac tests", function () {
 		console.log("=======================================");
 		done();
 	});
-	
-	
+
 	describe("testing passport login API", function () {
 		
 		it("FAIL - Missing config", function (done) {
@@ -86,7 +85,7 @@ describe("simple urac tests", function () {
 			});
 		});
 		
-		it("SUCCESS - will redirect user", function (done) {
+		it("SUCCESS - will redirect user to google", function (done) {
 			var params = {
 				qs: {}
 			};
@@ -97,11 +96,22 @@ describe("simple urac tests", function () {
 			});
 		});
 
+		it("SUCCESS - will redirect user to github", function (done) {
+			var params = {
+				qs: {}
+			};
+			requester('passport/login/github', 'get', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				done();
+			});
+		});
+
 		it("SUCCESS - will login user", function (done) {
 			var params = {
 				qs: {
 					oauth_token: "XnjHbgAAAAAAxq3dAAABWCr23O0",
-					oauth_verifier:"CZ10nMKn8BSEYHpZZb8eQxUY3kuxGAR6"
+					oauth_verifier: "CZ10nMKn8BSEYHpZZb8eQxUY3kuxGAR6"
 				}
 			};
 			requester('passport/validate/twitter', 'get', params, function (error, body) {
@@ -114,7 +124,7 @@ describe("simple urac tests", function () {
 		it("Fail - Missing param", function (done) {
 			var params = {
 				qs: {
-					oauth_verifier:"CZ10nMKn8BSEYHpZZb8eQxUY3kuxGAR6"
+					oauth_verifier: "CZ10nMKn8BSEYHpZZb8eQxUY3kuxGAR6"
 				}
 			};
 			requester('passport/validate/twitter', 'get', params, function (error, body) {
@@ -150,8 +160,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-
+		
 	});
-	
 	
 });

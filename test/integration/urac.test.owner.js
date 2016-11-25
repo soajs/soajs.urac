@@ -495,7 +495,22 @@ describe("Owner admin tests", function () {
 				});
 			});
 			
-			
+			it("Fail - Invalid model", function (done) {
+
+				var params = {
+					qs: {
+						model: "memory",
+						'tCode': tCode
+					}
+				};
+				requester('owner/admin/group/list', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body.errors);
+					assert.deepEqual(body.errors.details[0], {"code": 601, "message": errorCodes[601]});
+					done();
+				});
+			});
+
 		});
 		
 		describe("testing delete group API", function () {

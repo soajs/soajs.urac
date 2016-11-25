@@ -6,6 +6,9 @@ var helper = require("../helper.js");
 var soajs = require('soajs');
 var urac;
 
+var config = helper.requireModule('./config');
+var errorCodes = config.errors;
+
 var Mongo = soajs.mongo;
 var dbConfig = require("./db.config.test.js");
 
@@ -1371,6 +1374,24 @@ describe("simple urac tests", function () {
 			});
 		});
 		
+		it("Fail - email already exists", function (done) {
+			var params = {
+				qs: {
+					'uId': uId
+				},
+				form: {
+					'email': 'john.black@soajs.org'
+				}
+			};
+			requester('account/changeEmail', 'post', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.deepEqual(body.errors.details[0], {"code": 402, "message": errorCodes[402]});
+				done();
+			});
+		});
+
 		it("SUCCESS - change email request created", function (done) {
 			var params = {
 				qs: {
@@ -1388,7 +1409,7 @@ describe("simple urac tests", function () {
 				mongo.findOne('users', {"username": "john123"}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
-					
+
 					mongo.findOne('tokens', {
 						'userId': userRecord._id.toString(),
 						'service': 'changeEmail',
@@ -1403,7 +1424,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-		
+
 		it("SUCCESS - change email request again", function (done) {
 			var params = {
 				qs: {
@@ -1422,7 +1443,7 @@ describe("simple urac tests", function () {
 				mongo.findOne('users', {"username": "john123"}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
-					
+
 					mongo.find('tokens', {
 						'userId': userRecord._id.toString(),
 						'service': 'changeEmail'
@@ -1439,7 +1460,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-		
+
 		it("FAIL - do change email fail, missing params", function (done) {
 			var params = {
 				qs: {}
@@ -1452,7 +1473,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-		
+
 		it("FAIL - do change email fail, invalid token", function (done) {
 			var params = {
 				qs: {
@@ -1467,7 +1488,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-		
+
 		it("SUCCESS - do change email verified", function (done) {
 			var params = {
 				qs: {
@@ -1482,7 +1503,7 @@ describe("simple urac tests", function () {
 				mongo.findOne('users', {'username': 'john123'}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
-					
+
 					mongo.find('tokens', {
 						'userId': userRecord._id.toString(),
 						'service': 'changeEmail'
@@ -1498,8 +1519,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-		
-		
+
 		it("SUCCESS - change email request created - no mail sent", function (done) {
 			var params = {
 				headers: {
@@ -1534,7 +1554,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-		
+
 		it("FAIL - do change email fail - expired token", function (done) {
 			var params = {
 				qs: {
@@ -1549,7 +1569,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-		
+
 		it('SUCCESS - manual reset of user email address to receive notifications from remaining APIs tests', function (done) {
 			mongo.findOne('users', {'username': 'john123'}, function (error, userRecord) {
 				assert.ifError(error);
@@ -1581,7 +1601,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-		
+
 		it("FAIL - invalid user account", function (done) {
 			var params = {
 				qs: {
@@ -1593,7 +1613,7 @@ describe("simple urac tests", function () {
 					'lastName': 'doe2'
 				}
 			};
-			
+
 			requester('account/editProfile', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
@@ -1605,7 +1625,7 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-		
+
 		it("FAIL - username exists for another account", function (done) {
 			var params = {
 				qs: {
@@ -1644,7 +1664,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-		
+
 		it("SUCCESS - will update user profile", function (done) {
 			var params = {
 				qs: {
@@ -1665,9 +1685,9 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-		
+
 	});
-	
+
 	describe("testing admin API", function () {
 		describe("testing edit user API", function () {
 			it("FAIL - missing params", function (done) {
@@ -1688,7 +1708,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 			it("FAIL - invalid user account", function (done) {
 				var params = {
 					qs: {
@@ -1710,7 +1730,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 			it("FAIL - username exists for another account", function (done) {
 				var params = {
 					qs: {
@@ -1735,7 +1755,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 			it("SUCCESS - will update user account - john123", function (done) {
 				var params = {
 					qs: {
@@ -1759,13 +1779,13 @@ describe("simple urac tests", function () {
 						}
 					}
 				};
-				
+
 				requester('admin/editUser', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					assert.ok(body.data);
 					console.log(JSON.stringify(body));
-					
+
 					mongo.findOne("users", {'username': 'john123'}, function (error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
@@ -1800,11 +1820,11 @@ describe("simple urac tests", function () {
 						});
 						done();
 					});
-					
-					
+
+
 				});
 			});
-			
+
 			it("SUCCESS - will update user account user2", function (done) {
 				mongo.findOne("users", {'username': 'user2'}, function (error, userRecord) {
 					assert.ifError(error);
@@ -1877,7 +1897,7 @@ describe("simple urac tests", function () {
 					});
 				});
 			});
-			
+
 			it("FAIL - password and its confirmation do not match", function (done) {
 				mongo.findOne("users", {'username': 'user2'}, function (error, userRecord) {
 					assert.ifError(error);
@@ -1921,7 +1941,7 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-		
+
 		describe("testing change user status API", function () {
 			it("FAIL - missing parameters", function (done) {
 				var params = {
@@ -1940,7 +1960,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 			it("FAIL - invalid user account", function (done) {
 				var params = {
 					qs: {
@@ -1956,7 +1976,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 			it("FAIL - will approve user", function (done) {
 				var params = {
 					qs: {
@@ -1973,7 +1993,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 			it("SUCCESS - will approve user", function (done) {
 				var params = {
 					qs: {
@@ -1994,7 +2014,7 @@ describe("simple urac tests", function () {
 					});
 				});
 			});
-			
+
 			it("SUCCESS - will inactivate user", function (done) {
 				var params = {
 					qs: {
@@ -2015,7 +2035,7 @@ describe("simple urac tests", function () {
 					});
 				});
 			});
-			
+
 			it("SUCCESS - will activate user - no mail", function (done) {
 				var params = {
 					headers: {
@@ -2034,9 +2054,9 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 		});
-		
+
 		describe("testing admin get user API", function () {
 			it("Fail - missing param", function (done) {
 				var params = {
@@ -2050,7 +2070,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 			it("Fail - invalid id", function (done) {
 				var params = {
 					qs: {
@@ -2065,7 +2085,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 			it("Success - get user", function (done) {
 				var params = {
 					qs: {
@@ -2081,11 +2101,11 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 		});
-		
+
 		describe("testing count users API", function () {
-			
+
 			it("SUCCESS - will return user count", function (done) {
 				var params = {};
 				requester('admin/users/count', 'get', params, function (error, body) {
@@ -2095,7 +2115,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 			it("SUCCESS - search keywords", function (done) {
 				var params = {
 					qs: {
@@ -2109,11 +2129,11 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 		});
-		
+
 		describe("testing list users API", function () {
-			
+
 			it("SUCCESS - will return user records", function (done) {
 				var params = {};
 				requester('admin/listUsers', 'get', params, function (error, body) {
@@ -2125,7 +2145,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 			it("SUCCESS - search keywords", function (done) {
 				var params = {
 					qs: {
@@ -2141,7 +2161,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 			it("SUCCESS - will return user records", function (done) {
 				var params = {qs: {'tId': '10d2cb5fc04ce51e06000001'}};
 				requester('admin/listUsers', 'get', params, function (error, body) {
@@ -2153,7 +2173,7 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			
+
 			it("SUCCESS - will return empty array", function (done) {
 				mongo.dropCollection('users', function () {
 					var params = {};

@@ -140,6 +140,15 @@ module.exports = {
 				"validation": {
 					"type": "boolean"
 				}
+			},
+			"model": {
+				"source": ['query.model'],
+				"required": false,
+				"default": "mongo",
+				"validation": {
+					"type": "string",
+					"enum": ["memory", "mongo"]
+				}
 			}
 		},
 		
@@ -149,6 +158,7 @@ module.exports = {
 					"l": "Login Through Passport",
 					"group": "Guest"
 				},
+				"commonFields": ["model"],
 				"uracConfig": {
 					"source": ['servicesConfig.urac'],
 					"required": true,
@@ -247,6 +257,7 @@ module.exports = {
 					"l": "Login Through Passport Validate",
 					"group": "Guest"
 				},
+				"commonFields": ["model"],
 				"strategy": {
 					"source": ['params.strategy'],
 					"required": true,
@@ -276,6 +287,7 @@ module.exports = {
 					"l": "Validate Register",
 					"group": "Guest"
 				},
+				"commonFields": ["model"],
 				"token": {
 					"source": ['query.token'],
 					"required": true,
@@ -293,6 +305,7 @@ module.exports = {
 					"l": "Forgot Password",
 					"group": "Guest"
 				},
+				"commonFields": ["model"],
 				"username": {
 					"source": ['query.username'],
 					"required": true,
@@ -304,6 +317,7 @@ module.exports = {
 					"l": "Check If Username Exists",
 					"group": "Guest"
 				},
+				"commonFields": ["model"],
 				"username": {
 					"source": ['query.username'],
 					"required": true,
@@ -315,6 +329,7 @@ module.exports = {
 					"l": "Validate Change Email",
 					"group": "Guest"
 				},
+				"commonFields": ["model"],
 				"token": {
 					"source": ['query.token'],
 					"required": true,
@@ -327,6 +342,7 @@ module.exports = {
 					"group": "My Account",
 					"groupMain": true
 				},
+				"commonFields": ["model"],
 				"username": {
 					"source": ['query.username'],
 					"required": true,
@@ -338,6 +354,7 @@ module.exports = {
 					"l": "Change User Status",
 					"group": "Administration"
 				},
+				"commonFields": ["model"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -355,7 +372,7 @@ module.exports = {
 					"group": "Administration",
 					"groupMain": true
 				},
-				"commonFields": ["start", "limit", "keywords"],
+				"commonFields": ["model", "start", "limit", "keywords"],
 				"tId": {
 					"source": ['query.tId'],
 					"required": false,
@@ -367,7 +384,7 @@ module.exports = {
 					"l": "Total Users Count",
 					"group": "Administration"
 				},
-				"commonFields": ["keywords"],
+				"commonFields": ["model", "keywords"],
 				"tId": {
 					"source": ['query.tId'],
 					"required": false,
@@ -379,6 +396,7 @@ module.exports = {
 					"l": "Get User Record",
 					"group": "Administration"
 				},
+				"commonFields": ["model"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -390,25 +408,27 @@ module.exports = {
 					"l": "List Groups",
 					"group": "Administration"
 				},
+				"commonFields": ["model"],
 				"tId": {
 					"source": ['query.tId'],
 					"required": false,
 					"validation": {"type": "string"}
 				}
 			},
-			
+
 			"/admin/all": {
 				"_apiInfo": {
 					"l": "Get all Users & Groups",
 					"group": "Administration"
-				}
+				},
+				"commonFields": ["model"]
 			},
 			'/owner/admin/users/count': {
 				"_apiInfo": {
 					"l": "Total Users Count",
 					"group": "Owner"
 				},
-				"commonFields": ['tCode', 'keywords', "isOwner"]
+				"commonFields": ["model", 'tCode', 'keywords', "isOwner"]
 			},
 			'/owner/admin/listUsers': {
 				"_apiInfo": {
@@ -416,14 +436,14 @@ module.exports = {
 					"group": "Owner",
 					"groupMain": true
 				},
-				"commonFields": ["tCode", "start", "limit", "keywords", "isOwner"]
+				"commonFields": ["model", "tCode", "start", "limit", "keywords", "isOwner"]
 			},
 			'/owner/admin/changeUserStatus': {
 				"_apiInfo": {
 					"l": "Change User Status",
 					"group": "Owner"
 				},
-				"commonFields": ["tCode", "isOwner"],
+				"commonFields": ["model", "tCode", "isOwner"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -440,7 +460,7 @@ module.exports = {
 					"l": "Get User Record",
 					"group": "Owner"
 				},
-				"commonFields": ["tCode", "isOwner"],
+				"commonFields": ["model", "tCode", "isOwner"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -452,14 +472,14 @@ module.exports = {
 					"l": "List Groups",
 					"group": "Owner"
 				},
-				"commonFields": ["tCode", "isOwner"]
+				"commonFields": ["model", "tCode", "isOwner"]
 			},
 			"/owner/admin/tokens/list": {
 				"_apiInfo": {
 					"l": "List Tokens",
 					"group": "Owner"
 				},
-				"commonFields": ["tCode", "isOwner", "start", "limit"]
+				"commonFields": ["model", "tCode", "isOwner", "start", "limit"]
 			}
 		},
 		"post": {
@@ -469,6 +489,7 @@ module.exports = {
 					"group": "Guest",
 					"groupMain": true
 				},
+				"commonFields": ["model"],
 				"username": {
 					"source": ['body.username'],
 					"required": true,
@@ -489,6 +510,7 @@ module.exports = {
 					"l": "Register",
 					"group": "Guest"
 				},
+				"commonFields": ["model"],
 				"username": {
 					"source": ['body.username'],
 					"required": true,
@@ -523,6 +545,7 @@ module.exports = {
 					"l": "Reset Password",
 					"group": "Guest"
 				},
+				"commonFields": ["model"],
 				"token": {
 					"source": ['query.token'],
 					"required": true,
@@ -544,6 +567,7 @@ module.exports = {
 					"l": "Change Password",
 					"group": "My Account"
 				},
+				"commonFields": ["model"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -570,6 +594,7 @@ module.exports = {
 					"l": "Change Email",
 					"group": "My Account"
 				},
+				"commonFields": ["model"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -586,6 +611,7 @@ module.exports = {
 					"l": "Edit Profile",
 					"group": "My Account"
 				},
+				"commonFields": ["model"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -620,7 +646,7 @@ module.exports = {
 					"l": "Add new User",
 					"group": "Administration"
 				},
-				"commonFields": ['tId', 'tCode'],
+				"commonFields": ["model", 'tId', 'tCode'],
 				"username": {
 					"source": ['body.username'],
 					"required": true,
@@ -684,6 +710,7 @@ module.exports = {
 					"l": "Edit User Record",
 					"group": "Administration"
 				},
+				"commonFields": ["model"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -773,6 +800,7 @@ module.exports = {
 					"l": "Edit User Config",
 					"group": "Administration"
 				},
+				"commonFields": ["model"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -806,7 +834,7 @@ module.exports = {
 					"l": "Add new Group",
 					"group": "Administration"
 				},
-				"commonFields": ['tId', 'tCode'],
+				"commonFields": ["model", 'tId', 'tCode'],
 				"code": {
 					"source": ['body.code'],
 					"required": true,
@@ -832,6 +860,7 @@ module.exports = {
 					"l": "Edit Group",
 					"group": "Administration"
 				},
+				"commonFields": ["model"],
 				"gId": {
 					"source": ['query.gId'],
 					"required": true,
@@ -853,7 +882,7 @@ module.exports = {
 					"l": "Add Users to Group",
 					"group": "Administration"
 				},
-				"commonFields": ['tId'],
+				"commonFields": ["model", 'tId'],
 				"code": {
 					"source": ['body.groupCode'],
 					"required": true,
@@ -870,13 +899,13 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			'/owner/admin/addUser': {
 				"_apiInfo": {
 					"l": "Add new User",
 					"group": "Owner"
 				},
-				"commonFields": ['tCode', "isOwner"],
+				"commonFields": ["model", 'tCode', "isOwner"],
 				"username": {
 					"source": ['body.username'],
 					"required": true,
@@ -937,7 +966,7 @@ module.exports = {
 					"l": "Edit User Record",
 					"group": "Owner"
 				},
-				"commonFields": ["tCode", "isOwner"],
+				"commonFields": ["model", "tCode", "isOwner"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -1027,7 +1056,7 @@ module.exports = {
 					"l": "Edit User Config",
 					"group": "Owner"
 				},
-				"commonFields": ["tCode", "isOwner"],
+				"commonFields": ["model", "tCode", "isOwner"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -1056,13 +1085,13 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			'/owner/admin/group/add': {
 				"_apiInfo": {
 					"l": "Add new Group",
 					"group": "Owner"
 				},
-				"commonFields": ['tCode', "isOwner"],
+				"commonFields": ["model", 'tCode', "isOwner"],
 				"code": {
 					"source": ['body.code'],
 					"required": true,
@@ -1088,7 +1117,7 @@ module.exports = {
 					"l": "Edit Group",
 					"group": "Owner"
 				},
-				"commonFields": ["tCode", "isOwner"],
+				"commonFields": ["model", "tCode", "isOwner"],
 				"gId": {
 					"source": ['query.gId'],
 					"required": true,
@@ -1110,7 +1139,7 @@ module.exports = {
 					"l": "Add Users to Group",
 					"group": "Owner"
 				},
-				"commonFields": ["tCode", "isOwner"],
+				"commonFields": ["model", "tCode", "isOwner"],
 				"code": {
 					"source": ['body.groupCode'],
 					"required": true,
@@ -1135,6 +1164,7 @@ module.exports = {
 					"l": "Delete Group",
 					"group": "Administration"
 				},
+				"commonFields": ["model"],
 				"gId": {
 					"source": ['query.gId'],
 					"required": true,
@@ -1146,7 +1176,7 @@ module.exports = {
 					"l": "Delete Group",
 					"group": "Owner"
 				},
-				"commonFields": ["tCode", "isOwner"],
+				"commonFields": ["model", "tCode", "isOwner"],
 				"gId": {
 					"source": ['query.gId'],
 					"required": true,
@@ -1158,7 +1188,7 @@ module.exports = {
 					"l": "Delete Token",
 					"group": "Owner"
 				},
-				"commonFields": ["tCode", "isOwner"],
+				"commonFields": ["tCode", "isOwner", "model"],
 				"tokenId": {
 					"source": ['query.tokenId'],
 					"required": true,
