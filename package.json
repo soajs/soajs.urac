@@ -40,6 +40,7 @@
     "passport-facebook": "*",
     "passport-google-oauth": "*",
     "passport-twitter": "*",
+    "passport-github": "*",
     "soajs": "0.3.*",
     "uuid": "^3.0.0"
   }

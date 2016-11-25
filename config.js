@@ -209,6 +209,23 @@ module.exports = {
 												"required": true
 											}
 										}
+									},
+									"github": {
+										"type": "object",
+										"properties": {
+											"clientID": {
+												"type": "string",
+												"required": true
+											},
+											"clientSecret": {
+												"type": "string",
+												"required": true
+											},
+											"callbackURL": {
+												"type": "string",
+												"required": true
+											}
+										}
 									}
 								}
 							}
@@ -220,7 +237,7 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "string",
-						"enum": ["facebook", "google", "twitter"]
+						"enum": ["facebook", "google", "twitter", "github"]
 					}
 				}
 			},
@@ -235,7 +252,7 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "string",
-						"enum": ["facebook", "google", "twitter"]
+						"enum": ["facebook", "google", "twitter", "github"]
 					}
 				},
 				"oauth_token": {
