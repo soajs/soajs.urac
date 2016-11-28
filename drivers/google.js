@@ -6,14 +6,15 @@ var lib = {
 		var mode = req.soajs.inputmaskData.strategy;
 		
 		var data = {
-			strategy: require('passport-facebook').Strategy,
-			authentication: 'facebook',
+			strategy: require('passport-google-oauth').OAuth2Strategy, // OAuthStrategy, OAuth2Strategy
+			authentication: 'google',
 			configAuth: {
 				clientID: req.soajs.servicesConfig.urac.passportLogin[mode].clientID,
 				clientSecret: req.soajs.servicesConfig.urac.passportLogin[mode].clientSecret.trim(),
 				callbackURL: req.soajs.servicesConfig.urac.passportLogin[mode].callbackURL,
-				scope: 'email',
-				profileFields: ['id', 'email', 'name']
+				accessType: 'offline',
+				// approvalPrompt: 'force',
+				scope: 'email'
 			}
 			
 		};
@@ -23,10 +24,15 @@ var lib = {
 	
 	"mapProfile": function (user, cb) {
 		
+		var email = '';
+		if (user.profile.emails && user.profile.emails.length !== 0) {
+			email = user.profile.emails[0].value;
+		}
+		
 		var profile = {
-			firstName: user.profile._json.first_name,
-			lastName: user.profile._json.last_name,
-			email: user.profile._json.email,
+			firstName: user.profile.name.givenName,
+			lastName: user.profile.name.familyName,
+			email: email,
 			password: '',
 			username: user.profile.id
 		};
@@ -39,6 +45,9 @@ var lib = {
 	},
 	
 	"updateConfig": function (config, cb) {
+		config.scope = 'email';
+		config.accessType = 'offline';
+		
 		return cb(null, config);
 	}
 };

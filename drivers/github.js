@@ -2,33 +2,27 @@
 
 var lib = {
 	"init": function (req, cb) {
-		
 		var mode = req.soajs.inputmaskData.strategy;
-		
 		var data = {
-			strategy: require('passport-facebook').Strategy,
-			authentication: 'facebook',
+			strategy: require('passport-github').Strategy,
+			authentication: 'github',
 			configAuth: {
 				clientID: req.soajs.servicesConfig.urac.passportLogin[mode].clientID,
 				clientSecret: req.soajs.servicesConfig.urac.passportLogin[mode].clientSecret.trim(),
-				callbackURL: req.soajs.servicesConfig.urac.passportLogin[mode].callbackURL,
-				scope: 'email',
-				profileFields: ['id', 'email', 'name']
+				callbackURL: req.soajs.servicesConfig.urac.passportLogin[mode].callbackURL
 			}
-			
 		};
 		
 		return cb(null, data);
 	},
 	
 	"mapProfile": function (user, cb) {
-		
 		var profile = {
-			firstName: user.profile._json.first_name,
-			lastName: user.profile._json.last_name,
-			email: user.profile._json.email,
+			firstName: user.profile.username,
+			lastName: '',
+			email: user.profile.username + '@github.com',
 			password: '',
-			username: user.profile.id
+			username: user.profile.username + '_' + user.profile.id
 		};
 		
 		return cb(null, profile);

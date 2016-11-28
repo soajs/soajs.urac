@@ -91,6 +91,7 @@ module.exports = {
 		424: "Invalid Request, cannot add a pending user account and provide a password at the same time.",
 		425: "Unable to find record.",
 		426: "Invalid id provided",
+		427: "Driver not found",
 		
 		500: "This record in locked. You cannot modify or delete it",
 		
