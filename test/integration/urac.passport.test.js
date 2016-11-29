@@ -159,7 +159,20 @@ describe("simple urac tests", function () {
 				done();
 			});
 		});
-		
+
+		it("Fail - wrong format for github code", function (done) {
+			var params = {
+				qs: {
+					code: "123"
+				}
+			};
+			requester('passport/validate/github', 'get', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				done();
+			});
+		});
+
 	});
 	
 });
