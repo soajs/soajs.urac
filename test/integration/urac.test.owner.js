@@ -171,7 +171,7 @@ describe("Owner admin tests", function () {
 					assert.ifError(error);
 					assert.ok(body);
 					assert.ok(body.data);
-					console.log(body);
+					// console.log(body);
 					mongo.findOne("users", {'username': 'smith123'}, function (error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
@@ -251,7 +251,7 @@ describe("Owner admin tests", function () {
 					
 				});
 			});
-
+			
 			it("Fail - invalid id", function (done) {
 				var params = {
 					qs: {
@@ -271,13 +271,13 @@ describe("Owner admin tests", function () {
 						}
 					}
 				};
-
+				
 				requester('owner/admin/editUserConfig', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					assert.equal(body.result, false);
 					done();
-
+					
 				});
 			});
 		});
@@ -295,7 +295,7 @@ describe("Owner admin tests", function () {
 				requester('owner/admin/changeUserStatus', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					// console.log(JSON.stringify(body));
 					assert.ok(body.data);
 					mongo.findOne('users', {'_id': mongo.ObjectId(uId)}, function (error, userRecord) {
 						assert.ifError(error);
@@ -496,7 +496,7 @@ describe("Owner admin tests", function () {
 			});
 			
 			it("Fail - Invalid model", function (done) {
-
+				
 				var params = {
 					qs: {
 						model: "memory",
@@ -510,7 +510,7 @@ describe("Owner admin tests", function () {
 					done();
 				});
 			});
-
+			
 		});
 		
 		describe("testing delete group API", function () {
@@ -586,7 +586,7 @@ describe("Owner admin tests", function () {
 					done();
 				});
 			});
-
+			
 			it("SUCCESS - will delete token", function (done) {
 				var params = {
 					qs: {
@@ -597,33 +597,31 @@ describe("Owner admin tests", function () {
 				requester('owner/admin/tokens/delete', 'del', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					// console.log(JSON.stringify(body));
 					assert.ok(body.data);
 					done();
 				});
 			});
-
+			
 			it("SUCCESS - will get none", function (done) {
 				var params = {
 					qs: {
 						'tCode': tCode
 					}
 				};
-				console.log(mongo);
 				mongo.remove("tokens", {}, function (error) {
 					assert.ifError(error);
 					requester('owner/admin/tokens/list', 'get', params, function (error, body) {
 						assert.ifError(error);
 						assert.ok(body);
-						console.log(JSON.stringify(body));
+						// console.log(JSON.stringify(body));
 						assert.ok(body.data);
 						done();
 					});
 				});
-
+				
 			});
 		});
-		
 		
 	});
 	

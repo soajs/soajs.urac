@@ -2,9 +2,7 @@
 
 var lib = {
 	"init": function (req, cb) {
-		
 		var mode = req.soajs.inputmaskData.strategy;
-		
 		var data = {
 			strategy: require('passport-facebook').Strategy,
 			authentication: 'facebook',
@@ -15,14 +13,11 @@ var lib = {
 				scope: 'email',
 				profileFields: ['id', 'email', 'name']
 			}
-			
 		};
-		
 		return cb(null, data);
 	},
 	
 	"mapProfile": function (user, cb) {
-		
 		var profile = {
 			firstName: user.profile._json.first_name,
 			lastName: user.profile._json.last_name,
@@ -30,7 +25,6 @@ var lib = {
 			password: '',
 			username: user.profile.id
 		};
-		
 		return cb(null, profile);
 	},
 	

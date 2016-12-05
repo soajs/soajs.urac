@@ -2,9 +2,7 @@
 
 var lib = {
 	"init": function (req, cb) {
-		
 		var mode = req.soajs.inputmaskData.strategy;
-		
 		var data = {
 			strategy: require('passport-google-oauth').OAuth2Strategy, // OAuthStrategy, OAuth2Strategy
 			authentication: 'google',
@@ -16,19 +14,15 @@ var lib = {
 				// approvalPrompt: 'force',
 				scope: 'email'
 			}
-			
 		};
-		
 		return cb(null, data);
 	},
 	
 	"mapProfile": function (user, cb) {
-		
 		var email = '';
 		if (user.profile.emails && user.profile.emails.length !== 0) {
 			email = user.profile.emails[0].value;
 		}
-		
 		var profile = {
 			firstName: user.profile.name.givenName,
 			lastName: user.profile.name.familyName,
@@ -36,7 +30,6 @@ var lib = {
 			password: '',
 			username: user.profile.id
 		};
-		
 		return cb(null, profile);
 	},
 	

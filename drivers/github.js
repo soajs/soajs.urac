@@ -12,7 +12,6 @@ var lib = {
 				callbackURL: req.soajs.servicesConfig.urac.passportLogin[mode].callbackURL
 			}
 		};
-		
 		return cb(null, data);
 	},
 	
@@ -24,7 +23,6 @@ var lib = {
 			password: '',
 			username: user.profile.username + '_' + user.profile.id
 		};
-		
 		return cb(null, profile);
 	},
 	
