@@ -2,7 +2,7 @@
 var soajs = require('soajs');
 var config = require('./config.js');
 var service = new soajs.server.service(config);
-var passportLib = require('./lib/passport.js');
+var myDriver = require("soajs.urac.driver");
 
 var BLModule = require('./lib/urac.js');
 
@@ -421,22 +421,34 @@ service.init(function () {
 	
 	service.get('/passport/login/:strategy', function (req, res) {
 		req.soajs.config = config;
-		passportLib.init(req, function (error, passport) {
+		myDriver.passportLibInit(req, function (error, passport) {
 			if (error) {
 				return res.json(req.soajs.buildResponse(error));
 			}
-			passportLib.initAuth(req, res, passport);
+			myDriver.passportLibInitAuth(req, res, passport);
 		});
 		
 	});
 	
 	service.get('/passport/validate/:strategy', function (req, res) {
 		req.soajs.config = config;
-		passportLib.init(req, function (error, passport) {
+		myDriver.passportLibInit(req, function (error, passport) {
 			if (error) {
 				return res.json(req.soajs.buildResponse(error));
 			}
-			passportLib.authenticate(req, res, passport, initBLModel);
+			myDriver.passportLibAuthenticate(req, res, passport, function (error, user) {
+				
+				if(error){
+					return res.json(req.soajs.buildResponse(error, null));
+				}
+				
+				initBLModel(req, res, function (BLInstance) {
+					BLInstance.guest.customLogin(req, user, function (error, data) {
+						return res.json(req.soajs.buildResponse(error, data));
+					});
+				});
+				
+			});
 		});
 	});
 	
