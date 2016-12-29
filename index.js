@@ -2,7 +2,7 @@
 var soajs = require('soajs');
 var config = require('./config.js');
 var service = new soajs.server.service(config);
-var myDriver = require("soajs.urac.driver");
+var uracDriver = require("soajs.urac.driver");
 
 var BLModule = require('./lib/urac.js');
 
@@ -421,24 +421,23 @@ service.init(function () {
 	
 	service.get('/passport/login/:strategy', function (req, res) {
 		req.soajs.config = config;
-		myDriver.passportLibInit(req, function (error, passport) {
+		uracDriver.passportLibInit(req, function (error, passport) {
 			if (error) {
 				return res.json(req.soajs.buildResponse(error));
 			}
-			myDriver.passportLibInitAuth(req, res, passport);
+			uracDriver.passportLibInitAuth(req, res, passport);
 		});
 		
 	});
 	
 	service.get('/passport/validate/:strategy', function (req, res) {
 		req.soajs.config = config;
-		myDriver.passportLibInit(req, function (error, passport) {
+		uracDriver.passportLibInit(req, function (error, passport) {
 			if (error) {
 				return res.json(req.soajs.buildResponse(error));
 			}
-			myDriver.passportLibAuthenticate(req, res, passport, function (error, user) {
-				
-				if(error){
+			uracDriver.passportLibAuthenticate(req, res, passport, function (error, user) {
+				if (error) {
 					return res.json(req.soajs.buildResponse(error, null));
 				}
 				
