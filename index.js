@@ -36,6 +36,18 @@ service.init(function () {
 		});
 	});
 	
+	service.post('/ldap/login', function (req, res) {
+		var data = {
+			'username': req.soajs.inputmaskData['username'],
+			'password': req.soajs.inputmaskData['password']
+		};
+		
+		req.soajs.config = config;
+		uracDriver.ldapLogin(req.soajs, data, function (error, data) {
+			return res.json(req.soajs.buildResponse(error, data));
+		});
+	});
+	
 	service.get("/logout", function (req, res) {
 		req.soajs.session.clearURAC(function () {
 			return res.jsonp(req.soajs.buildResponse(null, true));
@@ -427,7 +439,6 @@ service.init(function () {
 			}
 			uracDriver.passportLibInitAuth(req, res, passport);
 		});
-		
 	});
 	
 	service.get('/passport/validate/:strategy', function (req, res) {

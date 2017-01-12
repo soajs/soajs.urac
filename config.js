@@ -95,7 +95,15 @@ module.exports = {
 		500: "This record in locked. You cannot modify or delete it",
 		
 		601: "Model not found",
-		611: "Invalid tenant id provided"
+		611: "Invalid tenant id provided",
+	 	
+		700: "Unable to log in. Ldap connection refused!",
+		701: "Unable to log in. Invalid ldap admin user.",
+		702: "Unable to log in. Invalid ldap admin credentials.",
+		703: "Unable to log in. Invalid ldap user credentials.",
+		704: "Unable to log in. Ldap user not found.",
+		705: "Unable to log in. Authentication failed.",
+		706: "Unable to log in. General Error."
 	},
 	
 	"schema": {
@@ -486,6 +494,28 @@ module.exports = {
 			"/login": {
 				"_apiInfo": {
 					"l": "Login",
+					"group": "Guest",
+					"groupMain": true
+				},
+				"commonFields": ["model"],
+				"username": {
+					"source": ['body.username'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"password": {
+					"source": ['body.password'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				}
+			},
+			"/ldap/login": {
+				"_apiInfo": {
+					"l": "Ldap Login",
 					"group": "Guest",
 					"groupMain": true
 				},
