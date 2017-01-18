@@ -96,14 +96,13 @@ module.exports = {
 		
 		601: "Model not found",
 		611: "Invalid tenant id provided",
-	 	
+		
 		700: "Unable to log in. Ldap connection refused!",
 		701: "Unable to log in. Invalid ldap admin user.",
 		702: "Unable to log in. Invalid ldap admin credentials.",
 		703: "Unable to log in. Invalid ldap user credentials.",
-		704: "Unable to log in. Ldap user not found.",
-		705: "Unable to log in. Authentication failed.",
-		706: "Unable to log in. General Error."
+		704: "Unable to log in. General Error.",
+		705: "Unable to log in. Authentication failed."
 	},
 	
 	"schema": {
@@ -423,7 +422,7 @@ module.exports = {
 					"validation": {"type": "string"}
 				}
 			},
-
+			
 			"/admin/all": {
 				"_apiInfo": {
 					"l": "Get all Users & Groups",
@@ -929,7 +928,7 @@ module.exports = {
 					}
 				}
 			},
-
+			
 			'/owner/admin/addUser': {
 				"_apiInfo": {
 					"l": "Add new User",
@@ -1115,7 +1114,7 @@ module.exports = {
 					}
 				}
 			},
-
+			
 			'/owner/admin/group/add': {
 				"_apiInfo": {
 					"l": "Add new Group",
