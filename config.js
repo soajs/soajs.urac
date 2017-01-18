@@ -102,7 +102,8 @@ module.exports = {
 		702: "Unable to log in. Invalid ldap admin credentials.",
 		703: "Unable to log in. Invalid ldap user credentials.",
 		704: "Unable to log in. General Error.",
-		705: "Unable to log in. Authentication failed."
+		705: "Unable to log in. Authentication failed.",
+		706: "Missing Configuration. Contact Web Master."
 	},
 	
 	"schema": {
