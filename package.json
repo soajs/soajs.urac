@@ -18,30 +18,30 @@
     "test": "grunt test"
   },
   "devDependencies": {
-    "soajs.mongodb.data": "0.2.*",
-    "soajs.controller": "0.2.*",
     "grunt": "0.4.5",
-    "grunt-contrib-jshint": "*",
-    "grunt-jsdoc": "*",
-    "grunt-contrib-clean": "*",
-    "grunt-mocha-test": "*",
-    "grunt-env": "*",
-    "grunt-istanbul": "*",
-    "grunt-coveralls": "*",
-    "jshint": "*",
-    "lodash": "*",
-    "mocha": "*",
-    "request": "*",
-    "shelljs": "*"
+    "grunt-contrib-jshint": "1.1.0",
+    "grunt-jsdoc": "2.1.0",
+    "grunt-contrib-clean": "1.0.0",
+    "grunt-mocha-test": "0.13.2",
+    "grunt-env": "0.4.4",
+    "grunt-istanbul": "0.7.2",
+    "grunt-coveralls": "1.0.1",
+    "jshint": "2.9.4",
+    "lodash": "4.17.4",
+    "mocha": "3.2.0",
+    "request": "2.79.0",
+    "shelljs": "0.7.5",
+    "soajs.mongodb.data": "0.2.*",
+    "soajs.controller": "0.2.*"
   },
   "dependencies": {
-    "passport": "*",
-    "passport-facebook": "*",
-    "passport-github": "*",
-    "passport-google-oauth": "*",
-    "passport-local": "*",
-    "passport-twitter": "*",
+    "passport": "0.3.2",
+    "passport-facebook": "2.1.1",
+    "passport-github": "1.1.0",
+    "passport-google-oauth": "1.0.0",
+    "passport-local": "1.0.0",
+    "passport-twitter": "1.0.4",
     "soajs": "0.4.*",
-    "uuid": "^3.0.0"
+    "uuid": "3.0.1"
   }
 }
