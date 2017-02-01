@@ -42,7 +42,7 @@
     "passport-local": "1.0.0",
     "passport-twitter": "1.0.4",
     "soajs": "0.4.*",
-    "soajs.urac.driver": "0.1.*",
+    "soajs.urac.driver": "soajs/soajs.urac.driver.git#develop",
     "uuid": "3.0.1"
   }
 }
