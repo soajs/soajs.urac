@@ -49,9 +49,10 @@ service.init(function () {
 	});
 	
 	service.get("/logout", function (req, res) {
-		req.soajs.session.clearURAC(function () {
+		//TODO add to oauth @ provision a method to kill the access token
+		//req.soajs.session.clearURAC(function () {
 			return res.jsonp(req.soajs.buildResponse(null, true));
-		});
+		//});
 	});
 	
 	service.get("/forgotPassword", function (req, res) {
