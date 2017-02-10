@@ -15,7 +15,7 @@ var BLModule = require('./lib/urac.js');
 function initBLModel(req, res, cb) {
 	var modelName = config.model;
 	if (req.soajs.servicesConfig && req.soajs.servicesConfig.model) {
-		modelName = req.soajs.servicesConfig.model
+		modelName = req.soajs.servicesConfig.model;
 	}
 	if (process.env.SOAJS_TEST && req.soajs.inputmaskData.model) {
 		modelName = req.soajs.inputmaskData.model;
