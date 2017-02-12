@@ -6,10 +6,16 @@ var uracDriver = require("soajs.urac.driver");
 
 var BLModule = require('./lib/urac.js');
 
+/**
+ * Initialize the Business Logic model
+ * @param {Request Object} req
+ * @param {Response Object} res
+ * @param {Callback Function} cb
+ */
 function initBLModel(req, res, cb) {
 	var modelName = config.model;
 	if (req.soajs.servicesConfig && req.soajs.servicesConfig.model) {
-		modelName = req.soajs.servicesConfig.model
+		modelName = req.soajs.servicesConfig.model;
 	}
 	if (process.env.SOAJS_TEST && req.soajs.inputmaskData.model) {
 		modelName = req.soajs.inputmaskData.model;
@@ -26,7 +32,11 @@ function initBLModel(req, res, cb) {
 }
 
 service.init(function () {
-	
+	/**
+	 * Perform the login by checking username and password
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/login", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -35,7 +45,53 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Login through passport
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.get('/passport/login/:strategy', function (req, res) {
+		req.soajs.config = config;
+		uracDriver.passportLibInit(req, function (error, passport) {
+			if (error) {
+				return res.json(req.soajs.buildResponse(error));
+			}
+			uracDriver.passportLibInitAuth(req, res, passport);
+		});
+	});
+
+	/**
+	 * Validate Login through passport
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.get('/passport/validate/:strategy', function (req, res) {
+		req.soajs.config = config;
+		uracDriver.passportLibInit(req, function (error, passport) {
+			if (error) {
+				return res.json(req.soajs.buildResponse(error));
+			}
+			uracDriver.passportLibAuthenticate(req, res, passport, function (error, user) {
+				if (error) {
+					return res.json(req.soajs.buildResponse(error, null));
+				}
+
+				initBLModel(req, res, function (BLInstance) {
+					BLInstance.guest.customLogin(req, user, function (error, data) {
+						return res.json(req.soajs.buildResponse(error, data));
+					});
+				});
+
+			});
+		});
+	});
+
+	/**
+	 * Login through lDap
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post('/ldap/login', function (req, res) {
 		var data = {
 			'username': req.soajs.inputmaskData['username'],
@@ -47,14 +103,24 @@ service.init(function () {
 			return res.json(req.soajs.buildResponse(error, data));
 		});
 	});
-	
+
+	/**
+	 * Logout api. Clear session
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/logout", function (req, res) {
 		//TODO add to oauth @ provision a method to kill the access token
 		//req.soajs.session.clearURAC(function () {
 			return res.jsonp(req.soajs.buildResponse(null, true));
 		//});
 	});
-	
+
+	/**
+	 * Allow user to send an email to reset password
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/forgotPassword", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -63,7 +129,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Reset the password of the user
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/resetPassword", function (req, res) {
 		//validate that the password and its confirmation match
 		if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
@@ -77,7 +148,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Check if the username exists
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/checkUsername", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -86,7 +162,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Join: Create a new user
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/join", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -95,7 +176,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Validate the joined user email
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/join/validate", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -104,7 +190,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Validate the new email
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/changeEmail/validate", function (req, res) {
 		//check if user account is there
 		initBLModel(req, res, function (BLInstance) {
@@ -114,7 +205,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Get the logged in user record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/account/getUser", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -123,7 +219,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Change the password of the logged in user
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/account/changePassword", function (req, res) {
 		//validate that the password and its confirmation match
 		if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
@@ -137,7 +238,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Change the email of the logged in user
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/account/changeEmail", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -146,7 +252,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Edit the logged in user profile
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/account/editProfile", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -155,7 +266,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Return user records
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/admin/listUsers", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -164,7 +280,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Return the count of user records
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/admin/users/count", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -173,7 +294,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Return a user record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/admin/getUser", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -182,7 +308,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Add a new user record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/admin/addUser", function (req, res) {
 		
 		if (req.soajs.inputmaskData['status'] === 'pendingNew' && req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '') {
@@ -206,7 +337,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Change a user status
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/admin/changeUserStatus", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -215,7 +351,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Edit a user record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/admin/editUser", function (req, res) {
 		if (req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '') {
 			if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
@@ -230,7 +371,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Edit user configuration
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/admin/editUserConfig", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -239,7 +385,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * List all group records
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/admin/group/list", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -248,7 +399,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Add a new group record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/admin/group/add", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -257,7 +413,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Edit a group record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/admin/group/edit", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -266,7 +427,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Delete a group record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.delete("/admin/group/delete", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -275,8 +441,12 @@ service.init(function () {
 			});
 		});
 	});
-	
-	// add multiple Users To Group
+
+	/**
+	 * Add multiple Users To Group
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/admin/group/addUsers", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -285,7 +455,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * List all users and groups
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/admin/all", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -294,7 +469,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant: List user records
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/owner/admin/listUsers", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -303,7 +483,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant:
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/owner/admin/users/count", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -312,7 +497,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant:
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/owner/admin/addUser", function (req, res) {
 		if (req.soajs.inputmaskData['status'] !== 'pendingNew') {
 			if (!req.soajs.inputmaskData['password'] || req.soajs.inputmaskData['password'] === '') {
@@ -332,7 +522,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant:
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/owner/admin/editUser", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -341,7 +536,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant:
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/owner/admin/editUserConfig", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -350,7 +550,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant:
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/owner/admin/getUser", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -359,7 +564,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant:
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/owner/admin/changeUserStatus", function (req, res) {
 		req.soajs.config = config;
 		initBLModel(req, res, function (BLInstance) {
@@ -368,7 +578,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant:
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/owner/admin/group/list", function (req, res) {
 		req.soajs.config = config;
 		initBLModel(req, res, function (BLInstance) {
@@ -377,7 +592,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant:
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/owner/admin/group/add", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -386,7 +606,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant:
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/owner/admin/group/edit", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -395,7 +620,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant: Delete a group record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.delete("/owner/admin/group/delete", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -404,7 +634,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant: Assign users to a group
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.post("/owner/admin/group/addUsers", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -413,7 +648,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant: List Tokens
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.get("/owner/admin/tokens/list", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -422,7 +662,12 @@ service.init(function () {
 			});
 		});
 	});
-	
+
+	/**
+	 * Super user management of another tenant: Delete Token Record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
 	service.delete("/owner/admin/tokens/delete", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
@@ -431,37 +676,6 @@ service.init(function () {
 			});
 		});
 	});
-	
-	service.get('/passport/login/:strategy', function (req, res) {
-		req.soajs.config = config;
-		uracDriver.passportLibInit(req, function (error, passport) {
-			if (error) {
-				return res.json(req.soajs.buildResponse(error));
-			}
-			uracDriver.passportLibInitAuth(req, res, passport);
-		});
-	});
-	
-	service.get('/passport/validate/:strategy', function (req, res) {
-		req.soajs.config = config;
-		uracDriver.passportLibInit(req, function (error, passport) {
-			if (error) {
-				return res.json(req.soajs.buildResponse(error));
-			}
-			uracDriver.passportLibAuthenticate(req, res, passport, function (error, user) {
-				if (error) {
-					return res.json(req.soajs.buildResponse(error, null));
-				}
-				
-				initBLModel(req, res, function (BLInstance) {
-					BLInstance.guest.customLogin(req, user, function (error, data) {
-						return res.json(req.soajs.buildResponse(error, data));
-					});
-				});
-				
-			});
-		});
-	});
-	
+
 	service.start();
 });
