@@ -28,7 +28,6 @@
     "grunt-coveralls": "1.0.1",
     "jshint": "2.9.4",
     "lodash": "4.17.4",
-    "mocha": "3.2.0",
     "request": "2.79.0",
     "shelljs": "0.7.5",
     "soajs.mongodb.data": "0.2.*",
@@ -42,6 +41,7 @@
     "passport-local": "1.0.0",
     "passport-twitter": "1.0.4",
     "soajs": "0.4.*",
+    "soajs.core.libs": "0.0.*",
     "soajs.urac.driver": "0.0.2",
     "uuid": "3.0.1"
   }
