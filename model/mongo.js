@@ -1,5 +1,5 @@
 "use strict";
-var core = require("soajs.core.modules");
+var core = require("soajs");
 var Mongo = core.mongo;
 
 module.exports = {
