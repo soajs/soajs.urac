@@ -25,7 +25,7 @@ module.exports = {
 	},
 	
 	/**
-	 * Validates the mongo object ID  
+	 * Validates the mongo object ID
 	 * @param {Request Object} req
 	 * @param {Callback Function} cb
 	 */

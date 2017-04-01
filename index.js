@@ -110,9 +110,10 @@ service.init(function () {
 	 * @param {Function} API middleware
 	 */
 	service.get("/logout", function (req, res) {
-		req.soajs.session.clearURAC(function () {
+		//TODO add to oauth @ provision a method to kill the access token
+		//req.soajs.session.clearURAC(function () {
 			return res.jsonp(req.soajs.buildResponse(null, true));
-		});
+		//});
 	});
 
 	/**

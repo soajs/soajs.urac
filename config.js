@@ -56,7 +56,7 @@ module.exports = {
 	"hashIterations": 1024,
 	"seedLength": 32,
 	"extKeyRequired": true,
-	"oauth": false,
+	"oauth": true,
 	"session": true,
 	"model": 'mongo',
 	

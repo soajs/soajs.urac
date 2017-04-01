@@ -28,7 +28,6 @@
     "grunt-coveralls": "1.0.1",
     "jshint": "2.9.4",
     "lodash": "4.17.4",
-    "mocha": "3.2.0",
     "request": "2.79.0",
     "shelljs": "0.7.5",
     "soajs.mongodb.data": "0.2.*",
@@ -41,8 +40,9 @@
     "passport-google-oauth": "1.0.0",
     "passport-local": "1.0.0",
     "passport-twitter": "1.0.4",
-    "soajs": "0.4.*",
-    "soajs.urac.driver": "0.0.2",
+    "soajs": "git+https://github.com/soajs/soajs.git#feature/sessionLess",
+    "soajs.core.libs": "git+https://github.com/soajs/soajs.core.libs.git#develop",
+    "soajs.urac.driver": "git+https://github.com/soajs/soajs.urac.driver.git#feature/sessionLess",
     "uuid": "3.0.1"
   }
 }
