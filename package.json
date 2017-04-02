@@ -30,8 +30,8 @@
     "lodash": "4.17.4",
     "request": "2.79.0",
     "shelljs": "0.7.5",
-    "soajs.mongodb.data": "0.2.*",
-    "soajs.controller": "0.2.*"
+    "soajs.mongodb.data": "1.*",
+    "soajs.controller": "1.*"
   },
   "dependencies": {
     "passport": "0.3.2",
@@ -40,9 +40,9 @@
     "passport-google-oauth": "1.0.0",
     "passport-local": "1.0.0",
     "passport-twitter": "1.0.4",
-    "soajs": "git+https://github.com/soajs/soajs.git#feature/sessionLess",
-    "soajs.core.libs": "git+https://github.com/soajs/soajs.core.libs.git#develop",
-    "soajs.urac.driver": "git+https://github.com/soajs/soajs.urac.driver.git#feature/sessionLess",
+    "soajs": "1.*",
+    "soajs.core.libs": "1.*",
+    "soajs.urac.driver": "1.*",
     "uuid": "3.0.1"
   }
 }
