@@ -40,10 +40,10 @@
     "passport-google-oauth": "1.0.0",
     "passport-local": "1.0.0",
     "passport-twitter": "1.0.4",
-    "soajs": "1.*",
-    "soajs.core.libs": "1.*",
-    "soajs.urac.driver": "1.*",
-    "soajs.core.modules": "1.*",
+    "soajs": "soajs/soajs.git#develop",
+    "soajs.core.libs": "soajs/soajs.core.libs.git#develop",
+    "soajs.urac.driver": "soajs/soajs.urac.driver.git#develop",
+    "soajs.core.modules": "soajs/soajs.core.modules.git#develop",
     "uuid": "3.0.1"
   }
 }
