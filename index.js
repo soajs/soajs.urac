@@ -3,6 +3,7 @@ var soajs = require('soajs');
 var config = require('./config.js');
 var service = new soajs.server.service(config);
 var uracDriver = require("soajs.urac.driver");
+var coreModules = require("soajs.core.modules");
 
 var BLModule = require('./lib/urac.js');
 
@@ -68,6 +69,7 @@ service.init(function () {
 	 */
 	service.get('/passport/validate/:strategy', function (req, res) {
 		req.soajs.config = config;
+		var provision = coreModules.provision;
 		uracDriver.passportLibInit(req, function (error, passport) {
 			if (error) {
 				return res.json(req.soajs.buildResponse(error));
@@ -77,12 +79,25 @@ service.init(function () {
 					return res.json(req.soajs.buildResponse(error, null));
 				}
 
-				initBLModel(req, res, function (BLInstance) {
-					BLInstance.guest.customLogin(req, user, function (error, data) {
-						return res.json(req.soajs.buildResponse(error, data));
+				provision.generateSaveAccessRefreshToken(user, req, function (err, accessData) {
+					if (err) {
+						return res.json(req.soajs.buildResponse({
+							code: 499,
+							msg: err.message
+						}, null));
+					}
+
+					initBLModel(req, res, function (BLInstance) {
+						BLInstance.guest.customLogin(req, user, function (error, data) {
+							data.access = accessData;
+							// data.access_token = accessData.access_token;
+							// data.refresh_token = accessData.refresh_token;
+							// data.token_type = accessData.token_type;
+							// data.expires_in = accessData.expires_in;
+							return res.json(req.soajs.buildResponse(error, data));
+						});
 					});
 				});
-
 			});
 		});
 	});
@@ -97,7 +112,7 @@ service.init(function () {
 			'username': req.soajs.inputmaskData['username'],
 			'password': req.soajs.inputmaskData['password']
 		};
-		
+
 		req.soajs.config = config;
 		uracDriver.ldapLogin(req.soajs, data, function (error, data) {
 			return res.json(req.soajs.buildResponse(error, data));
@@ -112,7 +127,7 @@ service.init(function () {
 	service.get("/logout", function (req, res) {
 		//TODO add to oauth @ provision a method to kill the access token
 		//req.soajs.session.clearURAC(function () {
-			return res.jsonp(req.soajs.buildResponse(null, true));
+		return res.jsonp(req.soajs.buildResponse(null, true));
 		//});
 	});
 
@@ -140,7 +155,7 @@ service.init(function () {
 		if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
 			return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
 		}
-		
+
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.guest.resetPassword(req, function (error, data) {
@@ -230,7 +245,7 @@ service.init(function () {
 		if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
 			return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
 		}
-		
+
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.account.changePassword(req, function (error, data) {
@@ -315,21 +330,21 @@ service.init(function () {
 	 * @param {Function} API middleware
 	 */
 	service.post("/admin/addUser", function (req, res) {
-		
+
 		if (req.soajs.inputmaskData['status'] === 'pendingNew' && req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '') {
 			return res.jsonp(req.soajs.buildResponse({"code": 424, "msg": config.errors[424]}));
 		}
-		
+
 		if (req.soajs.inputmaskData['status'] !== 'pendingNew' && (!req.soajs.inputmaskData['password'] || req.soajs.inputmaskData['password'] === '')) {
 			return res.jsonp(req.soajs.buildResponse({"code": 424, "msg": config.errors[424]}));
 		}
-		
+
 		if (req.soajs.inputmaskData['password'] && req.soajs.inputmaskData['password'] !== '') {
 			if (req.soajs.inputmaskData['password'] !== req.soajs.inputmaskData['confirmation']) {
 				return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
 			}
 		}
-		
+
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.user.addUser(req, function (error, data) {
@@ -363,7 +378,7 @@ service.init(function () {
 				return res.jsonp(req.soajs.buildResponse({"code": 408, "msg": config.errors[408]}));
 			}
 		}
-		
+
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.user.editUser(req, function (error, data) {
@@ -514,7 +529,7 @@ service.init(function () {
 				return res.jsonp(req.soajs.buildResponse({"code": 424, "msg": config.errors[424]}));
 			}
 		}
-		
+
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.user.addUser(req, function (error, data) {

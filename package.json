@@ -43,6 +43,7 @@
     "soajs": "1.*",
     "soajs.core.libs": "1.*",
     "soajs.urac.driver": "1.*",
+    "soajs.core.modules": "1.*",
     "uuid": "3.0.1"
   }
 }
