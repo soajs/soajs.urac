@@ -4,6 +4,7 @@ var config = require('./config.js');
 var service = new soajs.server.service(config);
 var uracDriver = require("soajs.urac.driver");
 var coreModules = require("soajs.core.modules");
+var provision = coreModules.provision;
 
 var BLModule = require('./lib/urac.js');
 
@@ -34,20 +35,6 @@ function initBLModel(req, res, cb) {
 
 service.init(function () {
 	/**
-	 * Perform the login by checking username and password
-	 * @param {String} API route
-	 * @param {Function} API middleware
-	 */
-	service.post("/login", function (req, res) {
-		initBLModel(req, res, function (BLInstance) {
-			req.soajs.config = config;
-			BLInstance.guest.login(req, function (error, data) {
-				return res.json(req.soajs.buildResponse(error, data));
-			});
-		});
-	});
-
-	/**
 	 * Login through passport
 	 * @param {String} API route
 	 * @param {Function} API middleware
@@ -69,7 +56,6 @@ service.init(function () {
 	 */
 	service.get('/passport/validate/:strategy', function (req, res) {
 		req.soajs.config = config;
-		var provision = coreModules.provision;
 		uracDriver.passportLibInit(req, function (error, passport) {
 			if (error) {
 				return res.json(req.soajs.buildResponse(error));
@@ -89,7 +75,7 @@ service.init(function () {
 
 					initBLModel(req, res, function (BLInstance) {
 						BLInstance.guest.customLogin(req, user, function (error, data) {
-							data.access = accessData;
+							data.accessTokens = accessData;
 							// data.access_token = accessData.access_token;
 							// data.refresh_token = accessData.refresh_token;
 							// data.token_type = accessData.token_type;
@@ -115,22 +101,19 @@ service.init(function () {
 
 		req.soajs.config = config;
 		uracDriver.ldapLogin(req.soajs, data, function (error, data) {
-			return res.json(req.soajs.buildResponse(error, data));
+			provision.generateSaveAccessRefreshToken(data, req, function (err, accessData) {
+				if (err) {
+					return res.json(req.soajs.buildResponse({
+						code: 499,
+						msg: err.message
+					}, null));
+				}
+				data.accessTokens = accessData;
+				return res.json(req.soajs.buildResponse(error, data));
+			});
 		});
 	});
-
-	/**
-	 * Logout api. Clear session
-	 * @param {String} API route
-	 * @param {Function} API middleware
-	 */
-	service.get("/logout", function (req, res) {
-		//TODO add to oauth @ provision a method to kill the access token
-		//req.soajs.session.clearURAC(function () {
-		return res.jsonp(req.soajs.buildResponse(null, true));
-		//});
-	});
-
+	
 	/**
 	 * Allow user to send an email to reset password
 	 * @param {String} API route

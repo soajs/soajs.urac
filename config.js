@@ -303,12 +303,7 @@ module.exports = {
 					"validation": {"type": "string"}
 				}
 			},
-			'/logout': {
-				"_apiInfo": {
-					"l": "Logout",
-					"group": "Guest"
-				}
-			},
+			
 			'/forgotPassword': {
 				"_apiInfo": {
 					"l": "Forgot Password",
@@ -492,28 +487,7 @@ module.exports = {
 			}
 		},
 		"post": {
-			"/login": {
-				"_apiInfo": {
-					"l": "Login",
-					"group": "Guest",
-					"groupMain": true
-				},
-				"commonFields": ["model"],
-				"username": {
-					"source": ['body.username'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
-				},
-				"password": {
-					"source": ['body.password'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
-				}
-			},
+
 			"/ldap/login": {
 				"_apiInfo": {
 					"l": "Ldap Login",
