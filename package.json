@@ -30,6 +30,7 @@
     "lodash": "4.17.4",
     "request": "2.79.0",
     "shelljs": "0.7.5",
+    "sinon": "*",
     "soajs.mongodb.data": "1.*",
     "soajs.controller": "1.*"
   },
