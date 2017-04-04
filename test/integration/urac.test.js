@@ -95,7 +95,7 @@ describe("simple urac tests", function () {
 				}
 			};
 			
-			var ldapServer = require('./ldap/ldapServer');
+			var ldapServer = require('./extras/ldapServer');
 			ldapServer.startServer(serverConfig, function (server) {
 				requester('ldap/login', 'post', params, function (error, body) {
 					assert.deepEqual(body.errors.details[0].code,706);
@@ -118,7 +118,7 @@ describe("simple urac tests", function () {
 				}
 			};
 			
-			var ldapServer = require('./ldap/ldapServer');
+			var ldapServer = require('./extras/ldapServer');
 			ldapServer.startServer(serverConfig, function (server) {
 				requester('ldap/login', 'post', params, function (error, body) {
 					console.log(JSON.stringify(body, null, 2));
