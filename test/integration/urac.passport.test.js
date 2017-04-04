@@ -20,6 +20,10 @@ var mongo = new Mongo(uracConfig);
 var extKey = 'aa39b5490c4a4ed0e56d7ec1232a428f771e8bb83cfcee16de14f735d0f5da587d5968ec4f785e38570902fd24e0b522b46cb171872d1ea038e88328e7d973ff47d9392f72b2d49566209eb88eb60aed8534a965cf30072c39565bd8d72f68ac';
 var extKey3 = "aa39b5490c4a4ed0e56d7ec1232a428f1c5b5dcabc0788ce563402e233386738fc3eb18234a486ce1667cf70bd0e8b08890a86126cf1aa8d38f84606d8a6346359a61678428343e01319e0b784bc7e2ca267bbaafccffcb6174206e8c83f2a25";
 
+const sinon = require('sinon');
+var uracDriver = require("soajs.urac.driver");
+var mockedData = require("./extras/passportExtras");
+
 function requester(apiName, method, params, cb) {
 	var options = {
 		uri: 'http://127.0.0.1:4000/urac/' + apiName,
@@ -58,8 +62,20 @@ function requester(apiName, method, params, cb) {
 
 describe("simple urac tests", function () {
 	var uId;
+	let serviceStub;
+	
+	beforeEach(function (done) {
+		serviceStub = sinon.stub(uracDriver, 'passportLibAuthenticate', (req, res, passport, cb) => {
+				cb(null, mockedData.passportLibAuthenticateUser);
+			}
+		);
+		done();
+	});
 	
 	afterEach(function (done) {
+		if (serviceStub) {
+			serviceStub.restore();
+		}
 		console.log("=======================================");
 		done();
 	});
@@ -114,59 +130,6 @@ describe("simple urac tests", function () {
 				}
 			};
 			requester('passport/validate/twitter', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				done();
-			});
-		});
-
-		it("Fail - Missing param", function (done) {
-			var params = {
-				qs: {
-					oauth_verifier: "CZ10nMKn8BSEYHpZZb8eQxUY3kuxGAR6"
-				}
-			};
-			requester('passport/validate/twitter', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				done();
-			});
-		});
-
-		it("Fail - Code Already used", function (done) {
-			var params = {
-				qs: {
-					code: "AQARgR1d6G3ISNzf3cet5espoQDGh_ADkU-n5J3VWGnydyGqdsgZYntKGe-7Ww3sFVWvXybCmiaW5tCXjRElzBI2hk7i75Oi9eNbPzC_W_PrjvmAh3q1rTpbCPCGO8bziT7kITp2rcPXVur3Gq7SHrPtcMp7gXfvB77Cbb9N1XCrmDWw_wKmZkWqjQlOF6Es-P8njD9hl9_MoCRH5-LRfUoM9N_2QBRAxmCn7UMlIxq0kajyDtpVcDW36hFIwMUt5ZYy1t9ClFhA3Y-y4s0kWzdz-pY55pMfdgm9vxU9Ku6gwZn1HfjAe0w1_2JGk3UXEflG0003hPwBe0kakKPwb-BZ#_=_"
-				}
-			};
-			
-			requester('passport/validate/facebook', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				done();
-			});
-		});
-
-		it("Fail - wrong format", function (done) {
-			var params = {
-				qs: {
-					code: "123"
-				}
-			};
-			requester('passport/validate/facebook', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				done();
-			});
-		});
-
-		it("Fail - wrong format for github code", function (done) {
-			var params = {
-				qs: {
-					code: "123"
-				}
-			};
-			requester('passport/validate/github', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
 				done();
