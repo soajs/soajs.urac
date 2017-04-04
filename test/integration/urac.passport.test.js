@@ -136,59 +136,6 @@ describe("simple urac tests", function () {
 			});
 		});
 
-		it("Fail - Missing param", function (done) {
-			var params = {
-				qs: {
-					oauth_verifier: "CZ10nMKn8BSEYHpZZb8eQxUY3kuxGAR6"
-				}
-			};
-			requester('passport/validate/twitter', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				done();
-			});
-		});
-
-		it("Fail - Code Already used", function (done) {
-			var params = {
-				qs: {
-					code: "AQARgR1d6G3ISNzf3cet5espoQDGh_ADkU-n5J3VWGnydyGqdsgZYntKGe-7Ww3sFVWvXybCmiaW5tCXjRElzBI2hk7i75Oi9eNbPzC_W_PrjvmAh3q1rTpbCPCGO8bziT7kITp2rcPXVur3Gq7SHrPtcMp7gXfvB77Cbb9N1XCrmDWw_wKmZkWqjQlOF6Es-P8njD9hl9_MoCRH5-LRfUoM9N_2QBRAxmCn7UMlIxq0kajyDtpVcDW36hFIwMUt5ZYy1t9ClFhA3Y-y4s0kWzdz-pY55pMfdgm9vxU9Ku6gwZn1HfjAe0w1_2JGk3UXEflG0003hPwBe0kakKPwb-BZ#_=_"
-				}
-			};
-			
-			requester('passport/validate/facebook', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				done();
-			});
-		});
-
-		it("Fail - wrong format", function (done) {
-			var params = {
-				qs: {
-					code: "123"
-				}
-			};
-			requester('passport/validate/facebook', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				done();
-			});
-		});
-
-		it("Fail - wrong format for github code", function (done) {
-			var params = {
-				qs: {
-					code: "123"
-				}
-			};
-			requester('passport/validate/github', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				done();
-			});
-		});
-
 	});
 	
 });
