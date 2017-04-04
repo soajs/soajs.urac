@@ -101,6 +101,13 @@ service.init(function () {
 
 		req.soajs.config = config;
 		uracDriver.ldapLogin(req.soajs, data, function (error, data) {
+			if(error){
+				return res.json(req.soajs.buildResponse({
+					code: error.code,
+					msg: error.msg
+				}, null));
+			}
+			
 			provision.generateSaveAccessRefreshToken(data, req, function (err, accessData) {
 				if (err) {
 					return res.json(req.soajs.buildResponse({

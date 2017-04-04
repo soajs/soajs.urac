@@ -76,22 +76,6 @@ describe("urac group tests", function () {
 		done();
 	});
 	
-	it("Testing login user2 and get groups", function (done) {
-		var params = {
-			form: {
-				"username": 'user2',
-				"password": '123456'
-			}
-		};
-		requester('login', 'post', params, function (error, body) {
-			assert.ifError(error);
-			assert.ok(body);
-			console.log(JSON.stringify(body));
-			assert.ok(body.data);
-			done();
-		});
-	});
-	
 	describe("testing groups API", function () {
 		
 		describe("testing create group API", function () {
@@ -345,36 +329,6 @@ describe("urac group tests", function () {
 						assert.deepEqual(userRecord.groups, ['gold']);
 						done();
 					});
-				});
-			});
-			it("SUCCESS - will login user with no config obj", function (done) {
-				var params = {
-					form: {
-						"username": 'user1',
-						"password": '123456'
-					}
-				};
-				requester('login', 'post', params, function (error, body) {
-					assert.ifError(error);
-					assert.ok(body);
-					console.log(JSON.stringify(body));
-					assert.ok(body.data);
-					done();
-				});
-			});
-			it("SUCCESS - will login user 3 with no grps arr", function (done) {
-				var params = {
-					form: {
-						"username": 'user3',
-						"password": '654321'
-					}
-				};
-				requester('login', 'post', params, function (error, body) {
-					assert.ifError(error);
-					assert.ok(body);
-					console.log(JSON.stringify(body));
-					assert.ok(body.data);
-					done();
 				});
 			});
 		});
