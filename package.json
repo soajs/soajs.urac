@@ -1,7 +1,7 @@
 {
   "name": "soajs.urac",
   "description": "soajs URAC service",
-  "version": "0.3.2",
+  "version": "1.0.0",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -30,8 +30,9 @@
     "lodash": "4.17.4",
     "request": "2.79.0",
     "shelljs": "0.7.5",
-    "soajs.mongodb.data": "soajs/soajs.mongodb.data.git#develop",
-    "soajs.controller": "soajs/soajs.controller.git#develop"
+    "sinon": "*",
+    "soajs.mongodb.data": "1.*",
+    "soajs.controller": "1.*"
   },
   "dependencies": {
     "passport": "0.3.2",
@@ -40,10 +41,10 @@
     "passport-google-oauth": "1.0.0",
     "passport-local": "1.0.0",
     "passport-twitter": "1.0.4",
-    "soajs": "soajs/soajs.git#develop",
-    "soajs.core.libs": "soajs/soajs.core.libs.git#develop",
-    "soajs.urac.driver": "soajs/soajs.urac.driver.git#develop",
-    "soajs.core.modules": "soajs/soajs.core.modules.git#develop",
+    "soajs": "1.*",
+    "soajs.core.libs": "1.*",
+    "soajs.urac.driver": "1.*",
+    "soajs.core.modules": "1.*",
     "uuid": "3.0.1"
   }
 }
