@@ -61,14 +61,9 @@ function requester(apiName, method, params, cb) {
 }
 
 describe("simple urac tests", function () {
-	var uId;
-	let serviceStub;
+	var serviceStub;
 	
 	beforeEach(function (done) {
-		serviceStub = sinon.stub(uracDriver, 'passportLibAuthenticate', (req, res, passport, cb) => {
-				cb(null, mockedData.passportLibAuthenticateUser);
-			}
-		);
 		done();
 	});
 	
@@ -100,17 +95,6 @@ describe("simple urac tests", function () {
 			});
 		});
 
-		it("SUCCESS - will redirect user to github", function (done) {
-			var params = {
-				qs: {}
-			};
-			requester('passport/login/github', 'get', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				done();
-			});
-		});
-		
 		it("SUCCESS - will redirect user to google", function (done) {
 			var params = {
 				qs: {}
@@ -123,6 +107,10 @@ describe("simple urac tests", function () {
 		});
 
 		it("SUCCESS - will login user", function (done) {
+			serviceStub = sinon.stub(uracDriver, 'passportLibAuthenticate', (req, res, passport, cb) => {
+					cb(null, mockedData.passportLibAuthenticateUser);
+				}
+			);
 			var params = {
 				qs: {
 					oauth_token: "XnjHbgAAAAAAxq3dAAABWCr23O0",
