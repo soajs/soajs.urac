@@ -1087,10 +1087,45 @@ describe("simple urac tests", function () {
 			});
 		});
 		
-		it("SUCCESS - returns user record", function (done) {
+		it("SUCCESS - returns user record by username", function (done) {
 			var params = {
 				qs: {
 					"username": 'john123'
+				}
+			};
+			requester('account/getUser', 'get', params, function (error, body) {
+				assert.ifError(error);
+				assert.ok(body);
+				console.log(JSON.stringify(body));
+				assert.ok(body.data);
+				delete body.data.password;
+				delete body.data.ts;
+				delete body.data._id;
+				assert.deepEqual(body.data, {
+					"username": "john123",
+					"firstName": "john",
+					"lastName": "doe",
+					"email": "john.doe@soajs.org",
+					"status": "active",
+					"groups": [],
+					'profile': {},
+					'config': {
+						'packages': {},
+						'keys': {}
+					},
+					'tenant': {
+						'id': '10d2cb5fc04ce51e06000001',
+						'code': 'test'
+					}
+				});
+				done();
+			});
+		});
+
+		it("SUCCESS - returns user record by email", function (done) {
+			var params = {
+				qs: {
+					"username": 'john.doe@soajs.org'
 				}
 			};
 			requester('account/getUser', 'get', params, function (error, body) {
