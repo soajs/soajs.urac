@@ -488,6 +488,22 @@ module.exports = {
 		},
 		"post": {
 
+			"ypsso/login" : {
+                "_apiInfo": {
+                    "l": "YP SSO Login",
+                    "group": "Guest",
+                    "groupMain": true
+                },
+                "commonFields": ["model"],
+                "ssoToken": {
+                    "source": ['body.ssoToken'],
+                    "required": true,
+                    "validation": {
+                        "type": "string"
+                    }
+                }
+			},
+
 			"/ldap/login": {
 				"_apiInfo": {
 					"l": "Ldap Login",

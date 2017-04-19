@@ -88,6 +88,38 @@ service.init(function () {
 		});
 	});
 
+    /**
+     * Login through YP SSO
+     * @param {String} API route
+     * @param {Function} API middleware
+     */
+    service.post('/ypsso/login', function (req, res) {
+        var data = {
+            'ssotoken': req.soajs.inputmaskData['ssoToken']
+        };
+
+        req.soajs.config = config;
+        uracDriver.ypssoLogin(req.soajs, data, function (error, data) {
+            if(error){
+                return res.json(req.soajs.buildResponse({
+                    code: error.code,
+                    msg: error.msg
+                }, null));
+            }
+
+            provision.generateSaveAccessRefreshToken(data, req, function (err, accessData) {
+                if (err) {
+                    return res.json(req.soajs.buildResponse({
+                        code: 499,
+                        msg: err.message
+                    }, null));
+                }
+                data.accessTokens = accessData;
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+    });
+
 	/**
 	 * Login through lDap
 	 * @param {String} API route
