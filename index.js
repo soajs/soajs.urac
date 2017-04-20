@@ -95,7 +95,7 @@ service.init(function () {
      */
     service.post('/ypsso/login', function (req, res) {
         var data = {
-            'ssotoken': req.soajs.inputmaskData['ssoToken']
+            'ssoToken': req.soajs.inputmaskData['ssoToken']
         };
 
         req.soajs.config = config;
