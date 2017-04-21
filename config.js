@@ -492,7 +492,7 @@ module.exports = {
 		},
 		"post": {
 
-			"ypsso/login" : {
+			"/ypsso/login" : {
                 "_apiInfo": {
                     "l": "YP SSO Login",
                     "group": "Guest",
