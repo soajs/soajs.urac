@@ -3,7 +3,7 @@ var soajs = require('soajs');
 var config = require('./config.js');
 var service = new soajs.server.service(config);
 var uracDriver = require("soajs.urac.driver");
-var coreModules = require("soajs.core.modules");
+var coreModules = require("soajs");
 var provision = coreModules.provision;
 
 var BLModule = require('./lib/urac.js');

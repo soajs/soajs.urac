@@ -3,7 +3,7 @@ var assert = require('assert');
 var request = require("request");
 var helper = require("../helper.js");
 
-var soajs = require('soajs.core.modules');
+var soajs = require('soajs');
 var urac;
 
 var Mongo = soajs.mongo;
