@@ -452,7 +452,7 @@ describe("simple urac tests", function () {
 	describe("testing join API without validation", function () {
 		it("change service tenant configuration, set validate to false", function (done) {
 			var options = {
-				uri: 'http://localhost:5001/loadProvision',
+				uri: 'http://localhost:5000/loadProvision',
 				headers: {
 					key: extKey
 				}
