@@ -106,9 +106,9 @@ module.exports = {
 		705: "Unable to log in. Authentication failed.",
 		706: "Missing Configuration. Contact Web Master.",
 
-    710: "Unable to log in. YP SSO connection error.",
-    711: "Unable to log in. YP SSO token invalid.",
-    712: "Unable to log in. YP SSO general error."
+    710: "Unable to log in. OpenAM connection error.",
+    711: "Unable to log in. OpenAM token invalid.",
+    712: "Unable to log in. OpenAM general error."
 	},
 	
 	"schema": {
@@ -492,15 +492,15 @@ module.exports = {
 		},
 		"post": {
 
-			"/ypsso/login" : {
+			"/openam/login" : {
                 "_apiInfo": {
-                    "l": "YP SSO Login",
+                    "l": "OpenAM Login",
                     "group": "Guest",
                     "groupMain": true
                 },
                 "commonFields": ["model"],
-                "ssoToken": {
-                    "source": ['body.ssoToken'],
+                "token": {
+                    "source": ['body.token'],
                     "required": true,
                     "validation": {
                         "type": "string"

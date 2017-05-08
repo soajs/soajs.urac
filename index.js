@@ -89,17 +89,17 @@ service.init(function () {
 	});
 
     /**
-     * Login through YP SSO
+     * Login through OpenAM
      * @param {String} API route
      * @param {Function} API middleware
      */
-    service.post('/ypsso/login', function (req, res) {
+    service.post('/openam/login', function (req, res) {
         var data = {
-            'ssoToken': req.soajs.inputmaskData['ssoToken']
+            'token': req.soajs.inputmaskData['token']
         };
 
         req.soajs.config = config;
-        uracDriver.ypssoLogin(req.soajs, data, function (error, data) {
+        uracDriver.openamLogin(req.soajs, data, function (error, data) {
             if(error){
                 return res.json(req.soajs.buildResponse({
                     code: error.code,
