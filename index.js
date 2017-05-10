@@ -88,6 +88,38 @@ service.init(function () {
 		});
 	});
 
+    /**
+     * Login through OpenAM
+     * @param {String} API route
+     * @param {Function} API middleware
+     */
+    service.post('/openam/login', function (req, res) {
+        var data = {
+            'token': req.soajs.inputmaskData['token']
+        };
+
+        req.soajs.config = config;
+        uracDriver.openamLogin(req.soajs, data, function (error, data) {
+            if(error){
+                return res.json(req.soajs.buildResponse({
+                    code: error.code,
+                    msg: error.msg
+                }, null));
+            }
+
+            provision.generateSaveAccessRefreshToken(data, req, function (err, accessData) {
+                if (err) {
+                    return res.json(req.soajs.buildResponse({
+                        code: 499,
+                        msg: err.message
+                    }, null));
+                }
+                data.accessTokens = accessData;
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+    });
+
 	/**
 	 * Login through lDap
 	 * @param {String} API route
