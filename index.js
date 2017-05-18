@@ -64,7 +64,7 @@ service.init(function () {
 				if (error) {
 					return res.json(req.soajs.buildResponse(error, null));
 				}
-
+				user.id = user._id.toString();
 				provision.generateSaveAccessRefreshToken(user, req, function (err, accessData) {
 					if (err) {
 						return res.json(req.soajs.buildResponse({
