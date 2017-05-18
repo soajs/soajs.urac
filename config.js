@@ -495,8 +495,7 @@ module.exports = {
 			"/openam/login" : {
                 "_apiInfo": {
                     "l": "OpenAM Login",
-                    "group": "Guest",
-                    "groupMain": true
+                    "group": "Guest"
                 },
                 "commonFields": ["model"],
                 "token": {
@@ -511,8 +510,7 @@ module.exports = {
 			"/ldap/login": {
 				"_apiInfo": {
 					"l": "Ldap Login",
-					"group": "Guest",
-					"groupMain": true
+					"group": "Guest"
 				},
 				"commonFields": ["model"],
 				"username": {
