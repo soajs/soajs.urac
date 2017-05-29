@@ -1,7 +1,7 @@
 {
   "name": "soajs.urac",
   "description": "soajs URAC service",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -28,6 +28,7 @@
     "grunt-coveralls": "1.0.1",
     "jshint": "2.9.4",
     "lodash": "4.17.4",
+    "nock": "*",
     "request": "2.79.0",
     "shelljs": "0.7.5",
     "sinon": "*",
