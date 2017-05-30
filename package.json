@@ -42,8 +42,8 @@
     "passport-google-oauth": "1.0.0",
     "passport-local": "1.0.0",
     "passport-twitter": "1.0.4",
-    "soajs": "1.0.*",
-    "soajs.urac.driver": "1.0.*",
+    "soajs": "git://github.com/soajs/soajs#feature/sessionLessCtrl",
+    "soajs.urac.driver": "git://github.com/soajs/soajs.urac.driver#feature/sessionLess",
     "uuid": "3.0.1"
   }
 }
