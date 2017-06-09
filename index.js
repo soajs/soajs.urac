@@ -34,6 +34,9 @@ function initBLModel(req, res, cb) {
 }
 
 service.init(function () {
+	var reg = service.registry.get();
+	provision.init(reg.coreDB.provision, service.log);
+	
 	/**
 	 * Login through passport
 	 * @param {String} API route
@@ -65,8 +68,6 @@ service.init(function () {
 					return res.json(req.soajs.buildResponse(error, null));
 				}
 				user.id = user._id.toString();
-				var reg = service.registry.get();
-				provision.init(reg.coreDB.provision, service.log);
 				provision.generateSaveAccessRefreshToken(user, req, function (err, accessData) {
 					if (err) {
 						return res.json(req.soajs.buildResponse({
@@ -108,7 +109,6 @@ service.init(function () {
                     msg: error.msg
                 }, null));
             }
-
             provision.generateSaveAccessRefreshToken(data, req, function (err, accessData) {
                 if (err) {
                     return res.json(req.soajs.buildResponse({
