@@ -429,7 +429,7 @@ module.exports = {
 					"l": "Get all Users & Groups",
 					"group": "Administration"
 				},
-				"commonFields": ["model"]
+				"commonFields": ["model", "isOwner"]
 			},
 			'/owner/admin/users/count': {
 				"_apiInfo": {
