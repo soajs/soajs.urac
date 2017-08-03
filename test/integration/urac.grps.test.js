@@ -424,9 +424,9 @@ describe("urac group tests", function () {
 					console.log(JSON.stringify(body));
 					assert.ok(body.data);
 					assert.ok(body.data.users);
-					assert.ok(body.data.users.length > 0);
+					assert.ok(body.data.users.length === 0);
 					assert.ok(body.data.groups);
-					assert.ok(body.data.groups.length > 0);
+					assert.ok(body.data.groups.length === 0);
 					done();
 				});
 			});
