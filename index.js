@@ -517,7 +517,7 @@ service.init(function () {
 	service.get("/owner/admin/listUsers", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.listUsers(req, function (error, data) {
+			BLInstance.owner.user.listUsers(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -531,7 +531,7 @@ service.init(function () {
 	service.get("/owner/admin/users/count", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.countUsers(req, function (error, data) {
+			BLInstance.owner.user.countUsers(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -556,7 +556,7 @@ service.init(function () {
 
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.addUser(req, function (error, data) {
+			BLInstance.owner.user.addUser(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -570,7 +570,7 @@ service.init(function () {
 	service.post("/owner/admin/editUser", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.editUser(req, function (error, data) {
+			BLInstance.owner.user.editUser(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -584,7 +584,7 @@ service.init(function () {
 	service.post("/owner/admin/editUserConfig", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.editConfig(req, function (error, data) {
+			BLInstance.owner.user.editConfig(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -598,7 +598,7 @@ service.init(function () {
 	service.get("/owner/admin/getUser", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.user.getUser(req, function (error, data) {
+			BLInstance.owner.user.getUser(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -612,7 +612,7 @@ service.init(function () {
 	service.get("/owner/admin/changeUserStatus", function (req, res) {
 		req.soajs.config = config;
 		initBLModel(req, res, function (BLInstance) {
-			BLInstance.admin.user.changeStatus(req, function (error, data) {
+			BLInstance.owner.user.changeStatus(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -626,7 +626,7 @@ service.init(function () {
 	service.get("/owner/admin/group/list", function (req, res) {
 		req.soajs.config = config;
 		initBLModel(req, res, function (BLInstance) {
-			BLInstance.admin.group.list(req, function (error, data) {
+			BLInstance.owner.group.list(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -640,7 +640,7 @@ service.init(function () {
 	service.post("/owner/admin/group/add", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.add(req, function (error, data) {
+			BLInstance.owner.group.add(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -654,7 +654,7 @@ service.init(function () {
 	service.post("/owner/admin/group/edit", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.edit(req, function (error, data) {
+			BLInstance.owner.group.edit(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -668,7 +668,7 @@ service.init(function () {
 	service.delete("/owner/admin/group/delete", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.delete(req, function (error, data) {
+			BLInstance.owner.group.delete(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -682,7 +682,7 @@ service.init(function () {
 	service.post("/owner/admin/group/addUsers", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.group.addUsers(req, function (error, data) {
+			BLInstance.owner.group.addUsers(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -696,7 +696,7 @@ service.init(function () {
 	service.get("/owner/admin/tokens/list", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.tokens.list(req, function (error, data) {
+			BLInstance.owner.tokens.list(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
@@ -710,7 +710,7 @@ service.init(function () {
 	service.delete("/owner/admin/tokens/delete", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.tokens.delete(req, function (error, data) {
+			BLInstance.owner.tokens.delete(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
