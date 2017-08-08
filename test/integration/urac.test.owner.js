@@ -142,7 +142,7 @@ describe("Owner admin tests", function () {
 					assert.ok(body);
 					assert.ok(body.data);
 					console.log(body);
-					mongo.findOne("users", {'username': 'black_123'}, function (error, userRecord) {
+					mongo.findOne("users", { 'username': 'black_123' }, function (error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
 						done();
@@ -172,7 +172,7 @@ describe("Owner admin tests", function () {
 					assert.ok(body);
 					assert.ok(body.data);
 					// console.log(body);
-					mongo.findOne("users", {'username': 'smith123'}, function (error, userRecord) {
+					mongo.findOne("users", { 'username': 'smith123' }, function (error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
 						delete userRecord.password;
@@ -236,7 +236,7 @@ describe("Owner admin tests", function () {
 					assert.ifError(error);
 					assert.ok(body);
 					assert.ok(body.data);
-					mongo.findOne("users", {'username': 'smith123'}, function (error, userRecord) {
+					mongo.findOne("users", { 'username': 'smith123' }, function (error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
 						assert.deepEqual(userRecord.config.packages, {
@@ -297,7 +297,7 @@ describe("Owner admin tests", function () {
 					assert.ok(body);
 					// console.log(JSON.stringify(body));
 					assert.ok(body.data);
-					mongo.findOne('users', {'_id': mongo.ObjectId(uId)}, function (error, userRecord) {
+					mongo.findOne('users', { '_id': mongo.ObjectId(uId) }, function (error, userRecord) {
 						assert.ifError(error);
 						assert.ok(userRecord);
 						assert.equal(userRecord.status, 'inactive');
@@ -419,7 +419,7 @@ describe("Owner admin tests", function () {
 					console.log(JSON.stringify(body));
 					assert.ok(body.data);
 					
-					mongo.findOne('groups', {'code': 'gold'}, function (error, record) {
+					mongo.findOne('groups', { 'code': 'gold' }, function (error, record) {
 						assert.ifError(error);
 						assert.ok(record);
 						console.log(record);
@@ -506,7 +506,7 @@ describe("Owner admin tests", function () {
 				requester('owner/admin/group/list', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body.errors);
-					assert.deepEqual(body.errors.details[0], {"code": 601, "message": errorCodes[601]});
+					assert.deepEqual(body.errors.details[0], { "code": 601, "message": errorCodes[601] });
 					done();
 				});
 			});
@@ -582,7 +582,7 @@ describe("Owner admin tests", function () {
 					assert.ifError(error);
 					assert.ok(body);
 					console.log(JSON.stringify(body));
-					assert.deepEqual(body.errors.details[0], {"code": 426, "message": errorCodes[426]});
+					assert.deepEqual(body.errors.details[0], { "code": 426, "message": errorCodes[426] });
 					done();
 				});
 			});
@@ -624,5 +624,5 @@ describe("Owner admin tests", function () {
 		});
 		
 	});
-	
+
 });

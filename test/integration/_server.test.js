@@ -5,6 +5,16 @@ var helper = require("../helper.js");
 var sampleData = require("soajs.mongodb.data/modules/urac");
 var urac, controller;
 
+var request = require("request");
+var soajs = require('soajs');
+
+var Mongo = soajs.mongo;
+var dbConfig = require("./db.config.test.js");
+
+var uracConfig = dbConfig();
+uracConfig.name = "core_provision";
+var mongo = new Mongo(uracConfig);
+
 describe("importing sample data", function () {
 	
 	it("do import", function (done) {
@@ -14,6 +24,18 @@ describe("importing sample data", function () {
 			shell.exec(sampleData.shell, function (code) {
 				assert.equal(code, 0);
 				shell.popd();
+				done();
+			});
+		});
+	});
+	
+	it("clear", function (done) {
+		mongo.update('tenants', { code: 'DBTN' }, {
+			'$set': {
+				locked: false
+			}
+		}, function () {
+			mongo.update('tenants', { code: 'test' }, { '$set': { locked: true } }, function () {
 				done();
 			});
 		});
