@@ -28,10 +28,10 @@
     "grunt-coveralls": "1.0.1",
     "jshint": "2.9.4",
     "lodash": "4.17.4",
-    "nock": "*",
+    "nock": "^9.0.2",
     "request": "2.79.0",
     "shelljs": "0.7.5",
-    "sinon": "*",
+    "sinon": "1.17.6",
     "soajs.mongodb.data": "1.0.*",
     "soajs.controller": "1.0.*"
   },
