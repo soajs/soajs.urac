@@ -107,10 +107,9 @@ describe("simple urac tests", function () {
 		});
 
 		it("SUCCESS - will login user", function (done) {
-			serviceStub = sinon.stub(uracDriver, 'passportLibAuthenticate', (req, res, passport, cb) => {
-					cb(null, mockedData.passportLibAuthenticateUser);
-				}
-			);
+			serviceStub = sinon.stub(uracDriver, 'passportLibAuthenticate').callsFake((req, res, passport, cb) => {
+				cb(null, mockedData.passportLibAuthenticateUser);
+			});
 			var params = {
 				qs: {
 					oauth_token: "XnjHbgAAAAAAxq3dAAABWCr23O0",

@@ -715,6 +715,15 @@ service.init(function () {
 			});
 		});
 	});
+	
+	service.get("/tenant/list", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.tenant.list(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
 
 	service.start();
 });

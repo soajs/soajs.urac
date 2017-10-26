@@ -488,6 +488,28 @@ module.exports = {
 					"group": "Owner"
 				},
 				"commonFields": ["model", "tCode", "isOwner", "start", "limit"]
+			},
+			"/tenant/list": {
+				_apiInfo: {
+					"l": "List Tenants",
+					"group": "Tenant"
+				},
+				"type": {
+					"source": ['query.type'],
+					"required": false,
+					"validation": {
+						"type": "string",
+						"enum": ["admin", "product", "client"]
+					}
+				},
+				"negate": {
+					"source": ['query.negate'],
+					"required": false,
+					"default": false,
+					"validation": {
+						"type": "boolean"
+					}
+				}
 			}
 		},
 		"post": {

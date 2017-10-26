@@ -76,6 +76,48 @@ describe("simple urac tests", function () {
 	
 	var u4 = '22d2cb5fc04ce51e06000001';
 	
+	describe("testing list tenant", function () {
+		it("Success - with type client", function (done) {
+			var params = {
+				qs: {
+					"type": "client"
+				}
+			};
+			requester('tenant/list', 'get', params, function (error, body) {
+				assert.equal(body.result, true);
+				assert.ok(body.data);
+				body.data.forEach(function (tenant) {
+					assert.deepEqual(tenant.type, "client");
+				});
+				done();
+			});
+		});
+		
+		it("Success - with type and negate", function (done) {
+			var params = {
+				qs: {
+					"type": "client",
+					"negate": true
+				}
+			};
+			requester('tenant/list', 'get', params, function (error, body) {
+				assert.equal(body.result, true);
+				assert.ok(body.data);
+				done();
+			});
+		});
+		
+		it("Success", function (done) {
+			var params = {
+				qs: {}
+			};
+			requester('tenant/list', 'get', params, function (error, body) {
+				assert.equal(body.result, true);
+				assert.ok(body.data);
+				done();
+			});
+		});
+	});
 	
 	describe("testing openam login", function () {
 		it("fail - login with an invalid token", function (done) {
@@ -95,7 +137,7 @@ describe("simple urac tests", function () {
 			
 			var coreModules = require("soajs.core.modules");
 			var provision = coreModules.provision;
-			var serviceStub = sinon.stub(provision, 'generateSaveAccessRefreshToken', (req, data, cb) =>
+			var serviceStub = sinon.stub(provision, 'generateSaveAccessRefreshToken').callsFake((req, data, cb) =>
 				{
 					var error = {
 						code : 123,
