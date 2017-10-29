@@ -58,7 +58,6 @@ function requester(apiName, method, params, cb) {
 	if (params.qs) {
 		options.qs = params.qs;
 	}
-	
 	request[method](options, function (error, response, body) {
 		assert.ifError(error);
 		assert.ok(body);
@@ -75,6 +74,22 @@ describe("simple urac tests", function () {
 	});
 	
 	var u4 = '22d2cb5fc04ce51e06000001';
+	
+	describe("testing getUserAclInfo", function () {
+		it("Success", function (done) {
+			var params = {
+				qs: {
+					"tenantId" : "551286bce603d7e01ab1688e"
+				}
+			};
+			requester('tenant/getUserAclInfo', 'get', params, function (error, body) {
+				console.log(JSON.stringify(body,null,2));
+				assert.equal(body.result, true);
+				assert.ok(body.data);
+				done();
+			});
+		});
+	});
 	
 	describe("testing list tenant", function () {
 		it("Success - with type client", function (done) {

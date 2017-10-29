@@ -724,6 +724,15 @@ service.init(function () {
 			});
 		});
 	});
+	
+	service.get("/tenant/getUserAclInfo", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.tenant.getUserAclInfo(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
 
 	service.start();
 });

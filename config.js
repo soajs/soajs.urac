@@ -91,6 +91,12 @@ module.exports = {
 		425: "Unable to find record.",
 		426: "Invalid id provided",
 		427: "Driver not found",
+		
+		436: "Invalid tenant Id provided",
+		437: "Unable to get the environment records",
+		438: "Invalid tenant Id provided",
+		460: "Unable to find product",
+		461: "Unable to find package",
 
 		499: "Error in oAuth",
 		500: "This record in locked. You cannot modify or delete it",
@@ -508,6 +514,19 @@ module.exports = {
 					"default": false,
 					"validation": {
 						"type": "boolean"
+					}
+				}
+			},
+			"/tenant/getUserAclInfo": {
+				"_apiInfo": {
+					"l": "Get user acl info",
+					"group": "Owner"
+				},
+				"tenantId": {
+					"source": ['query.tenantId'],
+					"required": true,
+					"validation": {
+						"type": "string"
 					}
 				}
 			}
