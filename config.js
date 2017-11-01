@@ -129,6 +129,11 @@ module.exports = {
 				"required": true,
 				"validation": {"type": "string"}
 			},
+			"tenantCode": {
+				"source": ['query.tenantCode', 'query.tCode'],
+				"required": true,
+				"validation": {"type": "string"}
+			},
 			"keywords": {
 				"source": ['query.keywords', 'body.keywords'],
 				"required": false,
@@ -442,7 +447,7 @@ module.exports = {
 					"l": "Total Users Count",
 					"group": "Owner"
 				},
-				"commonFields": ["model", 'tCode', 'keywords', "isOwner"]
+				"commonFields": ["model", 'tenantCode', 'keywords', "isOwner"]
 			},
 			'/owner/admin/listUsers': {
 				"_apiInfo": {
@@ -450,14 +455,14 @@ module.exports = {
 					"group": "Owner",
 					"groupMain": true
 				},
-				"commonFields": ["model", "tCode", "start", "limit", "keywords", "isOwner"]
+				"commonFields": ["model", "tenantCode", "start", "limit", "keywords", "isOwner"]
 			},
 			'/owner/admin/changeUserStatus': {
 				"_apiInfo": {
 					"l": "Change User Status",
 					"group": "Owner"
 				},
-				"commonFields": ["model", "tCode", "isOwner"],
+				"commonFields": ["model", "tenantCode", "isOwner"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -474,7 +479,7 @@ module.exports = {
 					"l": "Get User Record",
 					"group": "Owner"
 				},
-				"commonFields": ["model", "tCode", "isOwner"],
+				"commonFields": ["model", "tenantCode", "isOwner"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -486,14 +491,14 @@ module.exports = {
 					"l": "List Groups",
 					"group": "Owner"
 				},
-				"commonFields": ["model", "tCode", "isOwner"]
+				"commonFields": ["model", "tenantCode", "isOwner"]
 			},
 			"/owner/admin/tokens/list": {
 				"_apiInfo": {
 					"l": "List Tokens",
 					"group": "Owner"
 				},
-				"commonFields": ["model", "tCode", "isOwner", "start", "limit"]
+				"commonFields": ["model", "tenantCode", "isOwner", "start", "limit"]
 			},
 			"/tenant/list": {
 				_apiInfo: {
@@ -969,7 +974,7 @@ module.exports = {
 					"l": "Add new User",
 					"group": "Owner"
 				},
-				"commonFields": ["model", 'tCode', "isOwner"],
+				"commonFields": ["model", 'tenantCode', "isOwner"],
 				"username": {
 					"source": ['body.username'],
 					"required": true,
@@ -1030,7 +1035,7 @@ module.exports = {
 					"l": "Edit User Record",
 					"group": "Owner"
 				},
-				"commonFields": ["model", "tCode", "isOwner"],
+				"commonFields": ["model", "tenantCode", "isOwner"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -1120,7 +1125,7 @@ module.exports = {
 					"l": "Edit User Config",
 					"group": "Owner"
 				},
-				"commonFields": ["model", "tCode", "isOwner"],
+				"commonFields": ["model", "tenantCode", "isOwner"],
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -1155,7 +1160,7 @@ module.exports = {
 					"l": "Add new Group",
 					"group": "Owner"
 				},
-				"commonFields": ["model", 'tCode', "isOwner"],
+				"commonFields": ["model", 'tenantCode', "isOwner"],
 				"code": {
 					"source": ['body.code'],
 					"required": true,
@@ -1181,7 +1186,7 @@ module.exports = {
 					"l": "Edit Group",
 					"group": "Owner"
 				},
-				"commonFields": ["model", "tCode", "isOwner"],
+				"commonFields": ["model", "tenantCode", "isOwner"],
 				"gId": {
 					"source": ['query.gId'],
 					"required": true,
@@ -1203,7 +1208,7 @@ module.exports = {
 					"l": "Add Users to Group",
 					"group": "Owner"
 				},
-				"commonFields": ["model", "tCode", "isOwner"],
+				"commonFields": ["model", "tenantCode", "isOwner"],
 				"code": {
 					"source": ['body.groupCode'],
 					"required": true,
@@ -1240,7 +1245,7 @@ module.exports = {
 					"l": "Delete Group",
 					"group": "Owner"
 				},
-				"commonFields": ["model", "tCode", "isOwner"],
+				"commonFields": ["model", "tenantCode", "isOwner"],
 				"gId": {
 					"source": ['query.gId'],
 					"required": true,
@@ -1252,7 +1257,7 @@ module.exports = {
 					"l": "Delete Token",
 					"group": "Owner"
 				},
-				"commonFields": ["tCode", "isOwner", "model"],
+				"commonFields": ["tenantCode", "isOwner", "model"],
 				"tokenId": {
 					"source": ['query.tokenId'],
 					"required": true,
