@@ -525,7 +525,7 @@ module.exports = {
 			"/tenant/getUserAclInfo": {
 				"_apiInfo": {
 					"l": "Get user acl info",
-					"group": "Owner"
+					"group": "Tenant"
 				},
 				"tenantId": {
 					"source": ['query.tenantId'],
