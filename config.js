@@ -57,7 +57,7 @@ module.exports = {
 	"seedLength": 32,
 	"extKeyRequired": true,
 	"oauth": true,
-	"session": true,
+	"session": false,
 	"model": 'mongo',
 	
 	"cmd": ["/etc/init.d/postfix start"],
