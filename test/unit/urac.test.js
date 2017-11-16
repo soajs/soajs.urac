@@ -10,7 +10,7 @@ var Mongo = require("soajs").mongo;
 describe("testing rules", function () {
 	
 	let mongoStub;
-	let mongoObjectIdStub;
+	let mongoFindOneStub;
 	
 	let modelName = "mongo";
 	
@@ -22,10 +22,26 @@ describe("testing rules", function () {
 				}
 			},
 			registry: {
-				coreDB: {}
+				coreDB: {
+					provision: {
+						"name": "core_provision",
+						"prefix": '',
+						"servers": [
+							{
+								"host": "127.0.0.1",
+								"port": 27017
+							}
+						],
+						"credentials": null,
+						"URLParam": {
+							"poolSize": 5,
+							"autoReconnect": true
+						}
+					}
+				}
 			},
 			inputmaskData: {
-				tenantId: "1"
+				tenantId: "57a2495612979c1655f0ed70"
 			},
 			log: {
 				error: function (err) {
@@ -39,8 +55,8 @@ describe("testing rules", function () {
 		if (mongoStub) {
 			mongoStub.restore();
 		}
-		if (mongoObjectIdStub) {
-			mongoObjectIdStub.restore();
+		if (mongoFindOneStub) {
+			mongoFindOneStub.restore();
 		}
 		
 		urac.clearMongo();
@@ -49,11 +65,13 @@ describe("testing rules", function () {
 	});
 	
 	it("error on listEnvironment", function (done) {
-		mongoStub = sinon.stub(Mongo.prototype, 'find').callsFake((collection, cb) => {
-				return cb({
-					code: 123,
-					message: "error on first database call"
-				});
+		mongoStub = sinon.stub(Mongo.prototype, 'find').callsFake((collection, condition, stubCb) => {
+				if (stubCb) {
+					return stubCb({
+						code: 123,
+						message: "error on first database call"
+					});
+				}
 			}
 		);
 		
@@ -66,8 +84,10 @@ describe("testing rules", function () {
 	});
 	
 	it("error on getTenant", function (done) {
-		mongoStub = sinon.stub(Mongo.prototype, 'find').callsFake((collection, cb) => {
-				return cb(null, {});
+		mongoStub = sinon.stub(Mongo.prototype, 'find').callsFake((collection, condition, stubCb) => {
+				if (stubCb) {
+					return stubCb(null, {});
+				}
 			}
 		);
 		
@@ -82,22 +102,28 @@ describe("testing rules", function () {
 	it("error on listServices", function (done) {
 		
 		request.soajs.inputmaskData.tenantId = "551286bce603d7e01ab1688e";
-		mongoObjectIdStub = sinon.stub(Mongo.prototype, 'findOne').callsFake((collection, conditions, cb) => {
+		mongoFindOneStub = sinon.stub(Mongo.prototype, 'findOne').callsFake((collection, conditions, cb) => {
 				return cb(null, {});
 			}
 		);
 		
-		mongoStub = sinon.stub(Mongo.prototype, 'find').callsFake((collection, cb) => {
+		mongoStub = sinon.stub(Mongo.prototype, 'find').callsFake((collection, condition, cb) => {
+				let lastParam = cb;
+				if (!cb) {
+					lastParam = condition;
+				}
+				
 				if (collection === 'environment') {
-					return cb(null, {});
+					return lastParam(null, {});
 				} else if (collection === 'tenants') {
-					return cb(null, {});
+					return lastParam(null, {});
 				} else if (collection === 'services') {
-					return cb({
+					return lastParam({
 						code: 400,
 						message: "error on services call"
 					});
 				}
+				
 			}
 		);
 		
@@ -112,7 +138,7 @@ describe("testing rules", function () {
 	it("error on getAndSetPackages", function (done) {
 		
 		request.soajs.inputmaskData.tenantId = "551286bce603d7e01ab1688e";
-		mongoObjectIdStub = sinon.stub(Mongo.prototype, 'findOne').callsFake((collection, conditions, cb) => {
+		mongoFindOneStub = sinon.stub(Mongo.prototype, 'findOne').callsFake((collection, conditions, cb) => {
 				if (collection === 'products') {
 					return cb(null, {
 						packages: []
@@ -127,15 +153,20 @@ describe("testing rules", function () {
 			}
 		);
 		
-		mongoStub = sinon.stub(Mongo.prototype, 'find').callsFake((collection, cb) => {
+		mongoStub = sinon.stub(Mongo.prototype, 'find').callsFake((collection, condition, cb) => {
+				let lastParam = cb;
+				if (!cb) {
+					lastParam = condition;
+				}
+				
 				if (collection === 'environment') {
-					return cb(null, {});
+					return lastParam(null, {});
 				} else if (collection === 'tenants') {
-					return cb(null, {});
+					return lastParam(null, {});
 				} else if (collection === 'services') {
-					return cb(null, {});
+					return lastParam(null, {});
 				} else {
-					return cb(null, {});
+					return lastParam(null, {});
 				}
 			}
 		);
