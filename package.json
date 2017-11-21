@@ -32,8 +32,8 @@
     "request": "2.79.0",
     "shelljs": "0.7.5",
     "sinon": "3.1.0",
-    "soajs.mongodb.data": "1.0.*",
-    "soajs.controller": "1.0.*"
+    "soajs.mongodb.data": "2.0.*",
+    "soajs.controller": "2.0.*"
   },
   "dependencies": {
     "async": "2.1.4",
@@ -43,8 +43,8 @@
     "passport-google-oauth": "1.0.0",
     "passport-local": "1.0.0",
     "passport-twitter": "1.0.4",
-    "soajs": "1.0.*",
-    "soajs.urac.driver": "1.0.*",
+    "soajs": "2.0.0",
+    "soajs.urac.driver": "1.0.4",
     "uuid": "3.0.1"
   }
 }
