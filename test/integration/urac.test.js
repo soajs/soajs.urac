@@ -997,7 +997,7 @@ describe("simple urac tests", function () {
 				assert.ifError(error);
 				assert.ok(body);
 				console.log(JSON.stringify(body));
-				assert.deepEqual(body.errors.details[0], {"code": 406, "message": "Invalid or token has expired."});
+				assert.deepEqual(body.errors.details[0], {"code": 403, "message": "User Not Found!"});
 				done();
 			});
 		});
