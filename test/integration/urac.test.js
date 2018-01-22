@@ -170,7 +170,7 @@ describe("simple urac tests", function () {
 					{ name: 'sn', values: [ 'daher' ] }
 				]
 			};
-			nock('https://sso.dev.ypg.com')
+			nock('https://test.com')
 				.post('/openam/identity/json/attributes')
 				.query(true) // any params sent
 				.reply(200, mockedReply);
@@ -197,7 +197,7 @@ describe("simple urac tests", function () {
 					{ name: 'sn', values: [ 'daher' ] }
 				]
 			};
-			nock('https://sso.dev.ypg.com')
+			nock('https://test.com')
 				.post('/openam/identity/json/attributes')
 				.query(true) // any params sent
 				.reply(200, mockedReply);
