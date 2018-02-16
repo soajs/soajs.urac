@@ -114,7 +114,9 @@ module.exports = {
 		
 		710: "Unable to log in. OpenAM connection error.",
 		711: "Unable to log in. OpenAM token invalid.",
-		712: "Unable to log in. OpenAM general error."
+		712: "Unable to log in. OpenAM general error.",
+		
+		998: "This group has a project associated to it. Remove the project first so you can delete this group."
 	},
 	
 	"schema": {
