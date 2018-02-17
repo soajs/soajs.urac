@@ -116,7 +116,9 @@ module.exports = {
 		711: "Unable to log in. OpenAM token invalid.",
 		712: "Unable to log in. OpenAM general error.",
 		
-		998: "This group has a project associated to it. Remove the project first so you can delete this group."
+		998: "This group has a project associated to it. Remove the project first so you can delete this group.",
+		999: "Limit Exceed, please upgrade your account"
+		
 	},
 	
 	"schema": {
@@ -174,6 +176,13 @@ module.exports = {
 				"validation": {
 					"type": "string",
 					"enum": ["memory", "mongo"]
+				}
+			},
+			"soajs_project": {
+				"source": ['query.soajs_project', 'body.soajs_project'],
+				"required": false,
+				"validation": {
+					"type": "string"
 				}
 			}
 		},
@@ -717,7 +726,7 @@ module.exports = {
 					"l": "Add new User",
 					"group": "Administration"
 				},
-				"commonFields": ["model", 'tId', 'tCode'],
+				"commonFields": ["model", 'tId', 'tCode', 'soajs_project'],
 				"username": {
 					"source": ['body.username'],
 					"required": true,
@@ -1235,7 +1244,7 @@ module.exports = {
 					"l": "Delete Group",
 					"group": "Administration"
 				},
-				"commonFields": ["model"],
+				"commonFields": ["model", "soajs_project"],
 				"gId": {
 					"source": ['query.gId'],
 					"required": true,

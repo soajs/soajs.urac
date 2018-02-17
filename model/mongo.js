@@ -16,6 +16,17 @@ module.exports = {
 		}
 	},
 	
+	
+	"switchTenant": function(soajs, tCode, cb){
+		let condition = {
+			"code": tCode
+		};
+		let coreMongo = new Mongo(soajs.registry.coreDB.provision);
+		coreMongo.findOne("tenants", condition, (error, tenant) => {
+			return cb(error, tenant);
+		});
+	},
+	
 	/**
 	 * Close the mongo connection
 	 * @param {SOAJS Object} soajs
