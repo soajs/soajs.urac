@@ -6,6 +6,7 @@ describe("Beginning test", function () {
 	
 	it("Testing urac", function (done) {
 		require("./urac.test");
+		require("./utils.test");
 		done();
 	});
 });
