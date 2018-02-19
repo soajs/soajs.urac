@@ -1,6 +1,7 @@
 # soajs.urac
 [![Build Status](https://travis-ci.org/soajs/soajs.urac.svg?branch=master)](https://travis-ci.org/soajs/soajs.urac)
 [![Coverage Status](https://coveralls.io/repos/soajs/soajs.urac/badge.png)](https://coveralls.io/r/soajs/soajs.urac)
+[![Known Vulnerabilities](https://snyk.io/test/github/soajs/soajs.urac/badge.svg)](https://snyk.io/test/github/soajs/soajs.urac)
 
 SOAJS URAC is a service that manages all users accounts for all tenants.
 
