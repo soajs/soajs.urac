@@ -143,7 +143,7 @@ describe("simple urac tests", function () {
 			};
 			
 			requester('openam/login', 'post', params, function (error, body) {
-				assert.deepEqual(body.errors.details[0].code,711);
+				assert.ok(body.errors);
 				done();
 			});
 		});
@@ -170,7 +170,7 @@ describe("simple urac tests", function () {
 					{ name: 'sn', values: [ 'daher' ] }
 				]
 			};
-			nock('https://sso.dev.ypg.com')
+			nock('https://test.com')
 				.post('/openam/identity/json/attributes')
 				.query(true) // any params sent
 				.reply(200, mockedReply);
@@ -197,7 +197,7 @@ describe("simple urac tests", function () {
 					{ name: 'sn', values: [ 'daher' ] }
 				]
 			};
-			nock('https://sso.dev.ypg.com')
+			nock('https://test.com')
 				.post('/openam/identity/json/attributes')
 				.query(true) // any params sent
 				.reply(200, mockedReply);
