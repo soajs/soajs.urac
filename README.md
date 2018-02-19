@@ -91,8 +91,8 @@ $ CURL -X GET http://localhost:4000/urac/admin/changeUserStatus -d 'uId=123&stat
 The URAC is also equipped with templates used by SOAJS notification system.
 These templates are configurable, can be themed and are rendered using [SWIG](http://www.swig.org) and contain data from URAC service.
 
-Templates are located in the [registry](http://www.soajs.org/#/documentation/registry) of SOAJS.
+Templates are located in the [registry](https://soajsorg.atlassian.net/wiki/spaces/SOAJ/pages/61354289/Registry) of SOAJS.
 
 ---
 
-More information is available on SOAJS website section for [URAC](http://www.soajs.org/#/documentation/urac).
+More information is available on SOAJS website section for [URAC](https://soajsorg.atlassian.net/wiki/spaces/URAC).

@@ -80,7 +80,7 @@ describe("Owner admin tests", function () {
 			it("Fail - Active missing password", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode
+						'tenantCode': tCode
 					},
 					form: {
 						'firstName': 'john',
@@ -103,7 +103,7 @@ describe("Owner admin tests", function () {
 			it("Fail - Pending with password", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode
+						'tenantCode': tCode
 					},
 					form: {
 						'firstName': 'john',
@@ -126,7 +126,7 @@ describe("Owner admin tests", function () {
 			it("SUCCESS - will add user account", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode
+						'tenantCode': tCode
 					},
 					form: {
 						'firstName': 'john',
@@ -147,14 +147,13 @@ describe("Owner admin tests", function () {
 						assert.ok(userRecord);
 						done();
 					});
-					
 				});
 			});
 			
 			it("SUCCESS - will add user account with password", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode
+						'tenantCode': tCode
 					},
 					form: {
 						'firstName': 'john',
@@ -192,7 +191,7 @@ describe("Owner admin tests", function () {
 				var params = {
 					qs: {
 						'uId': uId,
-						'tCode': tCode
+						'tenantCode': tCode
 					},
 					form: {
 						'firstName': 'john-jack',
@@ -216,7 +215,7 @@ describe("Owner admin tests", function () {
 				var params = {
 					qs: {
 						'uId': uId,
-						'tCode': tCode
+						'tenantCode': tCode
 					},
 					form: {
 						'config': {
@@ -256,7 +255,7 @@ describe("Owner admin tests", function () {
 				var params = {
 					qs: {
 						'uId': "581b6947f2eb001e4db64285",
-						'tCode': tCode
+						'tenantCode': tCode
 					},
 					form: {
 						'config': {
@@ -288,7 +287,7 @@ describe("Owner admin tests", function () {
 				var params = {
 					qs: {
 						'uId': uId,
-						'tCode': tCode,
+						'tenantCode': tCode,
 						'status': 'inactive'
 					}
 				};
@@ -314,7 +313,7 @@ describe("Owner admin tests", function () {
 				var params = {
 					qs: {
 						'uId': uId,
-						'tCode': tCode
+						'tenantCode': tCode
 					}
 				};
 				requester('owner/admin/getUser', 'get', params, function (error, body) {
@@ -334,7 +333,7 @@ describe("Owner admin tests", function () {
 			it("SUCCESS - will return user records", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode
+						'tenantCode': tCode
 					}
 				};
 				requester('owner/admin/listUsers', 'get', params, function (error, body) {
@@ -350,7 +349,7 @@ describe("Owner admin tests", function () {
 			it("SUCCESS - search keywords", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode,
+						'tenantCode': tCode,
 						'keywords': 'john'
 					}
 				};
@@ -371,7 +370,7 @@ describe("Owner admin tests", function () {
 			it("SUCCESS - will return user count", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode
+						'tenantCode': tCode
 					}
 				};
 				requester('owner/admin/users/count', 'get', params, function (error, body) {
@@ -385,7 +384,7 @@ describe("Owner admin tests", function () {
 			it("SUCCESS - with keywords", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode,
+						'tenantCode': tCode,
 						'keywords': 'john'
 					}
 				};
@@ -405,7 +404,7 @@ describe("Owner admin tests", function () {
 			it("SUCCESS - will create new group", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode
+						'tenantCode': tCode
 					},
 					form: {
 						'code': 'gold',
@@ -436,7 +435,7 @@ describe("Owner admin tests", function () {
 				var params = {
 					qs: {
 						'gId': gId,
-						'tCode': tCode
+						'tenantCode': tCode
 					},
 					form: {
 						'name': 'gold name',
@@ -459,7 +458,7 @@ describe("Owner admin tests", function () {
 			it("SUCCESS - will map grp to users", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode
+						'tenantCode': tCode
 					},
 					form: {
 						'groupCode': 'gold',
@@ -482,7 +481,7 @@ describe("Owner admin tests", function () {
 			it("SUCCESS - will return grps records", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode
+						'tenantCode': tCode
 					}
 				};
 				requester('owner/admin/group/list', 'get', params, function (error, body) {
@@ -500,7 +499,7 @@ describe("Owner admin tests", function () {
 				var params = {
 					qs: {
 						model: "memory",
-						'tCode': tCode
+						'tenantCode': tCode
 					}
 				};
 				requester('owner/admin/group/list', 'get', params, function (error, body) {
@@ -518,7 +517,7 @@ describe("Owner admin tests", function () {
 				var params = {
 					qs: {
 						'gId': gId,
-						'tCode': tCode
+						'tenantCode': tCode
 					}
 				};
 				requester('owner/admin/group/delete', 'del', params, function (error, body) {
@@ -539,7 +538,7 @@ describe("Owner admin tests", function () {
 			it("SUCCESS - will get all", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode
+						'tenantCode': tCode
 					}
 				};
 				requester('owner/admin/tokens/list', 'get', params, function (error, body) {
@@ -555,7 +554,7 @@ describe("Owner admin tests", function () {
 			it("SUCCESS - will get next", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode,
+						'tenantCode': tCode,
 						'start': 10
 					}
 				};
@@ -575,7 +574,7 @@ describe("Owner admin tests", function () {
 				var params = {
 					qs: {
 						'tokenId': "123456789",
-						'tCode': tCode
+						'tenantCode': tCode
 					}
 				};
 				requester('owner/admin/tokens/delete', 'del', params, function (error, body) {
@@ -591,7 +590,7 @@ describe("Owner admin tests", function () {
 				var params = {
 					qs: {
 						'tokenId': tokenId,
-						'tCode': tCode
+						'tenantCode': tCode
 					}
 				};
 				requester('owner/admin/tokens/delete', 'del', params, function (error, body) {
@@ -606,7 +605,7 @@ describe("Owner admin tests", function () {
 			it("SUCCESS - will get none", function (done) {
 				var params = {
 					qs: {
-						'tCode': tCode
+						'tenantCode': tCode
 					}
 				};
 				mongo.remove("tokens", {}, function (error) {
