@@ -1,7 +1,7 @@
 {
   "name": "soajs.urac",
   "description": "soajs URAC service",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -44,9 +44,9 @@
     "passport-google-oauth": "1.0.0",
     "passport-local": "1.0.0",
     "passport-twitter": "1.0.4",
-    "request": "2.81.0",
-    "soajs": "2.0.3",
-    "soajs.urac.driver": "1.0.4",
+    "request": "2.82.0",
+    "soajs": "2.0.4",
+    "soajs.urac.driver": "1.0.5",
     "uuid": "3.0.1"
   }
 }
