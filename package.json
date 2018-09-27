@@ -27,7 +27,7 @@
     "grunt-istanbul": "0.7.2",
     "grunt-coveralls": "1.0.1",
     "jshint": "2.9.4",
-    "lodash": "4.17.4",
+    "lodash": "4.17.5",
     "mocha": "3.2.0",
     "nock": "^9.0.2",
     "request": "2.79.0",
