@@ -46,7 +46,7 @@
     "passport-twitter": "1.0.4",
     "request": "2.82.0",
     "soajs": "2.0.12",
-    "soajs.urac.driver": "1.0.5",
+    "soajs.urac.driver": "1.0.7",
     "uuid": "3.0.1"
   }
 }
