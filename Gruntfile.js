@@ -112,7 +112,8 @@ module.exports = function (grunt) {
 				SOAJS_ENV: 'dev',
 				SOAJS_SRVIP: '127.0.0.1',
 				SOAJS_TEST: true,
-				SOAJS_PROFILE: ''
+				SOAJS_PROFILE: '',
+				SOAJS_SRVPORT: 4001
 			}
 		},
 		
