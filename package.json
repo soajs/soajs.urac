@@ -27,14 +27,14 @@
     "grunt-istanbul": "0.7.2",
     "grunt-coveralls": "1.0.1",
     "jshint": "2.9.4",
-    "lodash": "4.17.5",
+    "lodash": "4.17.11",
     "mocha": "3.2.0",
     "nock": "^9.0.2",
     "request": "2.79.0",
     "shelljs": "0.7.5",
     "sinon": "3.1.0",
     "soajs.mongodb.data": "2.1.*",
-    "soajs.controller": "2.1.*"
+    "soajs.controller": "2.2.*"
   },
   "dependencies": {
     "async": "2.1.4",
@@ -45,8 +45,8 @@
     "passport-local": "1.0.0",
     "passport-twitter": "1.0.4",
     "request": "2.84.0",
-    "soajs": "2.1.2",
-    "soajs.urac.driver": "1.1.2",
+    "soajs": "2.2.2",
+    "soajs.urac.driver": "1.2.0",
     "uuid": "3.0.1"
   }
 }
