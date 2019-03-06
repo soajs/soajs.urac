@@ -933,6 +933,30 @@ module.exports = {
 					"source": ['body.description'],
 					"required": true,
 					"validation": {"type": "string"}
+				},
+				"config": {
+					"source": ['body.config'],
+					"required": true,
+					"validation": {
+						"type": "object",
+						"properties": {
+							"allowedPackages": {
+								"validation": {
+									"type": "object",
+									"patternProperties": {
+										"^([A-Za-z0-9]+)$": { //pattern to match an api route
+											"type": "array",
+											"required": true,
+											"items": {
+												"type": "string"
+											}
+										}
+									},
+									"additionalProperties": false
+								}
+							}
+						}
+					}
 				}
 			},
 			'/admin/group/edit': {
@@ -955,6 +979,30 @@ module.exports = {
 					"source": ['body.description'],
 					"required": true,
 					"validation": {"type": "string"}
+				},
+				"config": {
+					"source": ['body.config'],
+					"required": true,
+					"validation": {
+						"type": "object",
+						"properties": {
+							"allowedPackages": {
+								"validation": {
+									"type": "object",
+									"patternProperties": {
+										"^([A-Za-z0-9]+)$": { //pattern to match an api route
+											"type": "array",
+											"required": true,
+											"items": {
+												"type": "string"
+											}
+										}
+									},
+									"additionalProperties": false
+								}
+							}
+						}
+					}
 				}
 			},
 			"/admin/group/addUsers": {
