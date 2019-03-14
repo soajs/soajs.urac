@@ -85,7 +85,12 @@ describe("urac group tests", function () {
 						'name': 'Gold',
 						'description': 'grp description',
 						'tId': '10d2cb5fc04ce51e06000001',
-						'tCode': 'test'
+						'tCode': 'test',
+						'config': {
+							"allowedPackages": {
+								'prod' : "pack"
+							}
+						}
 					}
 				};
 				requester('admin/group/add', 'post', params, function (error, body) {
@@ -111,7 +116,12 @@ describe("urac group tests", function () {
 						'name': 'gold',
 						'description': 'grp description',
 						'tId': '10d2cbc6000001',
-						'tCode': 'test'
+						'tCode': 'test',
+						'config': {
+							"allowedPackages": {
+								'prod' : "pack"
+							}
+						}
 					}
 				};
 				requester('admin/group/add', 'post', params, function (error, body) {
@@ -132,7 +142,12 @@ describe("urac group tests", function () {
 						'name': 'gold',
 						'description': 'grp description',
 						'tId': '10d2cb5fc04ce51e06000001',
-						'tCode': 'test'
+						'tCode': 'test',
+						'config': {
+							"allowedPackages": {
+								'prod' : "pack"
+							}
+						}
 					}
 				};
 				requester('admin/group/add', 'post', params, function (error, body) {
@@ -153,7 +168,12 @@ describe("urac group tests", function () {
 						'name': 'Silver Group',
 						'description': 'grp description',
 						'tId': '10d2cb5fc04ce51e06000001',
-						'tCode': 'test'
+						'tCode': 'test',
+						'config': {
+							"allowedPackages": {
+								'prod' : "pack"
+							}
+						}
 					}
 				};
 				requester('admin/group/add', 'post', params, function (error, body) {
@@ -172,7 +192,12 @@ describe("urac group tests", function () {
 					qs: { 'gId': '5645' },
 					form: {
 						'name': 'gold 2',
-						'description': 'description 2'
+						'description': 'description 2',
+						'config': {
+							"allowedPackages": {
+								'prod' : "pack"
+							}
+						}
 					}
 				};
 				requester('admin/group/edit', 'post', params, function (error, body) {
@@ -191,7 +216,12 @@ describe("urac group tests", function () {
 					},
 					form: {
 						'name': 'gold name',
-						'description': 'description update'
+						'description': 'description update',
+						'config': {
+							"allowedPackages": {
+								'prod' : "pack"
+							}
+						}
 					}
 				};
 				requester('admin/group/edit', 'post', params, function (error, body) {
@@ -213,7 +243,17 @@ describe("urac group tests", function () {
 					form: {
 						'groupCode': 'bronze',
 						'users': ['user1', 'user4'],
-						'tId': '10d2cb5fc04ce51e06000001'
+						'tId': '10d2cb5fc04ce51e06000001',
+						'config': {
+							"allowedPackages": {
+								'prod' : "pack",
+								'config': {
+									"allowedPackages": {
+										'prod' : "pack"
+									}
+								}
+							}
+						}
 					}
 				};
 				requester('admin/group/addUsers', 'post', params, function (error, body) {
@@ -229,7 +269,17 @@ describe("urac group tests", function () {
 					form: {
 						'groupCode': 'silver',
 						'users': [],
-						'tId': '10d2cb5fc04ce51e06000001'
+						'tId': '10d2cb5fc04ce51e06000001',
+						'config': {
+							"allowedPackages": {
+								'prod' : "pack",
+								'config': {
+									"allowedPackages": {
+										'prod' : "pack"
+									}
+								}
+							}
+						}
 					}
 				};
 				requester('admin/group/addUsers', 'post', params, function (error, body) {
@@ -255,7 +305,17 @@ describe("urac group tests", function () {
 							"email": "user1@domain.com",
 							'username': 'user1',
 							'status': 'active',
-							"groups": ['silver', 'gold', 'bronze']
+							"groups": ['silver', 'gold', 'bronze'],
+							'config': {
+								"allowedPackages": {
+									'prod' : "pack",
+									'config': {
+										"allowedPackages": {
+											'prod' : "pack"
+										}
+									}
+								}
+							}
 						}
 					};
 					
@@ -285,7 +345,17 @@ describe("urac group tests", function () {
 						'username': 'user1',
 						'status': 'active',
 						"groups": [],
-						'tId': '10d2cb5fc04ce51e06000001'
+						'tId': '10d2cb5fc04ce51e06000001',
+						'config': {
+							"allowedPackages": {
+								'prod' : "pack",
+								'config': {
+									"allowedPackages": {
+										'prod' : "pack"
+									}
+								}
+							}
+						}
 					}
 				};
 				requester('admin/editUser', 'post', params, function (error, body) {
@@ -313,7 +383,12 @@ describe("urac group tests", function () {
 						'tId': '10d2cb5fc04ce51e06000001',
 						'tCode': 'test',
 						'password': '123',
-						'confirmation': '123'
+						'confirmation': '123',
+						'config': {
+							"allowedPackages": {
+								'prod' : "pack"
+							}
+						}
 					}
 				};
 				requester('admin/addUser', 'post', params, function (error, body) {

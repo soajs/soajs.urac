@@ -333,7 +333,7 @@ module.exports = {
 			'/forgotPassword': {
 				"_apiInfo": {
 					"l": "Forgot Password",
-					"group": "Guest"
+					"group": "Guest Account Settings"
 				},
 				"commonFields": ["model"],
 				"username": {
@@ -345,7 +345,7 @@ module.exports = {
 			'/checkUsername': {
 				"_apiInfo": {
 					"l": "Check If Username Exists",
-					"group": "Guest"
+					"group": "Guest Account Settings"
 				},
 				"commonFields": ["model"],
 				"username": {
@@ -357,7 +357,7 @@ module.exports = {
 			'/changeEmail/validate': {
 				"_apiInfo": {
 					"l": "Validate Change Email",
-					"group": "Guest"
+					"group": "Guest Email Account Settings"
 				},
 				"commonFields": ["model"],
 				"token": {
@@ -366,6 +366,7 @@ module.exports = {
 					"validation": {"type": "string"}
 				}
 			},
+			
 			'/account/getUser': {
 				"_apiInfo": {
 					"l": "Get User Info",
@@ -445,71 +446,12 @@ module.exports = {
 					"validation": {"type": "string"}
 				}
 			},
-			
 			"/admin/all": {
 				"_apiInfo": {
 					"l": "Get all Users & Groups",
 					"group": "Administration"
 				},
 				"commonFields": ["model", "isOwner"]
-			},
-			'/owner/admin/users/count': {
-				"_apiInfo": {
-					"l": "Total Users Count",
-					"group": "Owner"
-				},
-				"commonFields": ["model", 'tenantCode', 'keywords', "isOwner"]
-			},
-			'/owner/admin/listUsers': {
-				"_apiInfo": {
-					"l": "List Users",
-					"group": "Owner",
-					"groupMain": true
-				},
-				"commonFields": ["model", "tenantCode", "start", "limit", "keywords", "isOwner"]
-			},
-			'/owner/admin/changeUserStatus': {
-				"_apiInfo": {
-					"l": "Change User Status",
-					"group": "Owner"
-				},
-				"commonFields": ["model", "tenantCode", "isOwner"],
-				"uId": {
-					"source": ['query.uId'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"status": {
-					"source": ['query.status'],
-					"required": true,
-					"validation": {"type": "string", "enum": ['active', 'inactive']}
-				}
-			},
-			'/owner/admin/getUser': {
-				"_apiInfo": {
-					"l": "Get User Record",
-					"group": "Owner"
-				},
-				"commonFields": ["model", "tenantCode", "isOwner"],
-				"uId": {
-					"source": ['query.uId'],
-					"required": true,
-					"validation": {"type": "string"}
-				}
-			},
-			'/owner/admin/group/list': {
-				"_apiInfo": {
-					"l": "List Groups",
-					"group": "Owner"
-				},
-				"commonFields": ["model", "tenantCode", "isOwner"]
-			},
-			"/owner/admin/tokens/list": {
-				"_apiInfo": {
-					"l": "List Tokens",
-					"group": "Owner"
-				},
-				"commonFields": ["model", "tenantCode", "isOwner", "start", "limit"]
 			},
 			"/tenant/list": {
 				_apiInfo: {
@@ -546,6 +488,66 @@ module.exports = {
 					}
 				}
 			}
+			
+			// '/owner/admin/users/count': {
+			// 	"_apiInfo": {
+			// 		"l": "Total Users Count",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["model", 'tenantCode', 'keywords', "isOwner"]
+			// },
+			// '/owner/admin/listUsers': {
+			// 	"_apiInfo": {
+			// 		"l": "List Users",
+			// 		"group": "Owner",
+			// 		"groupMain": true
+			// 	},
+			// 	"commonFields": ["model", "tenantCode", "start", "limit", "keywords", "isOwner"]
+			// },
+			// '/owner/admin/changeUserStatus': {
+			// 	"_apiInfo": {
+			// 		"l": "Change User Status",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["model", "tenantCode", "isOwner"],
+			// 	"uId": {
+			// 		"source": ['query.uId'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"status": {
+			// 		"source": ['query.status'],
+			// 		"required": true,
+			// 		"validation": {"type": "string", "enum": ['active', 'inactive']}
+			// 	}
+			// },
+			// '/owner/admin/getUser': {
+			// 	"_apiInfo": {
+			// 		"l": "Get User Record",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["model", "tenantCode", "isOwner"],
+			// 	"uId": {
+			// 		"source": ['query.uId'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	}
+			// },
+			// '/owner/admin/group/list': {
+			// 	"_apiInfo": {
+			// 		"l": "List Groups",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["model", "tenantCode", "isOwner"]
+			// },
+			// "/owner/admin/tokens/list": {
+			// 	"_apiInfo": {
+			// 		"l": "List Tokens",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["model", "tenantCode", "isOwner", "start", "limit"]
+			// },
+			
 		},
 		"post": {
 
@@ -623,7 +625,7 @@ module.exports = {
 			'/resetPassword': {
 				"_apiInfo": {
 					"l": "Reset Password",
-					"group": "Guest"
+					"group": "Guest Account Settings"
 				},
 				"commonFields": ["model"],
 				"token": {
@@ -1026,264 +1028,263 @@ module.exports = {
 						}
 					}
 				}
-			},
-			
-			'/owner/admin/addUser': {
-				"_apiInfo": {
-					"l": "Add new User",
-					"group": "Owner"
-				},
-				"commonFields": ["model", 'tenantCode', "isOwner"],
-				"username": {
-					"source": ['body.username'],
-					"required": true,
-					"validation": {
-						"type": "string",
-						"pattern": /^[a-zA-Z0-9_-]+$/
-					}
-				},
-				"firstName": {
-					"source": ['body.firstName'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"lastName": {
-					"source": ['body.lastName'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"email": {
-					"source": ['body.email'],
-					"required": true,
-					"validation": {"type": "string", format: "email"}
-				},
-				"profile": {
-					"source": ['body.profile'],
-					"required": false,
-					"validation": {"type": "object"}
-				},
-				"groups": {
-					"source": ['body.groups'],
-					"required": false,
-					"validation": {
-						"type": "array",
-						"items": {
-							"type": "string"
-						}
-					}
-				},
-				"status": {
-					"source": ['body.status'],
-					"default": "pendingNew",
-					"required": false,
-					"validation": {"type": "string", "enum": ['active', 'inactive', 'pendingNew']}
-				},
-				"password": {
-					"source": ['body.password'],
-					"required": false,
-					"validation": {"type": "string"}
-				},
-				"confirmation": {
-					"source": ['body.confirmation'],
-					"required": false,
-					"validation": {"type": "string"}
-				}
-			},
-			'/owner/admin/editUser': {
-				"_apiInfo": {
-					"l": "Edit User Record",
-					"group": "Owner"
-				},
-				"commonFields": ["model", "tenantCode", "isOwner"],
-				"uId": {
-					"source": ['query.uId'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"username": {
-					"source": ['body.username'],
-					"required": true,
-					"validation": {
-						"type": "string",
-						"pattern": /^[a-zA-Z0-9_-]+$/
-					}
-				},
-				"firstName": {
-					"source": ['body.firstName'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"lastName": {
-					"source": ['body.lastName'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"email": {
-					"source": ['body.email'],
-					"required": true,
-					"validation": {"type": "string", 'format': 'email'}
-				},
-				"groups": {
-					"source": ['body.groups'],
-					"required": false,
-					"validation": {
-						"type": "array",
-						"items": {
-							"type": "string"
-						}
-					}
-				},
-				"config": {
-					"source": ['body.config'],
-					"required": false,
-					"validation": {
-						"type": "object",
-						"properties": {
-							"keys": {
-								"type": "object"
-							},
-							"packages": {
-								"type": "object",
-								"required": false,
-								"additionalProperties": {
-									type: 'object',
-									'additionalProperties': {
-										'acl': acl
-									}
-								}
-							}
-						}
-					}
-				},
-				"status": {
-					"source": ['body.status'],
-					"required": true,
-					"validation": {
-						"type": "string",
-						"enum": ['active', 'inactive', 'pendingNew']
-					}
-				},
-				"profile": {
-					"source": ['body.profile'],
-					"required": false,
-					"validation": {"type": "object"}
-				},
-				"password": {
-					"source": ['body.password'],
-					"required": false,
-					"validation": {"type": "string"}
-				},
-				"confirmation": {
-					"source": ['body.confirmation'],
-					"required": false,
-					"validation": {"type": "string"}
-				}
-			},
-			'/owner/admin/editUserConfig': {
-				"_apiInfo": {
-					"l": "Edit User Config",
-					"group": "Owner"
-				},
-				"commonFields": ["model", "tenantCode", "isOwner"],
-				"uId": {
-					"source": ['query.uId'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"config": {
-					"source": ['body.config'],
-					"required": true,
-					"validation": {
-						"type": "object",
-						"properties": {
-							"keys": {
-								"type": "object"
-							},
-							"packages": {
-								"type": "object",
-								"required": false,
-								"additionalProperties": {
-									type: 'object',
-									'additionalProperties': {
-										'acl': acl
-									}
-								}
-							}
-						}
-					}
-				}
-			},
-			
-			'/owner/admin/group/add': {
-				"_apiInfo": {
-					"l": "Add new Group",
-					"group": "Owner"
-				},
-				"commonFields": ["model", 'tenantCode', "isOwner"],
-				"code": {
-					"source": ['body.code'],
-					"required": true,
-					"validation": {
-						"type": "string",
-						"format": "alphanumeric",
-						"maxLength": 20
-					}
-				},
-				"name": {
-					"source": ['body.name'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"description": {
-					"source": ['body.description'],
-					"required": true,
-					"validation": {"type": "string"}
-				}
-			},
-			'/owner/admin/group/edit': {
-				"_apiInfo": {
-					"l": "Edit Group",
-					"group": "Owner"
-				},
-				"commonFields": ["model", "tenantCode", "isOwner"],
-				"gId": {
-					"source": ['query.gId'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"name": {
-					"source": ['body.name'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"description": {
-					"source": ['body.description'],
-					"required": true,
-					"validation": {"type": "string"}
-				}
-			},
-			"/owner/admin/group/addUsers": {
-				"_apiInfo": {
-					"l": "Add Users to Group",
-					"group": "Owner"
-				},
-				"commonFields": ["model", "tenantCode", "isOwner"],
-				"code": {
-					"source": ['body.groupCode'],
-					"required": true,
-					"validation": {"type": "string"}
-				},
-				"users": {
-					"source": ['body.users'],
-					"required": false,
-					"validation": {
-						"type": "array",
-						"items": {
-							"type": "string"
-						}
-					}
-				}
 			}
+			
+			// '/owner/admin/addUser': {
+			// 	"_apiInfo": {
+			// 		"l": "Add new User",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["model", 'tenantCode', "isOwner"],
+			// 	"username": {
+			// 		"source": ['body.username'],
+			// 		"required": true,
+			// 		"validation": {
+			// 			"type": "string",
+			// 			"pattern": /^[a-zA-Z0-9_-]+$/
+			// 		}
+			// 	},
+			// 	"firstName": {
+			// 		"source": ['body.firstName'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"lastName": {
+			// 		"source": ['body.lastName'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"email": {
+			// 		"source": ['body.email'],
+			// 		"required": true,
+			// 		"validation": {"type": "string", format: "email"}
+			// 	},
+			// 	"profile": {
+			// 		"source": ['body.profile'],
+			// 		"required": false,
+			// 		"validation": {"type": "object"}
+			// 	},
+			// 	"groups": {
+			// 		"source": ['body.groups'],
+			// 		"required": false,
+			// 		"validation": {
+			// 			"type": "array",
+			// 			"items": {
+			// 				"type": "string"
+			// 			}
+			// 		}
+			// 	},
+			// 	"status": {
+			// 		"source": ['body.status'],
+			// 		"default": "pendingNew",
+			// 		"required": false,
+			// 		"validation": {"type": "string", "enum": ['active', 'inactive', 'pendingNew']}
+			// 	},
+			// 	"password": {
+			// 		"source": ['body.password'],
+			// 		"required": false,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"confirmation": {
+			// 		"source": ['body.confirmation'],
+			// 		"required": false,
+			// 		"validation": {"type": "string"}
+			// 	}
+			// },
+			// '/owner/admin/editUser': {
+			// 	"_apiInfo": {
+			// 		"l": "Edit User Record",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["model", "tenantCode", "isOwner"],
+			// 	"uId": {
+			// 		"source": ['query.uId'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"username": {
+			// 		"source": ['body.username'],
+			// 		"required": true,
+			// 		"validation": {
+			// 			"type": "string",
+			// 			"pattern": /^[a-zA-Z0-9_-]+$/
+			// 		}
+			// 	},
+			// 	"firstName": {
+			// 		"source": ['body.firstName'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"lastName": {
+			// 		"source": ['body.lastName'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"email": {
+			// 		"source": ['body.email'],
+			// 		"required": true,
+			// 		"validation": {"type": "string", 'format': 'email'}
+			// 	},
+			// 	"groups": {
+			// 		"source": ['body.groups'],
+			// 		"required": false,
+			// 		"validation": {
+			// 			"type": "array",
+			// 			"items": {
+			// 				"type": "string"
+			// 			}
+			// 		}
+			// 	},
+			// 	"config": {
+			// 		"source": ['body.config'],
+			// 		"required": false,
+			// 		"validation": {
+			// 			"type": "object",
+			// 			"properties": {
+			// 				"keys": {
+			// 					"type": "object"
+			// 				},
+			// 				"packages": {
+			// 					"type": "object",
+			// 					"required": false,
+			// 					"additionalProperties": {
+			// 						type: 'object',
+			// 						'additionalProperties': {
+			// 							'acl': acl
+			// 						}
+			// 					}
+			// 				}
+			// 			}
+			// 		}
+			// 	},
+			// 	"status": {
+			// 		"source": ['body.status'],
+			// 		"required": true,
+			// 		"validation": {
+			// 			"type": "string",
+			// 			"enum": ['active', 'inactive', 'pendingNew']
+			// 		}
+			// 	},
+			// 	"profile": {
+			// 		"source": ['body.profile'],
+			// 		"required": false,
+			// 		"validation": {"type": "object"}
+			// 	},
+			// 	"password": {
+			// 		"source": ['body.password'],
+			// 		"required": false,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"confirmation": {
+			// 		"source": ['body.confirmation'],
+			// 		"required": false,
+			// 		"validation": {"type": "string"}
+			// 	}
+			// },
+			// '/owner/admin/editUserConfig': {
+			// 	"_apiInfo": {
+			// 		"l": "Edit User Config",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["model", "tenantCode", "isOwner"],
+			// 	"uId": {
+			// 		"source": ['query.uId'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"config": {
+			// 		"source": ['body.config'],
+			// 		"required": true,
+			// 		"validation": {
+			// 			"type": "object",
+			// 			"properties": {
+			// 				"keys": {
+			// 					"type": "object"
+			// 				},
+			// 				"packages": {
+			// 					"type": "object",
+			// 					"required": false,
+			// 					"additionalProperties": {
+			// 						type: 'object',
+			// 						'additionalProperties': {
+			// 							'acl': acl
+			// 						}
+			// 					}
+			// 				}
+			// 			}
+			// 		}
+			// 	}
+			// },
+			// '/owner/admin/group/add': {
+			// 	"_apiInfo": {
+			// 		"l": "Add new Group",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["model", 'tenantCode', "isOwner"],
+			// 	"code": {
+			// 		"source": ['body.code'],
+			// 		"required": true,
+			// 		"validation": {
+			// 			"type": "string",
+			// 			"format": "alphanumeric",
+			// 			"maxLength": 20
+			// 		}
+			// 	},
+			// 	"name": {
+			// 		"source": ['body.name'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"description": {
+			// 		"source": ['body.description'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	}
+			// },
+			// '/owner/admin/group/edit': {
+			// 	"_apiInfo": {
+			// 		"l": "Edit Group",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["model", "tenantCode", "isOwner"],
+			// 	"gId": {
+			// 		"source": ['query.gId'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"name": {
+			// 		"source": ['body.name'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"description": {
+			// 		"source": ['body.description'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	}
+			// },
+			// "/owner/admin/group/addUsers": {
+			// 	"_apiInfo": {
+			// 		"l": "Add Users to Group",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["model", "tenantCode", "isOwner"],
+			// 	"code": {
+			// 		"source": ['body.groupCode'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	},
+			// 	"users": {
+			// 		"source": ['body.users'],
+			// 		"required": false,
+			// 		"validation": {
+			// 			"type": "array",
+			// 			"items": {
+			// 				"type": "string"
+			// 			}
+			// 		}
+			// 	}
+			// }
 		},
 		"put": {},
 		"delete": {
@@ -1298,31 +1299,31 @@ module.exports = {
 					"required": true,
 					"validation": {"type": "string"}
 				}
-			},
-			'/owner/admin/group/delete': {
-				"_apiInfo": {
-					"l": "Delete Group",
-					"group": "Owner"
-				},
-				"commonFields": ["model", "tenantCode", "isOwner"],
-				"gId": {
-					"source": ['query.gId'],
-					"required": true,
-					"validation": {"type": "string"}
-				}
-			},
-			"/owner/admin/tokens/delete": {
-				"_apiInfo": {
-					"l": "Delete Token",
-					"group": "Owner"
-				},
-				"commonFields": ["tenantCode", "isOwner", "model"],
-				"tokenId": {
-					"source": ['query.tokenId'],
-					"required": true,
-					"validation": {"type": "string"}
-				}
 			}
+			// '/owner/admin/group/delete': {
+			// 	"_apiInfo": {
+			// 		"l": "Delete Group",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["model", "tenantCode", "isOwner"],
+			// 	"gId": {
+			// 		"source": ['query.gId'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	}
+			// },
+			// "/owner/admin/tokens/delete": {
+			// 	"_apiInfo": {
+			// 		"l": "Delete Token",
+			// 		"group": "Owner"
+			// 	},
+			// 	"commonFields": ["tenantCode", "isOwner", "model"],
+			// 	"tokenId": {
+			// 		"source": ['query.tokenId'],
+			// 		"required": true,
+			// 		"validation": {"type": "string"}
+			// 	}
+			// }
 		}
 		
 	}
