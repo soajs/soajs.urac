@@ -191,7 +191,7 @@ module.exports = {
             "/passport/login/:strategy": {
                 "_apiInfo": {
                     "l": "Login Through Passport",
-                    "group": "Guest"
+                    "group": "Guest Login(s)"
                 },
                 "commonFields": ["model"],
                 "uracConfig": {
@@ -290,7 +290,7 @@ module.exports = {
             "/passport/validate/:strategy": {
                 "_apiInfo": {
                     "l": "Login Through Passport Callback",
-                    "group": "Guest"
+                    "group": "Guest Login(s)"
                 },
                 "commonFields": ["model"],
                 "strategy": {
@@ -320,7 +320,7 @@ module.exports = {
             '/join/validate': {
                 "_apiInfo": {
                     "l": "Validate registered account",
-                    "group": "Guest"
+                    "group": "Guest Join"
                 },
                 "commonFields": ["model"],
                 "token": {
@@ -333,7 +333,7 @@ module.exports = {
             '/forgotPassword': {
                 "_apiInfo": {
                     "l": "Forgot Password",
-                    "group": "Guest Account Settings"
+                    "group": "Guest Password Settings"
                 },
                 "commonFields": ["model"],
                 "username": {
@@ -345,7 +345,7 @@ module.exports = {
             '/checkUsername': {
                 "_apiInfo": {
                     "l": "Check If Username Exists",
-                    "group": "Guest Account Settings"
+                    "group": "Guest Check Username"
                 },
                 "commonFields": ["model"],
                 "username": {
@@ -357,7 +357,7 @@ module.exports = {
             '/changeEmail/validate': {
                 "_apiInfo": {
                     "l": "Validate change email address",
-                    "group": "Guest Email Account Settings"
+                    "group": "Guest Email Validation"
                 },
                 "commonFields": ["model"],
                 "token": {
@@ -496,7 +496,7 @@ module.exports = {
             "/openam/login": {
                 "_apiInfo": {
                     "l": "OpenAM Login",
-                    "group": "Guest"
+                    "group": "Guest Login(s)"
                 },
                 "commonFields": ["model"],
                 "token": {
@@ -511,7 +511,7 @@ module.exports = {
             "/ldap/login": {
                 "_apiInfo": {
                     "l": "Ldap Login",
-                    "group": "Guest"
+                    "group": "Guest Login(s)"
                 },
                 "commonFields": ["model"],
                 "username": {
@@ -532,7 +532,7 @@ module.exports = {
             '/join': {
                 "_apiInfo": {
                     "l": "Register",
-                    "group": "Guest"
+                    "group": "Guest Join"
                 },
                 "commonFields": ["model"],
                 "username": {
@@ -567,7 +567,7 @@ module.exports = {
             '/resetPassword': {
                 "_apiInfo": {
                     "l": "Reset Password",
-                    "group": "Guest Account Settings"
+                    "group": "Guest Password Settings"
                 },
                 "commonFields": ["model"],
                 "token": {
