@@ -503,7 +503,7 @@ service.init(function () {
 	service.get("/admin/all", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
-			BLInstance.admin.listAll(req, function (error, data) {
+			BLInstance.adminOLD.listAll(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
