@@ -780,16 +780,32 @@ module.exports = {
                         "type": "object",
                         "properties": {
                             "keys": {
-                                "type": "object"
+                                "type": "object",
+                                "required": false,
                             },
                             "packages": {
                                 "type": "object",
                                 "required": false,
                                 "additionalProperties": {
-                                    type: 'object',
+                                    "type": 'object',
                                     'additionalProperties': {
                                         'acl': acl
                                     }
+                                }
+                            },
+                            "allowedTenants":{
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "tenant": {
+                                            "type": 'object',
+                                        },
+                                        "groups": {
+                                            "type": "array",
+                                        }
+                                    },
+                                    "additionalProperties": false
                                 }
                             }
                         }
@@ -837,7 +853,8 @@ module.exports = {
                         "type": "object",
                         "properties": {
                             "keys": {
-                                "type": "object"
+                                "type": "object",
+                                "required": false,
                             },
                             "packages": {
                                 "type": "object",
@@ -847,6 +864,21 @@ module.exports = {
                                     'additionalProperties': {
                                         'acl': acl
                                     }
+                                }
+                            },
+                            "allowedTenants":{
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "tenant": {
+                                            "type": 'object',
+                                        },
+                                        "groups": {
+                                            "type": "array",
+                                        }
+                                    },
+                                    "additionalProperties": false
                                 }
                             }
                         }
@@ -893,6 +925,20 @@ module.exports = {
                                             "required": true,
                                             "items": {
                                                 "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            },
+                            "allowedEnvironments": {
+                                "validation": {
+                                    "type": "object",
+                                    "patternProperties": {
+                                        "^([A-Za-z]+)$": {
+                                            "type": "object",
+                                            "validation": {
+                                                "type": "object"
                                             }
                                         }
                                     },
