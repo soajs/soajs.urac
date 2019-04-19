@@ -1040,8 +1040,10 @@ module.exports = {
                     "source": ['body.groups'],
                     "required": true,
                     "type": "array",
+                    "minItems": 1,
                     "items": {
-                        "type": "string"
+                        "type": "string",
+                        "required": true
                     }
                 },
                 "env": {
