@@ -1031,7 +1031,7 @@ module.exports = {
                     }
                 }
             },
-            '/admin/group/AddEnvironment': {
+            '/admin/group/addEnvironment': {
                 "_apiInfo": {
                     "l": "Add Allowed Environment to Group",
                     "group": "Administration"

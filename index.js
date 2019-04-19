@@ -500,7 +500,7 @@ service.init(function () {
      * @param {String} API route
      * @param {Function} API middleware
      */
-    service.post("/admin/group/AddEnvironment", function (req, res) {
+    service.post("/admin/group/addEnvironment", function (req, res) {
         initBLModel(req, res, function (BLInstance) {
             req.soajs.config = config;
             BLInstance.admin.group.addEnvironment(req, function (error, data) {
