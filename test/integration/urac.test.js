@@ -1988,6 +1988,7 @@ describe("simple urac tests", function () {
 							console.log(record);
 							delete record._id;
 							assert.deepEqual(record.config, {
+								'keys':{},
 								'packages': {
 									'TPROD_EX03': {
 										'acl': {
