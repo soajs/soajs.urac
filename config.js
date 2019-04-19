@@ -1039,11 +1039,13 @@ module.exports = {
                 "groups": {
                     "source": ['body.groups'],
                     "required": true,
-                    "type": "array",
-                    "minItems": 1,
-                    "items": {
-                        "type": "string",
-                        "required": true
+                    "validation": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "string",
+                            "required": true
+                        }
                     }
                 },
                 "env": {
