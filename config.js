@@ -793,7 +793,7 @@ module.exports = {
                                     }
                                 }
                             },
-                            "allowedTenants":{
+                            "allowedTenants": {
                                 "type": "array",
                                 "items": {
                                     "type": "object",
@@ -866,7 +866,7 @@ module.exports = {
                                     }
                                 }
                             },
-                            "allowedTenants":{
+                            "allowedTenants": {
                                 "type": "array",
                                 "items": {
                                     "type": "object",
@@ -985,6 +985,20 @@ module.exports = {
                                             "required": true,
                                             "items": {
                                                 "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            },
+                            "allowedEnvironments": {
+                                "validation": {
+                                    "type": "object",
+                                    "patternProperties": {
+                                        "^([A-Za-z]+)$": {
+                                            "type": "object",
+                                            "validation": {
+                                                "type": "object"
                                             }
                                         }
                                     },
