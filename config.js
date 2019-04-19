@@ -1030,6 +1030,25 @@ module.exports = {
                         }
                     }
                 }
+            },
+            '/admin/group/AddEnvironment': {
+                "_apiInfo": {
+                    "l": "Add Allowed Environment to Group",
+                    "group": "Administration"
+                },
+                "groups": {
+                    "source": ['body.groups'],
+                    "required": true,
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "env": {
+                    "source": ['body.env'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
             }
         },
         "put": {},

@@ -495,6 +495,20 @@ service.init(function () {
 		});
 	});
 
+    /**
+     * Add multiple Users To Group
+     * @param {String} API route
+     * @param {Function} API middleware
+     */
+    service.post("/admin/group/AddEnvironment", function (req, res) {
+        initBLModel(req, res, function (BLInstance) {
+            req.soajs.config = config;
+            BLInstance.admin.group.addEnvironment(req, function (error, data) {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+    });
+
 	/**
 	 * List all users and groups
 	 * @param {String} API route
