@@ -800,6 +800,26 @@ module.exports = {
                                     "properties": {
                                         "tenant": {
                                             "type": 'object',
+                                            "properties": {
+                                                "id": {
+                                                    "type": 'string'
+                                                },
+                                                "code": {
+                                                    "type": 'string'
+                                                },
+                                                "pin": {
+                                                    "type": 'object',
+                                                    "properties": {
+                                                        "code": {
+                                                            "type": 'string'
+                                                        },
+                                                        "allowed":{
+                                                            "type": 'boolean'
+                                                        }
+                                                    },
+                                                    "additionalProperties": false
+                                                }
+                                            }
                                         },
                                         "groups": {
                                             "type": "array",
@@ -873,9 +893,29 @@ module.exports = {
                                     "properties": {
                                         "tenant": {
                                             "type": 'object',
+                                            "properties": {
+                                                "id": {
+                                                    "type": 'string'
+                                                },
+                                                "code": {
+                                                    "type": 'string'
+                                                },
+                                                "pin": {
+                                                    "type": 'object',
+                                                    "properties": {
+                                                        "code": {
+                                                            "type": 'string'
+                                                        },
+                                                        "allowed":{
+                                                            "type": 'boolean'
+                                                        }
+                                                    },
+                                                    "additionalProperties": false
+                                                }
+                                            }
                                         },
                                         "groups": {
-                                            "type": "array",
+                                            "type": "array"
                                         }
                                     },
                                     "additionalProperties": false
