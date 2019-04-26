@@ -28,27 +28,11 @@ function Product(soajs) {
 
 Product.prototype.validateId = function (cb) {
 	let __self = this;
-	if (!__self.soajs.inputmaskData.id) {
-		soajs.log.error('No id provided');
-		
-		if (cb) {
-			return cb('no id provided');
-		} else {
-			return null;
-		}
-	}
-	
 	try {
 		__self.soajs.inputmaskData.id = __self.mongoCore.ObjectId(__self.soajs.inputmaskData.id);
 		return ((cb) ? cb(null, __self.soajs.inputmaskData.id) : __self.soajs.inputmaskData.id);
 	} catch (e) {
-		if (cb) {
-			return cb(e);
-		} else {
-			__self.soajs.log.error('Exception thrown while trying to get object id for ' + __self.soajs.inputmaskData.id);
-			__self.soajs.log.error(e);
-			return null;
-		}
+		return cb(e);
 	}
 };
 
@@ -89,7 +73,6 @@ Product.prototype.deleteProduct = function (cb) {
 	} else if (__self.soajs.inputmaskData.code) {
 		condition = {'code': __self.soajs.inputmaskData.code};
 	}
-	console.log(condition)
 	__self.mongoCore.remove(colName, condition, cb);
 };
 
