@@ -75,7 +75,7 @@ describe("simple urac tests", function () {
 	
 	var u4 = '22d2cb5fc04ce51e06000001';
 	
-	describe("testing getUserAclInfo", function () {
+	describe.skip("testing getUserAclInfo", function () {
 		it("Success", function (done) {
 			var params = {
 				qs: {
@@ -91,7 +91,7 @@ describe("simple urac tests", function () {
 		});
 	});
 	
-	describe("testing list tenant", function () {
+	describe.skip("testing list tenant", function () {
 		it("Success - with type client", function (done) {
 			var params = {
 				qs: {

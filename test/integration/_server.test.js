@@ -5,7 +5,6 @@ var helper = require("../helper.js");
 var sampleData = require("soajs.mongodb.data/modules/urac");
 var urac, controller;
 
-var request = require("request");
 var soajs = require('soajs');
 
 var Mongo = soajs.mongo;
@@ -50,6 +49,7 @@ describe("importing sample data", function () {
 				require("./urac.passport.test.js");
 				require("./urac.grps.test.js");
 				require("./urac.test.js");
+				require("./urac.product.js");
 				//require("./urac.test.owner.js");
 				done();
 			}, 1500);
