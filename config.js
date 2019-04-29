@@ -1,11 +1,11 @@
 'use strict';
-var accessSchema = {
+let accessSchema = {
     "oneOf": [
         {"type": "boolean", "required": false},
         {"type": "array", "minItems": 1, "items": {"type": "string", "required": true}, "required": false}
     ]
 };
-var acl = {
+let acl = {
     "type": "object",
     "required": false,
     "properties": {
@@ -40,6 +40,7 @@ var acl = {
         }
     }
 };
+let productAclSchema = require("./schemas/productAcl.js");
 
 module.exports = {
     type: 'service',
@@ -99,7 +100,25 @@ module.exports = {
         438: "Invalid tenant Id provided",
         460: "Unable to find product",
         461: "Unable to find package",
-
+	
+	    462: "You are not allowed to remove the tenant you are currently logged in with",
+	    463: "You are not allowed to remove the application you are currently logged in with",
+	    464: "You are not allowed to remove the key you are currently logged in with",
+	    465: "You are not allowed to remove the external key you are currently logged in with",
+	    466: "You are not allowed to remove the product you are currently logged in with",
+	    467: "You are not allowed to remove the package you are currently logged in with",
+	
+	    468: "Product already exists",
+	    469: "Unable to add the product record",
+	    470: "Unable to add the product package",
+	    471: "Product package already exists",
+	    472: "Unable to update the product record",
+	    473: "Unable to update the product package",
+	    474: "Missing required field: either id or code",
+	    475: "Unable to remove product record",
+	    476: "Unable to remove product package",
+	    477: "Invalid product code provided",
+	    
         499: "Error in oAuth",
         500: "This record in locked. You cannot modify or delete it",
 
@@ -186,7 +205,37 @@ module.exports = {
                 "validation": {
                     "type": "string"
                 }
-            }
+            },
+	        "id": {
+		        "source": ['query.id'],
+		        "required": true,
+		        "validation": {
+			        "type": "string"
+		        }
+	        },
+	        "description": {
+		        "source": ['body.description'],
+		        "required": false,
+		        "validation": {
+			        "type": "string"
+		        }
+	        },
+	        "_TTL": {
+		        "source": ['body._TTL'],
+		        "required": true,
+		        "validation": {
+			        "type": "string",
+			        "enum": ['6', '12', '24', '48', '72', '96', '120', '144', '168']
+		        }
+	        },
+	        'acl': productAclSchema,
+	        "name": {
+		        "source": ['body.name'],
+		        "required": true,
+		        "validation": {
+			        "type": "string"
+		        }
+	        }
         },
 
         "get": {
@@ -1339,7 +1388,7 @@ module.exports = {
 	         * product routes
 	         */
 	
-	        "/product/add": {
+	        "/product": {
 		        _apiInfo: {
 			        "l": "Add Product",
 			        "group": "Product"
@@ -1357,7 +1406,25 @@ module.exports = {
 		        }
 	        },
 	
-	        "/product/packages/add": {
+	        "/product/package": {
+		        _apiInfo: {
+			        "l": "Add Product Package",
+			        "group": "Product"
+		        },
+		        "commonFields": ['id', 'name', 'description', '_TTL', 'acl', 'soajs_project'],
+		        "code": {
+			        "source": ["body.code"],
+			        "required": true,
+			        "validation": {
+				        "type": "string",
+				        "format": "alphanumeric",
+				        "minLength": 4,
+				        "maxLength": 5
+			        }
+		        }
+	        },
+	        
+	        "/product/console/package": {
 		        _apiInfo: {
 			        "l": "Add Product Package",
 			        "group": "Product"
@@ -1540,7 +1607,7 @@ module.exports = {
 			    "commonFields": ['id', 'name', 'description', 'soajs_project']
 		    },
 		
-		    "/product/packages": {
+		    "/product/package": {
 			    _apiInfo: {
 				    "l": "Update Product Package",
 				    "group": "Product"
@@ -1799,7 +1866,7 @@ module.exports = {
 		        }
 	        },
 	
-	        "/product/packages": {
+	        "/product/package": {
 		        _apiInfo: {
 			        "l": "Delete Product Package",
 			        "group": "Product"

@@ -1,17 +1,18 @@
 'use strict';
-var soajs = require('soajs');
-var config = require('./config.js');
-var service = new soajs.server.service(config);
-var uracDriver = require("soajs.urac.driver");
-var coreModules = require("soajs");
-var provision = coreModules.provision;
-var product = require("./lib/product.js");
-
+const soajs = require('soajs');
+const config = require('./config.js');
+const service = new soajs.server.service(config);
+const uracDriver = require("soajs.urac.driver");
+const coreModules = require("soajs");
+const provision = coreModules.provision;
+let BL = {
+	product: require("./lib/product.js")
+};
 let SSOT = {
 	product: require('./model/product'),
 };
 
-var BLModule = require('./lib/urac.js');
+const BLModule = require('./lib/urac.js');
 
 /**
  * Initialize the Business Logic model
@@ -556,7 +557,9 @@ service.init(function () {
 	 */
 	service.get("/product/list", function (req, res) {
 		req.soajs.config = config;
-		product.list(req.soajs, SSOT.product, function (error, data) {
+		let product = new SSOT.product(soajs);
+		BL.product.list(req.soajs, product, function (error, data) {
+			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
 		});
 	});
@@ -568,55 +571,9 @@ service.init(function () {
 	 */
 	service.get("/product/console/list", function (req, res) {
 		req.soajs.config = config;
-		product.listConsole(req.soajs, SSOT.product, function (error, data) {
-			return res.json(req.soajs.buildResponse(error, data));
-		});
-	});
-	
-	/**
-	 * Delete an existing product
-	 * @param {String} API route
-	 * @param {Function} API middleware
-	 */
-	service.delete("/product", function (req, res) {
-		req.soajs.config = config;
-		product.delete(req.soajs, SSOT.product, function (error, data) {
-			return res.json(req.soajs.buildResponse(error, data));
-		});
-	});
-	
-	/**
-	 * Add a new product
-	 * @param {String} API route
-	 * @param {Function} API middleware
-	 */
-	service.post("/product", function (req, res) {
-		req.soajs.config = config;
-		product.add(req.soajs, SSOT.product, function (error, data) {
-			return res.json(req.soajs.buildResponse(error, data));
-		});
-	});
-	
-	/**
-	 * Update an existing product
-	 * @param {String} API route
-	 * @param {Function} API middleware
-	 */
-	service.put("/product", function (req, res) {
-		req.soajs.config = config;
-		product.update(req.soajs, SSOT.product, function (error, data) {
-			return res.json(req.soajs.buildResponse(error, data));
-		});
-	});
-	
-	/**
-	 * Update a product scope
-	 * @param {String} API route
-	 * @param {Function} API middleware
-	 */
-	service.put("/product/scope", function (req, res) {
-		req.soajs.config = config;
-		product.updateScope(req.soajs, SSOT.product, function (error, data) {
+		let product = new SSOT.product(soajs);
+		BL.product.listConsole(req.soajs, product, function (error, data) {
+			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
 		});
 	});
@@ -628,7 +585,9 @@ service.init(function () {
 	 */
 	service.get("/product", function (req, res) {
 		req.soajs.config = config;
-		product.get(req.soajs, SSOT.product, function (error, data) {
+		let product = new SSOT.product(soajs);
+		BL.product.get(req.soajs, product, function (error, data) {
+			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
 		});
 	});
@@ -640,7 +599,9 @@ service.init(function () {
 	 */
 	service.get("/product/purge", function (req, res) {
 		req.soajs.config = config;
-		product.purgeProduct(req.soajs, SSOT.product, function (error, data) {
+		let product = new SSOT.product(soajs);
+		BL.product.purgeProduct(req.soajs, product, function (error, data) {
+			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
 		});
 	});
@@ -650,9 +611,11 @@ service.init(function () {
 	 * @param {String} API route
 	 * @param {Function} API middleware
 	 */
-	service.get("/product/packages", function (req, res) {
+	service.get("/product/package", function (req, res) {
 		req.soajs.config = config;
-		product.getPackage(req.soajs, SSOT.product, function (error, data) {
+		let product = new SSOT.product(soajs);
+		BL.product.getPackage(req.soajs, product, function (error, data) {
+			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
 		});
 	});
@@ -664,19 +627,94 @@ service.init(function () {
 	 */
 	service.get("/product/packages/list", function (req, res) {
 		req.soajs.config = config;
-		product.listPackage(req.soajs, SSOT.product, function (error, data) {
+		let product = new SSOT.product(soajs);
+		BL.product.listPackage(req.soajs, product, function (error, data) {
+			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
 		});
 	});
+	
+	/**
+	 * Delete an existing product
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.delete("/product", function (req, res) {
+		req.soajs.config = config;
+		let product = new SSOT.product(soajs);
+		BL.product.delete(req.soajs, product, function (error, data) {
+			product.closeConnection();
+			return res.json(req.soajs.buildResponse(error, data));
+		});
+	});
+	
+	/**
+	 * Add a new product
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.post("/product", function (req, res) {
+		req.soajs.config = config;
+		let product = new SSOT.product(soajs);
+		BL.product.add(req.soajs, product, function (error, data) {
+			product.closeConnection();
+			return res.json(req.soajs.buildResponse(error, data));
+		});
+	});
+	
+	/**
+	 * Update an existing product
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.put("/product", function (req, res) {
+		req.soajs.config = config;
+		let product = new SSOT.product(soajs);
+		BL.product.update(req.soajs, product, function (error, data) {
+			product.closeConnection();
+			return res.json(req.soajs.buildResponse(error, data));
+		});
+	});
+	
+	/**
+	 * Update a product scope
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.put("/product/scope", function (req, res) {
+		req.soajs.config = config;
+		let product = new SSOT.product(soajs);
+		BL.product.updateScope(req.soajs, product, function (error, data) {
+			product.closeConnection();
+			return res.json(req.soajs.buildResponse(error, data));
+		});
+	});
+	
 	
 	/**
 	 * Add a new product package
 	 * @param {String} API route
 	 * @param {Function} API middleware
 	 */
-	service.post("/product/packages", function (req, res) {
+	service.post("/product/package", function (req, res) {
 		req.soajs.config = config;
-		product.addPackage(req.soajs, SSOT.product, function (error, data) {
+		let product = new SSOT.product(soajs);
+		BL.product.addPackage(req.soajs, product, function (error, data) {
+			product.closeConnection();
+			return res.json(req.soajs.buildResponse(error, data));
+		});
+	});
+	
+	/**
+	 * Add a new console product package
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.post("/product/console/package", function (req, res) {
+		req.soajs.config = config;
+		let product = new SSOT.product(soajs);
+		BL.product.addConsolePackage(req.soajs, product, function (error, data) {
+			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
 		});
 	});
@@ -686,9 +724,11 @@ service.init(function () {
 	 * @param {String} API route
 	 * @param {Function} API middleware
 	 */
-	service.put("/product/packages", function (req, res) {
+	service.put("/product/package", function (req, res) {
 		req.soajs.config = config;
-		product.updatePackage(req.soajs, SSOT.product, function (error, data) {
+		let product = new SSOT.product(soajs);
+		BL.product.updatePackage(req.soajs, product, function (error, data) {
+			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
 		});
 	});
@@ -698,9 +738,11 @@ service.init(function () {
 	 * @param {String} API route
 	 * @param {Function} API middleware
 	 */
-	service.delete("/product/packages", function (req, res) {
+	service.delete("/product/package", function (req, res) {
 		req.soajs.config = config;
-		product.deletePackage(req.soajs, SSOT.product, function (error, data) {
+		let product = new SSOT.product(soajs);
+		BL.product.deletePackage(req.soajs, product, function (error, data) {
+			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
 		});
 	});
