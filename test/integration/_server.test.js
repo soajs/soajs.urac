@@ -5,7 +5,6 @@ var helper = require("../helper.js");
 var sampleData = require("soajs.mongodb.data/modules/urac");
 var urac, controller;
 
-var request = require("request");
 var soajs = require('soajs');
 
 var Mongo = soajs.mongo;
