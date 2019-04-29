@@ -1,7 +1,6 @@
 "use strict";
-let colName = "products";
-let envColName = "environment";
-const productsCollectionName = 'products';
+const colName = "products";
+const envColName = "environment";
 const core = require("soajs");
 const async = require("async");
 const soajsLib = require("soajs.core.libs");
@@ -22,7 +21,7 @@ function Product(soajs) {
 		__self.mongoCore = new Mongo(__self.soajs.registry.coreDB.provision);
 		if (firstRun) {
 			//products
-			__self.mongoCore.createIndex(productsCollectionName, {code: 1, "packages.code": 1}, errorLogger);
+			__self.mongoCore.createIndex(colName, {code: 1, "packages.code": 1}, errorLogger);
 			__self.soajs.log.debug("Indexes Updated!");
 			firstRun = false;
 		}

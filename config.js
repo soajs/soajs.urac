@@ -602,7 +602,7 @@ module.exports = {
 		        "commonFields": ['id', 'soajs_project']
 	        },
 	
-	        "/product/packages": {
+	        "/product/package": {
 		        _apiInfo: {
 			        "l": "Get Product Package",
 			        "group": "Product"

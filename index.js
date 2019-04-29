@@ -557,7 +557,7 @@ service.init(function () {
 	 */
 	service.get("/product/list", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.list(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -571,7 +571,7 @@ service.init(function () {
 	 */
 	service.get("/product/console/list", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.listConsole(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -585,7 +585,7 @@ service.init(function () {
 	 */
 	service.get("/product", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.get(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -599,7 +599,7 @@ service.init(function () {
 	 */
 	service.get("/product/purge", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.purgeProduct(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -613,7 +613,7 @@ service.init(function () {
 	 */
 	service.get("/product/package", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.getPackage(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -627,7 +627,7 @@ service.init(function () {
 	 */
 	service.get("/product/packages/list", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.listPackage(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -641,7 +641,7 @@ service.init(function () {
 	 */
 	service.delete("/product", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.delete(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -655,7 +655,7 @@ service.init(function () {
 	 */
 	service.post("/product", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.add(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -669,7 +669,7 @@ service.init(function () {
 	 */
 	service.put("/product", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.update(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -683,7 +683,7 @@ service.init(function () {
 	 */
 	service.put("/product/scope", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.updateScope(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -698,7 +698,7 @@ service.init(function () {
 	 */
 	service.post("/product/package", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.addPackage(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -712,7 +712,7 @@ service.init(function () {
 	 */
 	service.post("/product/console/package", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.addConsolePackage(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -726,7 +726,7 @@ service.init(function () {
 	 */
 	service.put("/product/package", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.updatePackage(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
@@ -740,7 +740,7 @@ service.init(function () {
 	 */
 	service.delete("/product/package", function (req, res) {
 		req.soajs.config = config;
-		let product = new SSOT.product(soajs);
+		let product = new SSOT.product(req.soajs);
 		BL.product.deletePackage(req.soajs, product, function (error, data) {
 			product.closeConnection();
 			return res.json(req.soajs.buildResponse(error, data));
