@@ -50,6 +50,7 @@ describe("importing sample data", function () {
 				require("./urac.passport.test.js");
 				require("./urac.grps.test.js");
 				require("./urac.test.js");
+				require("./urac.product.js");
 				//require("./urac.test.owner.js");
 				done();
 			}, 1500);

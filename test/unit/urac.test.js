@@ -7,7 +7,7 @@ var urac = helper.requireModule('./lib/urac');
 const sinon = require('sinon');
 var Mongo = require("soajs").mongo;
 
-describe("testing rules", function () {
+describe.skip("testing rules", function () {
 	
 	let mongoStub;
 	let mongoFindOneStub;
