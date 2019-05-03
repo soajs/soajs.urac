@@ -41,6 +41,27 @@ Group.prototype.getGroups = function (cb) {
     });
 };
 
+Group.prototype.addEnvironment = function (cb) {
+    let __self = this;
+    let env_s = 'config.allowedEnvironments.' + __self.soajs.inputmaskData.env.toUpperCase();
+    let s = {
+        '$set': {
+            [env_s]: {}
+        }
+    };
+    let condition = {'code': {'$in': __self.soajs.inputmaskData.groups}};
+    let extraOptions = {
+        'upsert': false,
+        'safe': true
+    };
+    __self.mongoCore.update(colName, condition, s, extraOptions, (err, records) => {
+        if (err) {
+            return cb(err);
+        }
+        return cb(null, records);
+    });
+};
+
 Group.prototype.closeConnection = function () {
     let __self = this;
 
