@@ -143,6 +143,9 @@ Group.prototype.editGroup = function (cb) {
 /**
  * To delete a group
  *
+ * inputmaskData should have
+ *      required (id)
+ *
  * @param cb
  */
 Group.prototype.deleteGroup = function (cb) {
