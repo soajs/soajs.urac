@@ -10,6 +10,7 @@ function Group(soajs) {
         __self.mongoCore = new Mongo(__self.soajs.registry.coreDB.provision);
     }
 }
+
 Group.prototype.getGroup = function (cb) {
     let __self = this;
     let condition = {};
@@ -23,6 +24,20 @@ Group.prototype.getGroup = function (cb) {
             return cb(err);
         }
         return cb(null, record);
+    });
+};
+
+Group.prototype.getGroups = function (cb) {
+    let __self = this;
+    let condition = {};
+    if (__self.soajs.inputmaskData.id) {
+        condition = {"tenant.id": __self.soajs.inputmaskData.tId};
+    }
+    __self.mongoCore.find(colName, condition, null, null, (err, records) => {
+        if (err) {
+            return cb(err);
+        }
+        return cb(null, records);
     });
 };
 
