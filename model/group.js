@@ -155,6 +155,10 @@ Group.prototype.deleteGroup = function (cb) {
         if (err) {
             return cb(err);
         }
+        if (record.locked) {
+            //return error msg that this record is locked
+            return cb({"code": 500, "msg": __self.soajs.config.errors[500]});
+        }
         __self.mongoCore.remove(colName, condition, (err) => {
             if (err) {
                 return cb(err);
