@@ -445,6 +445,20 @@ service.init(function () {
 	});
 	
 	/**
+	 * Get one group record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.get("/admin/group", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.group.getGroup(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
 	 * Add a new group record
 	 * @param {String} API route
 	 * @param {Function} API middleware
@@ -523,6 +537,76 @@ service.init(function () {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.adminOLD.listAll(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Invite User
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.post("/admin/inviteUser", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.inviteUser(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Un Invite User
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.put("/admin/unInviteUsers", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.unInviteUsers(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * add  User tenant config
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.post("/admin/userTenantConfig", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.addEditPinCode(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * update  User tenant config
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.put("/admin/userTenantConfig", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.addEditPinCode(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Invite User
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.delete("/admin/pinConfig", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.deletePinCode(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
