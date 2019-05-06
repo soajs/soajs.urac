@@ -2357,7 +2357,7 @@ describe("simple urac tests", function () {
 						}
 					}
 				};
-				requester('admin/pinConfig', 'post', params, function (error, body) {
+				requester('admin/userTenantConfig', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					assert.ok(body.data);
@@ -2375,7 +2375,7 @@ describe("simple urac tests", function () {
 						}
 					}
 				};
-				requester('admin/pinConfig', 'post', params, function (error, body) {
+				requester('admin/userTenantConfig', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					done();
@@ -2396,7 +2396,7 @@ describe("simple urac tests", function () {
 						}
 					}
 				};
-				requester('admin/pinConfig', 'post', params, function (error, body) {
+				requester('admin/userTenantConfig', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					done();
@@ -2417,7 +2417,7 @@ describe("simple urac tests", function () {
 						}
 					}
 				};
-				requester('admin/pinConfig', 'post', params, function (error, body) {
+				requester('admin/userTenantConfig', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					done();

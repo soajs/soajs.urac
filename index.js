@@ -557,7 +557,7 @@ service.init(function () {
 	});
 	
 	/**
-	 * Invite User
+	 * Un Invite User
 	 * @param {String} API route
 	 * @param {Function} API middleware
 	 */
@@ -571,11 +571,11 @@ service.init(function () {
 	});
 	
 	/**
-	 * Invite User
+	 * add  User tenant config
 	 * @param {String} API route
 	 * @param {Function} API middleware
 	 */
-	service.post("/admin/pinConfig", function (req, res) {
+	service.post("/admin/userTenantConfig", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.user.addEditPinCode(req, function (error, data) {
@@ -585,11 +585,11 @@ service.init(function () {
 	});
 	
 	/**
-	 * Invite User
+	 * update  User tenant config
 	 * @param {String} API route
 	 * @param {Function} API middleware
 	 */
-	service.put("/admin/pinConfig", function (req, res) {
+	service.put("/admin/userTenantConfig", function (req, res) {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.user.addEditPinCode(req, function (error, data) {

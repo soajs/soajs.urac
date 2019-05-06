@@ -1503,7 +1503,7 @@ module.exports = {
 			        }
 		        }
 	        },
-	        "/admin/pinConfig": {
+	        "/admin/userTenantConfig": {
 		        "_apiInfo": {
 			        "l": "Add Pin Information",
 			        "group": "Administration"
@@ -1758,7 +1758,7 @@ module.exports = {
 	        },
         },
 	    "put": {
-		    "/admin/pinConfig": {
+		    "/admin/userTenantConfig": {
 			    "_apiInfo": {
 				    "l": "Add Pin Information",
 				    "group": "Administration"
