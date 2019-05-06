@@ -1076,7 +1076,25 @@ module.exports = {
                     "source": ['body.confirmation'],
                     "required": false,
                     "validation": {"type": "string"}
-                }
+                },
+	            "pin": {
+		            "source": ['body.pin'],
+		            "required": false,
+		            "validation": {
+			            "type": "object",
+			            "properties": {
+				            "code": {
+					            "required": true,
+					            "type": 'string'
+				            },
+				            "allowed": {
+					            "required": true,
+					            "type": 'boolean'
+				            }
+			            },
+			            "additionalProperties": false
+		            }
+	            }
             },
             '/admin/editUser': {
                 "_apiInfo": {
@@ -1202,7 +1220,25 @@ module.exports = {
                     "source": ['body.confirmation'],
                     "required": false,
                     "validation": {"type": "string"}
-                }
+                },
+	            "pin": {
+		            "source": ['body.pin'],
+		            "required": false,
+		            "validation": {
+			            "type": "object",
+			            "properties": {
+				            "code": {
+				            	"required": false,
+					            "type": 'string'
+				            },
+				            "allowed": {
+					            "required": false,
+					            "type": 'boolean'
+				            }
+			            },
+			            "additionalProperties": false
+		            }
+	            }
             },
             '/admin/editUserConfig': {
                 "_apiInfo": {
