@@ -461,6 +461,67 @@ describe("urac group tests", function () {
 			
 		});
 		
+		describe("testing add env to  group API", function () {
+			it("SUCCESS - will add env to  group API", function (done) {
+				var params = {
+					'form': {
+						groups: ["owner"],
+						env: "DESE"
+					}
+				};
+				requester('admin/group/addEnvironment', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+		});
+		
+		describe("testing get group API", function () {
+			it("SUCCESS - will return one grp record", function (done) {
+				var params = {
+					'qs': {
+						id: "55128764e603d7e01ab1688f"
+					}
+				};
+				requester('admin/group', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+			
+			it("Fail - invalid id", function (done) {
+				var params = {
+					'qs': {
+						id: "55128764e603d7e01ab16wqeqwe88f"
+					}
+				};
+				requester('admin/group', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.deepEqual(body.errors.details[0], { "code": 417, "message": "Invalid group id provided" });
+					done();
+				});
+			});
+			
+			it("Fail - group not found", function (done) {
+				var params = {
+					'qs': {
+						id: "55128764e603d7e01ab1678f"
+					}
+				};
+				requester('admin/group', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.deepEqual(body.errors.details[0], { "code": 415, "message": "Unable to find group." });
+					done();
+				});
+			});
+		});
+		
 		describe("testing list group API", function () {
 			it("SUCCESS - will return all grps records", function (done) {
 				var params = {};
@@ -511,7 +572,6 @@ describe("urac group tests", function () {
 					requester('admin/group/list', 'get', params, function (error, body) {
 						assert.ifError(error);
 						assert.ok(body);
-						console.log(JSON.stringify(body));
 						assert.ok(body.data);
 						assert.equal(body.data.length, 0);
 						done();

@@ -506,6 +506,18 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
+	        '/admin/group': {
+		        "_apiInfo": {
+			        "l": "Get group record by _id",
+			        "group": "Administration"
+		        },
+		        "commonFields": ["model"],
+		        "id": {
+			        "source": ['query.id'],
+			        "required": true,
+			        "validation": {"type": "string"}
+		        }
+	        },
             "/admin/all": {
                 "_apiInfo": {
                     "l": "Get all users & groups",

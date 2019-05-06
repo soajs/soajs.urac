@@ -445,6 +445,20 @@ service.init(function () {
 	});
 	
 	/**
+	 * Get one group record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.get("/admin/group", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.group.getGroup(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
 	 * Add a new group record
 	 * @param {String} API route
 	 * @param {Function} API middleware
