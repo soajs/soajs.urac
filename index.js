@@ -528,6 +528,76 @@ service.init(function () {
 		});
 	});
 	
+	/**
+	 * Invite User
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.post("/admin/inviteUser", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.inviteUser(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Invite User
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.put("/admin/unInviteUsers", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.unInviteUsers(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Invite User
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.post("/admin/pinConfig", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.addEditPinCode(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Invite User
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.put("/admin/pinConfig", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.addEditPinCode(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Invite User
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.delete("/admin/pinConfig", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.deletePinCode(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
 	// service.get("/tenant/list", function (req, res) {
 	// 	initBLModel(req, res, function (BLInstance) {
 	// 		req.soajs.config = config;

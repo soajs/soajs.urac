@@ -94,6 +94,9 @@ module.exports = {
         425: "Unable to find record.",
         426: "Invalid id provided",
         427: "Driver not found",
+	    428: "A username or an email must be provided.",
+	    429: "You already invited this user.",
+	    430: "Tenant not found for this user.",
 
         436: "Invalid tenant Id provided",
         437: "Unable to get the environment records",
@@ -460,7 +463,12 @@ module.exports = {
                     "source": ['query.tId'],
                     "required": false,
                     "validation": {"type": "string"}
-                }
+                },
+	            "config": {
+		            "source": ['query.config'],
+		            "required": false,
+		            "validation": {"type": "boolean"}
+	            }
             },
             '/admin/users/count': {
                 "_apiInfo": {
@@ -505,7 +513,6 @@ module.exports = {
                 },
                 "commonFields": ["model", "isOwner"]
             },
-	        
             // "/tenant/list": {
             //     _apiInfo: {
             //         "l": "List tenants",
@@ -820,6 +827,7 @@ module.exports = {
 		        "commonFields": ['appId', 'key', 'soajs_project']
 	        },
         },
+	    
         "post": {
 
             "/openam/login": {
@@ -1423,7 +1431,109 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
-	
+	        
+	        "/admin/inviteUser": {
+		        "_apiInfo": {
+			        "l": "Invite User",
+			        "group": "Administration"
+		        },
+		        "commonFields": ["model"],
+		        "username": {
+			        "source": ['query.username'],
+			        "required": false,
+			        "validation": {"type": "string"}
+		        },
+		        "email": {
+			        "source": ['query.email'],
+			        "required": false,
+			        "validation": {"type": "string"}
+		        },
+		        "tenantId": {
+			        "source": ['body.tenantId'],
+			        "required": true,
+			        "validation": {
+				        "type": "string"
+			        }
+		        },
+		        "tenantCode": {
+			        "source": ['body.tenantCode'],
+			        "required": true,
+			        "validation": {
+				        "type": "string"
+			        }
+		        },
+		        "groups": {
+			        "source": ['body.groups'],
+			        "required": false,
+			        "validation": {
+				        "type": "array",
+				        "items": {
+					        "type": "string"
+				        }
+			        }
+		        },
+		        "pin": {
+			        "source": ['body.pin'],
+			        "required": false,
+			        "validation": {
+				        "type": "object",
+				        "properties": {
+				        	"code": {
+				        		"type": "string",
+						        "required": true
+					        },
+					        "allowed": {
+						        "type": "boolean",
+						        "required": true
+					        }
+				        },
+				        "additionalProperties": false
+			        }
+		        }
+	        },
+	        "/admin/pinConfig": {
+		        "_apiInfo": {
+			        "l": "Add Pin Information",
+			        "group": "Administration"
+		        },
+		        "commonFields": ["model"],
+		        "username": {
+			        "source": ['query.username'],
+			        "required": false,
+			        "validation": {"type": "string"}
+		        },
+		        "email": {
+			        "source": ['query.email'],
+			        "required": false,
+			        "validation": {"type": "string"}
+		        },
+		        "tenantId": {
+			        "source": ['body.tenantId'],
+			        "required": true,
+			        "validation": {
+				        "type": "string"
+			        }
+		        },
+		        "pin": {
+			        "source": ['body.pin'],
+			        "required": false,
+			        "validation": {
+				        "type": "object",
+				        "properties": {
+					        "code": {
+						        "type": "string",
+						        "required": true
+					        },
+					        "allowed": {
+						        "type": "boolean",
+						        "required": false
+					        }
+				        },
+				        "additionalProperties": false
+			        }
+		        }
+	        },
+	        
 	        /**
 	         * product routes
 	         */
@@ -1636,6 +1746,95 @@ module.exports = {
 	        },
         },
 	    "put": {
+		    "/admin/pinConfig": {
+			    "_apiInfo": {
+				    "l": "Add Pin Information",
+				    "group": "Administration"
+			    },
+			    "commonFields": ["model"],
+			    "username": {
+				    "source": ['query.username'],
+				    "required": false,
+				    "validation": {"type": "string"}
+			    },
+			    "email": {
+				    "source": ['query.email'],
+				    "required": false,
+				    "validation": {"type": "string"}
+			    },
+			    "tenantId": {
+				    "source": ['body.tenantId'],
+				    "required": true,
+				    "validation": {
+					    "type": "string"
+				    }
+			    },
+			    "pin": {
+				    "source": ['body.pin'],
+				    "required": false,
+				    "validation": {
+					    "type": "object",
+					    "properties": {
+						    "code": {
+							    "type": "string",
+							    "required": true
+						    },
+						    "allowed": {
+							    "type": "boolean",
+							    "required": false
+						    }
+					    },
+					    "additionalProperties": false
+				    }
+			    },
+			    "groups": {
+				    "source": ['body.groups'],
+				    "required": false,
+				    "validation": {
+					    "type": "array",
+					    "items": {
+						    "type": "string"
+					    }
+				    }
+			    }
+		    },
+		
+		    "/admin/unInviteUsers": {
+			    "_apiInfo": {
+				    "l": "Un-Invite USer",
+				    "group": "Administration"
+			    },
+			    "commonFields": ["model"],
+			    "username": {
+				    "source": ['body.username'],
+				    "required": false,
+				    "validation": {
+					    "type": "array",
+					    "items": {
+						    "type": "string",
+						    "min": 1
+					    }
+				    }
+			    },
+			    "email": {
+				    "source": ['body.email'],
+				    "required": false,
+				    "validation": {
+					    "type": "array",
+					    "items": {
+						    "type": "string",
+						    "min": 1
+					    }
+				    }
+			    },
+			    "tenantId": {
+				    "source": ['query.tenantId'],
+				    "required": true,
+				    "validation": {
+					    "type": "string"
+				    }
+			    }
+		    },
 		    /**
 		     * product routes
 		     */
@@ -1880,6 +2079,31 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
+	
+	        "/admin/pinConfig": {
+		        "_apiInfo": {
+			        "l": "Remove Pin",
+			        "group": "Administration"
+		        },
+		        "commonFields": ["model"],
+		        "username": {
+			        "source": ['query.username'],
+			        "required": false,
+			        "validation": {"type": "string"}
+		        },
+		        "email": {
+			        "source": ['query.email'],
+			        "required": false,
+			        "validation": {"type": "string"}
+		        },
+		        "tenantId": {
+			        "source": ['query.tenantId'],
+			        "required": true,
+			        "validation": {
+				        "type": "string"
+			        }
+		        }
+	        },
 	        
 	        /**
 	         * product routes
