@@ -1046,7 +1046,7 @@ describe("simple urac tests", function () {
 				assert.ok(body);
 				
 				assert.ok(body.data);
-				token = body.data;
+				token = body.data.token;
 				done();
 			});
 		});
@@ -1063,7 +1063,10 @@ describe("simple urac tests", function () {
 				assert.ok(body);
 				
 				assert.ok(body.data);
-				token = body.data;
+				token = body.data.token;
+				console.log("-----------token------")
+				console.log(body.data)
+				console.log("-----------token------")
 				mongo.findOne('users', {'username': 'john123'}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
