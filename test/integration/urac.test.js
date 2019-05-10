@@ -297,7 +297,7 @@ describe("simple urac tests", function () {
 			requester('admin/editUserConfig', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				// console.log(JSON.stringify(body));
+				// 
 				// assert.equal(body.errors.details[0].code, 500);
 				done();
 			});
@@ -325,7 +325,7 @@ describe("simple urac tests", function () {
 			requester('admin/editUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				// console.log(JSON.stringify(body));
+				// 
 				// assert.equal(body.errors.details[0].code, 500);
 				done();
 				
@@ -348,7 +348,7 @@ describe("simple urac tests", function () {
 			requester('admin/editUserConfig', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
 				done();
 			});
@@ -450,7 +450,7 @@ describe("simple urac tests", function () {
 					"code": 172,
 					"message": "Missing required field: firstName, lastName"
 				});
-				console.log(JSON.stringify(body));
+				
 				done();
 			});
 		});
@@ -537,7 +537,7 @@ describe("simple urac tests", function () {
 				assert.ok(body);
 				assert.ok(body.errors);
 				assert.deepEqual(body.errors.details[0], {"code": 402, "message": "User account already exists."});
-				console.log(JSON.stringify(body));
+				
 				done();
 			});
 		});
@@ -552,7 +552,7 @@ describe("simple urac tests", function () {
 				assert.ok(body);
 				assert.ok(body.errors);
 				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: token"});
-				console.log(JSON.stringify(body));
+				
 				done();
 			});
 		});
@@ -566,7 +566,7 @@ describe("simple urac tests", function () {
 			
 			requester('join/validate', 'get', params, function (error, body) {
 				assert.ifError(error);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body);
 				assert.ok(body.data);
 				//assert.deepEqual(body.errors.details[0], {"code": 302, "message": "Missing required field: token"});
@@ -583,7 +583,7 @@ describe("simple urac tests", function () {
 			
 			requester('join/validate', 'get', params, function (error, body) {
 				assert.ifError(error);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body);
 				assert.deepEqual(body.errors.details[0], {"code": 406, "message": "Invalid or token has expired."});
 				done();
@@ -663,7 +663,7 @@ describe("simple urac tests", function () {
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {
 					"code": 172,
 					"message": "Missing required field: username, tId, tCode"
@@ -686,7 +686,7 @@ describe("simple urac tests", function () {
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 611, "message": "Invalid tenant id provided"});
 				done();
 			});
@@ -707,7 +707,7 @@ describe("simple urac tests", function () {
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
 				myNewToken = body.data.token;
 				mongo.findOne("users", {'username': 'john_smith'}, function (error, userRecord) {
@@ -744,7 +744,7 @@ describe("simple urac tests", function () {
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
 				lisaAdd_Token = body.data.token;
 				mongo.findOne("users", {'username': 'lisa'}, function (error, userRecord) {
@@ -780,7 +780,7 @@ describe("simple urac tests", function () {
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
 				mongo.findOne('users', {'username': 'lisa'}, function (error, userRecord) {
 					assert.ifError(error);
@@ -817,7 +817,7 @@ describe("simple urac tests", function () {
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
 				mongo.findOne('users', {'username': 'john_smith'}, function (error, userRecord) {
 					assert.ifError(error);
@@ -860,7 +860,7 @@ describe("simple urac tests", function () {
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
 				mongo.findOne("users", {'username': 'activeuser'}, function (error, userRecord) {
 					assert.ifError(error);
@@ -891,7 +891,7 @@ describe("simple urac tests", function () {
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.errors);
 				assert.equal(body.errors.codes[0], 424);
 				done();
@@ -915,7 +915,7 @@ describe("simple urac tests", function () {
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.errors);
 				assert.equal(body.errors.codes[0], 424);
 				done();
@@ -940,7 +940,7 @@ describe("simple urac tests", function () {
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.errors);
 				assert.equal(body.errors.codes[0], 408);
 				done();
@@ -961,7 +961,7 @@ describe("simple urac tests", function () {
 			requester('admin/addUser', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 402, "message": "User account already exists."});
 				done();
 			});
@@ -980,7 +980,7 @@ describe("simple urac tests", function () {
 			requester('forgotPassword', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: username"});
 				done();
 			});
@@ -996,7 +996,7 @@ describe("simple urac tests", function () {
 			requester('forgotPassword', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 403, "message": "User Not Found!"});
 				done();
 			});
@@ -1015,9 +1015,9 @@ describe("simple urac tests", function () {
 			requester('forgotPassword', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
-				fp_tokenlisa = body.data;
+				fp_tokenlisa = body.data.token;
 				
 				mongo.findOne('tokens', {'token': fp_tokenlisa}, function (err, tokenRecord) {
 					if (err || !tokenRecord) {
@@ -1044,9 +1044,9 @@ describe("simple urac tests", function () {
 			requester('forgotPassword', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
-				token = body.data;
+				token = body.data.token;
 				done();
 			});
 		});
@@ -1061,9 +1061,9 @@ describe("simple urac tests", function () {
 			requester('forgotPassword', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
-				token = body.data;
+				token = body.data.token;
 				mongo.findOne('users', {'username': 'john123'}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
@@ -1092,7 +1092,7 @@ describe("simple urac tests", function () {
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {
 					"code": 172,
 					"message": "Missing required field: confirmation"
@@ -1115,7 +1115,7 @@ describe("simple urac tests", function () {
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {
 					"code": 408,
 					"message": "The password and its confirmation do not match"
@@ -1138,7 +1138,7 @@ describe("simple urac tests", function () {
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 406, "message": "Invalid or token has expired."});
 				done();
 			});
@@ -1158,7 +1158,7 @@ describe("simple urac tests", function () {
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 406, "message": "Invalid or token has expired."});
 				done();
 			});
@@ -1178,7 +1178,7 @@ describe("simple urac tests", function () {
 			requester('resetPassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
 				token = body.data;
 				mongo.findOne('users', {'username': 'john123'}, function (error, userRecord) {
@@ -1206,7 +1206,7 @@ describe("simple urac tests", function () {
 			requester('account/getUser', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: username"});
 				done();
 			});
@@ -1221,7 +1221,7 @@ describe("simple urac tests", function () {
 			requester('account/getUser', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {
 					"code": 405,
 					"message": "Unable to find User. Please try again."
@@ -1239,7 +1239,7 @@ describe("simple urac tests", function () {
 			requester('account/getUser', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
 				delete body.data.password;
 				delete body.data.ts;
@@ -1274,7 +1274,7 @@ describe("simple urac tests", function () {
 			requester('account/getUser', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
 				delete body.data.password;
 				delete body.data.ts;
@@ -1314,7 +1314,7 @@ describe("simple urac tests", function () {
 			requester('account/changePassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: uId"});
 				done();
 			});
@@ -1335,7 +1335,7 @@ describe("simple urac tests", function () {
 			requester('account/changePassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {
 					"code": 408,
 					"message": "The password and its confirmation do not match"
@@ -1359,7 +1359,7 @@ describe("simple urac tests", function () {
 			requester('account/changePassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
 				done();
 			});
@@ -1380,7 +1380,7 @@ describe("simple urac tests", function () {
 			requester('account/changePassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {
 					"code": 405,
 					"message": "Unable to find User. Please try again."
@@ -1404,7 +1404,7 @@ describe("simple urac tests", function () {
 			requester('account/changePassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 409, "message": "Invalid old password provided"});
 				done();
 			});
@@ -1425,7 +1425,7 @@ describe("simple urac tests", function () {
 			requester('account/changePassword', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
 				done();
 			});
@@ -1444,7 +1444,7 @@ describe("simple urac tests", function () {
 			requester('account/changeEmail', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: uId"});
 				done();
 			});
@@ -1462,7 +1462,7 @@ describe("simple urac tests", function () {
 			requester('account/changeEmail', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
 				done();
 			});
@@ -1480,7 +1480,7 @@ describe("simple urac tests", function () {
 			requester('account/changeEmail', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {
 					"code": 412,
 					"message": "You have provided the same existing email address"
@@ -1501,7 +1501,7 @@ describe("simple urac tests", function () {
 			requester('account/changeEmail', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 402, "message": errorCodes[402]});
 				done();
 			});
@@ -1520,7 +1520,7 @@ describe("simple urac tests", function () {
 				assert.ifError(error);
 				assert.ok(body);
 				assert.ok(body.data);
-				console.log(JSON.stringify(body));
+				
 				mongo.findOne('users', {"username": "john123"}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
@@ -1553,7 +1553,7 @@ describe("simple urac tests", function () {
 				assert.ifError(error);
 				assert.ok(body);
 				assert.ok(body.data);
-				console.log(JSON.stringify(body));
+				
 				newToken = body.data;
 				mongo.findOne('users', {"username": "john123"}, function (error, userRecord) {
 					assert.ifError(error);
@@ -1583,7 +1583,7 @@ describe("simple urac tests", function () {
 			requester('changeEmail/validate', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: token"});
 				done();
 			});
@@ -1598,7 +1598,7 @@ describe("simple urac tests", function () {
 			requester('changeEmail/validate', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 406, "message": "Invalid or token has expired."});
 				done();
 			});
@@ -1612,7 +1612,7 @@ describe("simple urac tests", function () {
 			};
 			requester('changeEmail/validate', 'get', params, function (error, body) {
 				assert.ifError(error);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body);
 				assert.ok(body.data);
 				mongo.findOne('users', {'username': 'john123'}, function (error, userRecord) {
@@ -1650,7 +1650,7 @@ describe("simple urac tests", function () {
 			requester('account/changeEmail', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
 				changeEmailToken = body.data;
 				mongo.findOne('tokens', {'token': changeEmailToken}, function (error, tokenRecord) {
@@ -1679,7 +1679,7 @@ describe("simple urac tests", function () {
 			requester('changeEmail/validate', 'get', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 406, "message": "Invalid or token has expired."});
 				done();
 			});
@@ -1711,7 +1711,7 @@ describe("simple urac tests", function () {
 			requester('account/editProfile', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: uId"});
 				done();
 			});
@@ -1732,7 +1732,7 @@ describe("simple urac tests", function () {
 			requester('account/editProfile', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.deepEqual(body.errors.details[0], {
 					"code": 405,
 					"message": "Unable to find User. Please try again."
@@ -1770,7 +1770,7 @@ describe("simple urac tests", function () {
 				requester('account/editProfile', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.deepEqual(body.errors.details[0], {
 						"code": 410,
 						"message": "username taken, please choose another username"
@@ -1795,7 +1795,7 @@ describe("simple urac tests", function () {
 			requester('account/editProfile', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(JSON.stringify(body));
+				
 				assert.ok(body.data);
 				done();
 			});
@@ -1818,7 +1818,7 @@ describe("simple urac tests", function () {
 				requester('admin/editUser', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: uId"});
 					done();
 				});
@@ -1840,7 +1840,7 @@ describe("simple urac tests", function () {
 				requester('admin/editUser', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
 					done();
 				});
@@ -1862,7 +1862,7 @@ describe("simple urac tests", function () {
 				requester('admin/editUser', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.deepEqual(body.errors.details[0], {
 						"code": 410,
 						"message": "username taken, please choose another username"
@@ -1899,7 +1899,7 @@ describe("simple urac tests", function () {
 					assert.ifError(error);
 					assert.ok(body);
 					assert.ok(body.data);
-					console.log(JSON.stringify(body));
+					
 					
 					mongo.findOne("users", {'username': 'john123'}, function (error, userRecord) {
 						assert.ifError(error);
@@ -1978,7 +1978,7 @@ describe("simple urac tests", function () {
 						assert.ifError(error);
 						assert.ok(body);
 						assert.ok(body.data);
-						console.log(JSON.stringify(body));
+						
 						mongo.findOne("users", {'username': 'user2'}, function (error, record) {
 							assert.ok(record);
 							delete record.password;
@@ -2068,7 +2068,7 @@ describe("simple urac tests", function () {
 				requester('admin/changeUserStatus', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.deepEqual(body.errors.details[0], {
 						"code": 172,
 						"message": "Missing required field: status"
@@ -2087,7 +2087,7 @@ describe("simple urac tests", function () {
 				requester('admin/changeUserStatus', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
 					done();
 				});
@@ -2103,7 +2103,7 @@ describe("simple urac tests", function () {
 				requester('admin/changeUserStatus', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.equal(body.errors.details[0].code, '173');
 					assert.equal(body.errors.details[0].message, "Validation failed for field: status -> The parameter 'status' failed due to: instance is not one of enum values: active,inactive");
 					done();
@@ -2120,7 +2120,7 @@ describe("simple urac tests", function () {
 				requester('admin/changeUserStatus', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.ok(body.data);
 					mongo.findOne('users', {'_id': mongo.ObjectId(uId)}, function (error, userRecord) {
 						assert.ifError(error);
@@ -2141,7 +2141,7 @@ describe("simple urac tests", function () {
 				requester('admin/changeUserStatus', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.ok(body.data);
 					mongo.findOne('users', {'_id': mongo.ObjectId(uId)}, function (error, userRecord) {
 						assert.ifError(error);
@@ -2164,7 +2164,7 @@ describe("simple urac tests", function () {
 				};
 				requester('admin/changeUserStatus', 'get', params, function (error, body) {
 					assert.ifError(error);
-					console.log(JSON.stringify(body));
+					
 					assert.ok(body);
 					assert.ok(body.data);
 					done();
@@ -2181,7 +2181,7 @@ describe("simple urac tests", function () {
 				requester('admin/getUser', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.deepEqual(body.errors.details[0], {"code": 172, "message": "Missing required field: uId"});
 					done();
 				});
@@ -2196,7 +2196,7 @@ describe("simple urac tests", function () {
 				requester('admin/getUser', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.deepEqual(body.errors.details[0], {"code": 411, "message": "invalid user id provided"});
 					done();
 				});
@@ -2211,7 +2211,7 @@ describe("simple urac tests", function () {
 				requester('admin/getUser', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.ok(body.data);
 					assert.equal(body.data._id, uId);
 					done();
@@ -2248,6 +2248,292 @@ describe("simple urac tests", function () {
 			
 		});
 		
+		describe("testing invite user API", function () {
+			
+			it("SUCCESS - will invite user", function (done) {
+				var params = {
+					'qs': {
+						username: "john_smith",
+						email: "john.smith@soajs.org",
+					},
+					form: {
+						tenantId: "tenantId",
+						tenantCode: "tenantCode",
+						groups: ["owner"],
+						pin: {
+							code: "1234",
+							allowed: true
+						}
+					}
+				};
+				requester('admin/inviteUser', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+			
+			it("fail - no user or email", function (done) {
+				var params = {
+					form: {
+						tenantId: "tenantId",
+						tenantCode: "tenantCode",
+						groups: ["owner"],
+						pin: {
+							code: "1234",
+							allowed: true
+						}
+					}
+				};
+				requester('admin/inviteUser', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+			
+			it("fail - no user", function (done) {
+				var params = {
+					'qs': {
+						username: "john_smithsdsd",
+					},
+					form: {
+						tenantId: "tenantId",
+						tenantCode: "tenantCode",
+						groups: ["owner"],
+						pin: {
+							code: "1234",
+							allowed: true
+						}
+					}
+				};
+				requester('admin/inviteUser', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+			
+			it("fail - already added", function (done) {
+				var params = {
+					'qs': {
+						username: "john_smith",
+					},
+					form: {
+						tenantId: "tenantId",
+						tenantCode: "tenantCode",
+						groups: ["owner"],
+						pin: {
+							code: "1234",
+							allowed: true
+						}
+					}
+				};
+				requester('admin/inviteUser', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+			
+		});
+		
+		describe("testing add pin to user API", function () {
+			
+			it("SUCCESS - will add pin to  records", function (done) {
+				var params = {
+					'qs': {
+						username: "john_smith",
+						email: "john.smith@soajs.org",
+						
+					},
+					form: {
+						tenantId: "tenantId",
+						groups: ["owner2"],
+						pin: {
+							code: "12343",
+							allowed: true
+						}
+					}
+				};
+				requester('admin/userTenantConfig', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+			it("fail - no user or email", function (done) {
+				var params = {
+					form: {
+						tenantId: "tenantId",
+						groups: ["owner"],
+						pin: {
+							code: "1234",
+							allowed: true
+						}
+					}
+				};
+				requester('admin/userTenantConfig', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+			
+			it("fail - no user record", function (done) {
+				var params = {
+					'qs': {
+						username: "john_smitsh",
+					},
+					form: {
+						tenantId: "tenantId",
+						groups: ["owner"],
+						pin: {
+							code: "1234",
+							allowed: true
+						}
+					}
+				};
+				requester('admin/userTenantConfig', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+			
+			it("fail - no tenant", function (done) {
+				var params = {
+					'qs': {
+						username: "john_smith",
+					},
+					form: {
+						tenantId: "tenantIdsd",
+						groups: ["owner"],
+						pin: {
+							code: "1234",
+							allowed: true
+						}
+					}
+				};
+				requester('admin/userTenantConfig', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+		});
+		
+		describe("testing delete pin from user API", function () {
+			
+			it("SUCCESS - will return user records", function (done) {
+				var params = {
+					'qs': {
+						username: "john_smith",
+						email: "john.smith@soajs.org",
+						tenantId: "tenantId",
+					}
+				};
+				requester('admin/pinConfig', 'delete', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+			
+			it("fail - no user", function (done) {
+				var params = {
+					'qs': {
+						username: "john_smithsdfsf",
+						tenantId: "tenantId",
+					}
+				};
+				requester('admin/pinConfig', 'delete', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+			
+			it("fail - no user or email", function (done) {
+				var params = {
+					'qs': {
+						tenantId: "tenantId",
+					}
+				};
+				requester('admin/pinConfig', 'delete', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+			
+			it("fail - no user or email", function (done) {
+				var params = {
+					'qs': {
+						username: "john_smith",
+						tenantId: "tenantIdsd",
+					}
+				};
+				requester('admin/pinConfig', 'delete', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+		});
+		
+		describe("testing un-invite user API", function () {
+			
+			it("SUCCESS - will un-invite user", function (done) {
+				var params = {
+					'form': {
+						username: ["john_smith"],
+					},
+					'qs': {
+						tenantId: "tenantId"
+					}
+				};
+				requester('admin/unInviteUsers', 'put', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+			
+			it("SUCCESS - will un-invite user", function (done) {
+				var params = {
+					'form': {
+						email: ["john.smith@soajs.org"],
+					},
+					'qs': {
+						tenantId: "tenantId"
+					}
+				};
+				requester('admin/unInviteUsers', 'put', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+			it("fail - no user", function (done) {
+				var params = {
+					'qs': {
+						tenantId: "tenantId"
+					}
+				};
+				requester('admin/unInviteUsers', 'put', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+		});
+		
 		describe("testing list users API", function () {
 			
 			it("SUCCESS - will return user records", function (done) {
@@ -2255,7 +2541,7 @@ describe("simple urac tests", function () {
 				requester('admin/listUsers', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					//console.log(JSON.stringify(body));
+					
 					assert.ok(body.data);
 					assert.ok(body.data.length > 0);
 					done();
@@ -2271,7 +2557,7 @@ describe("simple urac tests", function () {
 				requester('admin/listUsers', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body));
+					
 					assert.ok(body.data);
 					assert.ok(body.data.length > 0);
 					done();
@@ -2283,7 +2569,7 @@ describe("simple urac tests", function () {
 				requester('admin/listUsers', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					//console.log(JSON.stringify(body));
+					
 					assert.ok(body.data);
 					assert.ok(body.data.length > 0);
 					done();
@@ -2296,7 +2582,7 @@ describe("simple urac tests", function () {
 					requester('admin/listUsers', 'get', params, function (error, body) {
 						assert.ifError(error);
 						assert.ok(body);
-						console.log(JSON.stringify(body));
+						
 						assert.ok(body.data);
 						assert.equal(body.data.length, 0);
 						done();
