@@ -15,7 +15,7 @@ function Group(soajs) {
             indexing[soajs.tenant.id] = true;
 
             __self.mongoCore.createIndex(colName, {'code': 1}, {unique: true}, function (err, result) {});
-            __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {unique: true}, function (err, result) {});
+            __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {});
 
             __self.soajs.log.debug("Indexes for "+ soajs.tenant.id +" Updated!");
         }
