@@ -13,7 +13,8 @@ function User(soajs) {
         if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
             indexing[soajs.tenant.id] = true;
 
-            __self.mongoCore.createIndex(colName, {'code': 1}, {unique: true}, function (err, result) {});
+            //needed by deleteGroup @ groups to pull group from all users once deleted
+            __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {});
 
             __self.soajs.log.debug("Indexes for "+ soajs.tenant.id +" Updated!");
         }
