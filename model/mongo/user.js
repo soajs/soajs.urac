@@ -5,9 +5,12 @@ const Mongo = core.mongo;
 
 let indexing = {};
 
-function User(soajs) {
+function User(soajs, mongoCore) {
     let __self = this;
     __self.soajs = soajs;
+    if (mongoCore)
+        __self.mongoCore = mongoCore;
+
     if (!__self.mongoCore) {
         __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, soajs.config.serviceName, soajs.tenant.code));
         if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
@@ -30,7 +33,7 @@ function User(soajs) {
  *
  * @param cb
  */
-Group.prototype.getUser = function (cb) {
+User.prototype.getUser = function (cb) {
     let __self = this;
     let condition = {};
     if (__self.soajs.inputmaskData.id) {
@@ -45,7 +48,27 @@ Group.prototype.getUser = function (cb) {
     }
 };
 
-User.prototype.closeConnection = function (cb) {
+/**
+ * To delete a group for all users of that tenant
+ *
+ * inputmaskData should have
+ *      required (tId, groupCode)
+ *
+ * @param cb
+ */
+User.prototype.deleteGroup = function (cb) {
+    let __self = this;
+    if (__self.soajs.inputmaskData.tId) {
+        let condition = {"tenant.id": __self.soajs.inputmaskData.tId};
+        let extraOptions = {multi: true};
+        let s = {"$pull": {groups: __self.soajs.inputmaskData.groupCode}};
+        __self.mongoCore.update(colName, condition, s, extraOptions, (err, response) => {
+            return cb(err, response);
+        });
+    }
+};
+
+User.prototype.closeConnection = function () {
     let __self = this;
 
     __self.mongoCore.closeDb();

@@ -3,21 +3,27 @@ const colName = "groups";
 const userColName = "users";
 const core = require("soajs");
 const Mongo = core.mongo;
+const User = require("./user.js");
 
 let indexing = {};
 
-function Group(soajs) {
+function Group(soajs, mongoCore) {
     let __self = this;
     __self.soajs = soajs;
+    if (mongoCore)
+        __self.mongoCore = mongoCore;
+
     if (!__self.mongoCore) {
         __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, soajs.config.serviceName, soajs.tenant.code));
         if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
             indexing[soajs.tenant.id] = true;
 
-            __self.mongoCore.createIndex(colName, {'code': 1}, {unique: true}, function (err, result) {});
-            __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {});
+            __self.mongoCore.createIndex(colName, {'code': 1}, {unique: true}, function (err, result) {
+            });
+            __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {
+            });
 
-            __self.soajs.log.debug("Indexes for "+ soajs.tenant.id +" Updated!");
+            __self.soajs.log.debug("Indexes for " + soajs.tenant.id + " Updated!");
         }
     }
 }
@@ -174,11 +180,11 @@ Group.prototype.deleteGroup = function (cb) {
                 return cb(err);
             }
             if (record.tenant && record.tenant.id) {
-                let condition = {"tenant.id": record.tenant.id};
-                let extraOptions = {multi: true};
-                let s = {"$pull": {groups: record.code}};
-                __self.mongoCore.update(userColName, condition, s, extraOptions, (err, record) => {
-                    return cb(null, record);
+                __self.soajs.inputmaskData.tId = record.tenant.id;
+                __self.soajs.inputmaskData.groupCode = record.code;
+                let user = new User(soajs, __self.mongoCore);
+                user.deleteGroup((error, response) => {
+                    return cb(error, record);
                 });
             }
             else
