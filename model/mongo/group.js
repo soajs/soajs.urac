@@ -1,6 +1,5 @@
 "use strict";
 const colName = "groups";
-const userColName = "users";
 const core = require("soajs");
 const Mongo = core.mongo;
 const User = require("./user.js");
@@ -9,10 +8,8 @@ let indexing = {};
 
 function Group(soajs, mongoCore) {
     let __self = this;
-    __self.soajs = soajs;
     if (mongoCore)
         __self.mongoCore = mongoCore;
-
     if (!__self.mongoCore) {
         __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, soajs.config.serviceName, soajs.tenant.code));
         if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
@@ -22,20 +19,30 @@ function Group(soajs, mongoCore) {
             });
             __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {
             });
-
-            __self.soajs.log.debug("Indexes for " + soajs.tenant.id + " Updated!");
+            soajs.log.debug("Indexes for " + soajs.tenant.id + " Updated!");
         }
     }
 }
 
-Group.prototype.validateId = function (cb) {
+
+/**
+ * To validate and convert an id to mongodb objectID
+ *
+ * @param data
+ *  should have:
+ *      required (id)
+ *
+ * @param cb
+ *  if not set return the id (optional)
+ */
+Group.prototype.validateId = function (data, cb) {
     let __self = this;
     try {
         if (process.env.SOAJS_TEST) {
-            return cb(null, __self.soajs.inputmaskData.id);
+            return cb(null, data.id);
         }
-        __self.soajs.inputmaskData.id = __self.mongoCore.ObjectId(__self.soajs.inputmaskData.id);
-        return ((cb) ? cb(null, __self.soajs.inputmaskData.id) : __self.soajs.inputmaskData.id);
+        data.id = __self.mongoCore.ObjectId(data.id);
+        return ((cb) ? cb(null, data.id) : data.id);
     } catch (e) {
         return cb(e);
     }
@@ -44,146 +51,158 @@ Group.prototype.validateId = function (cb) {
 /**
  * To add a group
  *
- * inputmaskData should have
+ * @param data
+ *  should have:
  *      required (code, name, description)
  *      optional (config, tId, tCode)
  *
  * @param cb
  */
-Group.prototype.addGroup = function (cb) {
+Group.prototype.addGroup = function (data, cb) {
     let __self = this;
-    let record = {
-        "code": __self.soajs.inputmaskData.code,
-        "name": __self.soajs.inputmaskData.name,
-        "description": __self.soajs.inputmaskData.description
-    };
-    if (__self.soajs.inputmaskData.config) {
-        record.config = __self.soajs.inputmaskData.config
+    if (!data.code || !data.name || !data.description) {
+        let error = new Error("code, name, and description are required.");
+        return cb(error, null);
     }
-    if (__self.soajs.inputmaskData.tId && __self.soajs.inputmaskData.code) {
+    let record = {
+        "code": data.code,
+        "name": data.name,
+        "description": data.description
+    };
+    if (data.config) {
+        record.config = data.config
+    }
+    if (data.tId && data.code) {
         record.tenant = {
-            "id": req.soajs.inputmaskData.tId,
-            "code": req.soajs.inputmaskData.tCode
+            "id": data.tId,
+            "code": data.tCode
         };
     }
     __self.mongoCore.insert(colName, record, (err, record) => {
-        if (err) {
-            return cb(err);
-        }
-        return cb(null, record);
+        return cb(err, record);
     });
 };
 
 /**
  * To get a group
  *
- * inputmaskData should have
+ * @param data
+ *  should have:
  *      required (id)
  *      optional (code)
  *
  * @param cb
  */
-Group.prototype.getGroup = function (cb) {
+Group.prototype.getGroup = function (data, cb) {
     let __self = this;
     let condition = {};
-    if (__self.soajs.inputmaskData.id) {
-        condition = {'_id': __self.soajs.inputmaskData.id};
-    } else if (__self.soajs.inputmaskData.code) {
-        condition = {'code': __self.soajs.inputmaskData.code};
+    if (data.id) {
+        condition = {'_id': data.id};
+    } else if (data.code) {
+        condition = {'code': data.code};
+    }
+    else {
+        let error = new Error("must provide either id or code.");
+        return cb(error, null);
     }
     __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
-        if (err) {
-            return cb(err);
-        }
-        return cb(null, record);
+        return cb(err, record);
     });
 };
 
 /**
  * To get group(s)
  *
- * inputmaskData should have
+ * @param data
+ *  should have:
  *      optional (tId)
  *
  * @param cb
  */
-Group.prototype.getGroups = function (cb) {
+Group.prototype.getGroups = function (data, cb) {
     let __self = this;
     let condition = {};
-    if (__self.soajs.inputmaskData.tId) {
-        condition = {"tenant.id": __self.soajs.inputmaskData.tId};
+    if (data.tId) {
+        condition = {"tenant.id": data.tId};
     }
     __self.mongoCore.find(colName, condition, null, null, (err, records) => {
-        if (err) {
-            return cb(err);
-        }
-        return cb(null, records);
+        return cb(err, records);
     });
 };
 
 /**
  * To edit a group
  *
- * inputmaskData should have
+ * @param data
+ *  should have:
  *      required (id, name)
  *      optional (config, description)
  *
  * @param cb
  */
-Group.prototype.editGroup = function (cb) {
+Group.prototype.editGroup = function (data, cb) {
     let __self = this;
+    if (!data.name || !data.id) {
+        let error = new Error("name and id are required.");
+        return cb(error, null);
+    }
     let s = {
         '$set': {
-            'name': __self.soajs.inputmaskData.name
+            'name': data.name
         }
     };
-    if (__self.soajs.inputmaskData.description) {
-        s['$set'].description = __self.soajs.inputmaskData.description;
+    if (data.description) {
+        s['$set'].description = data.description;
     }
-    if (__self.soajs.inputmaskData.config) {
-        s['$set'].config = __self.soajs.inputmaskData.config;
+    if (data.config) {
+        s['$set'].config = data.config;
     }
-    let condition = {'_id': __self.soajs.inputmaskData.id};
+    let condition = {'_id': data.id};
     let extraOptions = {
         'upsert': false,
         'safe': true
     };
     __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
-        if (err) {
-            return cb(err);
-        }
-        return cb(null, record);
+        return cb(err, record);
     });
 };
 
 /**
  * To delete a group
  *
- * inputmaskData should have
+ * @param data
+ *  should have:
  *      required (id)
  *
  * @param cb
  */
-Group.prototype.deleteGroup = function (cb) {
+Group.prototype.deleteGroup = function (data, cb) {
     let __self = this;
-    let condition = {'_id': __self.soajs.inputmaskData.id};
+    if (!data.id) {
+        let error = new Error("id is required.");
+        return cb(error, null);
+    }
+    let condition = {'_id': data.id};
     __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
         if (err) {
             return cb(err);
         }
         if (record.locked) {
             //return error msg that this record is locked
-            return cb({"code": 500, "msg": __self.soajs.config.errors[500]});
+            let error = new Error("cannot delete a locked record.");
+            return cb(error, null);
         }
         __self.mongoCore.remove(colName, condition, (err) => {
             if (err) {
                 return cb(err);
             }
             if (record.tenant && record.tenant.id) {
-                __self.soajs.inputmaskData.tId = record.tenant.id;
-                __self.soajs.inputmaskData.groupCode = record.code;
+                let userData = {
+                    "tId": record.tenant.id,
+                    "groupCode": record.code
+                };
                 let user = new User(soajs, __self.mongoCore);
-                user.deleteGroup((error, response) => {
+                user.deleteGroup(userData, (error) => {
                     return cb(error, record);
                 });
             }
@@ -196,64 +215,68 @@ Group.prototype.deleteGroup = function (cb) {
 /**
  * To add allowed environment(s) to a group
  *
- * inputmaskData should have
+ * @param data
+ *  should have:
  *      required (groups[code, code], allowedEnvironments[{product: "", package: ""}])
  *
  * @param cb
  */
-Group.prototype.addAllowedEnvironments = function (cb) {
+Group.prototype.addAllowedEnvironments = function (data, cb) {
     let __self = this;
+    if (!data.allowedEnvironments || !data.groups) {
+        let error = new Error("allowedEnvironments and groups are required.");
+        return cb(error, null);
+    }
     let s = {
         '$set': {}
     };
-    if (__self.soajs.inputmaskData.allowedEnvironments) {
-        for (let i = 0; i < __self.soajs.inputmaskData.allowedEnvironments.length; i++) {
-            let env = __self.soajs.inputmaskData.allowedEnvironments[i].toUpperCase();
+    if (data.allowedEnvironments) {
+        for (let i = 0; i < data.allowedEnvironments.length; i++) {
+            let env = data.allowedEnvironments[i].toUpperCase();
             s['$set']['config.allowedEnvironments.' + env] = {};
         }
     }
-    let condition = {'code': {'$in': __self.soajs.inputmaskData.groups}};
+    let condition = {'code': {'$in': data.groups}};
     let extraOptions = {
         'upsert': false,
         'safe': true
     };
     __self.mongoCore.update(colName, condition, s, extraOptions, (err, records) => {
-        if (err) {
-            return cb(err);
-        }
-        return cb(null, records);
+        return cb(err, records);
     });
 };
 
 /**
  * To add allowed package(s) to a group
  *
- * inputmaskData should have
+ * @param data
+ *  should have:
  *      required (id, allowedPackages[{product: "", package: ""}])
  *
  * @param cb
  */
-Group.prototype.addAllowedPackages = function (cb) {
+Group.prototype.addAllowedPackages = function (data, cb) {
     let __self = this;
+    if (!data.allowedPackages || !data.id) {
+        let error = new Error("allowedPackages and id are required.");
+        return cb(error, null);
+    }
     let s = {
         '$set': {}
     };
-    if (__self.soajs.inputmaskData.allowedPackages) {
-        for (let i = 0; i < __self.soajs.inputmaskData.allowedPackages.length; i++) {
-            let prodPack = __self.soajs.inputmaskData.allowedPackages[i];
+    if (data.allowedPackages) {
+        for (let i = 0; i < data.allowedPackages.length; i++) {
+            let prodPack = data.allowedPackages[i];
             s['$set']['config.allowedPackages.' + prodPack.product] = [prodPack.package];
         }
     }
-    let condition = {'_id': __self.soajs.inputmaskData.id};
+    let condition = {'_id': data.id};
     let extraOptions = {
         'upsert': false,
         'safe': true
     };
     __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
-        if (err) {
-            return cb(err);
-        }
-        return cb(null, record);
+        return cb(err, record);
     });
 };
 
