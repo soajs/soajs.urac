@@ -42,7 +42,7 @@ User.prototype.getUser = function (data, cb) {
         });
     }
     else {
-        let error = new Error ("id is required.");
+        let error = new Error("id is required.");
         return cb(error, null);
     }
 };
@@ -58,18 +58,16 @@ User.prototype.getUser = function (data, cb) {
  */
 User.prototype.deleteGroup = function (data, cb) {
     let __self = this;
-    if (data.tId && data.groupCode) {
-        let condition = {"tenant.id": data.tId};
-        let extraOptions = {multi: true};
-        let s = {"$pull": {groups: data.groupCode}};
-        __self.mongoCore.update(colName, condition, s, extraOptions, (err, response) => {
-            return cb(err, response);
-        });
-    }
-    else {
-        let error = new Error ("tId and groupCode are required.");
+    if (!data.tId || !data.groupCode) {
+        let error = new Error("tId and groupCode are required.");
         return cb(error, null);
     }
+    let condition = {"tenant.id": data.tId};
+    let extraOptions = {multi: true};
+    let s = {"$pull": {groups: data.groupCode}};
+    __self.mongoCore.update(colName, condition, s, extraOptions, (err, response) => {
+        return cb(err, response);
+    });
 };
 
 User.prototype.closeConnection = function () {
