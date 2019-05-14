@@ -33,7 +33,6 @@ function Group(soajs, mongoCore) {
  *      required (id)
  *
  * @param cb
- *  if not set return the id (optional)
  */
 Group.prototype.validateId = function (data, cb) {
     let __self = this;
@@ -42,7 +41,7 @@ Group.prototype.validateId = function (data, cb) {
             return cb(null, data.id);
         }
         data.id = __self.mongoCore.ObjectId(data.id);
-        return ((cb) ? cb(null, data.id) : data.id);
+        return cb(null, data.id);
     } catch (e) {
         return cb(e);
     }

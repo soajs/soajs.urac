@@ -23,6 +23,28 @@ function User(soajs, mongoCore) {
 }
 
 /**
+ * To validate and convert an id to mongodb objectID
+ *
+ * @param data
+ *  should have:
+ *      required (id)
+ *
+ * @param cb
+ */
+User.prototype.validateId = function (data, cb) {
+    let __self = this;
+    try {
+        if (process.env.SOAJS_TEST) {
+            return cb(null, data.id);
+        }
+        data.id = __self.mongoCore.ObjectId(data.id);
+        return cb(null, data.id);
+    } catch (e) {
+        return cb(e);
+    }
+};
+
+/**
  * To get a user
  *
  * @param data
