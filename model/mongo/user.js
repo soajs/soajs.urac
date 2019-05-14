@@ -48,6 +48,33 @@ User.prototype.getUser = function (data, cb) {
 };
 
 /**
+ * To check if a Username/Email is already taken
+ *
+ * @param data
+ *  should have:
+ *      required (username)
+ *
+ * @param cb
+ */
+User.prototype.checkUsername = function (data, cb) {
+    let __self = this;
+    if (!data.username || !data.email) {
+        let error = new Error("username/email is required.");
+        return cb(error, null);
+    }
+    let condition = {
+        '$or':
+            [
+                {'username': data['username']},
+                {'email': data['username']}
+            ]
+    };
+    __self.mongoCore.mongoDb.count(colNamen, condition, (err, response) => {
+        return cb(err, response);
+    });
+};
+
+/**
  * To delete a group for all users of that tenant
  *
  * @param data
