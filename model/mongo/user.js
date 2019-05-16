@@ -55,18 +55,15 @@ User.prototype.validateId = function (data, cb) {
  */
 User.prototype.getUser = function (data, cb) {
     let __self = this;
-    let condition = {};
-    if (data.id) {
-        condition = {'_id': data.id};
-
-        __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
-            return cb(err, record);
-        });
-    }
-    else {
+    if (!data.id) {
         let error = new Error("id is required.");
         return cb(error, null);
     }
+    let condition = {'_id': data.id};
+
+    __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
+        return cb(err, record);
+    });
 };
 
 /**
