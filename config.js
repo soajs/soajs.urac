@@ -1539,6 +1539,62 @@ module.exports = {
 			        }
 		        }
 	        },
+	
+	        "/admin/inviteUser/uId": {
+		        "_apiInfo": {
+			        "l": "Invite User by uId",
+			        "group": "Administration"
+		        },
+		        "commonFields": ["model"],
+		        "uId": {
+			        "source": ['query.uId'],
+			        "required": true,
+			        "validation": {"type": "string"}
+		        },
+		        "tenantId": {
+			        "source": ['body.tenantId'],
+			        "required": true,
+			        "validation": {
+				        "type": "string"
+			        }
+		        },
+		        "tenantCode": {
+			        "source": ['body.tenantCode'],
+			        "required": true,
+			        "validation": {
+				        "type": "string"
+			        }
+		        },
+		        "groups": {
+			        "source": ['body.groups'],
+			        "required": false,
+			        "validation": {
+				        "type": "array",
+				        "items": {
+					        "type": "string"
+				        }
+			        }
+		        },
+		        "pin": {
+			        "source": ['body.pin'],
+			        "required": false,
+			        "validation": {
+				        "type": "object",
+				        "properties": {
+					        "code": {
+						        "type": "string",
+						        "required": true
+					        },
+					        "allowed": {
+						        "type": "boolean",
+						        "required": true
+					        }
+				        },
+				        "additionalProperties": false
+			        }
+		        }
+	        },
+	        
 	        "/admin/userTenantConfig": {
 		        "_apiInfo": {
 			        "l": "Add Pin Information",
@@ -1793,6 +1849,7 @@ module.exports = {
 		        },
 	        },
         },
+	    
 	    "put": {
 		    "/admin/userTenantConfig": {
 			    "_apiInfo": {
@@ -1849,7 +1906,7 @@ module.exports = {
 		
 		    "/admin/unInviteUsers": {
 			    "_apiInfo": {
-				    "l": "Un-Invite USer",
+				    "l": "Un-Invite User",
 				    "group": "Administration"
 			    },
 			    "commonFields": ["model"],
@@ -1883,6 +1940,29 @@ module.exports = {
 				    }
 			    }
 		    },
+		
+		    "/admin/unInviteUser/uId": {
+			    "_apiInfo": {
+				    "l": "Un-Invite User by Ids",
+				    "group": "Administration"
+			    },
+			    "commonFields": ["model"],
+			    "uId": {
+				    "source": ['query.uId'],
+				    "required": true,
+				    "validation": {
+					    "type": "string"
+				    }
+			    },
+			    "tenantId": {
+				    "source": ['query.tenantId'],
+				    "required": true,
+				    "validation": {
+					    "type": "string"
+				    }
+			    }
+		    },
+		    
 		    /**
 		     * product routes
 		     */
