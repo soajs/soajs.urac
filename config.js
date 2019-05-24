@@ -2194,7 +2194,22 @@ module.exports = {
 			    "commonFields": ['appId', 'key', 'envCode', 'config', 'soajs_project']
 		    },
 	    },
+	    
         "delete": {
+	
+	        '/admin/user/delete': {
+		        "_apiInfo": {
+			        "l": "Delete User",
+			        "group": "Administration"
+		        },
+		        "commonFields": ["model", "soajs_project"],
+		        "uId": {
+			        "source": ['query.uId'],
+			        "required": true,
+			        "validation": {"type": "string"}
+		        }
+	        },
+	        
             '/admin/group/delete': {
                 "_apiInfo": {
                     "l": "Delete Group",

@@ -501,6 +501,20 @@ service.init(function () {
 	});
 	
 	/**
+	 * Delete a user record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.delete("/admin/user/delete", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.delete(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
 	 * Add multiple Users To Group
 	 * @param {String} API route
 	 * @param {Function} API middleware

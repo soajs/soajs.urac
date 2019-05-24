@@ -2629,7 +2629,7 @@ describe("simple urac tests", function () {
 		
 		describe("testing un-invite user API by id", function () {
 			
-			it("SUCCESS - will un-invite user by id", function (done) {
+			it("fail - will un-invite user by id", function (done) {
 				var params = {
 					'qs': {
 						tenantId: "tenantId",
@@ -2652,6 +2652,36 @@ describe("simple urac tests", function () {
 					}
 				};
 				requester('admin/unInviteUser/uId', 'put', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+		});
+		
+		describe("testing delete user API ", function () {
+			
+			it("SUCCESS - will delete user", function (done) {
+				var params = {
+					'qs': {
+						uId: user_id
+					}
+				};
+				requester('admin/user/delete', 'delete', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+			
+			it("fail - will delete user", function (done) {
+				var params = {
+					'qs': {
+						uId: "23728%%%%%%%%%%32837"
+					}
+				};
+				requester('admin/user/delete', 'delete', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
 					done();
