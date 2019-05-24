@@ -67,7 +67,7 @@ function requester(apiName, method, params, cb) {
 
 describe("simple urac tests", function () {
 	var uId;
-	let user_id;
+	let user_id, users_username = [], users_emails = [];
 	afterEach(function (done) {
 		console.log("=======================================");
 		done();
@@ -2523,6 +2523,10 @@ describe("simple urac tests", function () {
 					
 					assert.ok(body.data);
 					user_id = body.data[0]._id;
+					body.data.forEach((one)=>{
+						users_username.push(one.username);
+						users_emails.push(one.email);
+					});
 					assert.ok(body.data.length > 0);
 					done();
 				});
@@ -2627,9 +2631,57 @@ describe("simple urac tests", function () {
 			});
 		});
 		
+		describe("testing invite users API Bulk", function () {
+			
+			it("success - invite users API", function (done) {
+				var params = {
+					form: {
+						tenantId: "tenantId",
+						tenantCode: "tenantCode",
+						usernames: users_username,
+						emails: users_emails,
+					}
+				};
+				requester('admin/inviteUsers', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+			it("fail - invite users API no email and username", function (done) {
+				var params = {
+					form: {
+						tenantId: "tenantId",
+						tenantCode: "tenantCode"
+					}
+				};
+				requester('admin/inviteUsers', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+			it("success - invite users API no user found", function (done) {
+				var params = {
+					form: {
+						tenantId: "tenantId",
+						tenantCode: "tenantCode",
+						usernames: ["324234234"],
+					}
+				};
+				requester('admin/inviteUsers', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+			
+		});
+		
 		describe("testing un-invite user API by id", function () {
 			
-			it("fail - will un-invite user by id", function (done) {
+			it("success - will un-invite user by id", function (done) {
 				var params = {
 					'qs': {
 						tenantId: "tenantId",

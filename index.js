@@ -557,7 +557,7 @@ service.init(function () {
 	});
 	
 	/**
-	 * Invite User bu user or password
+	 * Invite User by user or password
 	 * @param {String} API route
 	 * @param {Function} API middleware
 	 */
@@ -565,6 +565,20 @@ service.init(function () {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.user.inviteUser(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Invite Users by user or password (bulk)
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.post("/admin/inviteUsers", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.inviteUsers(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});

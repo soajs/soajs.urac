@@ -1540,6 +1540,50 @@ module.exports = {
 		        }
 	        },
 	
+	        "/admin/inviteUsers": {
+		        "_apiInfo": {
+			        "l": "Invite Users",
+			        "group": "Administration"
+		        },
+		        "commonFields": ["model"],
+		        "usernames": {
+			        "source": ['body.usernames'],
+			        "required": false,
+			        "validation": {
+			        	"type": "array",
+				        "items": {
+					        "type": "string",
+					        "min": 1
+				        }
+			        }
+		        },
+		        "emails": {
+			        "source": ['body.emails'],
+			        "required": false,
+			        "validation": {
+				        "type": "array",
+				        "items": {
+					        "type": "string",
+					        "min": 1
+				        }
+			        }
+		        },
+		        "tenantId": {
+			        "source": ['body.tenantId'],
+			        "required": true,
+			        "validation": {
+				        "type": "string"
+			        }
+		        },
+		        "tenantCode": {
+			        "source": ['body.tenantCode'],
+			        "required": true,
+			        "validation": {
+				        "type": "string"
+			        }
+		        }
+	        },
+	
 	        "/admin/inviteUser/uId": {
 		        "_apiInfo": {
 			        "l": "Invite User by uId",
