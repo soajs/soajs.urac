@@ -67,7 +67,7 @@ function requester(apiName, method, params, cb) {
 
 describe("simple urac tests", function () {
 	var uId;
-	let user_id, users_username = [], users_emails = [];
+	let user_id, users_data = [];
 	afterEach(function (done) {
 		console.log("=======================================");
 		done();
@@ -2240,7 +2240,7 @@ describe("simple urac tests", function () {
 						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2260,7 +2260,7 @@ describe("simple urac tests", function () {
 						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2282,7 +2282,7 @@ describe("simple urac tests", function () {
 						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2304,7 +2304,7 @@ describe("simple urac tests", function () {
 						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2320,7 +2320,7 @@ describe("simple urac tests", function () {
 		
 		describe("testing add pin to user API", function () {
 			
-			it("SUCCESS - will add pin to  records", function (done) {
+			it("SUCCESS - will add pin to records", function (done) {
 				var params = {
 					'qs': {
 						username: "john_smith",
@@ -2331,7 +2331,7 @@ describe("simple urac tests", function () {
 						tenantId: "tenantId",
 						groups: ["owner2"],
 						pin: {
-							code: "12343",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2349,7 +2349,7 @@ describe("simple urac tests", function () {
 						tenantId: "tenantId",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2370,7 +2370,7 @@ describe("simple urac tests", function () {
 						tenantId: "tenantId",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2391,7 +2391,7 @@ describe("simple urac tests", function () {
 						tenantId: "tenantIdsd",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2524,8 +2524,11 @@ describe("simple urac tests", function () {
 					assert.ok(body.data);
 					user_id = body.data[0]._id;
 					body.data.forEach((one)=>{
-						users_username.push(one.username);
-						users_emails.push(one.email);
+						users_data.push({username: one.username, email: one.email, tenantId: "tenantId",
+							tenantCode: "tenantCode", pin :{
+							code: true,
+								"allowed": false
+							}});
 					});
 					assert.ok(body.data.length > 0);
 					done();
@@ -2573,7 +2576,7 @@ describe("simple urac tests", function () {
 						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2581,6 +2584,7 @@ describe("simple urac tests", function () {
 				requester('admin/inviteUser/uId', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
+					console.log(JSON.stringify(body,null, 2))
 					assert.ok(body.data);
 					done();
 				});
@@ -2596,7 +2600,7 @@ describe("simple urac tests", function () {
 						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2618,7 +2622,7 @@ describe("simple urac tests", function () {
 						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2634,12 +2638,10 @@ describe("simple urac tests", function () {
 		describe("testing invite users API Bulk", function () {
 			
 			it("success - invite users API", function (done) {
+				
 				var params = {
 					form: {
-						tenantId: "tenantId",
-						tenantCode: "tenantCode",
-						usernames: users_username,
-						emails: users_emails,
+						"users": users_data
 					}
 				};
 				requester('admin/inviteUsers', 'post', params, function (error, body) {
@@ -2649,34 +2651,6 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
-			it("fail - invite users API no email and username", function (done) {
-				var params = {
-					form: {
-						tenantId: "tenantId",
-						tenantCode: "tenantCode"
-					}
-				};
-				requester('admin/inviteUsers', 'post', params, function (error, body) {
-					assert.ifError(error);
-					assert.ok(body);
-					done();
-				});
-			});
-			it("success - invite users API no user found", function (done) {
-				var params = {
-					form: {
-						tenantId: "tenantId",
-						tenantCode: "tenantCode",
-						usernames: ["324234234"],
-					}
-				};
-				requester('admin/inviteUsers', 'post', params, function (error, body) {
-					assert.ifError(error);
-					assert.ok(body);
-					done();
-				});
-			});
-			
 		});
 		
 		describe("testing un-invite user API by id", function () {

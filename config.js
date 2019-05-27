@@ -144,7 +144,9 @@ module.exports = {
         999: "Limit Exceed, please upgrade your account"
 
     },
-
+	"pinCode": {
+    	"length": 5
+	},
     "schema": {
         "commonFields": {
             "tId": {
@@ -1527,15 +1529,14 @@ module.exports = {
 				        "type": "object",
 				        "properties": {
 				        	"code": {
-				        		"type": "string",
+				        		"type": "boolean",
 						        "required": true
 					        },
 					        "allowed": {
 						        "type": "boolean",
 						        "required": true
 					        }
-				        },
-				        "additionalProperties": false
+				        }
 			        }
 		        }
 	        },
@@ -1546,40 +1547,56 @@ module.exports = {
 			        "group": "Administration"
 		        },
 		        "commonFields": ["model"],
-		        "usernames": {
-			        "source": ['body.usernames'],
-			        "required": false,
-			        "validation": {
-			        	"type": "array",
-				        "items": {
-					        "type": "string",
-					        "min": 1
-				        }
-			        }
-		        },
-		        "emails": {
-			        "source": ['body.emails'],
-			        "required": false,
+		        "users": {
+			        "source": ['body.users'],
+			        "required": true,
 			        "validation": {
 				        "type": "array",
 				        "items": {
-					        "type": "string",
-					        "min": 1
+					        "type": "object",
+					        "minItems": 1,
+					        "properties": {
+						        "usernames": {
+							        "required": false,
+							        "type": "string",
+						        },
+						        "emails": {
+							        "required": false,
+							        "type": "string",
+						        },
+						        "tenantId": {
+							        "required": true,
+							        "type": "string"
+						        },
+						        "tenantCode": {
+							        "required": true,
+							        "type": "string"
+						        },
+						        "pin": {
+							        "required": false,
+							        "type": "object",
+							        "properties": {
+								        "code": {
+									        "type": "boolean",
+									        "required": true
+								        },
+								        "allowed": {
+									        "type": "boolean",
+									        "required": true
+								        }
+							        }
+						        },
+						        "groups": {
+							        "required": false,
+							        "validation": {
+								        "type": "array",
+								        "items": {
+									        "type": "string"
+								        }
+							        }
+						        }
+					        }
 				        }
-			        }
-		        },
-		        "tenantId": {
-			        "source": ['body.tenantId'],
-			        "required": true,
-			        "validation": {
-				        "type": "string"
-			        }
-		        },
-		        "tenantCode": {
-			        "source": ['body.tenantCode'],
-			        "required": true,
-			        "validation": {
-				        "type": "string"
 			        }
 		        }
 	        },
@@ -1626,7 +1643,7 @@ module.exports = {
 				        "type": "object",
 				        "properties": {
 					        "code": {
-						        "type": "string",
+						        "type": "boolean",
 						        "required": true
 					        },
 					        "allowed": {
@@ -1669,7 +1686,7 @@ module.exports = {
 				        "type": "object",
 				        "properties": {
 					        "code": {
-						        "type": "string",
+						        "type": "boolean",
 						        "required": true
 					        },
 					        "allowed": {
