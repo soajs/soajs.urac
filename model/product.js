@@ -85,6 +85,9 @@ Product.prototype.getProduct = function (cb) {
 	else if (__self.soajs.inputmaskData.productCode) {
 		condition = {'code': __self.soajs.inputmaskData.productCode};
 	}
+	else {
+		return cb(null);
+	}
 	__self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
 		if (err) {
 			return cb(err);
