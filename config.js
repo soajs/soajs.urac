@@ -1942,7 +1942,7 @@ module.exports = {
 					    "type": "object",
 					    "properties": {
 						    "code": {
-							    "type": "string",
+							    "type": "boolean",
 							    "required": true
 						    },
 						    "allowed": {
