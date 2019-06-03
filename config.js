@@ -1180,7 +1180,7 @@ module.exports = {
                                                     "type": 'object',
                                                     "properties": {
                                                         "code": {
-                                                            "type": 'string'
+                                                            "type": 'boolean'
                                                         },
                                                         "allowed":{
                                                             "type": 'boolean'
@@ -1556,11 +1556,11 @@ module.exports = {
 					        "type": "object",
 					        "minItems": 1,
 					        "properties": {
-						        "usernames": {
+						        "username": {
 							        "required": false,
 							        "type": "string",
 						        },
-						        "emails": {
+						        "email": {
 							        "required": false,
 							        "type": "string",
 						        },
