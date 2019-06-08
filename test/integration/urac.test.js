@@ -67,7 +67,7 @@ function requester(apiName, method, params, cb) {
 
 describe("simple urac tests", function () {
 	var uId;
-	
+	let user_id, users_data = [];
 	afterEach(function (done) {
 		console.log("=======================================");
 		done();
@@ -83,7 +83,6 @@ describe("simple urac tests", function () {
 				}
 			};
 			requester('tenant/getUserAclInfo', 'get', params, function (error, body) {
-				console.log(JSON.stringify(body,null,2));
 				assert.equal(body.result, true);
 				assert.ok(body.data);
 				done();
@@ -264,7 +263,6 @@ describe("simple urac tests", function () {
 			var ldapServer = require('./extras/ldapServer');
 			ldapServer.startServer(serverConfig, function (server) {
 				requester('ldap/login', 'post', params, function (error, body) {
-					console.log(JSON.stringify(body, null, 2));
 					assert.ok(body.data);
 					ldapServer.killServer(server);
 					done();
@@ -469,13 +467,11 @@ describe("simple urac tests", function () {
 			requester('join', 'post', params, function (error, body) {
 				assert.ifError(error);
 				assert.ok(body);
-				console.log(body);
 				assert.ok(body.data);
 				token = body.data.token;
 				setTimeout(function () {
 					mongo.findOne('users', {'username': 'john123', status: 'pendingJoin'}, function (error, record) {
 						assert.ifError(error);
-						console.log(JSON.stringify(record));
 						assert.ok(record);
 						done();
 					});
@@ -505,7 +501,6 @@ describe("simple urac tests", function () {
 					}
 					var t = new Date(1426087819320);
 					tokenRecord.expires = t;
-					console.log(tokenRecord);
 					mongo.save('tokens', tokenRecord, function (err) {
 						//console.log(tokenRecord);
 					});
@@ -513,7 +508,6 @@ describe("simple urac tests", function () {
 				
 				mongo.findOne('users', {'username': 'lisa2', status: 'pendingJoin'}, function (error, record) {
 					assert.ifError(error);
-					console.log(JSON.stringify(record));
 					assert.ok(record);
 					done();
 				});
@@ -634,12 +628,10 @@ describe("simple urac tests", function () {
 						assert.ifError(error);
 						assert.ok(body);
 						assert.ok(body.data);
-						console.log(body);
 						
 						mongo.findOne('users', {'username': 'john123', 'status': 'active'}, function (error, record) {
 							assert.ifError(error);
 							assert.ok(record);
-							console.log(record);
 							uId = record._id.toString();// will be used by other test cases
 							done();
 						});
@@ -717,7 +709,6 @@ describe("simple urac tests", function () {
 					mongo.findOne('tokens', {'userId': userRecord._id.toString()}, function (error, tokenRecord) {
 						assert.ifError(error);
 						assert.ok(tokenRecord);
-						console.log(tokenRecord);
 						assert.equal(tokenRecord.status, 'active');
 						assert.equal(tokenRecord.service, 'addUser');
 						done();
@@ -754,7 +745,6 @@ describe("simple urac tests", function () {
 					mongo.findOne('tokens', {'userId': userRecord._id.toString()}, function (error, tokenRecord) {
 						assert.ifError(error);
 						assert.ok(tokenRecord);
-						console.log(tokenRecord);
 						assert.equal(tokenRecord.status, 'active');
 						assert.equal(tokenRecord.service, 'addUser');
 						done();
@@ -785,7 +775,6 @@ describe("simple urac tests", function () {
 				mongo.findOne('users', {'username': 'lisa'}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
-					console.log(userRecord);
 					assert.equal(userRecord.status, 'active');
 					
 					mongo.findOne('tokens', {
@@ -794,7 +783,6 @@ describe("simple urac tests", function () {
 					}, function (error, tokenRecord) {
 						assert.ifError(error);
 						assert.ok(tokenRecord);
-						console.log(tokenRecord);
 						assert.equal(tokenRecord.status, 'used');
 						assert.equal(tokenRecord.service, 'addUser');
 						done();
@@ -822,7 +810,6 @@ describe("simple urac tests", function () {
 				mongo.findOne('users', {'username': 'john_smith'}, function (error, userRecord) {
 					assert.ifError(error);
 					assert.ok(userRecord);
-					console.log(userRecord);
 					assert.equal(userRecord.status, 'active');
 					mongo.findOne('tokens', {
 						'userId': userRecord._id.toString(),
@@ -830,7 +817,6 @@ describe("simple urac tests", function () {
 					}, function (error, tokenRecord) {
 						assert.ifError(error);
 						assert.ok(tokenRecord);
-						console.log(tokenRecord);
 						assert.equal(tokenRecord.status, 'used');
 						assert.equal(tokenRecord.service, 'addUser');
 						done();
@@ -1026,7 +1012,6 @@ describe("simple urac tests", function () {
 					
 					tokenRecord.expires = t;
 					mongo.save('tokens', tokenRecord, function (err) {
-						console.log(tokenRecord);
 						done();
 					});
 				});
@@ -1070,7 +1055,6 @@ describe("simple urac tests", function () {
 					mongo.find('tokens', {'userId': userRecord._id.toString()}, {'sort': {'ts': 1}}, function (error, records) {
 						assert.ifError(error);
 						assert.ok(records);
-						console.log(records);
 						assert.equal(records.length, 2);
 						assert.equal(records[0].status, 'invalid');
 						assert.equal(records[1].status, 'active');
@@ -1187,7 +1171,6 @@ describe("simple urac tests", function () {
 					mongo.find('tokens', {'userId': userRecord._id.toString()}, {'sort': {'ts': 1}}, function (error, records) {
 						assert.ifError(error);
 						assert.ok(records);
-						console.log(records);
 						assert.equal(records.length, 2);
 						assert.equal(records[0].status, 'invalid');
 						assert.equal(records[1].status, 'used');
@@ -1663,7 +1646,6 @@ describe("simple urac tests", function () {
 					tokenRecord.expires = t;
 					mongo.save('tokens', tokenRecord, function (err) {
 						assert.ifError(err);
-						console.log(tokenRecord);
 						done();
 					});
 				});
@@ -1946,7 +1928,6 @@ describe("simple urac tests", function () {
 					assert.ok(userRecord);
 					delete userRecord.password;
 					var id2 = userRecord._id.toString();
-					console.log(userRecord);
 					var params = {
 						qs: {
 							'uId': id2
@@ -1985,7 +1966,6 @@ describe("simple urac tests", function () {
 							delete record.ts;
 							delete record.groups;
 							delete record.tenant;
-							console.log(record);
 							delete record._id;
 							assert.deepEqual(record.config, {
 								'keys':{},
@@ -2227,7 +2207,6 @@ describe("simple urac tests", function () {
 				requester('admin/users/count', 'get', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(body);
 					done();
 				});
 			});
@@ -2261,7 +2240,7 @@ describe("simple urac tests", function () {
 						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2281,7 +2260,7 @@ describe("simple urac tests", function () {
 						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2303,7 +2282,7 @@ describe("simple urac tests", function () {
 						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2325,7 +2304,7 @@ describe("simple urac tests", function () {
 						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2341,7 +2320,7 @@ describe("simple urac tests", function () {
 		
 		describe("testing add pin to user API", function () {
 			
-			it("SUCCESS - will add pin to  records", function (done) {
+			it("SUCCESS - will add pin to records", function (done) {
 				var params = {
 					'qs': {
 						username: "john_smith",
@@ -2352,7 +2331,7 @@ describe("simple urac tests", function () {
 						tenantId: "tenantId",
 						groups: ["owner2"],
 						pin: {
-							code: "12343",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2370,7 +2349,7 @@ describe("simple urac tests", function () {
 						tenantId: "tenantId",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2391,7 +2370,7 @@ describe("simple urac tests", function () {
 						tenantId: "tenantId",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2412,7 +2391,7 @@ describe("simple urac tests", function () {
 						tenantId: "tenantIdsd",
 						groups: ["owner"],
 						pin: {
-							code: "1234",
+							code: true,
 							allowed: true
 						}
 					}
@@ -2485,7 +2464,7 @@ describe("simple urac tests", function () {
 			});
 		});
 		
-		describe("testing un-invite user API", function () {
+		describe("testing un-invite users API", function () {
 			
 			it("SUCCESS - will un-invite user", function (done) {
 				var params = {
@@ -2543,6 +2522,14 @@ describe("simple urac tests", function () {
 					assert.ok(body);
 					
 					assert.ok(body.data);
+					user_id = body.data[0]._id;
+					body.data.forEach((one)=>{
+						users_data.push({username: one.username, email: one.email, tenantId: "tenantId",
+							tenantCode: "tenantCode", pin :{
+							code: true,
+								"allowed": false
+							}});
+					});
 					assert.ok(body.data.length > 0);
 					done();
 				});
@@ -2575,6 +2562,157 @@ describe("simple urac tests", function () {
 					done();
 				});
 			});
+		});
+		
+		describe("testing invite user API", function () {
+			
+			it("SUCCESS - will invite user", function (done) {
+				var params = {
+					'qs': {
+						uId: user_id
+					},
+					form: {
+						tenantId: "tenantId",
+						tenantCode: "tenantCode",
+						groups: ["owner"],
+						pin: {
+							code: true,
+							allowed: true
+						}
+					}
+				};
+				requester('admin/inviteUser/uId', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					console.log(JSON.stringify(body,null, 2))
+					assert.ok(body.data);
+					done();
+				});
+			});
+			
+			it("fail - no user", function (done) {
+				var params = {
+					'qs': {
+						uId: "john_smithsdsd",
+					},
+					form: {
+						tenantId: "tenantId",
+						tenantCode: "tenantCode",
+						groups: ["owner"],
+						pin: {
+							code: true,
+							allowed: true
+						}
+					}
+				};
+				requester('admin/inviteUser/uId', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+			
+			it("fail - already added", function (done) {
+				var params = {
+					'qs': {
+						uId: user_id,
+					},
+					form: {
+						tenantId: "tenantId",
+						tenantCode: "tenantCode",
+						groups: ["owner"],
+						pin: {
+							code: true,
+							allowed: true
+						}
+					}
+				};
+				requester('admin/inviteUser/uId', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+		});
+		
+		describe("testing invite users API Bulk", function () {
+			
+			it("success - invite users API", function (done) {
+				
+				var params = {
+					form: {
+						"users": users_data
+					}
+				};
+				requester('admin/inviteUsers', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+		});
+		
+		describe("testing un-invite user API by id", function () {
+			
+			it("success - will un-invite user by id", function (done) {
+				var params = {
+					'qs': {
+						tenantId: "tenantId",
+						uId: user_id
+					}
+				};
+				requester('admin/unInviteUser/uId', 'put', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+			
+			it("SUCCESS - will un-invite user by id", function (done) {
+				var params = {
+					'qs': {
+						tenantId: "tenantId",
+						uId: "23728%%%%%%%%%%32837"
+					}
+				};
+				requester('admin/unInviteUser/uId', 'put', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
+		});
+		
+		describe("testing delete user API ", function () {
+			
+			it("SUCCESS - will delete user", function (done) {
+				var params = {
+					'qs': {
+						uId: user_id
+					}
+				};
+				requester('admin/user/delete', 'delete', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+			
+			it("fail - will delete user", function (done) {
+				var params = {
+					'qs': {
+						uId: "23728%%%%%%%%%%32837"
+					}
+				};
+				requester('admin/user/delete', 'delete', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					done();
+				});
+			});
 			
 			it("SUCCESS - will return empty array", function (done) {
 				mongo.dropCollection('users', function () {
@@ -2582,7 +2720,6 @@ describe("simple urac tests", function () {
 					requester('admin/listUsers', 'get', params, function (error, body) {
 						assert.ifError(error);
 						assert.ok(body);
-						
 						assert.ok(body.data);
 						assert.equal(body.data.length, 0);
 						done();

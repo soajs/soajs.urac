@@ -506,6 +506,20 @@ service.init(function () {
 	});
 	
 	/**
+	 * Delete a user record
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.delete("/admin/user/delete", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.delete(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
 	 * Add multiple Users To Group
 	 * @param {String} API route
 	 * @param {Function} API middleware
@@ -548,7 +562,7 @@ service.init(function () {
 	});
 	
 	/**
-	 * Invite User
+	 * Invite User by user or password
 	 * @param {String} API route
 	 * @param {Function} API middleware
 	 */
@@ -562,7 +576,35 @@ service.init(function () {
 	});
 	
 	/**
-	 * Un Invite User
+	 * Invite Users by user or password (bulk)
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.post("/admin/inviteUsers", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.inviteUsers(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Invite User by id
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.post("/admin/inviteUser/uId", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.inviteUserByID(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Un Invite User by emails or usernames
 	 * @param {String} API route
 	 * @param {Function} API middleware
 	 */
@@ -570,6 +612,20 @@ service.init(function () {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.user.unInviteUsers(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Un Invite User by ids
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.put("/admin/unInviteUser/uId", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.unInviteUserByID(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
