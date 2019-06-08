@@ -38,7 +38,7 @@ function initBLModel(req, res, cb) {
         return cb(null);
     }
     else {
-        soajs.log.error('Requested model not found. make sure you have a model for user and another one for group!');
+        req.soajs.log.error('Requested model not found. make sure you have a model for user and another one for group!');
         return cb({"code": 601, "msg": config.errors[601]});
     }
 }
