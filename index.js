@@ -3,16 +3,16 @@ const soajs = require('soajs');
 const config = require('./config.js');
 const service = new soajs.server.service(config);
 const uracDriver = require("soajs.urac.driver");
-const coreModules = require("soajs");
+const coreModules = require("soajs.core.modules");
 const provision = coreModules.provision;
+
 let BL = {
 	product: require("./lib/product.js")
 };
-let SSOT = {
-	product: require('./model/product'),
-};
+let SSOT = {};
 
 const BLModule = require('./lib/urac.js');
+let modelInit = false;
 
 /**
  * Initialize the Business Logic model
@@ -21,25 +21,30 @@ const BLModule = require('./lib/urac.js');
  * @param {Callback Function} cb
  */
 function initBLModel(req, res, cb) {
-	var modelName = config.model;
-	if (req.soajs.servicesConfig && req.soajs.servicesConfig.model) {
-		modelName = req.soajs.servicesConfig.model;
-	}
-	if (process.env.SOAJS_TEST && req.soajs.inputmaskData.model) {
-		modelName = req.soajs.inputmaskData.model;
-	}
-	BLModule.init(modelName, function (error, BL) {
-		if (error) {
-			req.soajs.log.error(error);
-			return res.json(req.soajs.buildResponse({"code": 601, "msg": config.errors[601]}));
-		} else {
-			return cb(BL);
-		}
-	});
+    if (modelInit)
+        return cb(null);
+    let modelName = config.model;
+    if (req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.model)
+        modelName = soajs.servicesConfig.urac.model;
+    let userModel = __dirname + "/model/" + modelName + "/user.js";
+    if (fs.existsSync(userModel))
+        SSOT.user = require(userModel);
+    let groupModel = __dirname + "/model/" + modelName + "/group.js";
+    if (fs.existsSync(groupModel))
+        SSOT.group = require(groupModel);
+
+    if (SSOT.user && SSOT.group) {
+        modelInit = true;
+        return cb(null);
+    }
+    else {
+        soajs.log.error('Requested model not found. make sure you have a model for user and another one for group!');
+        return cb({"code": 601, "msg": config.errors[601]});
+    }
 }
 
 service.init(function () {
-	var reg = service.registry.get();
+	let reg = service.registry.get();
 	provision.init(reg.coreDB.provision, service.log);
 	
 	/**
