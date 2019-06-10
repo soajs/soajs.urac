@@ -3,8 +3,7 @@ const soajs = require('soajs');
 const config = require('./config.js');
 const service = new soajs.server.service(config);
 const uracDriver = require("soajs.urac.driver");
-const coreModules = require("soajs.core.modules");
-const provision = coreModules.provision;
+const provision = soajs.provision;
 
 let BL = {
 	product: require("./lib/product.js")
