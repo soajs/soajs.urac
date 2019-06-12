@@ -1,7 +1,7 @@
 {
   "name": "soajs.urac",
   "description": "soajs URAC service",
-  "version": "2.4.14",
+  "version": "2.5.0",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -37,7 +37,7 @@
     "sinon": "7.3.1",
 
     "soajs.mongodb.data": "2.1.*",
-    "soajs.controller": "2.4.*"
+    "soajs.controller": "2.5.*"
   },
   "dependencies": {
     "async": "2.1.4",
@@ -49,8 +49,8 @@
     "passport-twitter": "1.0.4",
     "request": "2.84.0",
 
-    "soajs": "2.4.12",
-    "soajs.urac.driver": "1.4.9",
+    "soajs": "2.5.0",
+    "soajs.urac.driver": "2.0.0",
 
     "uuid": "3.0.1"
   }
