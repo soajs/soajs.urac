@@ -14,8 +14,11 @@ function User(soajs, mongoCore) {
         if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
             indexing[soajs.tenant.id] = true;
 
-            //needed by deleteGroup @ groups to pull group from all users once deleted
+            __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1}, {}, function (err, result) {
+            });
             __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {
+            });
+            __self.mongoCore.createIndex(colName, {'username': 1, 'tenant.id': 1}, {}, function (err, result) {
             });
             soajs.log.debug("Indexes for " + soajs.tenant.id + " Updated!");
         }
@@ -111,6 +114,33 @@ User.prototype.deleteGroup = function (data, cb) {
     let condition = {"tenant.id": data.tId};
     let extraOptions = {multi: true};
     let s = {"$pull": {groups: data.groupCode}};
+    __self.mongoCore.update(colName, condition, s, extraOptions, (err, response) => {
+        return cb(err, response);
+    });
+};
+
+
+/**
+ * To add a group for all users of that tenant
+ *
+ * @param data
+ *  should have:
+ *      required (users, groupCode, tId)
+ *
+ * @param cb
+ */
+User.prototype.addGroup = function (data, cb) {
+    let __self = this;
+    if (!data || !data.groupCode || !data.tId || !data.users || !Array.isArray(data.users) || data.users.length <= 0) {
+        let error = new Error("users, tId and groupCode are required.");
+        return cb(error, null);
+    }
+
+    let condition = {'username': {$in: data.users}};
+    if (data.tId)
+        condition["tenant.id"] = data.tId;
+    let extraOptions = {multi: true};
+    let s = {"$push": {groups: data.groupCode}};
     __self.mongoCore.update(colName, condition, s, extraOptions, (err, response) => {
         return cb(err, response);
     });

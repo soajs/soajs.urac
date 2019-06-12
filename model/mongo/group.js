@@ -37,9 +37,6 @@ function Group(soajs, mongoCore) {
 Group.prototype.validateId = function (data, cb) {
     let __self = this;
     try {
-        if (process.env.SOAJS_TEST) {
-            return cb(null, data.id);
-        }
         data.id = __self.mongoCore.ObjectId(data.id);
         return cb(null, data.id);
     } catch (e) {
@@ -59,7 +56,7 @@ Group.prototype.validateId = function (data, cb) {
  */
 Group.prototype.addGroup = function (data, cb) {
     let __self = this;
-    if (!data.code || !data.name || !data.description) {
+    if (!data || !data.code || !data.name || !data.description) {
         let error = new Error("code, name, and description are required.");
         return cb(error, null);
     }
@@ -94,15 +91,15 @@ Group.prototype.addGroup = function (data, cb) {
  */
 Group.prototype.getGroup = function (data, cb) {
     let __self = this;
+    if (!data || !(data.id || data.code)) {
+        let error = new Error("must provide either id or code.");
+        return cb(error, null);
+    }
     let condition = {};
     if (data.id) {
         condition = {'_id': data.id};
     } else if (data.code) {
         condition = {'code': data.code};
-    }
-    else {
-        let error = new Error("must provide either id or code.");
-        return cb(error, null);
     }
     __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
         return cb(err, record);
@@ -121,7 +118,7 @@ Group.prototype.getGroup = function (data, cb) {
 Group.prototype.getGroups = function (data, cb) {
     let __self = this;
     let condition = {};
-    if (data.tId) {
+    if (data && data.tId) {
         condition = {"tenant.id": data.tId};
     }
     __self.mongoCore.find(colName, condition, null, null, (err, records) => {
@@ -141,7 +138,7 @@ Group.prototype.getGroups = function (data, cb) {
  */
 Group.prototype.editGroup = function (data, cb) {
     let __self = this;
-    if (!data.name || !data.id) {
+    if (!data || !data.name || !data.id) {
         let error = new Error("name and id are required.");
         return cb(error, null);
     }
@@ -177,7 +174,7 @@ Group.prototype.editGroup = function (data, cb) {
  */
 Group.prototype.deleteGroup = function (data, cb) {
     let __self = this;
-    if (!data.id) {
+    if (!data || !data.id) {
         let error = new Error("id is required.");
         return cb(error, null);
     }
@@ -222,7 +219,7 @@ Group.prototype.deleteGroup = function (data, cb) {
  */
 Group.prototype.addAllowedEnvironments = function (data, cb) {
     let __self = this;
-    if (!data.allowedEnvironments || !data.groups) {
+    if (!data || !data.allowedEnvironments || !data.groups) {
         let error = new Error("allowedEnvironments and groups are required.");
         return cb(error, null);
     }
@@ -256,7 +253,7 @@ Group.prototype.addAllowedEnvironments = function (data, cb) {
  */
 Group.prototype.addAllowedPackages = function (data, cb) {
     let __self = this;
-    if (!data.allowedPackages || !data.id) {
+    if (!data || !data.allowedPackages || !data.id) {
         let error = new Error("allowedPackages and id are required.");
         return cb(error, null);
     }
