@@ -326,6 +326,20 @@ service.init(function () {
 	});
 	
 	/**
+	 * Return user records by id
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.post("/admin/listUsers/uId", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.listUsersById(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
 	 * Return the count of user records
 	 * @param {String} API route
 	 * @param {Function} API middleware

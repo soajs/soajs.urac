@@ -144,8 +144,9 @@ module.exports = {
         999: "Limit Exceed, please upgrade your account"
 
     },
-	"pinCode": {
-    	"length": 5
+	"pinConfiguration": {
+    	"charLength": 4,
+		"characters": "0123456789"
 	},
     "schema": {
         "commonFields": {
@@ -472,6 +473,35 @@ module.exports = {
 		            "validation": {"type": "boolean"}
 	            }
             },
+	        '/admin/listUsers/uId': {
+		        "_apiInfo": {
+			        "l": "List users by Id",
+			        "group": "Administration",
+			        "groupMain": true
+		        },
+		        "commonFields": ["model", "start", "limit"],
+		        "tId": {
+			        "source": ['query.tId'],
+			        "required": false,
+			        "validation": {"type": "string"}
+		        },
+		        "uId": {
+			        "source": ['query.uId'],
+			        "required": true,
+			        "validation": {
+				        "type": "array",
+				        "items": {
+					        "type": "string",
+					        "minItems": 1
+				        }
+			        }
+		        },
+		        "config": {
+			        "source": ['query.config'],
+			        "required": false,
+			        "validation": {"type": "boolean"}
+		        }
+	        },
             '/admin/users/count': {
                 "_apiInfo": {
                     "l": "Total users count",
@@ -858,7 +888,6 @@ module.exports = {
                     }
                 }
             },
-
             "/ldap/login": {
                 "_apiInfo": {
                     "l": "Ldap Login",
@@ -1016,6 +1045,35 @@ module.exports = {
                     "validation": {"type": "object"}
                 }
             },
+	        '/admin/listUsers/uId': {
+		        "_apiInfo": {
+			        "l": "List users by Id",
+			        "group": "Administration",
+			        "groupMain": true
+		        },
+		        "commonFields": ["model", "start", "limit"],
+		        "tId": {
+			        "source": ['query.tId'],
+			        "required": false,
+			        "validation": {"type": "string"}
+		        },
+		        "uId": {
+			        "source": ['body.uId'],
+			        "required": true,
+			        "validation": {
+				        "type": "array",
+				        "items": {
+					        "type": "string",
+					        "minItems": 1
+				        }
+			        }
+		        },
+		        "config": {
+			        "source": ['query.config'],
+			        "required": false,
+			        "validation": {"type": "boolean"}
+		        }
+	        },
             '/admin/addUser': {
                 "_apiInfo": {
                     "l": "Add new User",
