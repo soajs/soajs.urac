@@ -1,6 +1,7 @@
 'use strict';
 const soajs = require('soajs');
 const config = require('./config.js');
+config.packagejson = require("./package.json");
 const service = new soajs.server.service(config);
 const uracDriver = require("soajs.urac.driver");
 const provision = soajs.provision;
@@ -324,6 +325,20 @@ service.init(function () {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.user.listUsers(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Return user records by id
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.post("/admin/listUsers/uId", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.listUsersById(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});

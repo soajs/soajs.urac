@@ -2584,7 +2584,6 @@ describe("simple urac tests", function () {
 				requester('admin/inviteUser/uId', 'post', params, function (error, body) {
 					assert.ifError(error);
 					assert.ok(body);
-					console.log(JSON.stringify(body,null, 2))
 					assert.ok(body.data);
 					done();
 				});
@@ -2634,7 +2633,40 @@ describe("simple urac tests", function () {
 				});
 			});
 		});
-		
+		describe("testing list users API by Id", function () {
+			
+			it("SUCCESS - will return user records 1", function (done) {
+				var params = {
+					'form': {
+						uId: [user_id]
+					},
+					qs: {'tId': '10d2cb5fc04ce51e06000001', config : true}
+				};
+				requester('admin/listUsers/uId', 'post', params, function (error, body) {
+					console.log(JSON.stringify(body, null, 2))
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					assert.ok(body.data.length > 0);
+					done();
+				});
+			});
+			
+			it("SUCCESS - will return 0 user records ", function (done) {
+				var params = {
+					'form': {
+						uId: ["123"],
+					}
+				};
+				requester('admin/listUsers/uId', 'post', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					assert.ok(body.data.length === 0);
+					done();
+				});
+			});
+		});
 		describe("testing invite users API Bulk", function () {
 			
 			it("success - invite users API", function (done) {

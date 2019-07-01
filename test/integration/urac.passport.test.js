@@ -88,8 +88,8 @@ describe("simple urac tests", function () {
 				assert.ifError(error);
 				assert.ok(body);
 				assert.deepEqual(body.errors.details[0], {
-					"code": 399,
-					"message": "Missing Service config. Contact system Admin"
+					"code": 420,
+					"message": "Missing serviceConfig for urac.passportLogin"
 				});
 				done();
 			});
