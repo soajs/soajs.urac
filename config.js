@@ -1745,7 +1745,7 @@ module.exports = {
 						"properties": {
 							"code": {
 								"type": "boolean",
-								"required": true
+								"required": false
 							},
 							"allowed": {
 								"type": "boolean",
@@ -1753,6 +1753,16 @@ module.exports = {
 							}
 						},
 						"additionalProperties": false
+					}
+				},
+				"groups": {
+					"source": ['body.groups'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
 					}
 				}
 			},
