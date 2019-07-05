@@ -68,7 +68,7 @@ Group.prototype.addGroup = function (data, cb) {
     if (data.config) {
         record.config = data.config
     }
-    if (data.tId && data.code) {
+    if (data.tId && data.tCode) {
         record.tenant = {
             "id": data.tId,
             "code": data.tCode
