@@ -34,8 +34,9 @@ function init(soajs, cb) {
 }
 
 let BL = {
-    group: require("./group-new.js")
+    group: require("./group.js")
 };
+
 
 
 
