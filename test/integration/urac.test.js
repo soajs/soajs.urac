@@ -2404,6 +2404,26 @@ describe("simple urac tests", function () {
 			});
 		});
 		
+		describe("testing recover pin of user API", function () {
+			
+			it("SUCCESS - will add pin to records", function (done) {
+				var params = {
+					'qs': {
+						username: "john_smith",
+						email: "john.smith@soajs.org",
+						tenantId: "tenantId",
+						
+					}
+				};
+				requester('admin/recoverPinCode', 'get', params, function (error, body) {
+					assert.ifError(error);
+					assert.ok(body);
+					assert.ok(body.data);
+					done();
+				});
+			});
+		});
+		
 		describe("testing delete pin from user API", function () {
 			
 			it("SUCCESS - will return user records", function (done) {

@@ -870,6 +870,30 @@ module.exports = {
 				},
 				"commonFields": ['appId', 'key', 'soajs_project']
 			},
+			"/admin/recoverPinCode": {
+				"_apiInfo": {
+					"l": "Add Pin Information",
+					"group": "Administration"
+				},
+				"commonFields": ["model"],
+				"username": {
+					"source": ['query.username'],
+					"required": false,
+					"validation": {"type": "string"}
+				},
+				"email": {
+					"source": ['query.email'],
+					"required": false,
+					"validation": {"type": "string"}
+				},
+				"tenantId": {
+					"source": ['query.tenantId'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				}
+			},
 		},
 		
 		"post": {
@@ -1145,7 +1169,7 @@ module.exports = {
 						"properties": {
 							"code": {
 								"required": true,
-								"type": 'string'
+								"type": 'boolean'
 							},
 							"allowed": {
 								"required": true,
@@ -1289,7 +1313,7 @@ module.exports = {
 						"properties": {
 							"code": {
 								"required": false,
-								"type": 'string'
+								"type": 'boolean'
 							},
 							"allowed": {
 								"required": false,
@@ -1349,7 +1373,7 @@ module.exports = {
 													"type": 'object',
 													"properties": {
 														"code": {
-															"type": 'string'
+															"type": 'boolean'
 														},
 														"allowed": {
 															"type": 'boolean'
@@ -2011,7 +2035,7 @@ module.exports = {
 						"properties": {
 							"code": {
 								"type": "boolean",
-								"required": true
+								"required": false
 							},
 							"allowed": {
 								"type": "boolean",

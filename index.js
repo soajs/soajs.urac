@@ -670,6 +670,20 @@ service.init(function () {
 	});
 	
 	/**
+	 * Recover  User pin code
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.get("/admin/recoverPinCode", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.recoverPinCode(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
 	 * Invite User
 	 * @param {String} API route
 	 * @param {Function} API middleware
