@@ -557,6 +557,32 @@ module.exports = {
 				},
 				"commonFields": ["model", "isOwner"]
 			},
+			
+			"/admin/recoverPinCode": {
+				"_apiInfo": {
+					"l": "Recover Pin Information",
+					"group": "Administration"
+				},
+				"commonFields": ["model"],
+				"username": {
+					"source": ['query.username'],
+					"required": false,
+					"validation": {"type": "string"}
+				},
+				"email": {
+					"source": ['query.email'],
+					"required": false,
+					"validation": {"type": "string"}
+				},
+				"tenantId": {
+					"source": ['query.tenantId'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				}
+			},
+			
 			// "/tenant/list": {
 			//     _apiInfo: {
 			//         "l": "List tenants",
@@ -869,31 +895,7 @@ module.exports = {
 					"group": "Tenant Settings"
 				},
 				"commonFields": ['appId', 'key', 'soajs_project']
-			},
-			"/admin/recoverPinCode": {
-				"_apiInfo": {
-					"l": "Add Pin Information",
-					"group": "Administration"
-				},
-				"commonFields": ["model"],
-				"username": {
-					"source": ['query.username'],
-					"required": false,
-					"validation": {"type": "string"}
-				},
-				"email": {
-					"source": ['query.email'],
-					"required": false,
-					"validation": {"type": "string"}
-				},
-				"tenantId": {
-					"source": ['query.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
-				}
-			},
+			}
 		},
 		
 		"post": {
