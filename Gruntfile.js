@@ -76,43 +76,30 @@ module.exports = function (grunt) {
 					"beforeEach": false,
 					"after": false,
 					"afterEach": false
-				},
-				ignores: ['test/coverage/**/*.js']
+				}
 			},
 			files: {
-				src: ['**/*.js']
+                src: ['config-new.js', 'bl/*.js', 'model/mongo/*.js', 'test/helper.js', 'test/unit/**/*.js', 'test/integration/**/*.js']
 			},
 			gruntfile: {
 				src: 'Gruntfile.js'
 			}
 		},
-		// jsdoc: {
-		//   doc : {
-		//     src: ['soajs/**/*.js'],
-		//     jsdoc: pluginsRootPath+'/node_modules/grunt-jsdoc/node_modules/jsdoc/jsdoc',
-		//     options: {
-		//       dest: 'doc',
-		//     }
-		//   }
-		// },
 		
 		env: {
 			mochaTest: {
-				// NODE_ENV: 'test',
-				// APP_DIR: process.cwd(),
 				APP_DIR_FOR_CODE_COVERAGE: '../',
 				SOAJS_ENV: 'dev',
 				SOAJS_SRVIP: '127.0.0.1',
-				SOAJS_PROFILE: ''
+				//SOAJS_PROFILE: '',
+                SOAJS_SRVPORT: 4001
 			},
 			coverage: {
-				// NODE_ENV: 'test',
-				// APP_DIR: process.cwd(),
 				APP_DIR_FOR_CODE_COVERAGE: '../test/coverage/instrument/',
 				SOAJS_ENV: 'dev',
 				SOAJS_SRVIP: '127.0.0.1',
-				SOAJS_TEST: true,
-				SOAJS_PROFILE: '',
+				//SOAJS_TEST: true,
+				//SOAJS_PROFILE: '',
 				SOAJS_SRVPORT: 4001
 			}
 		},
@@ -135,8 +122,7 @@ module.exports = function (grunt) {
         },
 		
 		instrument: {
-			files: ['index.js', 'config.js', 'lib/*.js', 'drivers/*.js', 'model/*.js', 'schemas/*.js'],
-			//files: ['**/*.js'],
+			files: ['config-new.js', 'bl/*.js', 'model/mongo/*.js'],
 			options: {
 				lazy: false,
 				basePath: 'test/coverage/instrument/'
@@ -164,14 +150,14 @@ module.exports = function (grunt) {
 					reporter: 'spec',
 					timeout: 90000
 				},
-				src: ['test/unit/_servers.test.js']
+                src: ['test/unit/index.js']
 			},
 			integration: {
 				options: {
 					reporter: 'spec',
 					timeout: 90000
 				},
-				src: ['test/integration/_server.test.js']
+                src: ['test/integration/index.js']
 			}
 		},
 		
@@ -198,7 +184,6 @@ module.exports = function (grunt) {
 	grunt.registerTask("unit", ['env:mochaTest', 'mochaTest:unit']);
 	grunt.registerTask("test", ['clean', 'copy', 'env:coverage', 'instrument', 'mochaTest:unit', 'mochaTest:integration']);
 	grunt.registerTask("coverage", ['clean', 'copy', 'env:coverage', 'instrument', 'mochaTest:unit', 'mochaTest:integration', 'storeCoverage', 'makeReport', 'coveralls']);
-	//grunt.registerTask("coverage", ['clean', 'copy', 'env:coverage', 'instrument', 'mochaTest:unit', 'mochaTest:integration', 'storeCoverage', 'makeReport']);
 	
 };
 
