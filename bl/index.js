@@ -34,7 +34,28 @@ function init(soajs, cb) {
 }
 
 let BL = {
-    group: require("./group.js")
+    group: require("./group.js"),
+    user: require("./user.js"),
+
+    "addUser": (soajs, inputmaskData, modelObj, cb) => {
+        let data = {};
+        data.firstName = inputmaskData.firstName;
+        data.lastName = inputmaskData.lastName;
+        data.userName = inputmaskData.userName;
+        data.email = inputmaskData.email;
+        data.password = inputmaskData.password;
+        data.status = inputmaskData.status;
+        data.profile = inputmaskData.profile;
+        data.groups = inputmaskData.groups;
+
+        //add user
+    },
+
+    "deleteUser": (soajs, inputmaskData, modelObj, cb) => {
+
+    },
+
+
 };
 
 

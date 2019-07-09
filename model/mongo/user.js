@@ -26,6 +26,32 @@ function User(soajs, mongoCore) {
 }
 
 /**
+ * To Count Users based on id or username
+ *
+ * @param data
+ *  should have:
+ *      optional (username, id)
+ *
+ * @param cb
+ */
+
+User.prototype.countUsers = function (data, cb) {
+
+    let condition = {
+        '$or':
+            [
+                {'username': data.username},
+                {'_id': data.id}
+            ]
+    };// to be based on data (username, id, etc..)
+
+    let __self = this;
+    __self.mongoCore.mongoDb.count(colName, condition, null, null, (err, record) => {
+        return cb(err, record);
+    });
+};
+
+/**
  * To validate and convert an id to mongodb objectID
  *
  * @param data
@@ -47,6 +73,7 @@ User.prototype.validateId = function (data, cb) {
     }
 };
 
+
 /**
  * To get a user
  *
@@ -56,6 +83,7 @@ User.prototype.validateId = function (data, cb) {
  *
  * @param cb
  */
+
 User.prototype.getUser = function (data, cb) {
     let __self = this;
     if (!data.id) {
@@ -78,7 +106,7 @@ User.prototype.getUser = function (data, cb) {
  *
  * @param cb
  */
-User.prototype.checkUsername = function (data, cb) {
+User.prototype.checkIfExists = function (data, cb) {
     let __self = this;
     if (!data.username || !data.email) {
         let error = new Error("username/email is required.");
@@ -91,7 +119,7 @@ User.prototype.checkUsername = function (data, cb) {
                 {'email': data['username']}
             ]
     };
-    __self.mongoCore.mongoDb.count(colNamen, condition, (err, response) => {
+    __self.mongoCore.mongoDb.count(colName, condition, (err, response) => {
         return cb(err, response);
     });
 };
@@ -144,6 +172,85 @@ User.prototype.addGroup = function (data, cb) {
     __self.mongoCore.update(colName, condition, s, extraOptions, (err, response) => {
         return cb(err, response);
     });
+};
+
+/**
+ * To get user(s)
+ *
+ * @param data
+ *  should have:
+ *
+ * @param cb
+ */
+User.prototype.getUsers = function (data, cb) {
+    let __self = this;
+    let condition = {};
+    __self.mongoCore.find(colName, condition, null, null, (err, record) => {
+        return cb(err, record);
+    });
+};
+
+/**
+ * To edit a user
+ *
+ * @param data
+ *  should have:
+ *      required (id)
+ *      optional (firstName, lastName, userName, email, password)
+ *
+ * @param cb
+ */
+User.prototype.editUser = function (data, cb) { // Check!!!
+    let __self = this;
+    if (!data || !data.id || !data.userName) {
+        let error = new Error("id and userName are required.");
+        return cb(error, null);
+    }
+    let s = {
+        '$set': {
+            'firstName': data.firstName,
+            'lastName': data.lastName,
+            'userName': data.userName,
+            'email': data.email,
+            'password': data.password
+        }
+    };
+    let condition = {'_id': data.id};
+    let extraOptions = {
+        'upsert': false,
+        'safe': true
+    };
+    __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
+        return cb(err, record);
+    });
+};
+
+User.prototype.addUser = function (data, cb) {
+    // Check if username or email are already taken
+    let __self = this;
+
+    if (!data || !data.code || !data.name || !data.description) {
+        let error = new Error("code, name, and description are required.");
+        return cb(error, null);
+    }
+    let record = {
+        "code": data.code,
+        "name": data.name,
+        "description": data.description
+    };
+    if (data.config) {
+        record.config = data.config
+    }
+    if (data.tId && data.tCode) {
+        record.tenant = {
+            "id": data.tId,
+            "code": data.tCode
+        };
+    }
+    __self.mongoCore.insert(colName, record, (err, record) => {
+        return cb(err, record);
+    });
+
 };
 
 User.prototype.closeConnection = function () {
