@@ -75,64 +75,6 @@ describe("simple urac tests", function () {
 	
 	var u4 = '22d2cb5fc04ce51e06000001';
 	
-	describe.skip("testing getUserAclInfo", function () {
-		it("Success", function (done) {
-			var params = {
-				qs: {
-					"tenantId" : "551286bce603d7e01ab1688e"
-				}
-			};
-			requester('tenant/getUserAclInfo', 'get', params, function (error, body) {
-				assert.equal(body.result, true);
-				assert.ok(body.data);
-				done();
-			});
-		});
-	});
-	
-	describe.skip("testing list tenant", function () {
-		it("Success - with type client", function (done) {
-			var params = {
-				qs: {
-					"type": "client"
-				}
-			};
-			requester('tenant/list', 'get', params, function (error, body) {
-				assert.equal(body.result, true);
-				assert.ok(body.data);
-				body.data.forEach(function (tenant) {
-					assert.deepEqual(tenant.type, "client");
-				});
-				done();
-			});
-		});
-		
-		it("Success - with type and negate", function (done) {
-			var params = {
-				qs: {
-					"type": "client",
-					"negate": true
-				}
-			};
-			requester('tenant/list', 'get', params, function (error, body) {
-				assert.equal(body.result, true);
-				assert.ok(body.data);
-				done();
-			});
-		});
-		
-		it("Success", function (done) {
-			var params = {
-				qs: {}
-			};
-			requester('tenant/list', 'get', params, function (error, body) {
-				assert.equal(body.result, true);
-				assert.ok(body.data);
-				done();
-			});
-		});
-	});
-	
 	describe("testing openam login", function () {
 		it("fail - login with an invalid token", function (done) {
 			var params = {
@@ -658,28 +600,8 @@ describe("simple urac tests", function () {
 				
 				assert.deepEqual(body.errors.details[0], {
 					"code": 172,
-					"message": "Missing required field: username, tId, tCode"
+					"message": "Missing required field: username"
 				});
-				done();
-			});
-		});
-		
-		it("FAIL - invalid tId", function (done) {
-			var params = {
-				form: {
-					'username': 'johndoe1',
-					'firstName': 'john1',
-					'lastName': 'doe1',
-					'email': 'john.doe1@soajs.org',
-					'tId': 'invalidTID',
-					'tCode': 'test'
-				}
-			};
-			requester('admin/addUser', 'post', params, function (error, body) {
-				assert.ifError(error);
-				assert.ok(body);
-				
-				assert.deepEqual(body.errors.details[0], {"code": 611, "message": "Invalid tenant id provided"});
 				done();
 			});
 		});
@@ -690,9 +612,7 @@ describe("simple urac tests", function () {
 					'username': 'john_smith',
 					'firstName': 'john',
 					'lastName': 'smith',
-					'email': 'john.smith@soajs.org',
-					'tId': '10d2cb5fc04ce51e06000001',
-					'tCode': 'test'
+					'email': 'john.smith@soajs.org'
 				}
 			};
 			
@@ -727,9 +647,7 @@ describe("simple urac tests", function () {
 					'firstName': 'lisa',
 					'lastName': 'smith',
 					'email': 'lisa.smith@soajs.org',
-					'profile': {"gender": "female", "age": 25},
-					'tId': '10d2cb5fc04ce51e06000001',
-					'tCode': 'test'
+					'profile': {"gender": "female", "age": 25}
 				}
 			};
 			requester('admin/addUser', 'post', params, function (error, body) {
@@ -835,8 +753,6 @@ describe("simple urac tests", function () {
 					'firstName': 'john',
 					'lastName': 'doe',
 					'email': 'john.black@soajs.org',
-					'tId': '10d2cb5fc04ce51e06000001',
-					'tCode': 'test',
 					'status': 'active',
 					'password': '123',
 					'confirmation': '123'
@@ -868,8 +784,6 @@ describe("simple urac tests", function () {
 					'firstName': 'john',
 					'lastName': 'doe',
 					'email': 'john.doe@soajs.org',
-					'tId': '10d2cb5fc04ce51e06000001',
-					'tCode': 'test',
 					'status': 'active'
 				}
 			};
@@ -891,8 +805,6 @@ describe("simple urac tests", function () {
 					'firstName': 'john',
 					'lastName': 'doe',
 					'email': 'john.doe@soajs.org',
-					'tId': '10d2cb5fc04ce51e06000001',
-					'tCode': 'test',
 					'password': '123',
 					'confirmation': '123'
 				}
@@ -915,8 +827,6 @@ describe("simple urac tests", function () {
 					'firstName': 'john',
 					'lastName': 'doe',
 					'email': 'john.doe@soajs.org',
-					'tId': '10d2cb5fc04ce51e06000001',
-					'tCode': 'test',
 					'status': 'active',
 					'password': '123',
 					'confirmation': '456'
@@ -940,8 +850,6 @@ describe("simple urac tests", function () {
 					'firstName': 'john',
 					'lastName': 'doe',
 					'email': 'john.doe@soajs.org',
-					'tId': '10d2cb5fc04ce51e06000001',
-					'tCode': 'test'
 				}
 			};
 			requester('admin/addUser', 'post', params, function (error, body) {
@@ -2236,8 +2144,6 @@ describe("simple urac tests", function () {
 						email: "john.smith@soajs.org",
 					},
 					form: {
-						tenantId: "tenantId",
-						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
 							code: true,
@@ -2256,8 +2162,6 @@ describe("simple urac tests", function () {
 			it("fail - no user or email", function (done) {
 				var params = {
 					form: {
-						tenantId: "tenantId",
-						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
 							code: true,
@@ -2278,8 +2182,6 @@ describe("simple urac tests", function () {
 						username: "john_smithsdsd",
 					},
 					form: {
-						tenantId: "tenantId",
-						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
 							code: true,
@@ -2300,8 +2202,6 @@ describe("simple urac tests", function () {
 						username: "john_smith",
 					},
 					form: {
-						tenantId: "tenantId",
-						tenantCode: "tenantCode",
 						groups: ["owner"],
 						pin: {
 							code: true,

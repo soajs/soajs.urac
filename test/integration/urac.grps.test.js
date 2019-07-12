@@ -109,40 +109,12 @@ describe("urac group tests", function () {
 				});
 			});
 			
-			it("FAIL - invalid tenant id", function (done) {
-				var params = {
-					form: {
-						'code': 'gold',
-						'name': 'gold',
-						'description': 'grp description',
-						'tId': '10d2cbc6000001',
-						'tCode': 'test',
-						'config': {
-							"allowedPackages": {
-								'prod' : "pack"
-							}
-						}
-					}
-				};
-				requester('admin/group/add', 'post', params, function (error, body) {
-					assert.ifError(error);
-					assert.ok(body);
-					assert.deepEqual(body.errors.details[0], {
-						"code": 611,
-						"message": "Invalid tenant id provided"
-					});
-					done();
-				});
-			});
-			
 			it("FAIL - will NOT create group - code exists", function (done) {
 				var params = {
 					form: {
 						'code': 'gold',
 						'name': 'gold',
 						'description': 'grp description',
-						'tId': '10d2cb5fc04ce51e06000001',
-						'tCode': 'test',
 						'config': {
 							"allowedPackages": {
 								'prod' : "pack"

@@ -199,7 +199,7 @@ module.exports = {
 			"model": {
 				"source": ['query.model'],
 				"required": false,
-				"default": "mongo",
+				"default": "user",
 				"validation": {
 					"type": "string",
 					"enum": ["memory", "mongo"]
@@ -462,11 +462,6 @@ module.exports = {
 					"groupMain": true
 				},
 				"commonFields": ["model", "start", "limit", "keywords"],
-				"tId": {
-					"source": ['query.tId'],
-					"required": false,
-					"validation": {"type": "string"}
-				},
 				"config": {
 					"source": ['query.config'],
 					"required": false,
@@ -480,11 +475,6 @@ module.exports = {
 					"groupMain": true
 				},
 				"commonFields": ["model", "start", "limit"],
-				"tId": {
-					"source": ['query.tId'],
-					"required": false,
-					"validation": {"type": "string"}
-				},
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -507,12 +497,7 @@ module.exports = {
 					"l": "Total users count",
 					"group": "Administration"
 				},
-				"commonFields": ["model", "keywords"],
-				"tId": {
-					"source": ['query.tId'],
-					"required": false,
-					"validation": {"type": "string"}
-				}
+				"commonFields": ["model", "keywords"]
 			},
 			'/admin/getUser': {
 				"_apiInfo": {
@@ -531,12 +516,7 @@ module.exports = {
 					"l": "List groups",
 					"group": "Administration"
 				},
-				"commonFields": ["model"],
-				"tId": {
-					"source": ['query.tId'],
-					"required": false,
-					"validation": {"type": "string"}
-				}
+				"commonFields": ["model"]
 			},
 			'/admin/group': {
 				"_apiInfo": {
@@ -573,13 +553,6 @@ module.exports = {
 					"source": ['query.email'],
 					"required": false,
 					"validation": {"type": "string"}
-				},
-				"tenantId": {
-					"source": ['query.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
 				}
 			},
 			
@@ -1078,11 +1051,6 @@ module.exports = {
 					"groupMain": true
 				},
 				"commonFields": ["model", "start", "limit"],
-				"tId": {
-					"source": ['query.tId'],
-					"required": false,
-					"validation": {"type": "string"}
-				},
 				"uId": {
 					"source": ['body.uId'],
 					"required": true,
@@ -1105,7 +1073,7 @@ module.exports = {
 					"l": "Add new User",
 					"group": "Administration"
 				},
-				"commonFields": ["model", 'tId', 'tCode', 'soajs_project'],
+				"commonFields": ["model", 'soajs_project'],
 				"username": {
 					"source": ['body.username'],
 					"required": true,
@@ -1401,7 +1369,15 @@ module.exports = {
 					"l": "Add new Group",
 					"group": "Administration"
 				},
-				"commonFields": ["model", 'tId', 'tCode'],
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "mongo"]
+					}
+				},
 				"code": {
 					"source": ['body.code'],
 					"required": true,
@@ -1465,7 +1441,15 @@ module.exports = {
 					"l": "Edit Group",
 					"group": "Administration"
 				},
-				"commonFields": ["model"],
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "mongo"]
+					}
+				},
 				"gId": {
 					"source": ['query.gId'],
 					"required": true,
@@ -1525,7 +1509,16 @@ module.exports = {
 					"l": "Add Users to Group",
 					"group": "Administration"
 				},
-				"commonFields": ["model", 'tId'],
+				"commonFields": ["model"],
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "mongo"]
+					}
+				},
 				"code": {
 					"source": ['body.groupCode'],
 					"required": true,
@@ -1546,6 +1539,15 @@ module.exports = {
 				"_apiInfo": {
 					"l": "Add Allowed Environment to Group",
 					"group": "Administration"
+				},
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "mongo"]
+					}
 				},
 				"groups": {
 					"source": ['body.groups'],
@@ -1581,20 +1583,6 @@ module.exports = {
 					"source": ['query.email'],
 					"required": false,
 					"validation": {"type": "string"}
-				},
-				"tenantId": {
-					"source": ['body.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
-				},
-				"tenantCode": {
-					"source": ['body.tenantCode'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
 				},
 				"groups": {
 					"source": ['body.groups'],
@@ -1648,14 +1636,6 @@ module.exports = {
 									"required": false,
 									"type": "string",
 								},
-								"tenantId": {
-									"required": true,
-									"type": "string"
-								},
-								"tenantCode": {
-									"required": true,
-									"type": "string"
-								},
 								"pin": {
 									"required": false,
 									"type": "object",
@@ -1695,20 +1675,6 @@ module.exports = {
 					"source": ['query.uId'],
 					"required": true,
 					"validation": {"type": "string"}
-				},
-				"tenantId": {
-					"source": ['body.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
-				},
-				"tenantCode": {
-					"source": ['body.tenantCode'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
 				},
 				"groups": {
 					"source": ['body.groups'],
@@ -1755,13 +1721,6 @@ module.exports = {
 					"source": ['query.email'],
 					"required": false,
 					"validation": {"type": "string"}
-				},
-				"tenantId": {
-					"source": ['body.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
 				},
 				"pin": {
 					"source": ['body.pin'],
@@ -2370,7 +2329,16 @@ module.exports = {
 					"l": "Delete Group",
 					"group": "Administration"
 				},
-				"commonFields": ["model", "soajs_project"],
+				"commonFields": ["soajs_project"],
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "mongo"]
+					}
+				},
 				"gId": {
 					"source": ['query.gId'],
 					"required": true,
@@ -2393,13 +2361,6 @@ module.exports = {
 					"source": ['query.email'],
 					"required": false,
 					"validation": {"type": "string"}
-				},
-				"tenantId": {
-					"source": ['query.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
 				}
 			},
 			
