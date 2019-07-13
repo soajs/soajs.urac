@@ -202,7 +202,7 @@ module.exports = {
 				"default": "user",
 				"validation": {
 					"type": "string",
-					"enum": ["memory", "mongo"]
+					"enum": ["memory", "user"]
 				}
 			},
 			"soajs_project": {
@@ -516,14 +516,30 @@ module.exports = {
 					"l": "List groups",
 					"group": "Administration"
 				},
-				"commonFields": ["model"]
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "group"]
+					}
+				}
 			},
 			'/admin/group': {
 				"_apiInfo": {
 					"l": "Get group record by _id",
 					"group": "Administration"
 				},
-				"commonFields": ["model"],
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "group"]
+					}
+				},
 				"id": {
 					"source": ['query.id'],
 					"required": true,
@@ -1375,7 +1391,7 @@ module.exports = {
 					"default": "group",
 					"validation": {
 						"type": "string",
-						"enum": ["memory", "mongo"]
+						"enum": ["memory", "group"]
 					}
 				},
 				"code": {
@@ -1447,7 +1463,7 @@ module.exports = {
 					"default": "group",
 					"validation": {
 						"type": "string",
-						"enum": ["memory", "mongo"]
+						"enum": ["memory", "group"]
 					}
 				},
 				"gId": {
@@ -1516,7 +1532,7 @@ module.exports = {
 					"default": "group",
 					"validation": {
 						"type": "string",
-						"enum": ["memory", "mongo"]
+						"enum": ["memory", "group"]
 					}
 				},
 				"code": {
@@ -1546,7 +1562,7 @@ module.exports = {
 					"default": "group",
 					"validation": {
 						"type": "string",
-						"enum": ["memory", "mongo"]
+						"enum": ["memory", "group"]
 					}
 				},
 				"groups": {
@@ -1981,13 +1997,6 @@ module.exports = {
 					"required": false,
 					"validation": {"type": "string"}
 				},
-				"tenantId": {
-					"source": ['body.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
-				},
 				"pin": {
 					"source": ['body.pin'],
 					"required": false,
@@ -2045,13 +2054,6 @@ module.exports = {
 							"min": 1
 						}
 					}
-				},
-				"tenantId": {
-					"source": ['query.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
 				}
 			},
 			
@@ -2063,13 +2065,6 @@ module.exports = {
 				"commonFields": ["model"],
 				"uId": {
 					"source": ['query.uId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
-				},
-				"tenantId": {
-					"source": ['query.tenantId'],
 					"required": true,
 					"validation": {
 						"type": "string"
@@ -2336,7 +2331,7 @@ module.exports = {
 					"default": "group",
 					"validation": {
 						"type": "string",
-						"enum": ["memory", "mongo"]
+						"enum": ["memory", "group"]
 					}
 				},
 				"gId": {
