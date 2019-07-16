@@ -153,7 +153,7 @@ let bl = {
                     "msg": soajs.config.errors[417]
                 });
             }
-            modelObj.deleteGroup(data, (err, cb) => {
+            modelObj.deleteGroup(data, (err, record) => {
                 if (err) {
                     soajs.log.error(err);
                     return cb({
@@ -161,6 +161,8 @@ let bl = {
                         "msg": soajs.config.errors[419] + " - " + err.message
                     });
                 }
+                return cb(null, record);
+
             });
         });
     },

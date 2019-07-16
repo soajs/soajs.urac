@@ -32,7 +32,7 @@ let bl = {
         let data = {};
         data.firstName = inputmaskData.firstName;
         data.lastName = inputmaskData.lastName;
-        data.userName = inputmaskData.userName;
+        data.username = inputmaskData.username;
         data.email = inputmaskData.email;
         data.password = inputmaskData.password;
         data.status = inputmaskData.status;
@@ -104,7 +104,7 @@ let bl = {
         data.id = inputmaskData.uId;
         data.firstName = inputmaskData.firstName;
         data.lastName = inputmaskData.lastName;
-        data.userName = inputmaskData.userName;
+        data.username = inputmaskData.username;
         data.email = inputmaskData.email;
         data.password = inputmaskData.password;
 
@@ -224,26 +224,122 @@ let bl = {
         });
     },
 
+    "deleteUser": (soajs, inputmaskData, modelObj, cb) => {
+        let data = {};
+
+        if (!inputmaskData.uId) {
+            //must provide id
+        }
+
+        data.id = inputmaskData.uId;
+
+        modelObj.validateId((data, err) => {
+            if (err) {
+                return cb({
+                    "code": 411,
+                    "msg": soajs.config.errors[411]
+                });
+            }
+            modelObj.getUser(data, (err) => {
+                if (err) {
+                    soajs.log.error(err);
+                    return cb({
+                        "code": 405,
+                        "msg": soajs.config.errors[405] + " - " + err.message
+                    });
+                }
+                modelObj.deleteUser(data, (err, record) => {
+                    if (err) {
+                        soajs.log.error(err);
+                        return cb({
+                            "code": 421,
+                            "msg": soajs.config.errors[421] + " - " + err.message
+                        });
+                    }
+                    return cb(null, record);
+                });
+            });
+        });
+    },
+
     "inviteUser": (soajs, inputmaskData, modelObj, cb) => {
         let data = {};
-        // data.userName = inputmaskData.userName;
-        // data.email = inputmaskData.email;
+        if (!inputmaskData.username && !inputmaskData.email) {
+            return cb({
+                "code": 428,
+                "msg": soajs.config.errors[428]
+            });
+        }
+        if (inputmaskData.username) {
+            data.username = inputmaskData.username;
+        }
 
-        if (inputmaskData.userName) {
-            data.userName = inputmaskData.userName;
-        } else if (inputmaskData.email) {
+        if (inputmaskData.email) {
             data.email = inputmaskData.email;
         }
 
-        modelObj.getUser(data, (err) => {
-            if (err) {
+        modelObj.getUser(data, (err, record) => {
+            if (err || !record) {
                 soajs.log.error(err);
                 return cb({
                     "code": 405,
                     "msg": soajs.config.errors[405] + " - " + err.message
                 });
             }
-            // invite user
+
+            if (!soajs.tenant.locked && record.locked) {
+                return cb({
+                    "code": 500,
+                    "msg": req.soajs.config.errors[500]
+                });
+            }
+            if (!record.config) {
+                record.config = {};
+            }
+
+            if (!record.config.allowedTenants) {
+                record.config.allowedTenants = [];
+            }
+
+            let found = false;
+
+            if (record.config.allowedTenants.length > 0) {
+                record.config.allowedTenants.forEach((tenant) => {
+                    if (tenant.tenant && tenant.tenant.id && tenant.tenant.id === inputmaskData.tId) {
+                        found = true;
+                    }
+                });
+            }
+            if (found) {
+                return cb({
+                    "code": 429,
+                    "msg": soajs.config.errors[429]
+                });
+            }
+
+            let object = {
+                tenant: {
+                    id: inputmaskData.tId,
+                    code: inputmaskData.tCode,
+                    pin: {}
+                }
+            };
+
+            if (inputmaskData.groups) {
+                object.groups = inputmaskData.groups;
+            }
+
+            record.config.allowedTenants.push(object);
+
+            modelObj.addUser(data, (err) => {
+               if (err) {
+                   return cb({
+                       "code": 414,
+                       "msg": soajs.config.errors[414]
+                   });
+               }
+            });
+            return cb(null, record);
         });
     },
 
@@ -257,62 +353,269 @@ let bl = {
         let data = {};
         data.id = inputmaskData.uId;
 
-        modelObj.validateId((data, err) => {
+        modelObj.validateId(data, (err, record) => {
             if (err) {
                 return cb({
                     "code": 411,
                     "msg": soajs.config.errors[411]
                 });
             }
-            modelObj.getUser(data, (err) => {
+            if (!soajs.tenant.locked && record.locked) {
+                return cb({
+                    "code": 500,
+                    "msg": soajs.config.errors[500]
+                });
+            }
+            if (!record.config) {
+                record.config = {};
+            }
+
+            if (!record.config.allowedTenants) {
+                record.config.allowedTenants = [];
+            }
+
+            let found = false;
+
+            if (record.config.allowedTenants.length > 0) {
+                record.config.allowedTenants.forEach((oneTenant) => {
+                    if (oneTenant.tenant && oneTenant.tenant.id
+                        && oneTenant.tenant.id === inputmaskData.tenantId) {
+                        found = true;
+                    }
+                });
+            }
+
+            if (found) {
+                return cb({
+                    "code": 429,
+                    "msg": soajs.config.errors[429]
+                });
+            }
+
+            let object = {
+                tenant: {
+                    id: inputmaskData.tId,
+                    code: inputmaskData.tCode,
+                    pin: {}
+                }
+            };
+
+            if (inputmaskData.groups) {
+                object.groups = inputmaskData.groups;
+            }
+
+            record.config.allowedTenants.push(object);
+
+            modelObj.addUser(record, (err, record) => {
                 if (err) {
-                    soajs.log.error(err);
                     return cb({
-                        "code": 405,
-                        "msg": soajs.config.errors[405] + " - " + err.message
+                        "code": 414,
+                        "msg": soajs.config.errors[414]
                     });
                 }
-                // invite user
+            return cb(null, record);
             });
         });
     },
 
     "unInviteUsers": (soajs, inputmaskData, modelObj, cb) => {
         let data = {};
-
-        if (inputmaskData.userName) {
-            data.userName = inputmaskData.userName;
+        if (!inputmaskData.username && !inputmaskData.email) {
+            return cb({
+                "code": 428,
+                "msg": soajs.config.errors[428]
+            });
+        }
+        if (inputmaskData.username) {
+            data.username = inputmaskData.username;
         } else if (inputmaskData.email) {
             data.email = inputmaskData.email;
         }
+        data.updatedFields = {
+            "$pull": {
+                "config.allowedTenants": { tId: inputmaskData.tId }
+            }
+        };
 
-        //uninvite multiple users
+        data.extraOptions = { multi: true };
+
+        modelObj.editUser(data, (err, record) => {
+            if (err) {
+                return cb({
+                    "code": 422,
+                    "msg": soajs.config.errors[422]
+                });
+            }
+            return cb (null, record);
+        });
     },
 
     "unInviteUserByID": (soajs, inputmaskData, modelObj, cb) => {
         let data = {};
         data.id = inputmaskData.uId;
 
-        modelObj.validateId((data, err) => {
+        modelObj.validateId(data, (err) => {
             if (err) {
                 return cb({
                     "code": 411,
                     "msg": soajs.config.errors[411]
                 });
             }
-            modelObj.getUser(data, (err) => {
+            data.updatedFields = {
+                "$pull": {
+                    "config.allowedTenants": { tId: inputmaskData.tId}
+                }
+            };
+            modelObj.editUser(data, (err, record) => {
                 if (err) {
                     soajs.log.error(err);
                     return cb({
-                        "code": 405,
-                        "msg": soajs.config.errors[405] + " - " + err.message
+                        "code": 422,
+                        "msg": soajs.config.errors[422]
                     });
                 }
-                // uninvite user
+                return cb (null, record);
             });
         });
     },
 
+    "addEditPinCode": (soajs, inputmaskData, modelObj, cb) => {
+        let data = {};
+
+        if (!inputmaskData.username || !inputmaskData.email) {
+            return cb({
+                "code": 428,
+                "msg": req.soajs.config.errors[428]
+            });
+        }
+        if (inputmaskData.username) {
+            data.username = inputmaskData.username;
+        }
+        if (inputmaskData.email) {
+            data.email = inputmaskData.email;
+        }
+
+        modelObj.getUser(data, (err, record) => {
+            if (!soajs.tenant.locked && record.locked) {
+                return cb({
+                    "code": 500,
+                    "msg": soajs.config.errors[500]
+                });
+            }
+            if (!record.config || !record.config.allowedTenants || record.config.allowedTenants === 0) {
+                return cb({
+                    "code": 430,
+                    "msg": soajs.config.errors[430]
+                });
+            }
+
+            let allowedTenants = record.config.allowedTenants;
+
+            let index = allowedTenants.map(allowedTenant => {
+               return allowedTenant.tenant.id;
+            }).indexOf(inputmaskData.tId);
+
+            if (index === -1) {
+                return cb({
+                    "code": 430,
+                    "msg": req.soajs.config.errors[430]
+                });
+            }
+
+            if (!allowedTenants[index].tenant.pin) {
+                allowedTenants[index].tenant.pin = {};
+            }
+            if (inputmaskData.pin) {
+                if (inputmaskData.pin.code) {
+                    let pinCode = getPinCodeConfig(req.soajs);
+                    // allowedTenants[index].tenant.pin.code = makePin(pinCode);
+                }
+                if (inputmaskData.pin.hasOwnProperty("allowed")) {
+                    allowedTenants[index].tenant.pin.allowed = inputmaskData.pin.allowed;
+                }
+            }
+            if (inputmaskData.groups) {
+                allowedTenants[index].groups = inputmaskData.groups;
+            }
+
+            record.config.allowedTenants = allowedTenants;
+
+            modelObj.editUser(record, (err, res) => {
+                if (err) {
+                    soajs.log.error(err);
+                    return cb({
+                        "code": 422,
+                        "msg": soajs.config.errors[422]
+                    });
+                }
+                return (null, res);
+            });
+
+        });
+    },
+
+    "deletePinCode": (soajs, inputmaskData, modelObj, cb) => {
+        let data = {};
+
+        if (!inputmaskData.username || !inputmaskData.email) {
+            return cb({
+                "code": 428,
+                "msg": req.soajs.config.errors[428]
+            });
+        }
+        if (inputmaskData.username) {
+            data.username = inputmaskData.username;
+        }
+        if (inputmaskData.email) {
+            data.email = inputmaskData.email;
+        }
+
+        modelObj.getUser(data, (err, record) => {
+            if (!soajs.tenant.locked && record.locked) {
+                return cb({
+                    "code": 500,
+                    "msg": soajs.config.errors[500]
+                });
+            }
+            if (!record.config || !record.config.allowedTenants || record.config.allowedTenants === 0) {
+                return cb({
+                    "code": 430,
+                    "msg": soajs.config.errors[430]
+                });
+            }
+
+            let allowedTenants = record.config.allowedTenants;
+
+            let index = allowedTenants.map(allowedTenant => {
+                return allowedTenant.tenant.id;
+            }).indexOf(inputmaskData.tId);
+
+            if (index === -1) {
+                return cb({
+                    "code": 430,
+                    "msg": req.soajs.config.errors[430]
+                });
+            }
+
+            record.config.allowedTenants = allowedTenants;
+
+            modelObj.editUser(record, (err, res) => {
+                if (err) {
+                    soajs.log.error(err);
+                    return cb({
+                        "code": 422,
+                        "msg": soajs.config.errors[422]
+                    });
+                }
+                return (null, res);
+            });
+
+        });
+    }
+
 };
 
 module.exports = bl;
+
+
+//Check record vs Data
