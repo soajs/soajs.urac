@@ -1,13 +1,10 @@
 "use strict";
-
 const coreModules = require("soajs.core.modules");
 const core = coreModules.core;
 const helper = require("../../../helper.js");
-const Model = helper.requireModule('./model/mongo/group.js');
-const assert = require('assert');
+const Model = helper.requireModule('./model/mongo/user.js');
 
-describe("Unit test for: model - group", function () {
-
+describe("Unit test for: model - user", function () {
     let soajs = {
         "meta": core.meta,
         "tenant": {
@@ -47,7 +44,6 @@ describe("Unit test for: model - group", function () {
             }
         }
     };
-
     let modelObj = null;
 
     it("Constructor - with tenant - open connection", function (done) {
@@ -55,46 +51,8 @@ describe("Unit test for: model - group", function () {
         done();
     });
 
-    it("test - validateId", function (done) {
-        modelObj.validateId({"id": "5c8d0c505653de3985aa0ffe"}, (error, id) => {
-            assert.equal(id, "5c8d0c505653de3985aa0ffe");
-            done();
-        });
-    });
-
-    it("test - getGroups - with no data", function (done) {
-        modelObj.getGroups(null, (error, records) => {
-            console.log(error);
-            assert.ok(records);
-            done();
-        });
-    });
-
-    it("test - getGroups - with data", function (done) {
-        console.log(modelObj.getGroups({"groups": ["owner"]}, (err, r) => { return r; }));
-        modelObj.getGroups({"groups": ["owner"]}, (error, records) => {
-            assert.equal(records[0].code, "owner");
-            done();
-        });
-    });
-
-    it("test - getGroups - with data & tId", function (done) {
-        modelObj.getGroups({"groups": ["owner", "devop"], "tId": "5c0e74ba9acc3c5a84a51259"}, (error, records) => {
-            assert.equal(records.length, 2);
-            done();
-        });
-    });
-
-    it("test - getGroups - with data & with wrong tId", function (done) {
-        modelObj.getGroups({"groups": ["owner"], "tId": "5c0e74ba9acc3c5a84a51258"}, (error, records) => {
-            assert.equal(records.length, 0);
-            done();
-        });
-    });
-
     it("Constructor - with tenant - close connection", function (done) {
         modelObj.closeConnection();
         done();
     });
-
 });

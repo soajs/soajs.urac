@@ -1,5 +1,4 @@
 "use strict";
-
 const coreModules = require("soajs.core.modules");
 const core = coreModules.core;
 const helper = require("../../../helper.js");
@@ -7,7 +6,6 @@ const Model = helper.requireModule('./model/mongo/group.js');
 const assert = require('assert');
 
 describe("Unit test for: model - group", function () {
-
     let soajs = {
         "meta": core.meta,
         "tenant": {
@@ -47,7 +45,6 @@ describe("Unit test for: model - group", function () {
             }
         }
     };
-
     let modelObj = null;
 
     it("Constructor - with tenant - open connection", function (done) {
@@ -64,14 +61,12 @@ describe("Unit test for: model - group", function () {
 
     it("test - getGroups - with no data", function (done) {
         modelObj.getGroups(null, (error, records) => {
-            console.log(error);
-            assert.ok(records);
+            assert.ok(error);
             done();
         });
     });
 
     it("test - getGroups - with data", function (done) {
-        console.log(modelObj.getGroups({"groups": ["owner"]}, (err, r) => { return r; }));
         modelObj.getGroups({"groups": ["owner"]}, (error, records) => {
             assert.equal(records[0].code, "owner");
             done();
@@ -97,4 +92,8 @@ describe("Unit test for: model - group", function () {
         done();
     });
 
+    it("Constructor - with tenant - close connection", function (done) {
+        modelObj.closeConnection();
+        done();
+    });
 });
