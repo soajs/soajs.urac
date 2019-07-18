@@ -8,12 +8,7 @@ module.exports = {
 	 * @param {SOAJS Object} soajs
 	 */
 	"initConnection": function (soajs) {
-		if (soajs.inputmaskData.isOwner) {
-			soajs.mongoDb = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, soajs.config.serviceName, soajs.inputmaskData.tenantCode));
-		}
-		else {
-			soajs.mongoDb = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, soajs.config.serviceName, soajs.tenant.code));
-		}
+		soajs.mongoDb = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, soajs.config.serviceName, soajs.tenant.code));
 	},
 	
 	
