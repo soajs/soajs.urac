@@ -175,7 +175,7 @@ describe("Unit test for: model - user", function () {
     });
 
     it("test - deleteUser - with locked user error", function (done) {
-        modelObj.deleteUser({"id": userOne._id}, (error, result) => {
+        modelObj.deleteUser({"id": userOne._id}, (error) => {
             assert.ok(error);
             assert.deepEqual(error, new Error("cannot delete a locked record."));
             done();
