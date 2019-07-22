@@ -75,6 +75,25 @@ let bl = {
     }, // Check if needed
 
     "add": (soajs, inputmaskData, modelObj, cb) => {
+        let data = {};
+        data.token= inputmaskData.token;
+        data.expires= inputmaskData.expires;
+        data.status= inputmaskData.status;
+        data.ts= inputmaskData.ts;
+        data.service= inputmaskData.service;
+        data.username= inputmaskData.username;
 
+        modelObj.addToken(data, (err, record) => {
+           if (err) {
+               soajs.log.error(err);
+               // return cb({
+               //     "code": 418,
+               //     "msg": soajs.config.errors[418]
+               // }); Need to check error
+           }
+           return cb(null, record);
+        });
     }, // Check if needed
 }
+
+module.exports = bl;

@@ -32,7 +32,41 @@ let bl = {
 
         return Hasher.hash(password);
     },
+
+    "makePin": function (pinCode) {
+        let result = '';
+        let charactersLength = pinCode.characters.length;
+        for (let i = 0; i < pinCode.charLength; i++) {
+            result += pinCode.characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    },
+
+    /**
+     * Generate a random string
+     * @param {Number} length
+     * @param {object} config
+     */
+    "getRandomString": function (length, config) {
+        function getLetter() {
+            var start = process.hrtime()[1] % 2 === 0 ? 97 : 65;
+            return String.fromCharCode(Math.floor((start + Math.random() * 26)));
+        }
+
+        function getNumber() {
+            return String.fromCharCode(Math.floor((48 + Math.random() * 10)));
+        }
+
+        length = length || Math.ceil(Math.random() * config.maxStringLimit);
+        var qs = '';
+
+        while (length) {
+            qs += process.hrtime()[1] % 2 === 0 ? getLetter() : getNumber();
+            length--;
+        }
+
+        return qs.replace(/\s/g, '_');
+    },
 }
 
 module.exports = bl;
-

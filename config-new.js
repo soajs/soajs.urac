@@ -21,6 +21,7 @@ module.exports = {
         420: "Unable to delete token",
         421: "Unable to delete user",
         422: "Unable to edit user",
+        423: "An id must be provided",
         428: "A username or an email must be provided.",
         429: "You already invited this user.",
         430: "Tenant not found for this user.",

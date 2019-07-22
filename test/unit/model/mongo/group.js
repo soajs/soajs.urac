@@ -88,24 +88,143 @@ describe("Unit test for: model - group", function () {
         });
     });
 
-    // it("test - getGroups - with data", function (done) {
-    //     console.log(modelObj.getGroups({"groups": ["owner"]}, (err, r) => { return r; }));
-    //     modelObj.getGroups({"groups": ["owner"]}, (error, records) => {
-    //         assert.equal(records[0].code, "owner");
+    // it("test - addGroup - with data", function (done) {
+    //     modelObj.addGroup({
+    //         locked: false,
+    //         code: "test3",
+    //         name: "test Group",
+    //         owner: false,
+    //         description: "this is the test group",
+    //         config: {},
+    //         tenant: {
+    //             id: "5c0e74ba9acc3c5a84a51259",
+    //             code: "TES0"
+    //         }
+    //     }, (error, record) => {
+    //         assert.ok(record);
     //         done();
     //     });
     // });
 
-    // it("test - getGroups - with data & tId", function (done) {
-    //     modelObj.getGroups({"groups": ["owner", "devop"], "tId": "5c0e74ba9acc3c5a84a51259"}, (error, records) => {
-    //         assert.equal(records.length, 2);
-    //         done();
-    //     });
-    // });
+    it("test - addGroup", function (done) {
+        modelObj.addGroup(null, (error, record) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("code, name, and description are required."));
+            done();
+        });
+    });
 
-    // it("test - getGroups - with data & with wrong tId", function (done) {
-    //     modelObj.getGroups({"groups": ["owner"], "tId": "5c0e74ba9acc3c5a84a51258"}, (error, records) => {
-    //         assert.equal(records.length, 0);
+    it("test - addGroup - no description", function (done) {
+        modelObj.addGroup({
+            locked: true,
+            code: "test",
+            name: "test Group",
+            owner: false,
+            config: {},
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51259",
+                code: "TES0"
+            }
+        }, (error, record) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("code, name, and description are required."));
+            done();
+        });
+    });
+
+    it("test - getGroup - no data", function (done) {
+        modelObj.getGroup(null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("must provide either id or code."));
+            done();
+        });
+    });
+
+    it("test - getGroup - only id", function (done) {
+        modelObj.getGroup({"id": groupOne._id}, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.code, "owner");
+            done();
+        });
+    });
+
+    it("test - getGroup - only code", function (done) {
+        modelObj.getGroup({"code": "devop"}, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.name, groupTwo.name);
+            done();
+        });
+    });
+
+    it("test - getGroups - with data", function (done) {
+        modelObj.getGroups({"groups": ["owner"]}, (error, records) => {
+            assert.equal(records[0].code, "owner");
+            done();
+        });
+    });
+
+    it("test - getGroups - with data & tId", function (done) {
+        modelObj.getGroups({"groups": ["owner", "devop"], "tId": "5c0e74ba9acc3c5a84a51259"}, (error, records) => {
+            assert.equal(records.length, 2);
+            done();
+        });
+    });
+
+    it("test - getGroups - with data & with wrong tId", function (done) {
+        modelObj.getGroups({"groups": ["owner"], "tId": "5c0e74ba9acc3c5a84a51258"}, (error, records) => {
+            assert.equal(records.length, 0);
+            done();
+        });
+    });
+
+    it("test - editGrroup - with data", function (done) {
+        let validId = modelObj.validateId({"id": "5d31acd5daf9a61c99963814"} , (error, record) => {
+            return record;
+        });
+        modelObj.editGroup({
+            id: validId,
+            locked: true,
+            code: "test2",
+            name: "test2 Group",
+            owner: true,
+            config: {},
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51259",
+                code: "TES0"
+            }
+        }, (error, record) => {
+            assert.ok(record);
+            // console.log(record);
+            done();
+        });
+    });
+
+    it('test - deleteGroup - no data', function (done) {
+        modelObj.deleteGroup(null, (error, record) => {
+           assert.ok(error);
+           assert.deepEqual(error, new Error("id is required."));
+           done();
+        });
+    });
+
+    it('test - deleteGroup - with data - locked record', function (done) {
+        let validId = modelObj.validateId({"id": "5d31acd5daf9a61c99963814"} , (error, record) => {
+            return record;
+        });
+        modelObj.deleteGroup({"id": validId}, (error, record) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("cannot delete a locked record."));
+            done();
+        });
+    });
+
+    // it('test - deleteGroup - with data - not locked record', function (done) {
+    //     let validId = modelObj.validateId({"id": "5d31b1edd40e641d13c6225b"} , (error, record) => {
+    //         return record;
+    //     });
+    //     modelObj.deleteGroup({"id": validId}, (error, record) => {
+    //         console.log(record);
+    //         assert.ok(record);
     //         done();
     //     });
     // });

@@ -34,18 +34,28 @@ let bl = {
         });
     },
 
-    "find": (soajs, inputmaskData, modelObj, cb) => {
+    "findById": (soajs, inputmaskData, modelObj, cb) => {
         let data = {};
-        data.id = inputmaskData.id;
-        modelObj.getGroup(data, (err, record) => {
-            if (err) {
-                soajs.log.error(err);
+        data.id = inputmaskData.gId;
+        modelObj.validateId(data, (error, id) => {
+            if (error) {
+                soajs.log.error(error);
                 return cb({
-                    "code": 415,
-                    "msg": soajs.config.errors[415] + " - " + err.message
+                    "code": 412,
+                    "msg": soajs.config.errors[412] + " - " + error.message
                 });
             }
-            return cb(null, record);
+            data.id = id;
+            modelObj.getGroup(data, (err, record) => {
+                if (err) {
+                    soajs.log.error(err);
+                    return cb({
+                        "code": 415,
+                        "msg": soajs.config.errors[415] + " - " + err.message
+                    });
+                }
+                return cb(null, record);
+            });
         });
     },
 
@@ -55,7 +65,10 @@ let bl = {
         data.name = inputmaskData.name;
         data.description = inputmaskData.description;
         data.config = inputmaskData.config;
-        data.code = inputmaskData.code;
+        data.code = inputmaskData.gCode;
+        data.locked = inputmaskData.locked;
+        data.owner = inputmaskData.owner;
+        data.tenant = inputmaskData.tenant;
 
         let continueCreation = () => {
             modelObj.addGroup(data, (err, record) => {
@@ -90,18 +103,19 @@ let bl = {
         }
     },
 
-    "getGroup": (soajs, inputmaskData, modelObj, cb) => {
+    "getGroupByIdAndCode": (soajs, inputmaskData, modelObj, cb) => {
         let data = {};
         data.id = inputmaskData.gId;
-        data.code = inputmaskData.code;
+        data.code = inputmaskData.gCode;
 
-        modelObj.validateId(data, (err) => {
+        modelObj.validateId(data, (err, id) => {
             if (err) {
                 return cb({
                     "code": 417,
                     "msg": soajs.config.errors[417]
                 });
             }
+            data.id = id;
             modelObj.getGroup(data, (err, record) => {
                 if (err) {
                     soajs.log.error(err);
@@ -118,27 +132,40 @@ let bl = {
     "editGroup": (soajs, inputmaskData, modelObj, cb) => {
         let data = {};
         data.id = inputmaskData.gId;
-
+        data.code = inputmaskData.gCode;
         data.name = inputmaskData.name;
         data.description = inputmaskData.description;
         data.config = inputmaskData.config;
+        data.locked = inputmaskData.locked;
+        data.owner = inputmaskData.owner;
+        data.tenant = inputmaskData.tenant;
 
-        modelObj.validateId(data, (err) => {
+        modelObj.validateId(data, (err, id) => {
             if (err) {
                 return cb({
                     "code": 417,
                     "msg": soajs.config.errors[417]
                 });
             }
-            modelObj.editGroup(data, (err, record) => {
-                if (err) {
-                    soajs.log.error(err);
+            data.id = id;
+            modelObj.getGroup(data, (error) => {
+                if (error) {
+                    soajs.log.error(error);
                     return cb({
-                        "code": 431,
-                        "msg": soajs.config.errors[431] + " - " + err.message
+                        "code": 415,
+                        "msg": soajs.config.errors[415] + " - " + error.message
                     });
                 }
-                return cb(null, record);
+                modelObj.editGroup(data, (err, record) => {
+                    if (err) {
+                        soajs.log.error(err);
+                        return cb({
+                            "code": 431,
+                            "msg": soajs.config.errors[431] + " - " + err.message
+                        });
+                    }
+                    return cb(null, record);
+                });
             });
         });
     },
@@ -146,13 +173,14 @@ let bl = {
     "deleteGroup": (soajs, inputmaskData, modelObj, cb) => {
         let data = {};
         data.id = inputmaskData.gId;
-        modelObj.validateId(data, (err) => {
+        modelObj.validateId(data, (err, id) => {
             if (err) {
                 return cb({
                     "code": 417,
                     "msg": soajs.config.errors[417]
                 });
             }
+            data.id = id;
             modelObj.deleteGroup(data, (err, record) => {
                 if (err) {
                     soajs.log.error(err);

@@ -89,6 +89,16 @@ Token.prototype.countTokens = function (data, cb) {
     });
 };
 
+Token.prototype.addToken = function (data, cb) {
+    let __self = this;
+
+    // Check what to insure on creation
+
+    __self.mongoCore.insert(colName, data, (err, record) => {
+        return cb(err, record);
+    });
+}
+
 Token.prototype.closeConnection = function () {
     let __self = this;
 

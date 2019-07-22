@@ -63,6 +63,8 @@ Group.prototype.addGroup = function (data, cb) {
     let record = {
         "code": data.code,
         "name": data.name,
+        "locked": data.locked,
+        "owner": data.owner,
         "description": data.description
     };
     if (data.config) {
@@ -158,7 +160,7 @@ Group.prototype.editGroup = function (data, cb) {
         'upsert': false,
         'safe': true
     };
-    __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
+    __self.mongoCore.findOneAndUpdate(colName, condition, s, extraOptions, (err, record) => {
         return cb(err, record);
     });
 };
@@ -178,6 +180,7 @@ Group.prototype.deleteGroup = function (data, cb) {
         let error = new Error("id is required.");
         return cb(error, null);
     }
+
     let condition = {'_id': data.id};
     __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
         if (err) {
