@@ -97,6 +97,7 @@ module.exports = {
 		428: "A username or an email must be provided.",
 		429: "You already invited this user.",
 		430: "Tenant not found for this user.",
+		431: "Sub Tenants are not allowed to add a user.",
 		
 		436: "Invalid tenant Id provided",
 		437: "Unable to get the environment records",
