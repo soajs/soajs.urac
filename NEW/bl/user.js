@@ -11,7 +11,7 @@ let bl = {
         }
         return ({
             "code": errCode,
-            "msg": bl.localConfig.errors[errCode]
+            "msg": bl.localConfig.errors[errCode] + (errCode === 602 ? err.message : "")
         });
     },
 
@@ -28,17 +28,39 @@ let bl = {
 
     "getUser": (soajs, inputmaskData, cb) => {
         let modelObj = bl.mt.getModel(soajs);
-        let data = {};
-        if (!inputmaskData){
+        if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
+        let data = {};
         data.uId = inputmaskData.uId;
         modelObj.getUser(data, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
-                return cb (bl.handleError(soajs, 500, err));
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            if (!records) {
+                return cb(bl.handleError(soajs, 500, err));
             }
             return cb(null, records);
+        });
+    },
+
+    "countUser": (soajs, inputmaskData, cb) => {
+        let modelObj = bl.mt.getModel(soajs);
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let data = {};
+        data.username = inputmaskData.username;
+        modelObj.countUser(data, (err, records) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            if (!records || records.length < 1)
+                return cb(null, false);
+            else
+                return cb(null, true);
         });
     }
 };

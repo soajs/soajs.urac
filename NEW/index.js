@@ -15,6 +15,12 @@ service.init(() => {
             throw new Error('Failed starting service');
         }
 
+        service.get("/checkUsername", function (req, res) {
+            bl.user.countUser(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+
         service.get("/admin/user", function (req, res) {
             bl.user.getUser(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));

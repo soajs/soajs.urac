@@ -36,19 +36,35 @@ function User(soajs, mongoCore) {
  */
 User.prototype.getUser = function (data, cb) {
     let __self = this;
-    if (!data.id) {
+    if (!data || !data.id) {
         let error = new Error("id is required.");
         return cb(error, null);
     }
-    __slef.validateId(data.id, (err, _id) => {
+    __self.validateId(data.id, (err, _id) => {
         if (err) {
             return cb(err, null);
         }
         let condition = {'_id': _id};
-
         __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
             return cb(err, record);
         });
+    });
+};
+
+User.prototype.countUser = function (data, cb) {
+    let __self = this;
+    if (!data || !data.username) {
+        let error = new Error("username is required.");
+        return cb(error, null);
+    }
+    let condition = {
+        '$or': [
+            {'username': data.username},
+            {'email': data.username}
+        ],
+    };
+    __self.mongoCore.count(colName, condition, (err, record) => {
+        return cb(err, record);
     });
 };
 

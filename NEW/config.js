@@ -22,12 +22,26 @@ module.exports = {
 
         500: "Unable to find user.",
 
-        601: "Model not found"
+        601: "Model not found",
+        602: "Model error: ",
     },
 
     "schema": {
         "commonFields": {},
         "get": {
+
+            '/checkUsername': {
+                "_apiInfo": {
+                    "l": "Check If Username Exists",
+                    "group": "Guest Check Username"
+                },
+                "username": {
+                    "source": ['query.username'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
+
             '/admin/getUser': {
                 "_apiInfo": {
                     "l": "Get user record by id",
