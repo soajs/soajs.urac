@@ -40,13 +40,34 @@ User.prototype.getUser = function (data, cb) {
         let error = new Error("id is required.");
         return cb(error, null);
     }
-    let condition = {'_id': data.id};
+    __slef.validateId(data.id, (err, _id) => {
+        if (err) {
+            return cb(err, null);
+        }
+        let condition = {'_id': _id};
 
-    __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
-        return cb(err, record);
+        __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
+            return cb(err, record);
+        });
     });
 };
 
+
+User.prototype.validateId = function (id, cb) {
+    let __self = this;
+
+    if (!id) {
+        let error = new Error("must provide an id.");
+        return cb(error, null);
+    }
+
+    try {
+        id = __self.mongoCore.ObjectId(id);
+        return cb(null, id);
+    } catch (e) {
+        return cb(e, null);
+    }
+};
 
 User.prototype.closeConnection = function () {
     let __self = this;

@@ -18,13 +18,27 @@ module.exports = {
 
     "errors": {
         400: "Business logic needed data are missing.",
-        415: "Unable to find group.",
+        420: "Unable to find group.",
+
+        500: "Unable to find user.",
+
         601: "Model not found"
     },
 
     "schema": {
         "commonFields": {},
         "get": {
+            '/admin/getUser': {
+                "_apiInfo": {
+                    "l": "Get user record by id",
+                    "group": "Administration"
+                },
+                "uId": {
+                    "source": ['query.uId'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
 
             '/admin/groups': {
                 "_apiInfo": {
