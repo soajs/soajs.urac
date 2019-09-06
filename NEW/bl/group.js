@@ -26,35 +26,82 @@ let bl = {
     },
 
     "getGroups": (soajs, inputmaskData, cb) => {
-        let modelObj = bl.mt.getModel(soajs);
-        if (!inputmaskData){
+        if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        modelObj.getGroups(inputmaskData, (err, records) => {
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.tId = inputmaskData.tId;
+        modelObj.getGroups(data, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
-                return cb (bl.handleError(soajs, 602, err));
+                return cb(bl.handleError(soajs, 602, err));
             }
             return cb(null, records);
         });
     },
 
     "getGroup": (soajs, inputmaskData, cb) => {
-        let modelObj = bl.mt.getModel(soajs);
-        if (!inputmaskData){
+        if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        modelObj.getGroup(inputmaskData, (err, record) => {
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.id = inputmaskData.id;
+        data.code = inputmaskData.code;
+        modelObj.getGroup(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
-                return cb (bl.handleError(soajs, 602, err));
+                return cb(bl.handleError(soajs, 602, err));
             }
             if (!record) {
                 return cb(bl.handleError(soajs, 420, err));
             }
             return cb(null, record);
         });
+    },
+
+    "add": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.name = inputmaskData.name;
+        data.description = inputmaskData.description;
+        data.config = inputmaskData.config;
+        data.code = inputmaskData.code;
+        data.tId = soajs.tenant.id;
+        data.tCode = soajs.tenant.code;
+        modelObj.add(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
+
+    "edit": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.id = inputmaskData.gId;
+        data.name = inputmaskData.name;
+        data.description = inputmaskData.description;
+        data.config = inputmaskData.config;
+
+        modelObj.edit(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
     }
+
 
 };
 

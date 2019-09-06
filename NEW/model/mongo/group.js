@@ -61,14 +61,119 @@ Group.prototype.getGroup = function (data, cb) {
         return cb(error, null);
     }
     let condition = {};
-    if (data.id) {
-        condition = {'_id': data.id};
+
+    if (data.id){
+        __self.validateId(data.id, (err, _id) => {
+            if (err) {
+                return cb(err, null);
+            }
+            condition = {'_id': _id};
+            __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
+                return cb(err, record);
+            });
+        });
     } else if (data.code) {
         condition = {'code': data.code};
     }
     __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
         return cb(err, record);
     });
+};
+
+/**
+ * To add a group
+ *
+ * @param data
+ *  should have:
+ *      required (code, name, description)
+ *      optional (config, tId, tCode)
+ *
+ * @param cb
+ */
+Group.prototype.add = function (data, cb) {
+    let __self = this;
+    if (!data || !data.code || !data.name || !data.description) {
+        let error = new Error("code, name, and description are required.");
+        return cb(error, null);
+    }
+    let record = {
+        "code": data.code,
+        "name": data.name,
+        "description": data.description
+    };
+    if (data.config) {
+        record.config = data.config
+    }
+    if (data.tId && data.tCode) {
+        record.tenant = {
+            "id": data.tId,
+            "code": data.tCode
+        };
+    }
+    __self.mongoCore.insert(colName, record, (err, record) => {
+        return cb(err, record);
+    });
+};
+
+/**
+ * To edit a group
+ *
+ * @param data
+ *  should have:
+ *      required (id, name)
+ *      optional (config, description)
+ *
+ * @param cb
+ */
+Group.prototype.edit = function (data, cb) {
+    let __self = this;
+    if (!data || !data.name || !data.id) {
+        let error = new Error("name and id are required.");
+        return cb(error, null);
+    }
+    __self.validateId(data.id, (err, _id) => {
+        if (err) {
+            return cb(err, null);
+        }
+
+        let s = {
+            '$set': {
+                'name': data.name
+            }
+        };
+        if (data.description) {
+            s['$set'].description = data.description;
+        }
+        if (data.config) {
+            s['$set'].config = data.config;
+        }
+        let condition = {'_id': _id};
+        let extraOptions = {
+            'upsert': false,
+            'safe': true
+        };
+        __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
+            return cb(err, record);
+        });
+    });
+};
+
+
+
+Group.prototype.validateId = function (id, cb) {
+    let __self = this;
+
+    if (!id) {
+        let error = new Error("must provide an id.");
+        return cb(error, null);
+    }
+
+    try {
+        id = __self.mongoCore.ObjectId(id);
+        return cb(null, id);
+    } catch (e) {
+        return cb(e, null);
+    }
 };
 
 Group.prototype.closeConnection = function () {

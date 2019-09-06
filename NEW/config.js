@@ -20,7 +20,7 @@ module.exports = {
         400: "Business logic required data are missing.",
         420: "Unable to find group.",
 
-        500: "Unable to find user.",
+        520: "Unable to find user.",
 
         601: "Model not found",
         602: "Model error: ",

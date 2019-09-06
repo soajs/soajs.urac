@@ -87,7 +87,7 @@ User.prototype.getUsers = function (data, cb) {
     });
 };
 
-User.prototype.countUser = function (data, cb) {
+User.prototype.checkUsername = function (data, cb) {
     let __self = this;
     if (!data || !data.username) {
         let error = new Error("username is required.");

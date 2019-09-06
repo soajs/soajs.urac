@@ -27,28 +27,36 @@ let bl = {
     },
 
     "getUser": (soajs, inputmaskData, cb) => {
-        let modelObj = bl.mt.getModel(soajs);
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        modelObj.getUser(inputmaskData, (err, record) => {
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.id = inputmaskData.uId;
+        modelObj.getUser(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
             }
             if (!record) {
-                return cb(bl.handleError(soajs, 500, err));
+                return cb(bl.handleError(soajs, 520, err));
             }
             return cb(null, record);
         });
     },
 
     "getUsers": (soajs, inputmaskData, cb) => {
-        let modelObj = bl.mt.getModel(soajs);
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        modelObj.getUsers(inputmaskData, (err, records) => {
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.tId = inputmaskData.tId;
+        data.start = inputmaskData.start;
+        data.limit = inputmaskData.limit;
+        data.keywords = inputmaskData.keywords;
+        data.config = inputmaskData.config;
+        modelObj.getUsers(data, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
@@ -58,11 +66,13 @@ let bl = {
     },
 
     "countUser": (soajs, inputmaskData, cb) => {
-        let modelObj = bl.mt.getModel(soajs);
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        modelObj.countUser(inputmaskData, (err, records) => {
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.username = inputmaskData.username;
+        modelObj.checkUsername(data, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
