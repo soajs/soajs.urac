@@ -26,6 +26,11 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        service.get("/admin/users", function (req, res) {
+            bl.user.getUsers(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
 
         service.get("/admin/groups", function (req, res) {
             bl.group.list(req.soajs, req.soajs.inputmaskData, (error, data) => {

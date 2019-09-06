@@ -42,7 +42,7 @@ module.exports = {
                 }
             },
 
-            '/admin/getUser': {
+            '/admin/user': {
                 "_apiInfo": {
                     "l": "Get user record by id",
                     "group": "Administration"
@@ -51,6 +51,24 @@ module.exports = {
                     "source": ['query.uId'],
                     "required": true,
                     "validation": {"type": "string"}
+                }
+            },
+            '/admin/users': {
+                "_apiInfo": {
+                    "l": "List users",
+                    "group": "Administration",
+                    "groupMain": true
+                },
+                "commonFields": ["start", "limit", "keywords"],
+                "tId": {
+                    "source": ['query.tId'],
+                    "required": false,
+                    "validation": {"type": "string"}
+                },
+                "config": {
+                    "source": ['query.config'],
+                    "required": false,
+                    "validation": {"type": "boolean"}
                 }
             },
 

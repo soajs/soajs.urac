@@ -45,6 +45,21 @@ let bl = {
         });
     },
 
+    "getUsers": (soajs, inputmaskData, cb) => {
+        let modelObj = bl.mt.getModel(soajs);
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let data = inputmaskData;
+        modelObj.getUsers(data, (err, records) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, records);
+        });
+    },
+
     "countUser": (soajs, inputmaskData, cb) => {
         let modelObj = bl.mt.getModel(soajs);
         if (!inputmaskData) {

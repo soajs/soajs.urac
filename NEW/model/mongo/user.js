@@ -51,6 +51,42 @@ User.prototype.getUser = function (data, cb) {
     });
 };
 
+User.prototype.getUsers = function (data, cb) {
+    let __self = this;
+    let condition = {};
+    if (data.tId) {
+        condition["tenant.id"] = data.tId;
+    }
+    let pagination = {};
+    if (data.limit) {
+        pagination['skip'] = data.start;
+        pagination['limit'] = data.limit;
+        pagination.sort = {};
+    }
+    if (data.keywords) {
+        let rePattern = new RegExp(data.keywords, 'i');
+        condition['$or'] = [
+            {"username": rePattern},
+            {"email": rePattern},
+            {"firstName": rePattern},
+            {"lastName": rePattern}
+        ];
+    }
+    let fields = {
+        'password': 0,
+        'config': 0,
+        'socialId': 0,
+        'tenant.pin.code': 0,
+        'config.allowedTenants.tenant.pin.code': 0
+    };
+    if (data.config) {
+        delete fields.config;
+    }
+    __self.mongoCore.find(colName, condition, fields, pagination, (err, records) => {
+        return cb(err, records);
+    });
+};
+
 User.prototype.countUser = function (data, cb) {
     let __self = this;
     if (!data || !data.username) {
