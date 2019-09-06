@@ -33,7 +33,12 @@ service.init(() => {
         });
 
         service.get("/admin/groups", function (req, res) {
-            bl.group.list(req.soajs, req.soajs.inputmaskData, (error, data) => {
+            bl.group.getGroups(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+        service.get("/admin/group", function (req, res) {
+            bl.group.getGroup(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });

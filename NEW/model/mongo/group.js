@@ -44,7 +44,32 @@ Group.prototype.getGroups = function (data, cb) {
     });
 };
 
-
+/**
+ * To get a group
+ *
+ * @param data
+ *  should have:
+ *      required (id)
+ *      optional (code)
+ *
+ * @param cb
+ */
+Group.prototype.getGroup = function (data, cb) {
+    let __self = this;
+    if (!data || !(data.id || data.code)) {
+        let error = new Error("must provide either id or code.");
+        return cb(error, null);
+    }
+    let condition = {};
+    if (data.id) {
+        condition = {'_id': data.id};
+    } else if (data.code) {
+        condition = {'code': data.code};
+    }
+    __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
+        return cb(err, record);
+    });
+};
 
 Group.prototype.closeConnection = function () {
     let __self = this;

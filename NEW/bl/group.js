@@ -25,9 +25,8 @@ let bl = {
         }
     },
 
-    "list": (soajs, inputmaskData, cb) => {
+    "getGroups": (soajs, inputmaskData, cb) => {
         let modelObj = bl.mt.getModel(soajs);
-        let data = {};
         if (!inputmaskData){
             return cb(bl.handleError(soajs, 400, null));
         }
@@ -37,6 +36,23 @@ let bl = {
                 return cb (bl.handleError(soajs, 602, err));
             }
             return cb(null, records);
+        });
+    },
+
+    "getGroup": (soajs, inputmaskData, cb) => {
+        let modelObj = bl.mt.getModel(soajs);
+        if (!inputmaskData){
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        modelObj.getGroup(inputmaskData, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb (bl.handleError(soajs, 602, err));
+            }
+            if (!record) {
+                return cb(bl.handleError(soajs, 420, err));
+            }
+            return cb(null, record);
         });
     }
 

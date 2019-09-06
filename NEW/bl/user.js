@@ -31,15 +31,15 @@ let bl = {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        modelObj.getUser(inputmaskData, (err, records) => {
+        modelObj.getUser(inputmaskData, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
             }
-            if (!records) {
+            if (!record) {
                 return cb(bl.handleError(soajs, 500, err));
             }
-            return cb(null, records);
+            return cb(null, record);
         });
     },
 

@@ -82,6 +82,17 @@ module.exports = {
                     "required": false,
                     "validation": {"type": "string"}
                 }
+            },
+            '/admin/group': {
+                "_apiInfo": {
+                    "l": "Get group record by _id",
+                    "group": "Administration"
+                },
+                "id": {
+                    "source": ['query.id'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
             }
 
         },
