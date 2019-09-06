@@ -11,7 +11,7 @@ let bl = {
         }
         return ({
             "code": errCode,
-            "msg": bl.localConfig.errors[errCode]
+            "msg": bl.localConfig.errors[errCode] + (errCode === 602 ? err.message : "")
         });
     },
 
@@ -31,11 +31,10 @@ let bl = {
         if (!inputmaskData){
             return cb(bl.handleError(soajs, 400, null));
         }
-        data.tId = inputmaskData.tId;
-        modelObj.getGroups(data, (err, records) => {
+        modelObj.getGroups(inputmaskData, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
-                return cb (bl.handleError(soajs, 415, err));
+                return cb (bl.handleError(soajs, 602, err));
             }
             return cb(null, records);
         });

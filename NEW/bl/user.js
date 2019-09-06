@@ -31,9 +31,7 @@ let bl = {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let data = {};
-        data.uId = inputmaskData.uId;
-        modelObj.getUser(data, (err, records) => {
+        modelObj.getUser(inputmaskData, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
@@ -50,8 +48,7 @@ let bl = {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let data = inputmaskData;
-        modelObj.getUsers(data, (err, records) => {
+        modelObj.getUsers(inputmaskData, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
@@ -65,9 +62,7 @@ let bl = {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let data = {};
-        data.username = inputmaskData.username;
-        modelObj.countUser(data, (err, records) => {
+        modelObj.countUser(inputmaskData, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
