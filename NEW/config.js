@@ -17,7 +17,7 @@ module.exports = {
     "seedLength": 32,
 
     "errors": {
-        400: "Business logic needed data are missing.",
+        400: "Business logic required data are missing.",
         420: "Unable to find group.",
 
         500: "Unable to find user.",
