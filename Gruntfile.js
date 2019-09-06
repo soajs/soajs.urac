@@ -53,6 +53,7 @@ module.exports = function (grunt) {
 		//Defining jshint tasks
 		jshint: {
 			options: {
+                "esversion": 6,
 				"bitwise": true,
 				"eqeqeq": true,
 				"forin": true,
@@ -80,7 +81,7 @@ module.exports = function (grunt) {
 				ignores: ['test/coverage/**/*.js']
 			},
 			files: {
-				src: ['**/*.js']
+				src: ['index.js', 'config.js', 'lib/*.js', 'model/*.js', 'schemas/*.js']
 			},
 			gruntfile: {
 				src: 'Gruntfile.js'
@@ -135,7 +136,7 @@ module.exports = function (grunt) {
         },
 		
 		instrument: {
-			files: ['index.js', 'config.js', 'lib/*.js', 'drivers/*.js', 'model/*.js', 'schemas/*.js'],
+			files: ['index.js', 'config.js', 'lib/*.js', 'model/*.js', 'schemas/*.js'],
 			//files: ['**/*.js'],
 			options: {
 				lazy: false,
