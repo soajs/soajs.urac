@@ -26,6 +26,33 @@ function User(soajs, mongoCore) {
 }
 
 /**
+ * To clean up deleted group for main tenant
+ *
+ * @param data
+ * @param cb
+ * @returns {*}
+ */
+User.cleanDeleteGroup = function (data, cb) {
+    let __self = this;
+    if (!data || !data.tId || !data.groupCode) {
+        let error = new Error("tenant ID and group Code are required.");
+        return cb(error, null);
+    }
+    let user = new User(soajs, __self.mongoCore);
+    if (soajs.tenant.type === "client" && soajs.tenant.main) {
+        //TODO: clean up from sub tenant
+    }
+    else {
+        let condition = {"tenant.id": data.tId};
+        let extraOptions = {multi: true};
+        let s = {"$pull": {groups: data.groupCode}};
+        __self.mongoCore.update(colName, condition, s, extraOptions, (err, response) => {
+            return cb(err, response);
+        });
+    }
+};
+
+/**
  * To get a user
  *
  * @param data
@@ -102,6 +129,11 @@ User.prototype.checkUsername = function (data, cb) {
     __self.mongoCore.count(colName, condition, (err, record) => {
         return cb(err, record);
     });
+};
+
+
+User.prototype.cleanDeletedGroup = function (data, cb) {
+
 };
 
 

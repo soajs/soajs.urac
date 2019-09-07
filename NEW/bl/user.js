@@ -26,6 +26,23 @@ let bl = {
         }
     },
 
+    "cleanDeletedGroup": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.tId = inputmaskData.tId;
+        data.groupCode = inputmaskData.groupCode;
+        modelObj.cleanDeleteGroup(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
+
     "getUser": (soajs, inputmaskData, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));

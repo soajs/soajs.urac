@@ -39,7 +39,29 @@ function init(service, localConfig, cb) {
 let BL = {
     init: init,
     group: null,
-    user: null
+    user: null,
+
+    deleteGroup : (soajs, inputmaskData, cb) =>{
+        BL.group.deleteGroup (soajs, inputmaskData, (error, record)=>{
+            if (error){
+                return cb (error);
+            }
+            else{
+                //close response but continue to clean up delete group from users
+                cb (null, true);
+                let data = {};
+                if (record && record.tenant) {
+                    data.tId = record.tenant.id;
+                    data.groupCode = record.code;
+                    BL.user.cleanDeletedGroup(soajs, data, (error) => {
+                        if (error) {
+                            soajs.log.error(err);
+                        }
+                    });
+                }
+            }
+        });
+    }
 };
 
 module.exports = BL;

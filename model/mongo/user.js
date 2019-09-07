@@ -10,7 +10,11 @@ function User(soajs, mongoCore) {
     if (mongoCore)
         __self.mongoCore = mongoCore;
     if (!__self.mongoCore) {
-        __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, soajs.config.serviceName, soajs.tenant.code));
+        let tCode = soajs.tenant.code;
+        if (soajs.tenant.type === "client" && soajs.tenant.main) {
+            tCode = soajs.tenant.main.code;
+        }
+        __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, soajs.config.serviceName, tCode));
         if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
             indexing[soajs.tenant.id] = true;
 

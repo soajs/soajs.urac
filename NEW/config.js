@@ -98,7 +98,19 @@ module.exports = {
         },
 
         "post": {},
-        "delete": {},
+        "delete": {
+            '/admin/group': {
+                "_apiInfo": {
+                    "l": "Delete Group",
+                    "group": "Administration"
+                },
+                "gId": {
+                    "source": ['query.gId'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            }
+        },
         "put": {}
     }
 };

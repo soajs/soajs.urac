@@ -158,6 +158,128 @@ Group.prototype.edit = function (data, cb) {
     });
 };
 
+/**
+ * To delete a group
+ *
+ * @param data
+ *  should have:
+ *      required (id)
+ *
+ * @param cb
+ */
+Group.prototype.delete = function (data, cb) {
+    let __self = this;
+    if (!data || !data.id) {
+        let error = new Error("id is required.");
+        return cb(error, null);
+    }
+    __self.validateId(data.id, (err, _id) => {
+        if (err) {
+            return cb(err, null);
+        }
+        let condition = {'_id': _id};
+        __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
+            if (err) {
+                return cb(err);
+            }
+            if (record.locked) {
+                //return error msg that this record is locked
+                let error = new Error("cannot delete a locked record.");
+                return cb(error, null);
+            }
+            __self.mongoCore.remove(colName, condition, (err) => {
+                if (err) {
+                    return cb(err);
+                }
+
+                return cb(null, record);
+                /*
+                if (record.tenant && record.tenant.id) {
+                    let userData = {
+                        "tId": record.tenant.id,
+                        "groupCode": record.code
+                    };
+                    let user = new User(soajs, __self.mongoCore);
+                    user.deleteGroup(userData, (error) => {
+                        return cb(error, record);
+                    });
+                }
+                else
+                    return cb(null, record);
+                */
+            });
+        });
+    });
+};
+
+/**
+ * To add allowed environment(s) to a group
+ *
+ * @param data
+ *  should have:
+ *      required (groups[code, code], allowedEnvironments[{product: "", package: ""}])
+ *
+ * @param cb
+ */
+Group.prototype.addAllowedEnvironments = function (data, cb) {
+    let __self = this;
+    if (!data || !data.allowedEnvironments || !data.groups) {
+        let error = new Error("allowedEnvironments and groups are required.");
+        return cb(error, null);
+    }
+    let s = {
+        '$set': {}
+    };
+    if (data.allowedEnvironments) {
+        for (let i = 0; i < data.allowedEnvironments.length; i++) {
+            let env = data.allowedEnvironments[i].toUpperCase();
+            s['$set']['config.allowedEnvironments.' + env] = {};
+        }
+    }
+    let condition = {'code': {'$in': data.groups}};
+    let extraOptions = {
+        'upsert': false,
+        'safe': true
+    };
+    __self.mongoCore.update(colName, condition, s, extraOptions, (err, records) => {
+        return cb(err, records);
+    });
+};
+
+/**
+ * To add allowed package(s) to a group
+ *
+ * @param data
+ *  should have:
+ *      required (id, allowedPackages[{product: "", package: ""}])
+ *
+ * @param cb
+ */
+Group.prototype.addAllowedPackages = function (data, cb) {
+    let __self = this;
+    if (!data || !data.allowedPackages || !data.id) {
+        let error = new Error("allowedPackages and id are required.");
+        return cb(error, null);
+    }
+    let s = {
+        '$set': {}
+    };
+    if (data.allowedPackages) {
+        for (let i = 0; i < data.allowedPackages.length; i++) {
+            let prodPack = data.allowedPackages[i];
+            s['$set']['config.allowedPackages.' + prodPack.product] = [prodPack.package];
+        }
+    }
+    let condition = {'_id': data.id};
+    let extraOptions = {
+        'upsert': false,
+        'safe': true
+    };
+    __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
+        return cb(err, record);
+    });
+};
+
 
 
 Group.prototype.validateId = function (id, cb) {

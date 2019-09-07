@@ -100,7 +100,23 @@ let bl = {
             }
             return cb(null, record);
         });
-    }
+    },
+
+    "deleteGroup": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.id = inputmaskData.gId;
+        modelObj.delete(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
 
 
 };

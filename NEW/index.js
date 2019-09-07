@@ -43,6 +43,12 @@ service.init(() => {
             });
         });
 
+        service.delete("/admin/group", function (req, res) {
+            bl.deleteGroup(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+
         service.start();
     });
 });
