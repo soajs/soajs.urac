@@ -194,7 +194,7 @@ Group.prototype.delete = function (data, cb) {
 };
 
 /**
- * To add allowed environment(s) to a group
+ * To add allowed environment(s) to groups
  *
  * @param data
  *  should have:
@@ -228,18 +228,18 @@ Group.prototype.addAllowedEnvironments = function (data, cb) {
 };
 
 /**
- * To add allowed package(s) to a group
+ * To add allowed package(s) to groups
  *
  * @param data
  *  should have:
- *      required (id, allowedPackages[{product: "", package: ""}])
+ *      required (groups[code, code], allowedPackages[{product: "", package: ""}])
  *
  * @param cb
  */
 Group.prototype.addAllowedPackages = function (data, cb) {
     let __self = this;
-    if (!data || !data.allowedPackages || !data.id) {
-        let error = new Error("allowedPackages and id are required.");
+    if (!data || !data.allowedPackages || !data.groups) {
+        let error = new Error("allowedPackages and groups are required.");
         return cb(error, null);
     }
     let s = {
@@ -251,7 +251,7 @@ Group.prototype.addAllowedPackages = function (data, cb) {
             s['$set']['config.allowedPackages.' + prodPack.product] = [prodPack.package];
         }
     }
-    let condition = {'_id': data.id};
+    let condition = {'code': {'$in': data.groups}};
     let extraOptions = {
         'upsert': false,
         'safe': true

@@ -117,6 +117,39 @@ let bl = {
         });
     },
 
+    "addEnvironments": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.allowedEnvironments = inputmaskData.allowedEnvironments;
+        data.groups = inputmaskData.groups;
+        modelObj.addAllowedEnvironments(data, (err, records) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, records);
+        });
+    },
+
+    "addPackages": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.allowedPackages = inputmaskData.allowedPackages;
+        data.groups = inputmaskData.groups;
+        modelObj.addAllowedPackages(data, (err, records) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, records);
+        });
+    }
 
 };
 
