@@ -97,7 +97,71 @@ module.exports = {
 
         },
 
-        "post": {},
+        "post": {
+            '/admin/group': {
+                "_apiInfo": {
+                    "l": "Add new Group",
+                    "group": "Administration"
+                },
+                "code": {
+                    "source": ['body.code'],
+                    "required": true,
+                    "validation": {
+                        "type": "string",
+                        "format": "alphanumeric",
+                        "maxLength": 20
+                    }
+                },
+                "name": {
+                    "source": ['body.name'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "description": {
+                    "source": ['body.description'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "config": {
+                    "source": ['body.config'],
+                    "required": true,
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "allowedPackages": {
+                                "validation": {
+                                    "type": "object",
+                                    "patternProperties": {
+                                        "^([A-Za-z0-9]+)$": { //pattern to match an api route
+                                            "type": "array",
+                                            "required": true,
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            },
+                            "allowedEnvironments": {
+                                "validation": {
+                                    "type": "object",
+                                    "patternProperties": {
+                                        "^([A-Za-z]+)$": {
+                                            "type": "object",
+                                            "validation": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "delete": {
             '/admin/group': {
                 "_apiInfo": {
@@ -111,6 +175,66 @@ module.exports = {
                 }
             }
         },
-        "put": {}
+        "put": {
+            '/admin/group': {
+                "_apiInfo": {
+                    "l": "Edit Group",
+                    "group": "Administration"
+                },
+                "gId": {
+                    "source": ['query.gId'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "name": {
+                    "source": ['body.name'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "description": {
+                    "source": ['body.description'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "config": {
+                    "source": ['body.config'],
+                    "required": true,
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "allowedPackages": {
+                                "validation": {
+                                    "type": "object",
+                                    "patternProperties": {
+                                        "^([A-Za-z0-9]+)$": { //pattern to match an api route
+                                            "type": "array",
+                                            "required": true,
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            },
+                            "allowedEnvironments": {
+                                "validation": {
+                                    "type": "object",
+                                    "patternProperties": {
+                                        "^([A-Za-z]+)$": {
+                                            "type": "object",
+                                            "validation": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 };

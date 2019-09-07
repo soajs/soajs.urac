@@ -15,12 +15,12 @@ service.init(() => {
             throw new Error('Failed starting service');
         }
 
+        //GET methods
         service.get("/checkUsername", function (req, res) {
             bl.user.countUser(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-
         service.get("/admin/user", function (req, res) {
             bl.user.getUser(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
@@ -31,7 +31,6 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-
         service.get("/admin/groups", function (req, res) {
             bl.group.getGroups(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
@@ -43,8 +42,23 @@ service.init(() => {
             });
         });
 
+        //DELETE methods
         service.delete("/admin/group", function (req, res) {
             bl.deleteGroup(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+
+        //PUT methods
+        service.put("/admin/group", function (req, res) {
+            bl.group.edit(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+
+        //POST methods
+        service.post("/admin/group", function (req, res) {
+            bl.group.add(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });

@@ -62,7 +62,7 @@ Group.prototype.getGroup = function (data, cb) {
     }
     let condition = {};
 
-    if (data.id){
+    if (data.id) {
         __self.validateId(data.id, (err, _id) => {
             if (err) {
                 return cb(err, null);
@@ -188,25 +188,7 @@ Group.prototype.delete = function (data, cb) {
                 return cb(error, null);
             }
             __self.mongoCore.remove(colName, condition, (err) => {
-                if (err) {
-                    return cb(err);
-                }
-
-                return cb(null, record);
-                /*
-                if (record.tenant && record.tenant.id) {
-                    let userData = {
-                        "tId": record.tenant.id,
-                        "groupCode": record.code
-                    };
-                    let user = new User(soajs, __self.mongoCore);
-                    user.deleteGroup(userData, (error) => {
-                        return cb(error, record);
-                    });
-                }
-                else
-                    return cb(null, record);
-                */
+                return cb(err, record);
             });
         });
     });
@@ -279,7 +261,6 @@ Group.prototype.addAllowedPackages = function (data, cb) {
         return cb(err, record);
     });
 };
-
 
 
 Group.prototype.validateId = function (id, cb) {
