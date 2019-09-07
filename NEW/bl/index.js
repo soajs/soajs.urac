@@ -27,7 +27,7 @@ function init(service, localConfig, cb) {
             return cb({name: blName, model: typeModel});
         }
     };
-    async.each(BLs, fillModels, function (err, result) {
+    async.each(BLs, fillModels, function (err) {
         if (err) {
             service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);
             return cb({"code": 601, "msg": localConfig.errors[601]});

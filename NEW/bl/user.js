@@ -18,8 +18,7 @@ let bl = {
 
     "mt": {
         "getModel": (soajs, mongoCore) => {
-            let modelObj = new bl.model(soajs, mongoCore);
-            return modelObj;
+            return new bl.model(soajs, bl.localConfig, mongoCore);
         },
         "closeModel": (modelObj) => {
             modelObj.closeConnection();

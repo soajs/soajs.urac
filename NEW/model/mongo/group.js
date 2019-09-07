@@ -2,16 +2,15 @@
 const colName = "groups";
 const core = require("soajs");
 const Mongo = core.mongo;
-const User = require("./user.js");
 
 let indexing = {};
 
-function Group(soajs, mongoCore) {
+function Group(soajs, localConfig, mongoCore) {
     let __self = this;
     if (mongoCore)
         __self.mongoCore = mongoCore;
     if (!__self.mongoCore) {
-        __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, soajs.config.serviceName, soajs.tenant.code));
+        __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, localConfig.serviceName, soajs.tenant.code));
         if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
             indexing[soajs.tenant.id] = true;
 
