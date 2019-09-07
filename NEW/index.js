@@ -62,6 +62,17 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        service.post("admin/groups/environments", function (req, res) {
+            bl.group.addEnvironments(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+        service.post("/admin/groups/packages", function (req, res) {
+            bl.group.addPackages(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+
 
         service.start();
     });

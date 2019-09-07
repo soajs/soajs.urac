@@ -81,6 +81,22 @@ let bl = {
         });
     },
 
+    "deleteGroup": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.id = inputmaskData.gId;
+        modelObj.delete(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
+
     "edit": (soajs, inputmaskData, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
@@ -101,29 +117,13 @@ let bl = {
         });
     },
 
-    "deleteGroup": (soajs, inputmaskData, cb) => {
-        if (!inputmaskData) {
-            return cb(bl.handleError(soajs, 400, null));
-        }
-        let modelObj = bl.mt.getModel(soajs);
-        let data = {};
-        data.id = inputmaskData.gId;
-        modelObj.delete(data, (err, record) => {
-            bl.mt.closeModel(modelObj);
-            if (err) {
-                return cb(bl.handleError(soajs, 602, err));
-            }
-            return cb(null, record);
-        });
-    },
-
     "addEnvironments": (soajs, inputmaskData, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
         let modelObj = bl.mt.getModel(soajs);
         let data = {};
-        data.allowedEnvironments = inputmaskData.allowedEnvironments;
+        data.allowedEnvironments = inputmaskData.environments;
         data.groups = inputmaskData.groups;
         modelObj.addAllowedEnvironments(data, (err, records) => {
             bl.mt.closeModel(modelObj);
@@ -140,7 +140,7 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs);
         let data = {};
-        data.allowedPackages = inputmaskData.allowedPackages;
+        data.allowedPackages = inputmaskData.packages;
         data.groups = inputmaskData.groups;
         modelObj.addAllowedPackages(data, (err, records) => {
             bl.mt.closeModel(modelObj);

@@ -198,7 +198,7 @@ Group.prototype.delete = function (data, cb) {
  *
  * @param data
  *  should have:
- *      required (groups[code, code], allowedEnvironments[{product: "", package: ""}])
+ *      required (groups[code, code], allowedEnvironments[env, env])
  *
  * @param cb
  */

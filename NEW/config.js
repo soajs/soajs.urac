@@ -160,6 +160,72 @@ module.exports = {
                         }
                     }
                 }
+            },
+            '/admin/groups/environments': {
+                "_apiInfo": {
+                    "l": "Add environment(s) to group(s)",
+                    "group": "Administration"
+                },
+                "environments": {
+                    "source": ['body.environments'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "pattern": "^([A-Za-z]+)$"
+                        }
+                    }
+                },
+                "groups": {
+                    "source": ['body.groups'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "alphanumeric",
+                            "maxLength": 20
+                        }
+                    }
+                }
+            },
+            '/admin/groups/packages': {
+                "_apiInfo": {
+                    "l": "Add package(s) to group(s)",
+                    "group": "Administration"
+                },
+                "packages": {
+                    "source": ['body.packages'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "patternProperties": {
+                                "product": {
+                                    "type": "string"
+                                },
+                                "package": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                "groups": {
+                    "source": ['body.groups'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "alphanumeric",
+                            "maxLength": 20
+                        }
+                    }
+                }
             }
         },
         "delete": {
