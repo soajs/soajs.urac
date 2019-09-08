@@ -3,6 +3,10 @@
 const async = require("async");
 const fs = require("fs");
 
+const lib = {
+    "mail" : require ("../lib/mail.js")
+};
+
 let SSOT = {};
 let model = process.env.SOAJS_SERVICE_MODEL || "mongo";
 
@@ -81,7 +85,7 @@ let bl = {
             data.service = "forgotPassword";
             bl.token.add(soajs, data, options, (error, tokenRecord) => {
                 bl.user.mt.closeModel(modelObj);
-                lib.sendMail(soajs, "forgotPassword", userRecord, tokenRecord, function (error, mailRecord) {
+                lib.mail.send(soajs, "forgotPassword", userRecord, tokenRecord, function (error, mailRecord) {
                     if (error) {
                         soajs.log.info('No Mail was sent: ' + error);
                     }

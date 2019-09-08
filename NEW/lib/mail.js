@@ -3,7 +3,7 @@
 const soajsCore = require('soajs');
 
 let lib = {
-    "sendMail": function (soajs, service, data, tokenRecord, cb) {
+    "send": function (soajs, service, data, tokenRecord, cb) {
         let mailConf = null;
         if (soajs.servicesConfig.mail && soajs.servicesConfig.mail.transport && soajs.servicesConfig.mail.from) {
             mailConf = soajs.servicesConfig.mail;
