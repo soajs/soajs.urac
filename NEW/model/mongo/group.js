@@ -7,19 +7,22 @@ let indexing = {};
 
 function Group(soajs, localConfig, mongoCore) {
     let __self = this;
-    if (mongoCore)
+    if (mongoCore) {
         __self.mongoCore = mongoCore;
+        __self.mongoCoreExternal = true;
+    }
     if (!__self.mongoCore) {
+        __self.mongoCoreExternal = false;
         __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, localConfig.serviceName, soajs.tenant.code));
-        if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
-            indexing[soajs.tenant.id] = true;
+    }
+    if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
+        indexing[soajs.tenant.id] = true;
 
-            __self.mongoCore.createIndex(colName, {'code': 1}, {unique: true}, function (err, result) {
-            });
-            __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {
-            });
-            soajs.log.debug("Indexes for " + soajs.tenant.id + " Updated!");
-        }
+        __self.mongoCore.createIndex(colName, {'code': 1}, {unique: true}, function (err, result) {
+        });
+        __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {
+        });
+        soajs.log.debug("Group: Indexes for " + soajs.tenant.id + " Updated!");
     }
 }
 
@@ -56,7 +59,7 @@ Group.prototype.getGroups = function (data, cb) {
 Group.prototype.getGroup = function (data, cb) {
     let __self = this;
     if (!data || !(data.id || data.code)) {
-        let error = new Error("must provide either id or code.");
+        let error = new Error("Group: must provide either id or code.");
         return cb(error, null);
     }
     let condition = {};
@@ -92,7 +95,7 @@ Group.prototype.getGroup = function (data, cb) {
 Group.prototype.add = function (data, cb) {
     let __self = this;
     if (!data || !data.code || !data.name || !data.description) {
-        let error = new Error("code, name, and description are required.");
+        let error = new Error("Group: code, name, and description are required.");
         return cb(error, null);
     }
     let record = {
@@ -127,7 +130,7 @@ Group.prototype.add = function (data, cb) {
 Group.prototype.edit = function (data, cb) {
     let __self = this;
     if (!data || !data.name || !data.id) {
-        let error = new Error("name and id are required.");
+        let error = new Error("Group: name and id are required.");
         return cb(error, null);
     }
     __self.validateId(data.id, (err, _id) => {
@@ -169,7 +172,7 @@ Group.prototype.edit = function (data, cb) {
 Group.prototype.delete = function (data, cb) {
     let __self = this;
     if (!data || !data.id) {
-        let error = new Error("id is required.");
+        let error = new Error("Group: id is required.");
         return cb(error, null);
     }
     __self.validateId(data.id, (err, _id) => {
@@ -183,7 +186,7 @@ Group.prototype.delete = function (data, cb) {
             }
             if (record.locked) {
                 //return error msg that this record is locked
-                let error = new Error("cannot delete a locked record.");
+                let error = new Error("Group: cannot delete a locked record.");
                 return cb(error, null);
             }
             __self.mongoCore.remove(colName, condition, (err) => {
@@ -205,7 +208,7 @@ Group.prototype.delete = function (data, cb) {
 Group.prototype.addAllowedEnvironments = function (data, cb) {
     let __self = this;
     if (!data || !data.allowedEnvironments || !data.groups) {
-        let error = new Error("allowedEnvironments and groups are required.");
+        let error = new Error("Group: allowedEnvironments and groups are required.");
         return cb(error, null);
     }
     let s = {
@@ -239,7 +242,7 @@ Group.prototype.addAllowedEnvironments = function (data, cb) {
 Group.prototype.addAllowedPackages = function (data, cb) {
     let __self = this;
     if (!data || !data.allowedPackages || !data.groups) {
-        let error = new Error("allowedPackages and groups are required.");
+        let error = new Error("Group: allowedPackages and groups are required.");
         return cb(error, null);
     }
     let s = {
@@ -266,7 +269,7 @@ Group.prototype.validateId = function (id, cb) {
     let __self = this;
 
     if (!id) {
-        let error = new Error("must provide an id.");
+        let error = new Error("Group: must provide an id.");
         return cb(error, null);
     }
 
@@ -281,7 +284,8 @@ Group.prototype.validateId = function (id, cb) {
 Group.prototype.closeConnection = function () {
     let __self = this;
 
-    __self.mongoCore.closeDb();
+    if (!__self.mongoCoreExternal)
+        __self.mongoCore.closeDb();
 };
 
 module.exports = Group;

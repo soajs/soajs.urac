@@ -15,9 +15,11 @@ let bl = {
         });
     },
 
-
     "mt": {
-        "getModel": (soajs, mongoCore) => {
+        "getModel": (soajs, options) => {
+            let mongoCore = null;
+            if (options && options.mongoCore)
+                mongoCore = options.mongoCore;
             return new bl.model(soajs, bl.localConfig, mongoCore);
         },
         "closeModel": (modelObj) => {
@@ -25,23 +27,24 @@ let bl = {
         }
     },
 
-    "cleanDeletedGroup": (soajs, inputmaskData, cb) => {
+    "countUser": (soajs, inputmaskData, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
         let modelObj = bl.mt.getModel(soajs);
         let data = {};
-        data.tId = inputmaskData.tId;
-        data.groupCode = inputmaskData.groupCode;
-        modelObj.cleanDeleteGroup(data, (err, record) => {
+        data.username = inputmaskData.username;
+        modelObj.checkUsername(data, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
             }
-            return cb(null, record);
+            if (!records || records.length < 1)
+                return cb(null, false);
+            else
+                return cb(null, true);
         });
     },
-
     "getUser": (soajs, inputmaskData, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
@@ -60,7 +63,24 @@ let bl = {
             return cb(null, record);
         });
     },
-
+    "getUserByUsername": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs, options);
+        let data = {};
+        data.id = inputmaskData.username;
+        modelObj.getUser(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            if (!record) {
+                return cb(bl.handleError(soajs, 520, err));
+            }
+            return cb(null, record);
+        });
+    },
     "getUsers": (soajs, inputmaskData, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
@@ -81,22 +101,20 @@ let bl = {
         });
     },
 
-    "countUser": (soajs, inputmaskData, cb) => {
+    "cleanDeletedGroup": (soajs, inputmaskData, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
         let modelObj = bl.mt.getModel(soajs);
         let data = {};
-        data.username = inputmaskData.username;
-        modelObj.checkUsername(data, (err, records) => {
+        data.tId = inputmaskData.tId;
+        data.groupCode = inputmaskData.groupCode;
+        modelObj.cleanDeleteGroup(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
             }
-            if (!records || records.length < 1)
-                return cb(null, false);
-            else
-                return cb(null, true);
+            return cb(null, record);
         });
     }
 };

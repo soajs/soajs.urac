@@ -16,6 +16,11 @@ service.init(() => {
         }
 
         //GET methods
+        service.get("/forgotPassword", function (req, res) {
+            bl.forgotPassword(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
         service.get("/checkUsername", function (req, res) {
             bl.user.countUser(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));

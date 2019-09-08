@@ -30,6 +30,17 @@ module.exports = {
         "commonFields": {},
         "get": {
 
+            '/forgotPassword': {
+                "_apiInfo": {
+                    "l": "Forgot Password",
+                    "group": "Guest Password Settings"
+                },
+                "username": {
+                    "source": ['query.username'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
             '/checkUsername': {
                 "_apiInfo": {
                     "l": "Check If Username Exists",
@@ -173,6 +184,7 @@ module.exports = {
                         "type": "array",
                         "items": {
                             "type": "string",
+                            "minItems": 1,
                             "pattern": "^([A-Za-z]+)$"
                         }
                     }
@@ -184,6 +196,7 @@ module.exports = {
                         "type": "array",
                         "items": {
                             "type": "string",
+                            "minItems": 1,
                             "format": "alphanumeric",
                             "maxLength": 20
                         }
@@ -202,6 +215,7 @@ module.exports = {
                         "type": "array",
                         "items": {
                             "type": "object",
+                            "minItems": 1,
                             "patternProperties": {
                                 "product": {
                                     "type": "string"
@@ -221,6 +235,7 @@ module.exports = {
                         "type": "array",
                         "items": {
                             "type": "string",
+                            "minItems": 1,
                             "format": "alphanumeric",
                             "maxLength": 20
                         }

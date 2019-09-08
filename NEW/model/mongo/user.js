@@ -7,25 +7,28 @@ let indexing = {};
 
 function User(soajs, localConfig, mongoCore) {
     let __self = this;
-    if (mongoCore)
+    if (mongoCore) {
         __self.mongoCore = mongoCore;
+        __self.mongoCoreExternal = true;
+    }
     if (!__self.mongoCore) {
+        __self.mongoCoreExternal = false;
         let tCode = soajs.tenant.code;
         if (soajs.tenant.type === "client" && soajs.tenant.main) {
             tCode = soajs.tenant.main.code;
         }
         __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, localConfig.serviceName, tCode));
-        if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
-            indexing[soajs.tenant.id] = true;
+    }
+    if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
+        indexing[soajs.tenant.id] = true;
 
-            __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1}, {}, function (err, result) {
-            });
-            __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {
-            });
-            __self.mongoCore.createIndex(colName, {'username': 1, 'tenant.id': 1}, {}, function (err, result) {
-            });
-            soajs.log.debug("Indexes for " + soajs.tenant.id + " Updated!");
-        }
+        __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1}, {}, function (err, result) {
+        });
+        __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {
+        });
+        __self.mongoCore.createIndex(colName, {'username': 1, 'tenant.id': 1}, {}, function (err, result) {
+        });
+        soajs.log.debug("User: Indexes for " + soajs.tenant.id + " Updated!");
     }
 }
 
@@ -36,10 +39,10 @@ function User(soajs, localConfig, mongoCore) {
  * @param cb
  * @returns {*}
  */
-User.cleanDeleteGroup = function (data, cb) {
+User.prototype.cleanDeletedGroup = function (data, cb) {
     let __self = this;
     if (!data || !data.tId || !data.groupCode) {
-        let error = new Error("tenant ID and group Code are required.");
+        let error = new Error("User: tenant ID and group Code are required.");
         return cb(error, null);
     }
     let user = new User(soajs, __self.mongoCore);
@@ -56,8 +59,36 @@ User.cleanDeleteGroup = function (data, cb) {
     }
 };
 
+
 /**
- * To get a user
+ * To get a user by username
+ *
+ * @param data
+ *  should have:
+ *      required (id)
+ *
+ * @param cb
+ */
+User.prototype.getUserByUsername = function (data, cb) {
+    let __self = this;
+    if (!data || !data.username) {
+        let error = new Error("User: username is required.");
+        return cb(error, null);
+    }
+    let condition = {
+        '$or': [
+            {'username': req.soajs.inputmaskData['username']},
+            {'email': req.soajs.inputmaskData['username']}
+        ],
+        'status': 'active'
+    };
+    __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
+        return cb(err, record);
+    });
+};
+
+/**
+ * To get a user by id
  *
  * @param data
  *  should have:
@@ -68,7 +99,7 @@ User.cleanDeleteGroup = function (data, cb) {
 User.prototype.getUser = function (data, cb) {
     let __self = this;
     if (!data || !data.id) {
-        let error = new Error("id is required.");
+        let error = new Error("User: id is required.");
         return cb(error, null);
     }
     __self.validateId(data.id, (err, _id) => {
@@ -121,7 +152,7 @@ User.prototype.getUsers = function (data, cb) {
 User.prototype.checkUsername = function (data, cb) {
     let __self = this;
     if (!data || !data.username) {
-        let error = new Error("username is required.");
+        let error = new Error("User: username is required.");
         return cb(error, null);
     }
     let condition = {
@@ -136,16 +167,11 @@ User.prototype.checkUsername = function (data, cb) {
 };
 
 
-User.prototype.cleanDeletedGroup = function (data, cb) {
-
-};
-
-
 User.prototype.validateId = function (id, cb) {
     let __self = this;
 
     if (!id) {
-        let error = new Error("must provide an id.");
+        let error = new Error("User: must provide an id.");
         return cb(error, null);
     }
 
@@ -160,7 +186,8 @@ User.prototype.validateId = function (id, cb) {
 User.prototype.closeConnection = function () {
     let __self = this;
 
-    __self.mongoCore.closeDb();
+    if (!__self.mongoCoreExternal)
+        __self.mongoCore.closeDb();
 };
 
 module.exports = User;

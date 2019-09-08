@@ -6,7 +6,7 @@ const fs = require("fs");
 let SSOT = {};
 let model = process.env.SOAJS_SERVICE_MODEL || "mongo";
 
-const BLs = ["user", "group"];
+const BLs = ["user", "group", "token"];
 
 function init(service, localConfig, cb) {
 
@@ -21,7 +21,7 @@ function init(service, localConfig, cb) {
             temp.model = SSOT[`${blName}Model`];
             temp.soajs_service = service;
             temp.localConfig = localConfig;
-            BL[blName] = temp;
+            bl[blName] = temp;
             return cb(null);
         } else {
             return cb({name: blName, model: typeModel});
@@ -36,32 +36,63 @@ function init(service, localConfig, cb) {
     });
 }
 
-let BL = {
+let bl = {
     init: init,
     group: null,
     user: null,
+    token: null,
 
-    deleteGroup : (soajs, inputmaskData, cb) =>{
-        BL.group.deleteGroup (soajs, inputmaskData, (error, record)=>{
-            if (error){
-                return cb (error);
+    "deleteGroup": (soajs, inputmaskData, cb) => {
+        bl.group.deleteGroup(soajs, inputmaskData, (error, record) => {
+            if (error) {
+                return cb(error);
             }
-            else{
-                //close response but continue to clean up delete group from users
-                cb (null, true);
+            else {
+                //close response but continue to clean up deleted group from users
+                cb(null, true);
                 let data = {};
                 if (record && record.tenant) {
                     data.tId = record.tenant.id;
                     data.groupCode = record.code;
-                    BL.user.cleanDeletedGroup(soajs, data, (error) => {
+                    bl.user.cleanDeletedGroup(soajs, data, (error) => {
                         if (error) {
-                            soajs.log.error(err);
+                            soajs.log.error(error);
                         }
                     });
                 }
             }
         });
+    },
+
+    "forgotPassword": (soajs, inputmaskData, cb) => {
+        //get model since token and user are in the same db always, aka main tenant db
+        let modelObj = bl.user.mt.getModel(soajs);
+        let options = {};
+        options.mongoCore = modelObj.mongoCore;
+        bl.user.getUserByUsername(soajs, inputmaskData, options, (error, userRecord) => {
+            if (error) {
+                bl.user.mt.closeModel(modelObj);
+                return cb(error, record);
+            }
+            //No need to assure userRecord. At this point userRecord is valid and not empty
+            let data = {};
+            data.userId = userRecord._id.toString();
+            data.username = userRecord.username;
+            data.service = "forgotPassword";
+            bl.token.add(soajs, data, options, (error, tokenRecord) => {
+                bl.user.mt.closeModel(modelObj);
+                lib.sendMail(soajs, "forgotPassword", userRecord, tokenRecord, function (error, mailRecord) {
+                    if (error) {
+                        soajs.log.info('No Mail was sent: ' + error);
+                    }
+                    return cb(null, {
+                        token: tokenRecord.token,
+                        link: mailRecord.link
+                    });
+                });
+            });
+        });
     }
 };
 
-module.exports = BL;
+module.exports = bl;

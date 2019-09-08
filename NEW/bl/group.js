@@ -16,7 +16,10 @@ let bl = {
     },
 
     "mt": {
-        "getModel": (soajs, mongoCore) => {
+        "getModel": (soajs, options) => {
+            let mongoCore = null;
+            if (options && options.mongoCore)
+                mongoCore = options.mongoCore;
             return new bl.model(soajs, bl.localConfig, mongoCore);
         },
         "closeModel": (modelObj) => {
