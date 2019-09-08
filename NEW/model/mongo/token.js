@@ -34,6 +34,33 @@ function Token(soajs, localConfig, mongoCore) {
     }
 }
 
+Token.prototype.updateStatus = function (data, cb) {
+    let __self = this;
+    if (!data || !data.token || !data.status) {
+        let error = new Error("Token: status and token are required.");
+        return cb(error, null);
+    }
+    let s = {
+        '$set': {
+            'status': data.status
+        }
+    };
+    let condition = {
+        'token': data.token
+    };
+    let extraOptions = {
+        'upsert': false,
+        'safe': true
+    };
+    __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
+        if (!record) {
+            let error = new Error("Token: status for token [" + data.token + "] was not update.");
+            return cb(error);
+        }
+        return cb(err, record);
+    });
+};
+
 Token.prototype.add = function (data, cb) {
     let __self = this;
     if (!data || !data.userId || !data.username || !data.service) {
@@ -58,7 +85,7 @@ Token.prototype.add = function (data, cb) {
     let condition = {
         'userId': data.userId,
         'service': data.service,
-        'status': 'active'
+        'status': data.status || 'active'
     };
     let extraOptions = {
         'upsert': true,
@@ -69,6 +96,23 @@ Token.prototype.add = function (data, cb) {
             let error = new Error("Token: token for [" + data.service + "] was not created.");
             return cb(error);
         }
+        return cb(err, record);
+    });
+};
+
+Token.prototype.get = function (data, cb) {
+    let __self = this;
+    if (!data || !(data.token || data.service)) {
+        let error = new Error("Token: token, and what service are required.");
+        return cb(error, null);
+    }
+    let condition = {
+        'token': data.token,
+        'service': data.service,
+        'status': data.status || 'active'
+    };
+
+    __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
         return cb(err, record);
     });
 };

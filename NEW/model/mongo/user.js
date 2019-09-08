@@ -80,7 +80,7 @@ User.prototype.getUserByUsername = function (data, cb) {
             {'username': req.soajs.inputmaskData['username']},
             {'email': req.soajs.inputmaskData['username']}
         ],
-        'status': 'active'
+        'status': data.status || 'active'
     };
     __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
         return cb(err, record);
@@ -107,10 +107,54 @@ User.prototype.getUser = function (data, cb) {
             return cb(err, null);
         }
         let condition = {'_id': _id};
+        if (data.status){
+            condition.status = data.status;
+        }
         __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
             return cb(err, record);
         });
     });
+};
+
+User.prototype.updateStatus = function (data, cb) {
+    let __self = this;
+    if (!data || !(data.id ||data._id) || !data.status) {
+        let error = new Error("Token: status and either id or _id are required.");
+        return cb(error, null);
+    }
+    let s = {
+        '$set': {
+            'status': data.status
+        }
+    };
+
+    let updateStatus = (_id) =>{
+        let condition = {
+            '_id': _id
+        };
+        let extraOptions = {
+            'upsert': false,
+            'safe': true
+        };
+        __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
+            if (!record) {
+                let error = new Error("User: status for user [" + _id.toString() + "] was not update.");
+                return cb(error);
+            }
+            return cb(err, record);
+        });
+    };
+    if (data.id) {
+        __self.validateId(data.id, (err, _id) => {
+            if (err) {
+                return cb(err, null);
+            }
+            updateStatus(_id);
+        });
+    }
+    else {
+        updateStatus(data._id);
+    }
 };
 
 User.prototype.getUsers = function (data, cb) {

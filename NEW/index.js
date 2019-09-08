@@ -21,6 +21,11 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        service.get("/join/validate", function (req, res) {
+            bl.joinValidate(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
         service.get("/checkUsername", function (req, res) {
             bl.user.countUser(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));

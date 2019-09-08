@@ -22,6 +22,7 @@ module.exports = {
 
         520: "Unable to find user.",
 
+        600: "unable to find token",
         601: "Model not found",
         602: "Model error: ",
     },
@@ -30,6 +31,7 @@ module.exports = {
         "commonFields": {},
         "get": {
 
+
             '/forgotPassword': {
                 "_apiInfo": {
                     "l": "Forgot Password",
@@ -37,6 +39,18 @@ module.exports = {
                 },
                 "username": {
                     "source": ['query.username'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
+
+            '/join/validate': {
+                "_apiInfo": {
+                    "l": "Validate registered account",
+                    "group": "Guest Join"
+                },
+                "token": {
+                    "source": ['query.token'],
                     "required": true,
                     "validation": {"type": "string"}
                 }

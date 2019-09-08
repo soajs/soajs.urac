@@ -68,6 +68,51 @@ let bl = {
         });
     },
 
+    "joinValidate": (soajs, inputmaskData, cb) => {
+        //get model since token and user are in the same db always, aka main tenant db
+        let modelObj = bl.user.mt.getModel(soajs);
+        let options = {};
+        options.mongoCore = modelObj.mongoCore;
+        inputmaskData = inputmaskData || {};
+        inputmaskData.service = 'join';
+        bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
+            if (error) {
+                //close model
+                bl.user.mt.closeModel(modelObj);
+                return cb(error, null);
+            }
+            let data = {};
+            data.uId = tokenRecord.userId;
+            data.status = 'pendingJoin';
+            bl.user.getUser(soajs, data, options, (error, userRecord) => {
+                if (error) {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(error, null);
+                }
+                let tokenData = {};
+                tokenData.token = tokenRecord.token;
+                tokenData.status = 'used';
+                //update token status and do not wait for result
+                bl.token.updateStatus(soajs, tokenData, options, (error, tokenRecord) => {
+                    if (error) {
+                        bl.user.mt.closeModel(modelObj);
+                    }
+                });
+                let userData = {};
+                userData._id = userRecord._id;
+                userData.status = 'active';
+                bl.user.updateStatus(soajs, userData, options, (error, userRecord) => {
+                    if (error) {
+                        bl.user.mt.closeModel(modelObj);
+                        return cb(error, null);
+                    }
+                    return cb(null, userRecord);
+                });
+            });
+        });
+    },
+
     "forgotPassword": (soajs, inputmaskData, cb) => {
         //get model since token and user are in the same db always, aka main tenant db
         let modelObj = bl.user.mt.getModel(soajs);
@@ -75,8 +120,9 @@ let bl = {
         options.mongoCore = modelObj.mongoCore;
         bl.user.getUserByUsername(soajs, inputmaskData, options, (error, userRecord) => {
             if (error) {
+                //close model
                 bl.user.mt.closeModel(modelObj);
-                return cb(error, record);
+                return cb(error, userRecord);
             }
             //No need to assure userRecord. At this point userRecord is valid and not empty
             let data = {};
