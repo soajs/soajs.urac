@@ -84,6 +84,7 @@ let bl = {
             data.username = userRecord.username;
             data.service = "forgotPassword";
             bl.token.add(soajs, data, options, (error, tokenRecord) => {
+                //close model
                 bl.user.mt.closeModel(modelObj);
                 lib.mail.send(soajs, "forgotPassword", userRecord, tokenRecord, function (error, mailRecord) {
                     if (error) {
