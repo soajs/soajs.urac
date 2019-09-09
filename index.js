@@ -21,13 +21,23 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-        service.get("/join/validate", function (req, res) {
-            bl.joinValidate(req.soajs, req.soajs.inputmaskData, (error, data) => {
+        service.get("/validate/join", function (req, res) {
+            bl.validateJoin(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
         service.get("/checkUsername", function (req, res) {
             bl.user.countUser(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+        service.get("/validate/changeEmail", function (req, res) {
+            bl.validateChangeEmail(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+        service.get("/user", function (req, res) {
+            bl.user.getUserByUsername(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });

@@ -29,6 +29,12 @@ function Token(soajs, localConfig, mongoCore) {
             'status': 1
         }, {unique: true}, function (err, result) {
         });
+        __self.mongoCore.createIndex(colName, {
+            'token': 1,
+            'service': 1,
+            'status': 1
+        }, {unique: true}, function (err, result) {
+        });
 
         soajs.log.debug("Token: Indexes for " + soajs.tenant.id + " Updated!");
     }
@@ -85,7 +91,7 @@ Token.prototype.add = function (data, cb) {
     let condition = {
         'userId': data.userId,
         'service': data.service,
-        'status': data.status || 'active'
+        'status': data.status
     };
     let extraOptions = {
         'upsert': true,
@@ -109,7 +115,7 @@ Token.prototype.get = function (data, cb) {
     let condition = {
         'token': data.token,
         'service': data.service,
-        'status': data.status || 'active'
+        'status': data.status
     };
 
     __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {

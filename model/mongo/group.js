@@ -104,7 +104,7 @@ Group.prototype.add = function (data, cb) {
         "description": data.description
     };
     if (data.config) {
-        record.config = data.config
+        record.config = data.config;
     }
     if (data.tId && data.tCode) {
         record.tenant = {

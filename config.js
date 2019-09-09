@@ -22,6 +22,7 @@ module.exports = {
 
         520: "Unable to find user.",
 
+        599: "Token has expired.",
         600: "unable to find token",
         601: "Model not found",
         602: "Model error: ",
@@ -43,8 +44,7 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
-
-            '/join/validate': {
+            '/validate/join': {
                 "_apiInfo": {
                     "l": "Validate registered account",
                     "group": "Guest Join"
@@ -59,6 +59,29 @@ module.exports = {
                 "_apiInfo": {
                     "l": "Check If Username Exists",
                     "group": "Guest Check Username"
+                },
+                "username": {
+                    "source": ['query.username'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
+            '/validate/changeEmail': {
+                "_apiInfo": {
+                    "l": "Validate change email address",
+                    "group": "Guest Email Validation"
+                },
+                "token": {
+                    "source": ['query.token'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
+            '/user': {
+                "_apiInfo": {
+                    "l": "Get User Info by username",
+                    "group": "My Account",
+                    "groupMain": true
                 },
                 "username": {
                     "source": ['query.username'],

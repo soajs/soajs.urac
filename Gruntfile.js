@@ -47,12 +47,12 @@ var lib = {
 module.exports = function (grunt) {
 	//Loading the needed plugins to run the grunt tasks
 	var pluginsRootPath = lib.findRoot();
-	lib.loadTasks(grunt, pluginsRootPath, ['grunt-contrib-jshint', 'grunt-jsdoc', 'grunt-contrib-clean', 'grunt-contrib-copy', 'grunt-mocha-test', 'grunt-env'
-		, 'grunt-istanbul', 'grunt-coveralls']);
+	lib.loadTasks(grunt, pluginsRootPath, ['grunt-contrib-jshint', 'grunt-jsdoc', 'grunt-contrib-clean', 'grunt-contrib-copy', 'grunt-mocha-test', 'grunt-env', 'grunt-istanbul', 'grunt-coveralls']);
 	grunt.initConfig({
 		//Defining jshint tasks
 		jshint: {
 			options: {
+                "esversion": 6,
 				"bitwise": true,
 				"eqeqeq": true,
 				"forin": true,
@@ -79,7 +79,7 @@ module.exports = function (grunt) {
 				}
 			},
 			files: {
-                src: ['config-new.js', 'bl/*.js', 'model/mongo/*.js', 'test/helper.js', 'test/unit/**/*.js', 'test/integration/**/*.js']
+                src: ['config.js', 'index.js', 'bl/*.js', 'lib/*.js', 'model/mongo/*.js', 'test/helper.js', 'test/unit/**/*.js', 'test/integration/**/*.js']
 			},
 			gruntfile: {
 				src: 'Gruntfile.js'

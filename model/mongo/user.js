@@ -36,17 +36,18 @@ function User(soajs, localConfig, mongoCore) {
  * To clean up deleted group for main tenant
  *
  * @param data
+ *  should have:
+ *      required (tId, groupCode)
+ *
  * @param cb
- * @returns {*}
  */
 User.prototype.cleanDeletedGroup = function (data, cb) {
     let __self = this;
-    if (!data || !data.tId || !data.groupCode) {
+    if (!data || !data.tId || !data.groupCode || !data.tenant) {
         let error = new Error("User: tenant ID and group Code are required.");
         return cb(error, null);
     }
-    let user = new User(soajs, __self.mongoCore);
-    if (soajs.tenant.type === "client" && soajs.tenant.main) {
+    if (data.tenant.type === "client" && data.tenant.main) {
         //TODO: clean up from sub tenant
     }
     else {
@@ -65,7 +66,7 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
  *
  * @param data
  *  should have:
- *      required (id)
+ *      required (username)
  *
  * @param cb
  */
@@ -77,10 +78,10 @@ User.prototype.getUserByUsername = function (data, cb) {
     }
     let condition = {
         '$or': [
-            {'username': req.soajs.inputmaskData['username']},
-            {'email': req.soajs.inputmaskData['username']}
+            {'username': data.username},
+            {'email': data.username}
         ],
-        'status': data.status || 'active'
+        'status': data.status
     };
     __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
         return cb(err, record);
@@ -107,7 +108,7 @@ User.prototype.getUser = function (data, cb) {
             return cb(err, null);
         }
         let condition = {'_id': _id};
-        if (data.status){
+        if (data.status) {
             condition.status = data.status;
         }
         __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
@@ -116,19 +117,28 @@ User.prototype.getUser = function (data, cb) {
     });
 };
 
-User.prototype.updateStatus = function (data, cb) {
+/**
+ * To update a filed
+ *
+ * @param data
+ *  should have:
+ *      required (id || _id, what, whatField)
+ *
+ * @param cb
+ */
+User.prototype.updateOneField = function (data, cb) {
     let __self = this;
-    if (!data || !(data.id ||data._id) || !data.status) {
-        let error = new Error("Token: status and either id or _id are required.");
+    if (!data || !(data.id || data._id) || !(data.what && data[data.what])) {
+        let error = new Error("Token: either id or _id and the what field to update are required.");
         return cb(error, null);
     }
     let s = {
         '$set': {
-            'status': data.status
+            [data.what]: data[data.what]
         }
     };
 
-    let updateStatus = (_id) =>{
+    let updateStatus = (_id) => {
         let condition = {
             '_id': _id
         };
@@ -138,7 +148,7 @@ User.prototype.updateStatus = function (data, cb) {
         };
         __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
             if (!record) {
-                let error = new Error("User: status for user [" + _id.toString() + "] was not update.");
+                let error = new Error("User: [" + data.what + "] for user [" + _id.toString() + "] was not update.");
                 return cb(error);
             }
             return cb(err, record);
@@ -157,19 +167,28 @@ User.prototype.updateStatus = function (data, cb) {
     }
 };
 
+/**
+ * To get users
+ *
+ * @param data
+ *  should have:
+ *      optional (tId, limit, start, keywords, config)
+ *
+ * @param cb
+ */
 User.prototype.getUsers = function (data, cb) {
     let __self = this;
     let condition = {};
-    if (data.tId) {
+    if (data && data.tId) {
         condition["tenant.id"] = data.tId;
     }
     let pagination = {};
-    if (data.limit) {
+    if (data && data.limit) {
         pagination['skip'] = data.start;
         pagination['limit'] = data.limit;
         pagination.sort = {};
     }
-    if (data.keywords) {
+    if (data && data.keywords) {
         let rePattern = new RegExp(data.keywords, 'i');
         condition['$or'] = [
             {"username": rePattern},
@@ -185,7 +204,7 @@ User.prototype.getUsers = function (data, cb) {
         'tenant.pin.code': 0,
         'config.allowedTenants.tenant.pin.code': 0
     };
-    if (data.config) {
+    if (data && data.config) {
         delete fields.config;
     }
     __self.mongoCore.find(colName, condition, fields, pagination, (err, records) => {
@@ -193,6 +212,15 @@ User.prototype.getUsers = function (data, cb) {
     });
 };
 
+/**
+ * To check if a given username exist
+ *
+ * @param data
+ *  should have:
+ *      required (username)
+ *
+ * @param cb
+ */
 User.prototype.checkUsername = function (data, cb) {
     let __self = this;
     if (!data || !data.username) {

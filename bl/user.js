@@ -71,6 +71,7 @@ let bl = {
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.id = inputmaskData.username;
+        data.status = "active";
         modelObj.getUser(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
@@ -110,6 +111,7 @@ let bl = {
         let data = {};
         data.tId = inputmaskData.tId;
         data.groupCode = inputmaskData.groupCode;
+        data.tenant = soajs.tenant;
         modelObj.cleanDeleteGroup(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
@@ -119,7 +121,7 @@ let bl = {
         });
     },
 
-
+/*
     "updateStatus": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
@@ -128,8 +130,47 @@ let bl = {
         let data = {};
         data.id = inputmaskData.id;
         data._id = inputmaskData._id;
+        data.what = "status";
         data.status = inputmaskData.status;
-        modelObj.updateStatus(data, (err, record) => {
+        modelObj.updateOneField(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
+
+    "updateEmail": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs, options);
+        let data = {};
+        data.id = inputmaskData.id;
+        data._id = inputmaskData._id;
+        data.what = "email";
+        data.email = inputmaskData.email;
+        modelObj.updateOneField(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
+*/
+    "updateOneField": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData && !inputmaskData.what) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs, options);
+        let data = {};
+        data.id = inputmaskData.id;
+        data._id = inputmaskData._id;
+        data.what = inputmaskData.what;
+        data[inputmaskData.what] = inputmaskData[inputmaskData.what];
+        modelObj.updateOneField(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));

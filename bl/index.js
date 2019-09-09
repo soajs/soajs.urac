@@ -49,7 +49,7 @@ let bl = {
     "deleteGroup": (soajs, inputmaskData, cb) => {
         bl.group.deleteGroup(soajs, inputmaskData, (error, record) => {
             if (error) {
-                return cb(error);
+                return cb(error, null);
             }
             else {
                 //close response but continue to clean up deleted group from users
@@ -68,7 +68,7 @@ let bl = {
         });
     },
 
-    "joinValidate": (soajs, inputmaskData, cb) => {
+    "validateJoin": (soajs, inputmaskData, cb) => {
         //get model since token and user are in the same db always, aka main tenant db
         let modelObj = bl.user.mt.getModel(soajs);
         let options = {};
@@ -99,13 +99,57 @@ let bl = {
                 });
                 let userData = {};
                 userData._id = userRecord._id;
+                userData.what = 'status';
                 userData.status = 'active';
-                bl.user.updateStatus(soajs, userData, options, (error, userRecord) => {
+                bl.user.updateOneField(soajs, userData, options, (error) => {
                     bl.user.mt.closeModel(modelObj);
                     if (error) {
                         return cb(error, null);
                     }
-                    return cb(null, userRecord);
+                    return cb(null, true);
+                });
+            });
+        });
+    },
+
+    "validateChangeEmail": (soajs, inputmaskData, cb) => {
+        //get model since token and user are in the same db always, aka main tenant db
+        let modelObj = bl.user.mt.getModel(soajs);
+        let options = {};
+        options.mongoCore = modelObj.mongoCore;
+        inputmaskData = inputmaskData || {};
+        inputmaskData.service = 'changeEmail';
+        bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
+            if (error) {
+                //close model
+                bl.user.mt.closeModel(modelObj);
+                return cb(error, null);
+            }
+            let data = {};
+            data.uId = tokenRecord.userId;
+            bl.user.getUser(soajs, data, options, (error, userRecord) => {
+                if (error) {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(error, null);
+                }
+                let tokenData = {};
+                tokenData.token = tokenRecord.token;
+                tokenData.status = 'used';
+                //update token status and do not wait for result
+                bl.token.updateStatus(soajs, tokenData, options, () => {
+                    // no need to do anything here.
+                });
+                let userData = {};
+                userData._id = userRecord._id;
+                userData.what = 'email';
+                userData.email = tokenRecord.email;
+                bl.user.updateOneField(soajs, userData, options, (error) => {
+                    bl.user.mt.closeModel(modelObj);
+                    if (error) {
+                        return cb(error, null);
+                    }
+                    return cb(null, true);
                 });
             });
         });
