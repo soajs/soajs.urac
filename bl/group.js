@@ -1,174 +1,159 @@
-"use strict";
+'use strict';
 
 let bl = {
+    "model": null,
+    "soajs_service": null,
+    "localConfig": null,
 
-    "list": (soajs, inputmaskData, modelObj, cb) => {
+    "handleError": (soajs, errCode, err) => {
+        if (err) {
+            soajs.log.error(err);
+        }
+        return ({
+            "code": errCode,
+            "msg": bl.localConfig.errors[errCode] + ((err && errCode === 602) ? err.message : "")
+        });
+    },
+
+    "mt": {
+        "getModel": (soajs, options) => {
+            let mongoCore = null;
+            if (options && options.mongoCore)
+                mongoCore = options.mongoCore;
+            return new bl.model(soajs, bl.localConfig, mongoCore);
+        },
+        "closeModel": (modelObj) => {
+            modelObj.closeConnection();
+        }
+    },
+
+    "getGroups": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
         let data = {};
         data.tId = inputmaskData.tId;
         modelObj.getGroups(data, (err, records) => {
+            bl.mt.closeModel(modelObj);
             if (err) {
-                soajs.log.error(err);
-                return cb({
-                    "code": 415,
-                    "msg": soajs.config.errors[415] + " - " + err.message
-                });
+                return cb(bl.handleError(soajs, 602, err));
             }
             return cb(null, records);
         });
     },
 
-
-    "addEnvironment": (soajs, inputmaskData, modelObj, cb) => {
-        let data = {};
-        data.allowedEnvironments = inputmaskData.allowedEnvironments;
-        data.groups = inputmaskData.groups;
-        modelObj.addAllowedEnvironments(data, (err, records) => {
-            if (err) {
-                soajs.log.error(err);
-                return cb({
-                    "code": 400,
-                    "msg": soajs.config.errors[400] + " - " + err.message
-                });
-            }
-            return cb(null, records);
-        });
-    },
-
-    "find": (soajs, inputmaskData, modelObj, cb) => {
+    "getGroup": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
         let data = {};
         data.id = inputmaskData.id;
+        data.code = inputmaskData.code;
         modelObj.getGroup(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
             if (err) {
-                soajs.log.error(err);
-                return cb({
-                    "code": 415,
-                    "msg": soajs.config.errors[415] + " - " + err.message
-                });
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            if (!record) {
+                return cb(bl.handleError(soajs, 420, err));
             }
             return cb(null, record);
         });
     },
 
-    "add": (soajs, inputmaskData, modelObj, cb) => {
-
-        let data = {};
-        data.name = inputmaskData.name;
-        data.description = inputmaskData.description;
-        data.config = inputmaskData.config;
-        data.code = inputmaskData.code;
-
-        let continueCreation = () => {
-            modelObj.addGroup(data, (err, record) => {
-                if (err) {
-                    soajs.log.error(err);
-                    return cb({
-                        "code": 416,
-                        "msg": soajs.config.errors[416] + " - " + err.message
-                    });
-                }
-                return cb(null, record);
-            });
-        };
-
-        if (inputmaskData.tId) {
-            modelObj.validateId(data, (err, id) => {
-                if (err) {
-                    return cb({
-                        "code": 611,
-                        "msg": soajs.config.errors[611] + " - " + err.message
-                    });
-                }
-                inputmaskData.tId = id;
-
-                data.tId = inputmaskData.tId.toString();
-                data.tCode = inputmaskData.tCode;
-
-                continueCreation();
-            })
-        } else {
-            continueCreation();
+    "add": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
         }
-    },
-
-    "getGroup": (soajs, inputmaskData, modelObj, cb) => {
+        let modelObj = bl.mt.getModel(soajs);
         let data = {};
-        data.id = inputmaskData.gId;
+        data.name = inputmaskData.name;
+        data.description = inputmaskData.description;
+        data.config = inputmaskData.config;
         data.code = inputmaskData.code;
-
-        modelObj.validateId(data, (err) => {
+        data.tId = soajs.tenant.id;
+        data.tCode = soajs.tenant.code;
+        modelObj.add(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
             if (err) {
-                return cb({
-                    "code": 417,
-                    "msg": soajs.config.errors[417]
-                });
+                return cb(bl.handleError(soajs, 602, err));
             }
-            modelObj.getGroup(data, (err, record) => {
-                if (err) {
-                    soajs.log.error(err);
-                    return cb({
-                        "code": 474,
-                        "msg": soajs.config.errors[474] + " - " + err.message
-                    });
-                }
-                return cb(null, record);
-            });
+            return cb(null, record);
         });
     },
 
-    "editGroup": (soajs, inputmaskData, modelObj, cb) => {
+    "deleteGroup": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
         let data = {};
         data.id = inputmaskData.gId;
+        modelObj.delete(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
 
+    "edit": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.id = inputmaskData.gId;
         data.name = inputmaskData.name;
         data.description = inputmaskData.description;
         data.config = inputmaskData.config;
 
-        modelObj.validateId(data, (err) => {
+        modelObj.edit(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
             if (err) {
-                return cb({
-                    "code": 417,
-                    "msg": soajs.config.errors[417]
-                });
+                return cb(bl.handleError(soajs, 602, err));
             }
-            modelObj.editGroup(data, (err, record) => {
-                if (err) {
-                    soajs.log.error(err);
-                    return cb({
-                        "code": 431,
-                        "msg": soajs.config.errors[431] + " - " + err.message
-                    });
-                }
-                return cb(null, record);
-            });
+            return cb(null, record);
         });
     },
 
-    "deleteGroup": (soajs, inputmaskData, modelObj, cb) => {
+    "addEnvironments": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
         let data = {};
-        data.id = inputmaskData.gId;
-        modelObj.validateId(data, (err) => {
+        data.allowedEnvironments = inputmaskData.environments;
+        data.groups = inputmaskData.groups;
+        modelObj.addAllowedEnvironments(data, (err, records) => {
+            bl.mt.closeModel(modelObj);
             if (err) {
-                return cb({
-                    "code": 417,
-                    "msg": soajs.config.errors[417]
-                });
+                return cb(bl.handleError(soajs, 602, err));
             }
-            modelObj.deleteGroup(data, (err, cb) => {
-                if (err) {
-                    soajs.log.error(err);
-                    return cb({
-                        "code": 419,
-                        "msg": soajs.config.errors[419] + " - " + err.message
-                    });
-                }
-            });
+            return cb(null, records);
         });
     },
 
-    // We should add a new API later on, and we will introduce a new API
-    // "addPackages": (soajs, inputmaskData, modelObj, cb) => {
-    //     //not found in Lib
-    // }
+    "addPackages": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.allowedPackages = inputmaskData.packages;
+        data.groups = inputmaskData.groups;
+        modelObj.addAllowedPackages(data, (err, records) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, records);
+        });
+    }
+
 };
 
 module.exports = bl;

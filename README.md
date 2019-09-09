@@ -16,84 +16,12 @@ The service is Multitenant and provides the:
 * ability to register and login for anonymous users.
 
 
-##Installation
+### Environment variables
 
-```sh
-$ npm install soajs.urac
-$ cd soajs.urac
-$ node.
-```
+ENV Variable | Description | Default | Example
+--- | ----- | :---: | ---
+SOAJS_SERVICE_MODEL | The model | mongo | other models can be implemented aka oracle, postgresql
 
----
 
-##Features
-Once Installed and running, the URAC service offers different APIs to manage users:
-
-**Public APIs:**
-
-Login
-```bash
-$ CURL -X POST http://localhost:4000/urac/login -d 'username=john&password=johnpassword'
-```
-Logout
-```bash
-$ CURL -X GET http://localhost:4000/urac/logout -d 'username=john'
-```
-Forgot Password
-```bash
-$ CURL -X GET http://localhost:4000/urac/forgotPassword -d 'username=john&email=johndoe@domain.com'
-```
-Register
-```bash
-$ CURL -X POST http://localhost:4000/urac/join -d 'username=john&password=johnpassword&firstName=John&lastName=Doe&email=johndoe@domain.com'
-```
-
----
-
-**Members APIs:**
-
-Edit Profile
-```bash
-$ CURL -X POST http://localhost:4000/urac/account/editProfile -d 'uId=123&username=john&firstName=John&lastName=Doe&profile={'gender':'male'}'
-```
-Change Password
-```bash
-$ CURL -X POST http://localhost:4000/urac/account/changePassword -d 'uId=123&oldPassword=johnoldpassword&password=johnpassword&confirmation=johnpassword'
-```
-Change Email
-```bash
-$ CURL -X POST http://localhost:4000/urac/account/changeEmail -d 'uId=123&email=newemail@domain.com'
-```
-
----
-
-**Administrator APIs:**
-
-List Users
-```bash
-$ CURL -X GET http://localhost:4000/urac/admin/listUsers
-```
-Add User
-```bash
-$ CURL -X POST http://localhost:4000/urac/admin/addUser -d 'username=john&firstName=John&lastName=Doe&email=johndoe@domain.com'
-```
-Edit User
-```bash
-$ CURL -X POST http://localhost:4000/urac/admin/editUser -d 'uId=123&username=john&firstName=John&lastName=Doe&email=johndoe@domain.com&status=active'
-```
-Change User Status
-```bash
-$ CURL -X GET http://localhost:4000/urac/admin/changeUserStatus -d 'uId=123&status=active'
-```
-
----
-
-##Templates
-The URAC is also equipped with templates used by SOAJS notification system.
-These templates are configurable, can be themed and are rendered using [SWIG](http://www.swig.org) and contain data from URAC service.
-
-Templates are located in the [registry](https://soajsorg.atlassian.net/wiki/spaces/SOAJ/pages/61354289/Registry) of SOAJS.
-
----
-
-More information is available on SOAJS website section for [URAC](https://soajsorg.atlassian.net/wiki/spaces/URAC).
+### Complete Documentation
+More information is available on SOAJS website under the section for [URAC](https://soajsorg.atlassian.net/wiki/spaces/URAC).
