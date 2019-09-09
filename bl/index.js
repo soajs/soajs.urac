@@ -4,7 +4,7 @@ const async = require("async");
 const fs = require("fs");
 
 const lib = {
-    "mail" : require ("../lib/mail.js")
+    "mail": require("../lib/mail.js")
 };
 
 let SSOT = {};
@@ -95,16 +95,14 @@ let bl = {
                 tokenData.status = 'used';
                 //update token status and do not wait for result
                 bl.token.updateStatus(soajs, tokenData, options, (error, tokenRecord) => {
-                    if (error) {
-                        bl.user.mt.closeModel(modelObj);
-                    }
+                    // no need to do anything here.
                 });
                 let userData = {};
                 userData._id = userRecord._id;
                 userData.status = 'active';
                 bl.user.updateStatus(soajs, userData, options, (error, userRecord) => {
+                    bl.user.mt.closeModel(modelObj);
                     if (error) {
-                        bl.user.mt.closeModel(modelObj);
                         return cb(error, null);
                     }
                     return cb(null, userRecord);
