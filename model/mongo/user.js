@@ -1,4 +1,5 @@
 "use strict";
+const async = require("async");
 const colName = "users";
 const core = require("soajs");
 const Mongo = core.mongo;
@@ -172,16 +173,13 @@ User.prototype.updateOneField = function (data, cb) {
  *
  * @param data
  *  should have:
- *      optional (tId, limit, start, keywords, config)
+ *      optional (limit, start, keywords, config)
  *
  * @param cb
  */
 User.prototype.getUsers = function (data, cb) {
     let __self = this;
     let condition = {};
-    if (data && data.tId) {
-        condition["tenant.id"] = data.tId;
-    }
     let pagination = {};
     if (data && data.limit) {
         pagination['skip'] = data.start;
@@ -213,6 +211,61 @@ User.prototype.getUsers = function (data, cb) {
 };
 
 /**
+ * To get users by ids
+ *
+ * @param data
+ *  should have:
+ *      optional (limit, start, uIds, config)
+ *
+ * @param cb
+ */
+User.prototype.getUsersByIds = function (data, cb) {
+    let __self = this;
+    if (!data || !data.uIds || !Array.isArray(data.uIds)) {
+        let error = new Error("Token: An array of ids is required.");
+        return cb(error, null);
+    }
+    let _ids = [];
+    async.each(data.uIds, function (id, callback) {
+        __self.validateId(id, function (err, _id) {
+            if (err) {
+                //ignore
+            } else {
+                _ids.push(_id);
+            }
+            callback();
+        });
+    }, function () {
+        if (_ids.length === 0) {
+            return cb(null, []);
+        }
+        let condition = {};
+        condition._id = {
+            "$in": _ids
+        };
+        let pagination = {};
+        if (data && data.limit) {
+            pagination['skip'] = data.start;
+            pagination['limit'] = data.limit;
+            pagination.sort = {};
+        }
+        let fields = {
+            'password': 0,
+            'config': 0,
+            'socialId': 0,
+            'tenant.pin.code': 0,
+            'config.allowedTenants.tenant.pin.code': 0
+        };
+        if (data && data.config) {
+            delete fields.config;
+        }
+        __self.mongoCore.find(colName, condition, fields, pagination, (err, records) => {
+            return cb(err, records);
+        });
+    });
+};
+
+/**
  * To check if a given username exist
  *
  * @param data
@@ -233,11 +286,36 @@ User.prototype.checkUsername = function (data, cb) {
             {'email': data.username}
         ],
     };
-    __self.mongoCore.count(colName, condition, (err, record) => {
-        return cb(err, record);
+    __self.mongoCore.count(colName, condition, (err, count) => {
+        return cb(err, count);
     });
 };
 
+/**
+ * To count the number of users that matches certain keywords
+ *
+ * @param data
+ *  should have:
+ *      required (username)
+ *
+ * @param cb
+ */
+User.prototype.countUsers = function (data, cb) {
+    let __self = this;
+    let condition = {};
+    if (data && data.keywords) {
+        let rePattern = new RegExp(data.keywords, 'i');
+        condition['$or'] = [
+            {"username": rePattern},
+            {"email": rePattern},
+            {"firstName": rePattern},
+            {"lastName": rePattern}
+        ];
+    }
+    __self.mongoCore.count(colName, condition, (err, count) => {
+        return cb(err, count);
+    });
+};
 
 User.prototype.validateId = function (id, cb) {
     let __self = this;

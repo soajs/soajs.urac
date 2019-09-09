@@ -185,6 +185,31 @@ let bl = {
                 });
             });
         });
+    },
+
+    "getUsersAndGroups": (soajs, inputmaskData, cb) => {
+        if (soajs.tenant.type === "client" && soajs.tenant.main) {
+            bl.group.getGroups(soajs, inputmaskData, (error, groupRecords) => {
+                if (error) {
+                    return cb(error, null);
+                }
+                return cb(null, {'users': [], 'groups': groupRecords});
+            });
+        }
+        else{
+            //TODO: better to make this async
+            bl.group.getGroups(soajs, inputmaskData, (error, groupRecords) => {
+                if (error) {
+                    return cb(error, null);
+                }
+                bl.user.getUsers(soajs, inputmaskData, (error, userRecords) => {
+                    if (error) {
+                        return cb(error, null);
+                    }
+                    return cb(null, {'users': userRecords, 'groups': groupRecords});
+                });
+            });
+        }
     }
 };
 

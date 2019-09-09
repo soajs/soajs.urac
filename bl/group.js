@@ -33,7 +33,6 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs);
         let data = {};
-        data.tId = inputmaskData.tId;
         modelObj.getGroups(data, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {

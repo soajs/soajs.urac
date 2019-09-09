@@ -26,7 +26,6 @@ let bl = {
             modelObj.closeConnection();
         }
     },
-
     "countUser": (soajs, inputmaskData, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
@@ -34,15 +33,27 @@ let bl = {
         let modelObj = bl.mt.getModel(soajs);
         let data = {};
         data.username = inputmaskData.username;
-        modelObj.checkUsername(data, (err, records) => {
+        modelObj.checkUsername(data, (err, count) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
             }
-            if (!records || records.length < 1)
-                return cb(null, false);
-            else
-                return cb(null, true);
+            return cb(null, (count > 0));
+        });
+    },
+    "countUsers": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.keywords = inputmaskData.keywords;
+        modelObj.countUsers(data, (err, count) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, count);
         });
     },
     "getUser": (soajs, inputmaskData, cb) => {
@@ -89,12 +100,30 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs);
         let data = {};
-        data.tId = inputmaskData.tId;
         data.start = inputmaskData.start;
         data.limit = inputmaskData.limit;
         data.keywords = inputmaskData.keywords;
         data.config = inputmaskData.config;
         modelObj.getUsers(data, (err, records) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, records);
+        });
+    },
+
+    "getUsersByIds": (soajs, inputmaskData, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs);
+        let data = {};
+        data.start = inputmaskData.start;
+        data.limit = inputmaskData.limit;
+        data.uIds = inputmaskData.uIds;
+        data.config = inputmaskData.config;
+        modelObj.getUsersByIds(data, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
@@ -121,52 +150,39 @@ let bl = {
         });
     },
 
-/*
-    "updateStatus": (soajs, inputmaskData, options, cb) => {
-        if (!inputmaskData) {
-            return cb(bl.handleError(soajs, 400, null));
-        }
-        let modelObj = bl.mt.getModel(soajs, options);
-        let data = {};
-        data.id = inputmaskData.id;
-        data._id = inputmaskData._id;
-        data.what = "status";
-        data.status = inputmaskData.status;
-        modelObj.updateOneField(data, (err, record) => {
-            bl.mt.closeModel(modelObj);
-            if (err) {
-                return cb(bl.handleError(soajs, 602, err));
-            }
-            return cb(null, record);
-        });
-    },
 
-    "updateEmail": (soajs, inputmaskData, options, cb) => {
-        if (!inputmaskData) {
-            return cb(bl.handleError(soajs, 400, null));
-        }
-        let modelObj = bl.mt.getModel(soajs, options);
-        let data = {};
-        data.id = inputmaskData.id;
-        data._id = inputmaskData._id;
-        data.what = "email";
-        data.email = inputmaskData.email;
-        modelObj.updateOneField(data, (err, record) => {
-            bl.mt.closeModel(modelObj);
-            if (err) {
-                return cb(bl.handleError(soajs, 602, err));
-            }
-            return cb(null, record);
-        });
+    "updateStatus": (soajs, inputmaskData, options, cb) => {
+        inputmaskData = inputmaskData || {};
+        inputmaskData.what = 'status';
+        bl.updateOneField(soajs, inputmaskData, options, cb);
     },
-*/
+    /*
+        "updateEmail": (soajs, inputmaskData, options, cb) => {
+            if (!inputmaskData) {
+                return cb(bl.handleError(soajs, 400, null));
+            }
+            let modelObj = bl.mt.getModel(soajs, options);
+            let data = {};
+            data.id = inputmaskData.id;
+            data._id = inputmaskData._id;
+            data.what = "email";
+            data.email = inputmaskData.email;
+            modelObj.updateOneField(data, (err, record) => {
+                bl.mt.closeModel(modelObj);
+                if (err) {
+                    return cb(bl.handleError(soajs, 602, err));
+                }
+                return cb(null, record);
+            });
+        },
+    */
     "updateOneField": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData && !inputmaskData.what) {
             return cb(bl.handleError(soajs, 400, null));
         }
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
-        data.id = inputmaskData.id;
+        data.id = inputmaskData.id || inputmaskData.uId;
         data._id = inputmaskData._id;
         data.what = inputmaskData.what;
         data[inputmaskData.what] = inputmaskData[inputmaskData.what];

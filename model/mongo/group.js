@@ -27,20 +27,13 @@ function Group(soajs, localConfig, mongoCore) {
 }
 
 /**
- * To get group(s)
- *
- * @param data
- *  should have:
- *      optional (tId)
+ * To get all group(s)
  *
  * @param cb
  */
 Group.prototype.getGroups = function (data, cb) {
     let __self = this;
     let condition = {};
-    if (data && data.tId) {
-        condition = {"tenant.id": data.tId};
-    }
     __self.mongoCore.find(colName, condition, null, null, (err, records) => {
         return cb(err, records);
     });

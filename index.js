@@ -37,7 +37,7 @@ service.init(() => {
             });
         });
         service.get("/user", function (req, res) {
-            bl.user.getUserByUsername(req.soajs, req.soajs.inputmaskData, (error, data) => {
+            bl.user.getUserByUsername(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
@@ -51,6 +51,16 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        service.get("/admin/users/uIds", function (req, res) {
+            bl.user.getUsersByIds(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+        service.get("/admin/users/count", function (req, res) {
+            bl.user.countUsers(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
         service.get("/admin/groups", function (req, res) {
             bl.group.getGroups(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
@@ -58,6 +68,11 @@ service.init(() => {
         });
         service.get("/admin/group", function (req, res) {
             bl.group.getGroup(req.soajs, req.soajs.inputmaskData, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+        service.get("/admin/all", function (req, res) {
+            bl.getUsersAndGroups(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
@@ -70,6 +85,11 @@ service.init(() => {
         });
 
         //PUT methods
+        service.put("/admin/user/status", function (req, res) {
+            bl.user.updateStatus(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
         service.put("/admin/group", function (req, res) {
             bl.group.edit(req.soajs, req.soajs.inputmaskData, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));

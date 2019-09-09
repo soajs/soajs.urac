@@ -29,7 +29,31 @@ module.exports = {
     },
 
     "schema": {
-        "commonFields": {},
+        "commonFields": {
+            "keywords": {
+                "source": ['query.keywords', 'body.keywords'],
+                "required": false,
+                "validation": {"type": "string"}
+            },
+            "start": {
+                "required": false,
+                "source": ["query.start"],
+                "default": 0,
+                "validation": {
+                    "type": "integer",
+                    "min": 0
+                }
+            },
+            "limit": {
+                "required": false,
+                "source": ["query.limit"],
+                "default": 1000,
+                "validation": {
+                    "type": "integer",
+                    "max": 2000
+                }
+            }
+        },
         "get": {
 
 
@@ -108,10 +132,29 @@ module.exports = {
                     "groupMain": true
                 },
                 "commonFields": ["start", "limit", "keywords"],
-                "tId": {
-                    "source": ['query.tId'],
+                "config": {
+                    "source": ['query.config'],
                     "required": false,
-                    "validation": {"type": "string"}
+                    "validation": {"type": "boolean"}
+                }
+            },
+            '/admin/users/uIds': {
+                "_apiInfo": {
+                    "l": "List users by Id",
+                    "group": "Administration",
+                    "groupMain": true
+                },
+                "commonFields": ["start", "limit"],
+                "uIds": {
+                    "source": ['query.uIds'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "minItems": 1
+                        }
+                    }
                 },
                 "config": {
                     "source": ['query.config'],
@@ -119,27 +162,36 @@ module.exports = {
                     "validation": {"type": "boolean"}
                 }
             },
+            '/admin/users/count': {
+                "_apiInfo": {
+                    "l": "Total users count",
+                    "group": "Administration"
+                },
+                "commonFields": ["keywords"]
+            },
 
             '/admin/groups': {
                 "_apiInfo": {
                     "l": "List groups",
                     "group": "Administration"
-                },
-                "tId": {
-                    "source": ['query.tId'],
-                    "required": false,
-                    "validation": {"type": "string"}
                 }
             },
             '/admin/group': {
                 "_apiInfo": {
-                    "l": "Get group record by _id",
+                    "l": "Get group record by id",
                     "group": "Administration"
                 },
                 "id": {
                     "source": ['query.id'],
                     "required": true,
                     "validation": {"type": "string"}
+                }
+            },
+
+            '/admin/all': {
+                "_apiInfo": {
+                    "l": "Get all users & groups",
+                    "group": "Administration"
                 }
             }
 
@@ -294,6 +346,23 @@ module.exports = {
             }
         },
         "put": {
+            '/admin/user/status': {
+                "_apiInfo": {
+                    "l": "Change user status",
+                    "group": "Administration"
+                },
+                "uId": {
+                    "source": ['query.uId'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "status": {
+                    "source": ['query.status'],
+                    "required": true,
+                    "validation": {"type": "string", "enum": ['active', 'inactive']}
+                }
+            },
+
             '/admin/group': {
                 "_apiInfo": {
                     "l": "Edit Group",
