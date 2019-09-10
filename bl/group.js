@@ -28,12 +28,8 @@ let bl = {
     },
 
     "getGroups": (soajs, inputmaskData, options, cb) => {
-        if (!inputmaskData) {
-            return cb(bl.handleError(soajs, 400, null));
-        }
         let modelObj = bl.mt.getModel(soajs, options);
-        let data = {};
-        modelObj.getGroups(data, (err, records) => {
+        modelObj.getGroupsnull, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
