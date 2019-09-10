@@ -91,15 +91,14 @@ module.exports = function (grunt) {
 				APP_DIR_FOR_CODE_COVERAGE: '../',
 				SOAJS_ENV: 'dev',
 				SOAJS_SRVIP: '127.0.0.1',
-				//SOAJS_PROFILE: '',
+                SOAJS_TEST: true,
                 SOAJS_SRVPORT: 4001
 			},
 			coverage: {
 				APP_DIR_FOR_CODE_COVERAGE: '../test/coverage/instrument/',
 				SOAJS_ENV: 'dev',
 				SOAJS_SRVIP: '127.0.0.1',
-				//SOAJS_TEST: true,
-				//SOAJS_PROFILE: '',
+				SOAJS_TEST: true,
 				SOAJS_SRVPORT: 4001
 			}
 		},
@@ -122,7 +121,7 @@ module.exports = function (grunt) {
         },
 		
 		instrument: {
-			files: ['config-new.js', 'bl/*.js', 'model/mongo/*.js'],
+			files: ['config.js', 'index.js', 'bl/*.js', 'lib/*.js', 'model/mongo/*.js'],
 			options: {
 				lazy: false,
 				basePath: 'test/coverage/instrument/'
