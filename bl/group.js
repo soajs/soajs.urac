@@ -29,7 +29,7 @@ let bl = {
 
     "getGroups": (soajs, inputmaskData, options, cb) => {
         let modelObj = bl.mt.getModel(soajs, options);
-        modelObj.getGroupsnull, (err, records) => {
+        modelObj.getGroups(null, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
