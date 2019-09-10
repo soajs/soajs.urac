@@ -327,19 +327,12 @@ User.prototype.countUsers = function (data, cb) {
  *
  * @param cb
  */
-Group.prototype.add = function (data, cb) {
+User.prototype.add = function (data, cb) {
     let __self = this;
     if (!data || !data.username || !data.firstName || !data.lastName || !data.email || !data.password || !data.status) {
         let error = new Error("User: username, firstName, lastName, email, password, and status are required.");
         return cb(error, null);
     }
-
-    var userRecord = {
-        "password": utils.encryptPwd(req.soajs.servicesConfig.urac, req.soajs.inputmaskData['password'], req.soajs.config), //encrypt the password
-
-        'status': (requireValidation) ? 'pendingJoin' : 'active',
-
-    };
 
     let record = {
         "username": data.username,

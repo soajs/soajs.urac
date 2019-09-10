@@ -203,30 +203,29 @@ let bl = {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs, options);
-
-        let data = {};
-        data.username = inputmaskData.username;
-        data.firstName = inputmaskData.firstName;
-        data.lastName = inputmaskData.lastName;
-        data.email = inputmaskData.email;
-
-        let requireValidation = true;
-        if (soajs.servicesConfig.urac) {
-            if (Object.hasOwnProperty.call(soajs.servicesConfig.urac, 'validateJoin')) {
-                requireValidation = soajs.servicesConfig.urac.validateJoin;
-            }
-        }
-        data.status = (requireValidation) ? 'pendingJoin' : 'active';
-
-        data.tId = soajs.tenant.id;
-        data.tCode = soajs.tenant.code;
 
         lib.pwd.encrypt(soajs.servicesConfig, inputmaskData.password, bl.localConfig, (err, pwdEncrypted) => {
-            bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
             }
+            let modelObj = bl.mt.getModel(soajs, options);
+
+            let data = {};
+            data.username = inputmaskData.username;
+            data.firstName = inputmaskData.firstName;
+            data.lastName = inputmaskData.lastName;
+            data.email = inputmaskData.email;
+
+            let requireValidation = true;
+            if (soajs.servicesConfig.urac) {
+                if (Object.hasOwnProperty.call(soajs.servicesConfig.urac, 'validateJoin')) {
+                    requireValidation = soajs.servicesConfig.urac.validateJoin;
+                }
+            }
+            data.status = (requireValidation) ? 'pendingJoin' : 'active';
+
+            data.tId = soajs.tenant.id;
+            data.tCode = soajs.tenant.code;
             data.password = pwdEncrypted;
             modelObj.add(data, (err, record) => {
                 bl.mt.closeModel(modelObj);
