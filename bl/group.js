@@ -27,11 +27,11 @@ let bl = {
         }
     },
 
-    "getGroups": (soajs, inputmaskData, cb) => {
+    "getGroups": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         modelObj.getGroups(data, (err, records) => {
             bl.mt.closeModel(modelObj);
@@ -42,11 +42,11 @@ let bl = {
         });
     },
 
-    "getGroup": (soajs, inputmaskData, cb) => {
+    "getGroup": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.id = inputmaskData.id;
         data.code = inputmaskData.code;
@@ -62,11 +62,11 @@ let bl = {
         });
     },
 
-    "add": (soajs, inputmaskData, cb) => {
+    "add": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.name = inputmaskData.name;
         data.description = inputmaskData.description;
@@ -83,11 +83,11 @@ let bl = {
         });
     },
 
-    "deleteGroup": (soajs, inputmaskData, cb) => {
+    "deleteGroup": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.id = inputmaskData.gId;
         modelObj.delete(data, (err, record) => {
@@ -99,11 +99,11 @@ let bl = {
         });
     },
 
-    "edit": (soajs, inputmaskData, cb) => {
+    "edit": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.id = inputmaskData.gId;
         data.name = inputmaskData.name;
@@ -119,11 +119,11 @@ let bl = {
         });
     },
 
-    "addEnvironments": (soajs, inputmaskData, cb) => {
+    "addEnvironments": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.allowedEnvironments = inputmaskData.environments;
         data.groups = inputmaskData.groups;
@@ -136,11 +136,11 @@ let bl = {
         });
     },
 
-    "addPackages": (soajs, inputmaskData, cb) => {
+    "addPackages": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.allowedPackages = inputmaskData.packages;
         data.groups = inputmaskData.groups;

@@ -1,5 +1,9 @@
 'use strict';
 
+const lib = {
+    "pwd": require("../lib/pwd.js")
+};
+
 let bl = {
     "model": null,
     "soajs_service": null,
@@ -26,11 +30,11 @@ let bl = {
             modelObj.closeConnection();
         }
     },
-    "countUser": (soajs, inputmaskData, cb) => {
+    "countUser": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.username = inputmaskData.username;
         modelObj.checkUsername(data, (err, count) => {
@@ -41,11 +45,11 @@ let bl = {
             return cb(null, (count > 0));
         });
     },
-    "countUsers": (soajs, inputmaskData, cb) => {
+    "countUsers": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.keywords = inputmaskData.keywords;
         modelObj.countUsers(data, (err, count) => {
@@ -56,11 +60,11 @@ let bl = {
             return cb(null, count);
         });
     },
-    "getUser": (soajs, inputmaskData, cb) => {
+    "getUser": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.id = inputmaskData.uId;
         data.status = inputmaskData.status;
@@ -94,11 +98,11 @@ let bl = {
             return cb(null, record);
         });
     },
-    "getUsers": (soajs, inputmaskData, cb) => {
+    "getUsers": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.start = inputmaskData.start;
         data.limit = inputmaskData.limit;
@@ -113,11 +117,11 @@ let bl = {
         });
     },
 
-    "getUsersByIds": (soajs, inputmaskData, cb) => {
+    "getUsersByIds": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.start = inputmaskData.start;
         data.limit = inputmaskData.limit;
@@ -132,11 +136,11 @@ let bl = {
         });
     },
 
-    "cleanDeletedGroup": (soajs, inputmaskData, cb) => {
+    "cleanDeletedGroup": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-        let modelObj = bl.mt.getModel(soajs);
+        let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.tId = inputmaskData.tId;
         data.groupCode = inputmaskData.groupCode;
@@ -192,6 +196,46 @@ let bl = {
                 return cb(bl.handleError(soajs, 602, err));
             }
             return cb(null, record);
+        });
+    },
+
+    "join": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs, options);
+
+        let data = {};
+        data.username = inputmaskData.username;
+        data.firstName = inputmaskData.firstName;
+        data.lastName = inputmaskData.lastName;
+        data.email = inputmaskData.email;
+
+        let requireValidation = true;
+        if (soajs.servicesConfig.urac) {
+            if (Object.hasOwnProperty.call(soajs.servicesConfig.urac, 'validateJoin')) {
+                requireValidation = soajs.servicesConfig.urac.validateJoin;
+            }
+        }
+        data.status = (requireValidation) ? 'pendingJoin' : 'active';
+
+        data.tId = soajs.tenant.id;
+        data.tCode = soajs.tenant.code;
+
+        lib.pwd.encrypt(soajs.servicesConfig, inputmaskData.password, bl.localConfig, (err, pwdEncrypted) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            data.password = pwdEncrypted;
+            modelObj.add(data, (err, record) => {
+                bl.mt.closeModel(modelObj);
+                if (err) {
+                    return cb(bl.handleError(soajs, 602, err));
+                }
+                return cb(null, record);
+            });
+
         });
     }
 };

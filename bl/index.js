@@ -46,8 +46,52 @@ let bl = {
     user: null,
     token: null,
 
-    "deleteGroup": (soajs, inputmaskData, cb) => {
-        bl.group.deleteGroup(soajs, inputmaskData, (error, record) => {
+    "join": (soajs, inputmaskData, options, cb) => {
+        let modelObj = bl.user.mt.getModel(soajs);
+        options = {};
+        options.mongoCore = modelObj.mongoCore;
+        bl.user.countUser(soajs, inputmaskData, options, (error, found) => {
+            if (error) {
+                //close model
+                bl.user.mt.closeModel(modelObj);
+                return cb(error, null);
+            }
+            if (found) {
+                //close model
+                bl.user.mt.closeModel(modelObj);
+                return cb(bl.user.handleError(soajs, 402, null));
+            }
+            bl.user.join(soajs, inputmaskData, options, (error, userRecord) => {
+                if (error) {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(error, null);
+                }
+                let data = {};
+                data.userId = userRecord._id.toString();
+                data.username = userRecord.username;
+                data.service = "join";
+                bl.token.add(soajs, data, options, (error, tokenRecord) => {
+                    bl.user.mt.closeModel(modelObj);
+                    if (error){
+                        return cb(error, null);
+                    }
+                    lib.mail.send(soajs, "join", userRecord, tokenRecord, function (error, mailRecord) {
+                        if (error) {
+                            soajs.log.info('No Mail was sent: ' + error);
+                        }
+                        return cb(null, {
+                            token: tokenRecord.token,
+                            link: mailRecord.link || null
+                        });
+                    });
+                });
+            })
+        });
+    },
+
+    "deleteGroup": (soajs, inputmaskData, options, cb) => {
+        bl.group.deleteGroup(soajs, inputmaskData, null, (error, record) => {
             if (error) {
                 return cb(error, null);
             }
@@ -68,10 +112,10 @@ let bl = {
         });
     },
 
-    "validateJoin": (soajs, inputmaskData, cb) => {
+    "validateJoin": (soajs, inputmaskData, options, cb) => {
         //get model since token and user are in the same db always, aka main tenant db
         let modelObj = bl.user.mt.getModel(soajs);
-        let options = {};
+        options = {};
         options.mongoCore = modelObj.mongoCore;
         inputmaskData = inputmaskData || {};
         inputmaskData.service = 'join';
@@ -112,10 +156,10 @@ let bl = {
         });
     },
 
-    "validateChangeEmail": (soajs, inputmaskData, cb) => {
+    "validateChangeEmail": (soajs, inputmaskData, options, cb) => {
         //get model since token and user are in the same db always, aka main tenant db
         let modelObj = bl.user.mt.getModel(soajs);
-        let options = {};
+        options = {};
         options.mongoCore = modelObj.mongoCore;
         inputmaskData = inputmaskData || {};
         inputmaskData.service = 'changeEmail';
@@ -155,10 +199,10 @@ let bl = {
         });
     },
 
-    "forgotPassword": (soajs, inputmaskData, cb) => {
+    "forgotPassword": (soajs, inputmaskData, options, cb) => {
         //get model since token and user are in the same db always, aka main tenant db
         let modelObj = bl.user.mt.getModel(soajs);
-        let options = {};
+        options = {};
         options.mongoCore = modelObj.mongoCore;
         bl.user.getUserByUsername(soajs, inputmaskData, options, (error, userRecord) => {
             if (error) {
@@ -174,35 +218,42 @@ let bl = {
             bl.token.add(soajs, data, options, (error, tokenRecord) => {
                 //close model
                 bl.user.mt.closeModel(modelObj);
+                if (error){
+                    return cb(error, null);
+                }
                 lib.mail.send(soajs, "forgotPassword", userRecord, tokenRecord, function (error, mailRecord) {
                     if (error) {
                         soajs.log.info('No Mail was sent: ' + error);
                     }
                     return cb(null, {
                         token: tokenRecord.token,
-                        link: mailRecord.link
+                        link: mailRecord.link || null
                     });
                 });
             });
         });
     },
 
-    "getUsersAndGroups": (soajs, inputmaskData, cb) => {
+    "getUsersAndGroups": (soajs, inputmaskData, options, cb) => {
         if (soajs.tenant.type === "client" && soajs.tenant.main) {
-            bl.group.getGroups(soajs, inputmaskData, (error, groupRecords) => {
+            bl.group.getGroups(soajs, inputmaskData, null, (error, groupRecords) => {
                 if (error) {
                     return cb(error, null);
                 }
                 return cb(null, {'users': [], 'groups': groupRecords});
             });
         }
-        else{
+        else {
             //TODO: better to make this async
-            bl.group.getGroups(soajs, inputmaskData, (error, groupRecords) => {
+            //As main tenant both users and groups share the same DB connection
+            let modelObj = bl.user.mt.getModel(soajs);
+            options = {};
+            options.mongoCore = modelObj.mongoCore;
+            bl.group.getGroups(soajs, inputmaskData, options, (error, groupRecords) => {
                 if (error) {
                     return cb(error, null);
                 }
-                bl.user.getUsers(soajs, inputmaskData, (error, userRecords) => {
+                bl.user.getUsers(soajs, inputmaskData, options, (error, userRecords) => {
                     if (error) {
                         return cb(error, null);
                     }

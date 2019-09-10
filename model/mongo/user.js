@@ -317,6 +317,60 @@ User.prototype.countUsers = function (data, cb) {
     });
 };
 
+/**
+ * To add a user
+ *
+ * @param data
+ *  should have:
+ *      required (code, name, description)
+ *      optional (config, tId, tCode)
+ *
+ * @param cb
+ */
+Group.prototype.add = function (data, cb) {
+    let __self = this;
+    if (!data || !data.username || !data.firstName || !data.lastName || !data.email || !data.password || !data.status) {
+        let error = new Error("User: username, firstName, lastName, email, password, and status are required.");
+        return cb(error, null);
+    }
+
+    var userRecord = {
+        "password": utils.encryptPwd(req.soajs.servicesConfig.urac, req.soajs.inputmaskData['password'], req.soajs.config), //encrypt the password
+
+        'status': (requireValidation) ? 'pendingJoin' : 'active',
+
+    };
+
+    let record = {
+        "username": data.username,
+        "firstName": data.firstName,
+        "lastName": data.lastName,
+        "email": data.email,
+
+        "password": data.password,
+        "status": data.status
+    };
+
+    record.ts = new Date().getTime();
+    record.profile = data.profile || {};
+    record.groups = data.groups || [];
+    record.config = data.config || {"packages": {}, "keys": {}};
+
+    if (data.tId && data.tCode) {
+        record.tenant = {
+            "id": data.tId,
+            "code": data.tCode
+        };
+    }
+
+    __self.mongoCore.insert(colName, record, (err, record) => {
+        if (record && Array.isArray(record))
+            record = record [0];
+        return cb(err, record);
+    });
+};
+
+
 User.prototype.validateId = function (id, cb) {
     let __self = this;
 

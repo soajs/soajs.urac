@@ -106,6 +106,8 @@ Group.prototype.add = function (data, cb) {
         };
     }
     __self.mongoCore.insert(colName, record, (err, record) => {
+        if (record && Array.isArray(record))
+            record = record [0];
         return cb(err, record);
     });
 };

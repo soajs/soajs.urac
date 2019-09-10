@@ -21,6 +21,7 @@ module.exports = {
         420: "Unable to find group.",
 
         520: "Unable to find user.",
+        521: "User account already exists.",
 
         599: "Token has expired.",
         600: "unable to find token",
@@ -198,6 +199,42 @@ module.exports = {
         },
 
         "post": {
+
+            '/join': {
+                "_apiInfo": {
+                    "l": "Register",
+                    "group": "Guest Join"
+                },
+                "username": {
+                    "source": ['body.username'],
+                    "required": true,
+                    "validation": {
+                        "type": "string",
+                        "pattern": /^[a-zA-Z0-9_-]+$/
+                    }
+                },
+                "password": {
+                    "source": ['body.password'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "firstName": {
+                    "source": ['body.firstName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "lastName": {
+                    "source": ['body.lastName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "email": {
+                    "source": ['body.email'],
+                    "required": true,
+                    "validation": {"type": "string", format: "email"}
+                }
+            },
+
             '/admin/group': {
                 "_apiInfo": {
                     "l": "Add new Group",

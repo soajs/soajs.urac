@@ -77,11 +77,12 @@ Token.prototype.add = function (data, cb) {
     if (data.tokenExpiryTTL) {
         tokenExpiryTTL = data.tokenExpiryTTL;
     }
+    let token = uuid.v4();
     let s = {
         '$set': {
             'userId': data.userId,
             'username': data.username,
-            'token': uuid.v4(),
+            'token': token,
             'expires': new Date(new Date().getTime() + tokenExpiryTTL),
             'status': 'active',
             'ts': new Date().getTime(),
@@ -102,7 +103,7 @@ Token.prototype.add = function (data, cb) {
             let error = new Error("Token: token for [" + data.service + "] was not created.");
             return cb(error);
         }
-        return cb(err, record);
+        return cb(err, {'token': token});
     });
 };
 
