@@ -67,12 +67,15 @@ Group.prototype.getGroup = function (data, cb) {
                 return cb(err, record);
             });
         });
-    } else if (data.code) {
-        condition = {'code': data.code};
+    } else {
+        if (data.code) {
+            condition = {'code': data.code};
+        }
+
+        __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
+            return cb(err, record);
+        });
     }
-    __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
-        return cb(err, record);
-    });
 };
 
 /**
