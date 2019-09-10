@@ -22,10 +22,12 @@ module.exports = {
 
         520: "Unable to find user.",
         521: "User account already exists.",
+        522: "The password and its confirmation do not match.",
+        523: "The provided current password is not correct.",
 
         599: "Token has expired.",
-        600: "unable to find token",
-        601: "Model not found",
+        600: "unable to find token.",
+        601: "Model not found.",
         602: "Model error: ",
     },
 
@@ -58,7 +60,7 @@ module.exports = {
         "get": {
 
 
-            '/forgotPassword': {
+            '/password/forgot': {
                 "_apiInfo": {
                     "l": "Forgot Password",
                     "group": "Guest Password Settings"
@@ -235,6 +237,88 @@ module.exports = {
                 }
             },
 
+            '/admin/user': {
+                "_apiInfo": {
+                    "l": "Add new User",
+                    "group": "Administration"
+                },
+                "username": {
+                    "source": ['body.username'],
+                    "required": true,
+                    "validation": {
+                        "type": "string",
+                        "pattern": /^[a-zA-Z0-9_-]+$/
+                    }
+                },
+                "firstName": {
+                    "source": ['body.firstName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "lastName": {
+                    "source": ['body.lastName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "email": {
+                    "source": ['body.email'],
+                    "required": true,
+                    "validation": {"type": "string", format: "email"}
+                },
+                "profile": {
+                    "source": ['body.profile'],
+                    "required": false,
+                    "validation": {"type": "object"}
+                },
+                "groups": {
+                    "source": ['body.groups'],
+                    "required": false,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "status": {
+                    "source": ['body.status'],
+                    "default": "pendingNew",
+                    "required": false,
+                    "validation": {
+                        "type": "string",
+                        "enum": ['active', 'inactive', 'pendingNew']
+                    }
+                },
+                "password": {
+                    "source": ['body.password'],
+                    "required": false,
+                    "validation": {"type": "string"}
+                },
+                "confirmation": {
+                    "source": ['body.confirmation'],
+                    "required": false,
+                    "validation": {"type": "string"}
+                },
+                "pin": {
+                    "source": ['body.pin'],
+                    "required": false,
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "required": true,
+                                "type": 'string'
+                            },
+                            "allowed": {
+                                "required": true,
+                                "type": 'boolean'
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                }
+            },
+
             '/admin/group': {
                 "_apiInfo": {
                     "l": "Add new Group",
@@ -383,6 +467,55 @@ module.exports = {
             }
         },
         "put": {
+            '/password/reset': {
+                "_apiInfo": {
+                    "l": "Reset Password",
+                    "group": "Guest Password Settings"
+                },
+                "token": {
+                    "source": ['query.token'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "password": {
+                    "source": ['body.password'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "confirmation": {
+                    "source": ['body.confirmation'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
+
+            '/account/password': {
+                "_apiInfo": {
+                    "l": "Change Password",
+                    "group": "My Account"
+                },
+                "uId": {
+                    "source": ['query.uId'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "oldPassword": {
+                    "source": ['body.oldPassword'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "password": {
+                    "source": ['body.password'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "confirmation": {
+                    "source": ['body.confirmation'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
+
             '/admin/user/status': {
                 "_apiInfo": {
                     "l": "Change user status",

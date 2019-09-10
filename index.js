@@ -16,7 +16,7 @@ service.init(() => {
         }
 
         //GET methods
-        service.get("/forgotPassword", function (req, res) {
+        service.get("/password/forgot", function (req, res) {
             bl.forgotPassword(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
@@ -85,6 +85,16 @@ service.init(() => {
         });
 
         //PUT methods
+        service.put("/password/reset", function (req, res) {
+            bl.resetPassword(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+        service.put("/account/password", function (req, res) {
+            bl.changePassword(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
         service.put("/admin/user/status", function (req, res) {
             bl.user.updateStatus(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
@@ -99,6 +109,11 @@ service.init(() => {
         //POST methods
         service.post("/join", function (req, res) {
             bl.join(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+        service.post("/admin/user", function (req, res) {
+            bl.user.add(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });

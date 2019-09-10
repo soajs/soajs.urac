@@ -154,40 +154,41 @@ let bl = {
         });
     },
 
+    "add": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs, options);
+        let data = {};
+        data.name = inputmaskData.name;
+        data.description = inputmaskData.description;
+        data.config = inputmaskData.config;
+        data.code = inputmaskData.code;
+        data.tId = soajs.tenant.id;
+        data.tCode = soajs.tenant.code;
+        modelObj.add(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
 
     "updateStatus": (soajs, inputmaskData, options, cb) => {
         inputmaskData = inputmaskData || {};
         inputmaskData.what = 'status';
         bl.updateOneField(soajs, inputmaskData, options, cb);
     },
-    /*
-        "updateEmail": (soajs, inputmaskData, options, cb) => {
-            if (!inputmaskData) {
-                return cb(bl.handleError(soajs, 400, null));
-            }
-            let modelObj = bl.mt.getModel(soajs, options);
-            let data = {};
-            data.id = inputmaskData.id;
-            data._id = inputmaskData._id;
-            data.what = "email";
-            data.email = inputmaskData.email;
-            modelObj.updateOneField(data, (err, record) => {
-                bl.mt.closeModel(modelObj);
-                if (err) {
-                    return cb(bl.handleError(soajs, 602, err));
-                }
-                return cb(null, record);
-            });
-        },
-    */
+
     "updateOneField": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData && !inputmaskData.what) {
             return cb(bl.handleError(soajs, 400, null));
         }
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
-        data.id = inputmaskData.id || inputmaskData.uId;
-        data._id = inputmaskData._id;
+        data.id = inputmaskData.id || inputmaskData.uId || null;
+        data._id = inputmaskData._id || null;
         data.what = inputmaskData.what;
         data[inputmaskData.what] = inputmaskData[inputmaskData.what];
         modelObj.updateOneField(data, (err, record) => {
@@ -235,6 +236,26 @@ let bl = {
                 return cb(null, record);
             });
 
+        });
+    },
+
+    "resetPassword": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+
+        lib.pwd.encrypt(soajs.servicesConfig, inputmaskData.password, bl.localConfig, (err, pwdEncrypted) => {
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+
+            let data = {};
+            data._id = inputmaskData._id;
+            data.what = 'password';
+            data.password = pwdEncrypted;
+            //we always set status to active in case of addUser to activate the user
+            data.status = 'active';
+            bl.updateOneField(soajs, data, options, cb);
         });
     }
 };

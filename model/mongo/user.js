@@ -112,7 +112,12 @@ User.prototype.getUser = function (data, cb) {
         if (data.status) {
             condition.status = data.status;
         }
-        __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
+        let fields = {socialId: 0, password: 0};
+        if (data.keep && data.keep.pwd) {
+            delete fields.password;
+        }
+
+        __self.mongoCore.findOne(colName, condition, fields, null, (err, record) => {
             return cb(err, record);
         });
     });
@@ -138,8 +143,11 @@ User.prototype.updateOneField = function (data, cb) {
             [data.what]: data[data.what]
         }
     };
+    if (data.status && data.what !== "status") {
+        s['$set'].status = data.status;
+    }
 
-    let updateStatus = (_id) => {
+    let doUpdate = (_id) => {
         let condition = {
             '_id': _id
         };
@@ -160,11 +168,11 @@ User.prototype.updateOneField = function (data, cb) {
             if (err) {
                 return cb(err, null);
             }
-            updateStatus(_id);
+            doUpdate(_id);
         });
     }
     else {
-        updateStatus(data._id);
+        doUpdate(data._id);
     }
 };
 

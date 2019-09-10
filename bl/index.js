@@ -4,7 +4,8 @@ const async = require("async");
 const fs = require("fs");
 
 const lib = {
-    "mail": require("../lib/mail.js")
+    "mail": require("../lib/mail.js"),
+    "pwd": require("../lib/pwd.js")
 };
 
 let SSOT = {};
@@ -73,7 +74,7 @@ let bl = {
                 data.service = "join";
                 bl.token.add(soajs, data, options, (error, tokenRecord) => {
                     bl.user.mt.closeModel(modelObj);
-                    if (error){
+                    if (error) {
                         return cb(error, null);
                     }
                     lib.mail.send(soajs, "join", userRecord, tokenRecord, function (error, mailRecord) {
@@ -199,6 +200,85 @@ let bl = {
         });
     },
 
+    "resetPassword": (soajs, inputmaskData, options, cb) => {
+        inputmaskData = inputmaskData || {};
+        if (inputmaskData['password'] !== inputmaskData['confirmation']) {
+            return cb(bl.user.handleError(soajs, 522, null));
+        }
+        //get model since token and user are in the same db always, aka main tenant db
+        let modelObj = bl.user.mt.getModel(soajs);
+        options = {};
+        options.mongoCore = modelObj.mongoCore;
+        inputmaskData.services = ['forgotPassword', 'addUser'];
+        bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
+            if (error) {
+                //close model
+                bl.user.mt.closeModel(modelObj);
+                return cb(error, null);
+            }
+            let data = {};
+            data.uId = tokenRecord.userId;
+            bl.user.getUser(soajs, data, options, (error, userRecord) => {
+                if (error) {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(error, null);
+                }
+                let tokenData = {};
+                tokenData.token = tokenRecord.token;
+                tokenData.status = 'used';
+                //update token status and do not wait for result
+                bl.token.updateStatus(soajs, tokenData, options, () => {
+                    // no need to do anything here.
+                });
+                let userData = {};
+                userData._id = userRecord._id;
+                userData.password = inputmaskData.password;
+                bl.user.resetPassword(soajs, userData, options, (error) => {
+                    bl.user.mt.closeModel(modelObj);
+                    if (error) {
+                        return cb(error, null);
+                    }
+                    return cb(null, true);
+                });
+            });
+        });
+    },
+
+    "changePassword": (soajs, inputmaskData, options, cb) => {
+        let modelObj = bl.user.mt.getModel(soajs);
+        options = {};
+        options.mongoCore = modelObj.mongoCore;
+        inputmaskData = inputmaskData || {};
+        inputmaskData.keep = {
+            "pwd": true
+        };
+        bl.user.getUser(soajs, inputmaskData, options, (error, userRecord) => {
+            if (error) {
+                //close model
+                bl.user.mt.closeModel(modelObj);
+                return cb(error, null);
+            }
+            lib.pwd.compare(soajs.servicesConfig, inputmaskData.oldPassword, userRecord.password, bl.user.localConfig, (error, response) => {
+                if (error && !response) {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(bl.user.handleError(soajs, 523, error), null);
+                }
+                let userData = {};
+                userData._id = userRecord._id;
+                userData.password = inputmaskData.password;
+                bl.user.resetPassword(soajs, userData, options, (error) => {
+                    bl.user.mt.closeModel(modelObj);
+                    if (error) {
+                        return cb(error, null);
+                    }
+                    return cb(null, true);
+                });
+            });
+        });
+    },
+
     "forgotPassword": (soajs, inputmaskData, options, cb) => {
         //get model since token and user are in the same db always, aka main tenant db
         let modelObj = bl.user.mt.getModel(soajs);
@@ -218,7 +298,7 @@ let bl = {
             bl.token.add(soajs, data, options, (error, tokenRecord) => {
                 //close model
                 bl.user.mt.closeModel(modelObj);
-                if (error){
+                if (error) {
                     return cb(error, null);
                 }
                 lib.mail.send(soajs, "forgotPassword", userRecord, tokenRecord, function (error, mailRecord) {

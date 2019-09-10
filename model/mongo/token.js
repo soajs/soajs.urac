@@ -109,15 +109,22 @@ Token.prototype.add = function (data, cb) {
 
 Token.prototype.get = function (data, cb) {
     let __self = this;
-    if (!data || !(data.token || data.service)) {
-        let error = new Error("Token: token, and what service are required.");
+    if (!data || !data.token || !(data.service || (data.services && Array.isArray(data.services)))) {
+        let error = new Error("Token: token, and what service(s) are required.");
         return cb(error, null);
     }
     let condition = {
         'token': data.token,
-        'service': data.service,
         'status': data.status
     };
+
+    //At this point service ot services are available
+    if (data.service) {
+        condition.service = data.service;
+    }
+    else {
+        condition.service = {'$in': data.services}
+    }
 
     __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
         return cb(err, record);
