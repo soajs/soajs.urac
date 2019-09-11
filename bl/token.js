@@ -37,6 +37,13 @@ let bl = {
         data.username = inputmaskData.username;
         data.service = inputmaskData.service;
         data.status = 'active';
+
+        if (soajs.servicesConfig && soajs.servicesConfig.urac && soajs.servicesConfig.urac.tokenExpiryTTL) {
+            data.tokenExpiryTTL = soajs.servicesConfig.urac.tokenExpiryTTL;
+        }
+        else {
+            data.tokenExpiryTTL = 2 * 24 * 3600000;
+        }
         modelObj.add(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {

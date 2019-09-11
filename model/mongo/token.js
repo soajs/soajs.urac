@@ -69,13 +69,9 @@ Token.prototype.updateStatus = function (data, cb) {
 
 Token.prototype.add = function (data, cb) {
     let __self = this;
-    if (!data || !data.userId || !data.username || !data.service) {
-        let error = new Error("Token: userId, username, and what service are required.");
+    if (!data || !data.userId || !data.username || !data.service !data.tokenExpiryTTL) {
+        let error = new Error("Token: tokenExpiryTTL, userId, username, and what service are required.");
         return cb(error, null);
-    }
-    let tokenExpiryTTL = 2 * 24 * 3600000;
-    if (data.tokenExpiryTTL) {
-        tokenExpiryTTL = data.tokenExpiryTTL;
     }
     let token = uuid.v4();
     let s = {
@@ -83,7 +79,7 @@ Token.prototype.add = function (data, cb) {
             'userId': data.userId,
             'username': data.username,
             'token': token,
-            'expires': new Date(new Date().getTime() + tokenExpiryTTL),
+            'expires': new Date(new Date().getTime() + data.tokenExpiryTTL),
             'status': 'active',
             'ts': new Date().getTime(),
             'service': data.service,
@@ -103,7 +99,7 @@ Token.prototype.add = function (data, cb) {
             let error = new Error("Token: token for [" + data.service + "] was not created.");
             return cb(error);
         }
-        return cb(err, {'token': token});
+        return cb(err, {'token': token, 'ttl': data.tokenExpiryTTL});
     });
 };
 
