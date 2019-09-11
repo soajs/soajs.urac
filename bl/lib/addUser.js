@@ -1,7 +1,11 @@
 'use strict';
 
+const lib = {
+    "mail": require("../../lib/mail.js")
+};
+
 let bl = null;
-let lib = (soajs, inputmaskData, options, cb) => {
+let local = (soajs, inputmaskData, options, cb) => {
     let modelObj = bl.user.mt.getModel(soajs);
     options = {};
     options.mongoCore = modelObj.mongoCore;
@@ -31,10 +35,8 @@ let lib = (soajs, inputmaskData, options, cb) => {
                     return cb(error, null);
                 }
                 if (pin) {
-                    let data = JSON.parse(JSON.stringify(userRecord));
-                    data.pin = pinCode;
-                    data.tenant = soajs.tenant.id;
-                    lib.mail.send(soajs, 'invitePin', data, null, function (error) {
+                    userRecord.pin = pinCode;
+                    lib.mail.send(soajs, 'invitePin', userRecord, null, function (error) {
                         if (error)
                             soajs.log.info('invitePin: No Mail was sent: ' + error);
                     });
@@ -149,5 +151,5 @@ let lib = (soajs, inputmaskData, options, cb) => {
 
 module.exports = function (_bl) {
     bl = _bl;
-    return lib;
+    return local;
 };

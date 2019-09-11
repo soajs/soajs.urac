@@ -32,6 +32,7 @@ module.exports = {
         523: "The provided current password is not correct.",
         524: "Cannot join with a sub tenant key",
         525: "Unable to generate pin at this time.",
+        526: "Email already exists.",
 
         599: "Token has expired.",
         600: "unable to find token.",
@@ -516,6 +517,23 @@ module.exports = {
                     "source": ['body.confirmation'],
                     "required": true,
                     "validation": {"type": "string"}
+                }
+            },
+
+            '/account/email': {
+                "_apiInfo": {
+                    "l": "Change Email",
+                    "group": "My Account"
+                },
+                "uId": {
+                    "source": ['query.uId'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "email": {
+                    "source": ['body.email'],
+                    "required": true,
+                    "validation": {"type": "string", format: "email"}
                 }
             },
 

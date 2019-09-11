@@ -37,6 +37,7 @@ let bl = {
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.username = inputmaskData.username;
+        data.exclude_id = inputmaskData.exclude_id || null;
         modelObj.checkUsername(data, (err, count) => {
             bl.mt.closeModel(modelObj);
             if (err) {

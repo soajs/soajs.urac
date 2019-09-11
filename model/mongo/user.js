@@ -294,6 +294,9 @@ User.prototype.checkUsername = function (data, cb) {
             {'email': data.username}
         ],
     };
+    if (data.exclude_id){
+        condition["_id"] = {"$ne": data.exclude_id};
+    }
     __self.mongoCore.count(colName, condition, (err, count) => {
         return cb(err, count);
     });

@@ -203,6 +203,57 @@ let bl = {
         });
     },
 
+    "changeEmail": (soajs, inputmaskData, options, cb) => {
+        let modelObj = bl.user.mt.getModel(soajs);
+        options = {};
+        options.mongoCore = modelObj.mongoCore;
+
+        bl.user.getUser(soajs, inputmaskData, options, (error, userRecord) => {
+            if (error) {
+                //close model
+                bl.user.mt.closeModel(modelObj);
+                return cb(error, null);
+            }
+            let data = {};
+            data.username = inputmaskData.email;
+            data.exclude_id = userRecord._id;
+            bl.user.countUser(soajs, inputmaskData, options, (error, found) => {
+                if (error) {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(error, null);
+                }
+                if (found){
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(bl.user.handleError(soajs, 526, error), null);
+                }
+                let data = {};
+                data.userId = userRecord._id.toString();
+                data.username = userRecord.username;
+                data.service = "changeEmail";
+                data.email = inputmaskData.email;
+                bl.token.add(soajs, data, options, (error, tokenRecord) => {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    if (error) {
+                        return cb(error, null);
+                    }
+                    userRecord.email = inputmaskData.email;
+                    lib.mail.send(soajs, "changeEmail", userRecord, tokenRecord, function (error, mailRecord) {
+                        if (error) {
+                            soajs.log.info('changeEmail: No Mail was sent: ' + error);
+                        }
+                        return cb(null, {
+                            token: tokenRecord.token,
+                            link: mailRecord.link || null
+                        });
+                    });
+                });
+            });
+        });
+    },
+
     "changePassword": (soajs, inputmaskData, options, cb) => {
         let modelObj = bl.user.mt.getModel(soajs);
         options = {};
@@ -302,7 +353,7 @@ let bl = {
     }
 };
 
-bl["addUser"] = require ("./lib/addUser.js")(bl);
-bl["join"] =  require ("./lib/addUser.js")(bl);
+bl["addUser"] = require("./lib/addUser.js")(bl);
+bl["join"] = require("./lib/addUser.js")(bl);
 
 module.exports = bl;

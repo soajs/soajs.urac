@@ -1,7 +1,11 @@
 'use strict';
 
+const lib = {
+    "mail": require("../../lib/mail.js")
+};
+
 let bl = null;
-let lib = (soajs, inputmaskData, options, cb) => {
+let local = (soajs, inputmaskData, options, cb) => {
     if (soajs.tenant.type === "client" && soajs.tenant.main) {
         return cb(bl.user.handleError(soajs, 524, null));
     }
@@ -67,5 +71,5 @@ let lib = (soajs, inputmaskData, options, cb) => {
 
 module.exports = function (_bl) {
     bl = _bl;
-    return lib;
+    return local;
 };

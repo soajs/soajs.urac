@@ -95,6 +95,11 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        service.put("/account/email", function (req, res) {
+            bl.changeEmail(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
         service.put("/admin/user/status", function (req, res) {
             bl.user.updateStatus(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
