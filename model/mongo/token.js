@@ -69,7 +69,7 @@ Token.prototype.updateStatus = function (data, cb) {
 
 Token.prototype.add = function (data, cb) {
     let __self = this;
-    if (!data || !data.userId || !data.username || !data.service !data.tokenExpiryTTL) {
+    if (!data || !data.userId || !data.username || !data.service || !data.tokenExpiryTTL) {
         let error = new Error("Token: tokenExpiryTTL, userId, username, and what service are required.");
         return cb(error, null);
     }
