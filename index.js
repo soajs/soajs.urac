@@ -113,7 +113,7 @@ service.init(() => {
             });
         });
         service.post("/admin/user", function (req, res) {
-            bl.user.add(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+            bl.addUser(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });

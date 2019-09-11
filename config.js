@@ -16,6 +16,12 @@ module.exports = {
     "hashIterations": 1024,
     "seedLength": 32,
 
+
+    "pinConfiguration": {
+        "charLength": 4,
+        "characters": "0123456789"
+    },
+
     "errors": {
         400: "Business logic required data are missing.",
         420: "Unable to find group.",
@@ -24,6 +30,8 @@ module.exports = {
         521: "User account already exists.",
         522: "The password and its confirmation do not match.",
         523: "The provided current password is not correct.",
+        524: "Cannot join with a sub tenant key",
+        525: "Unable to generate pin at this time.",
 
         599: "Token has expired.",
         600: "unable to find token.",
@@ -291,11 +299,6 @@ module.exports = {
                 },
                 "password": {
                     "source": ['body.password'],
-                    "required": false,
-                    "validation": {"type": "string"}
-                },
-                "confirmation": {
-                    "source": ['body.confirmation'],
                     "required": false,
                     "validation": {"type": "string"}
                 },

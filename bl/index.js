@@ -47,50 +47,6 @@ let bl = {
     user: null,
     token: null,
 
-    "join": (soajs, inputmaskData, options, cb) => {
-        let modelObj = bl.user.mt.getModel(soajs);
-        options = {};
-        options.mongoCore = modelObj.mongoCore;
-        bl.user.countUser(soajs, inputmaskData, options, (error, found) => {
-            if (error) {
-                //close model
-                bl.user.mt.closeModel(modelObj);
-                return cb(error, null);
-            }
-            if (found) {
-                //close model
-                bl.user.mt.closeModel(modelObj);
-                return cb(bl.user.handleError(soajs, 402, null));
-            }
-            bl.user.join(soajs, inputmaskData, options, (error, userRecord) => {
-                if (error) {
-                    //close model
-                    bl.user.mt.closeModel(modelObj);
-                    return cb(error, null);
-                }
-                let data = {};
-                data.userId = userRecord._id.toString();
-                data.username = userRecord.username;
-                data.service = "join";
-                bl.token.add(soajs, data, options, (error, tokenRecord) => {
-                    bl.user.mt.closeModel(modelObj);
-                    if (error) {
-                        return cb(error, null);
-                    }
-                    lib.mail.send(soajs, "join", userRecord, tokenRecord, function (error, mailRecord) {
-                        if (error) {
-                            soajs.log.info('No Mail was sent: ' + error);
-                        }
-                        return cb(null, {
-                            token: tokenRecord.token,
-                            link: mailRecord.link || null
-                        });
-                    });
-                });
-            });
-        });
-    },
-
     "deleteGroup": (soajs, inputmaskData, options, cb) => {
         bl.group.deleteGroup(soajs, inputmaskData, null, (error, record) => {
             if (error) {
@@ -128,7 +84,6 @@ let bl = {
             }
             let data = {};
             data.uId = tokenRecord.userId;
-            data.status = 'pendingJoin';
             bl.user.getUser(soajs, data, options, (error, userRecord) => {
                 if (error) {
                     //close model
@@ -142,6 +97,9 @@ let bl = {
                 bl.token.updateStatus(soajs, tokenData, options, (error, tokenRecord) => {
                     // no need to do anything here.
                 });
+                if (userRecord.status === "active") {
+                    return cb(null, true);
+                }
                 let userData = {};
                 userData._id = userRecord._id;
                 userData.what = 'status';
@@ -303,7 +261,7 @@ let bl = {
                 }
                 lib.mail.send(soajs, "forgotPassword", userRecord, tokenRecord, function (error, mailRecord) {
                     if (error) {
-                        soajs.log.info('No Mail was sent: ' + error);
+                        soajs.log.info('forgotPassword: No Mail was sent: ' + error);
                     }
                     return cb(null, {
                         token: tokenRecord.token,
@@ -343,5 +301,8 @@ let bl = {
         }
     }
 };
+
+bl["addUser"] = require ("./lib/addUser.js")(bl);
+bl["join"] =  require ("./lib/addUser.js")(bl);
 
 module.exports = bl;

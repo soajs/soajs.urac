@@ -154,27 +154,6 @@ let bl = {
         });
     },
 
-    "add": (soajs, inputmaskData, options, cb) => {
-        if (!inputmaskData) {
-            return cb(bl.handleError(soajs, 400, null));
-        }
-        let modelObj = bl.mt.getModel(soajs, options);
-        let data = {};
-        data.name = inputmaskData.name;
-        data.description = inputmaskData.description;
-        data.config = inputmaskData.config;
-        data.code = inputmaskData.code;
-        data.tId = soajs.tenant.id;
-        data.tCode = soajs.tenant.code;
-        modelObj.add(data, (err, record) => {
-            bl.mt.closeModel(modelObj);
-            if (err) {
-                return cb(bl.handleError(soajs, 602, err));
-            }
-            return cb(null, record);
-        });
-    },
-
     "updateStatus": (soajs, inputmaskData, options, cb) => {
         inputmaskData = inputmaskData || {};
         inputmaskData.what = 'status';
@@ -200,10 +179,12 @@ let bl = {
         });
     },
 
-    "join": (soajs, inputmaskData, options, cb) => {
+    "add": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
+
+        inputmaskData.password = inputmaskData.password || Math.random().toString(36).slice(-10);
 
         lib.pwd.encrypt(soajs.servicesConfig, inputmaskData.password, bl.localConfig, (err, pwdEncrypted) => {
             if (err) {
@@ -217,17 +198,15 @@ let bl = {
             data.lastName = inputmaskData.lastName;
             data.email = inputmaskData.email;
 
-            let requireValidation = true;
-            if (soajs.servicesConfig.urac) {
-                if (Object.hasOwnProperty.call(soajs.servicesConfig.urac, 'validateJoin')) {
-                    requireValidation = soajs.servicesConfig.urac.validateJoin;
-                }
-            }
-            data.status = (requireValidation) ? 'pendingJoin' : 'active';
-
-            data.tId = soajs.tenant.id;
-            data.tCode = soajs.tenant.code;
             data.password = pwdEncrypted;
+            data.status = inputmaskData.status;
+
+            data.profile = inputmaskData.profile;
+            data.groups = inputmaskData.groups;
+            data.config = inputmaskData.config;
+
+            data.tenant = inputmaskData.tenant;
+
             modelObj.add(data, (err, record) => {
                 bl.mt.closeModel(modelObj);
                 if (err) {

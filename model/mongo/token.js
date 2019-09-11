@@ -123,7 +123,7 @@ Token.prototype.get = function (data, cb) {
         condition.service = data.service;
     }
     else {
-        condition.service = {'$in': data.services}
+        condition.service = {'$in': data.services};
     }
 
     __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {

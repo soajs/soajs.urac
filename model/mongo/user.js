@@ -337,8 +337,8 @@ User.prototype.countUsers = function (data, cb) {
  */
 User.prototype.add = function (data, cb) {
     let __self = this;
-    if (!data || !data.username || !data.firstName || !data.lastName || !data.email || !data.password || !data.status) {
-        let error = new Error("User: username, firstName, lastName, email, password, and status are required.");
+    if (!data || !data.username || !data.firstName || !data.lastName || !data.email || !data.password || !data.status || !data.tenant) {
+        let error = new Error("User: username, firstName, lastName, email, password, status and tenant information are required.");
         return cb(error, null);
     }
 
@@ -349,20 +349,16 @@ User.prototype.add = function (data, cb) {
         "email": data.email,
 
         "password": data.password,
-        "status": data.status
+        "status": data.status,
+
+        "tenant": data.tenant
     };
 
     record.ts = new Date().getTime();
+
     record.profile = data.profile || {};
     record.groups = data.groups || [];
     record.config = data.config || {"packages": {}, "keys": {}};
-
-    if (data.tId && data.tCode) {
-        record.tenant = {
-            "id": data.tId,
-            "code": data.tCode
-        };
-    }
 
     __self.mongoCore.insert(colName, record, (err, record) => {
         if (record && Array.isArray(record))
