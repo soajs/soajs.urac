@@ -537,6 +537,99 @@ module.exports = {
                 }
             },
 
+            '/account': {
+                "_apiInfo": {
+                    "l": "Edit basic user info and profile",
+                    "group": "My Account"
+                },
+                "uId": {
+                    "source": ['query.uId'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "username": {
+                    "source": ['body.username'],
+                    "required": true,
+                    "validation": {
+                        "type": "string",
+                        "pattern": /^[a-zA-Z0-9_-]+$/
+                    }
+                },
+                "firstName": {
+                    "source": ['body.firstName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "lastName": {
+                    "source": ['body.lastName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "profile": {
+                    "source": ['body.profile'],
+                    "required": false,
+                    "validation": {"type": "object"}
+                }
+            },
+
+            '/admin/user': {
+                "_apiInfo": {
+                    "l": "Edit User Record",
+                    "group": "Administration"
+                },
+                "uId": {
+                    "source": ['query.uId'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "username": {
+                    "source": ['body.username'],
+                    "required": true,
+                    "validation": {
+                        "type": "string",
+                        "pattern": /^[a-zA-Z0-9_-]+$/
+                    }
+                },
+                "firstName": {
+                    "source": ['body.firstName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "lastName": {
+                    "source": ['body.lastName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "email": {
+                    "source": ['body.email'],
+                    "required": true,
+                    "validation": {"type": "string", 'format': 'email'}
+                },
+                "groups": {
+                    "source": ['body.groups'],
+                    "required": false,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "status": {
+                    "source": ['body.status'],
+                    "required": true,
+                    "validation": {
+                        "type": "string",
+                        "enum": ['active', 'inactive', 'pendingNew']
+                    }
+                },
+                "profile": {
+                    "source": ['body.profile'],
+                    "required": false,
+                    "validation": {"type": "object"}
+                }
+            },
+
             '/admin/user/status': {
                 "_apiInfo": {
                     "l": "Change user status",

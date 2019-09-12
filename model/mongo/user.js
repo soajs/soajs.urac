@@ -138,14 +138,6 @@ User.prototype.updateOneField = function (data, cb) {
         let error = new Error("Token: either id or _id and the what field to update are required.");
         return cb(error, null);
     }
-    let s = {
-        '$set': {
-            [data.what]: data[data.what]
-        }
-    };
-    if (data.status && data.what !== "status") {
-        s['$set'].status = data.status;
-    }
 
     let doUpdate = (_id) => {
         let condition = {
@@ -155,6 +147,15 @@ User.prototype.updateOneField = function (data, cb) {
             'upsert': false,
             'safe': true
         };
+        let s = {
+            '$set': {
+                [data.what]: data[data.what]
+            }
+        };
+        if (data.status && data.what !== "status") {
+            s['$set'].status = data.status;
+        }
+
         __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
             if (!record) {
                 let error = new Error("User: [" + data.what + "] for user [" + _id.toString() + "] was not update.");
@@ -294,7 +295,7 @@ User.prototype.checkUsername = function (data, cb) {
             {'email': data.username}
         ],
     };
-    if (data.exclude_id){
+    if (data.exclude_id) {
         condition["_id"] = {"$ne": data.exclude_id};
     }
     __self.mongoCore.count(colName, condition, (err, count) => {
@@ -333,7 +334,7 @@ User.prototype.countUsers = function (data, cb) {
  *
  * @param data
  *  should have:
- *      required (code, name, description)
+ *      required (username, firstName, lastName, email, password, status, tenant{id,code})
  *      optional (config, tId, tCode)
  *
  * @param cb
@@ -370,6 +371,81 @@ User.prototype.add = function (data, cb) {
     });
 };
 
+/**
+ * To edit a user
+ *
+ * @param data
+ *  should have:
+ *      required (username, firstName, lastName, email, password, status, tenant{id,code})
+ *      optional (config, tId, tCode)
+ *
+ * @param cb
+ */
+User.prototype.edit = function (data, cb) {
+    let __self = this;
+    if (!data || !(data.id || data.uId || data._id)) {
+        let error = new Error("User: either id or _id is required.");
+        return cb(error, null);
+    }
+
+    let doUpdate = (_id) => {
+        let condition = {
+            '_id': _id
+        };
+        let extraOptions = {
+            'upsert': false,
+            'safe': true
+        };
+        if (data.username || data.firstName || data.lastName || data.profile || data.groups || data.email || data.status) {
+            let s = {'$set': {}};
+
+            if (data.username) {
+                s['$set'].username = data.username;
+            }
+            if (data.firstName) {
+                s['$set'].firstName = data.firstName;
+            }
+            if (data.lastName) {
+                s['$set'].lastName = data.lastName;
+            }
+            if (data.email) {
+                s['$set'].email = data.email;
+            }
+            if (data.profile) {
+                s['$set'].profile = data.profile;
+            }
+            if (data.groups) {
+                s['$set'].groups = data.groups;
+            }
+            if (data.status) {
+                s['$set'].status = data.status;
+            }
+            __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
+                if (!record) {
+                    let error = new Error("User: user [" + _id.toString() + "] was not update.");
+                    return cb(error);
+                }
+                return cb(err, record);
+            });
+        }
+        else {
+            let error = new Error("User: nothing to update.");
+            return cb(error);
+        }
+    };
+    data.id = data.id || data.uId || null;
+    if (data.id) {
+        __self.validateId(data.id, (err, _id) => {
+            if (err) {
+                return cb(err, null);
+            }
+            doUpdate(_id);
+        });
+    }
+    else {
+        doUpdate(data._id);
+    }
+};
 
 User.prototype.validateId = function (id, cb) {
     let __self = this;

@@ -1,7 +1,8 @@
 'use strict';
 
 const lib = {
-    "mail": require("../../lib/mail.js")
+    "mail": require("../../lib/mail.js"),
+    "pin": require("../../lib/pin.js")
 };
 
 let bl = null;
@@ -27,7 +28,6 @@ let local = (soajs, inputmaskData, options, cb) => {
         inputmaskData.config = inputmaskData.config || {};
 
         let doAdd = (pin, pinCode) => {
-
             bl.user.add(soajs, inputmaskData, options, (error, userRecord) => {
                 if (error) {
                     //close model
@@ -42,6 +42,8 @@ let local = (soajs, inputmaskData, options, cb) => {
                     });
                 }
                 if (userRecord.status !== "pendingNew") {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
                     return cb(null, {
                         id: userRecord._id.toString()
                     });
@@ -68,35 +70,14 @@ let local = (soajs, inputmaskData, options, cb) => {
                 });
             });
         };
+
         let doPin = (mainTenant) => {
             let generatedPin = null;
             if (inputmaskData.pin) {
                 if (inputmaskData.pin.code) {
-                    let getPinCodeConfig = (soajs) => {
-                        //service Config
-                        if (soajs.servicesConfig && soajs.servicesConfig.urac && soajs.servicesConfig.urac.pinConfiguration && soajs.servicesConfig.urac.pinConfiguration.charLength && soajs.servicesConfig.pinConfiguration.pin.characters) {
-                            return soajs.servicesConfig.pinConfiguration.pin;
-                        }
-                        //custom registry
-                        else if (soajs.registry && soajs.registry.custom && soajs.registry.custom.pinConfiguration && soajs.registry.custom.pinConfiguration.value && soajs.registry.custom.pinConfiguration.value.charLength && soajs.registry.custom.pinConfiguration.value.characters) {
-                            return soajs.registry.custom.pinConfiguration.value;
-                        }
-                        //default
-                        else {
-                            return bl.localConfig.pinConfiguration;
-                        }
-                    };
-                    let makePin = (pinCode) => {
-                        let result = '';
-                        let charactersLength = pinCode.characters.length;
-                        for (let i = 0; i < pinCode.charLength; i++) {
-                            result += pinCode.characters.charAt(Math.floor(Math.random() * charactersLength));
-                        }
-                        return result;
-                    };
-                    let pinCode = getPinCodeConfig(soajs);
+                    let pinConfig = lib.pin.config(soajs,bl.localConfig);
                     try {
-                        generatedPin = makePin(pinCode);
+                        generatedPin = lib.pin.generate(pinConfig);
                         if (mainTenant) {
                             inputmaskData.tenant.pin.code = generatedPin;
                             inputmaskData.tenant.pin.allowed = !!inputmaskData.tenant.pin.allowed;
@@ -107,11 +88,12 @@ let local = (soajs, inputmaskData, options, cb) => {
                         }
                         doAdd(true, generatedPin);
                     } catch (e) {
+                        //close model
+                        bl.user.mt.closeModel(modelObj);
                         return cb(bl.user.handleError(soajs, 525, e));
                     }
                 }
             }
-
             doAdd(false, null);
         };
 

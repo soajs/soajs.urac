@@ -217,7 +217,7 @@ let bl = {
             let data = {};
             data.username = inputmaskData.email;
             data.exclude_id = userRecord._id;
-            bl.user.countUser(soajs, inputmaskData, options, (error, found) => {
+            bl.user.countUser(soajs, data, options, (error, found) => {
                 if (error) {
                     //close model
                     bl.user.mt.closeModel(modelObj);
@@ -297,7 +297,7 @@ let bl = {
             if (error) {
                 //close model
                 bl.user.mt.closeModel(modelObj);
-                return cb(error, userRecord);
+                return cb(error, null);
             }
             //No need to assure userRecord. At this point userRecord is valid and not empty
             let data = {};
@@ -350,7 +350,45 @@ let bl = {
                 });
             });
         }
+    },
+
+    "editUser": (soajs, inputmaskData, options, cb) => {
+        let modelObj = bl.user.mt.getModel(soajs);
+        options = {};
+        options.mongoCore = modelObj.mongoCore;
+
+        bl.user.getUser(soajs, inputmaskData, options, (error, userRecord) => {
+            if (error) {
+                //close model
+                bl.user.mt.closeModel(modelObj);
+                return cb(error, null);
+            }
+            let data = {};
+            data.username = inputmaskData.email;
+            data.exclude_id = userRecord._id;
+            bl.user.countUser(soajs, data, options, (error, found) => {
+                if (error) {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(error, null);
+                }
+                if (found) {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(bl.user.handleError(soajs, 526, error), null);
+                }
+                bl.user.edit(soajs, inputmaskData, options, (error) => {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    if (error) {
+                        return cb(error, null);
+                    }
+                    return cb(null, true);
+                });
+            });
+        });
     }
+
 };
 
 bl["addUser"] = require("./lib/addUser.js")(bl);

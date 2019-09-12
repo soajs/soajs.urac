@@ -100,6 +100,16 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        service.put("/account", function (req, res) {
+            bl.user.edit(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+        service.put("/admin/user", function (req, res) {
+            bl.editUser(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
         service.put("/admin/user/status", function (req, res) {
             bl.user.updateStatus(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));

@@ -219,6 +219,32 @@ let bl = {
         });
     },
 
+    "edit": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+
+        let modelObj = bl.mt.getModel(soajs, options);
+
+        let data = {};
+        data.username = inputmaskData.username;
+        data.firstName = inputmaskData.firstName;
+        data.lastName = inputmaskData.lastName;
+        data.email = inputmaskData.email;
+
+        data.profile = inputmaskData.profile;
+        data.groups = inputmaskData.groups;
+        data.status = inputmaskData.status;
+
+        modelObj.edit(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
+
     "resetPassword": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
