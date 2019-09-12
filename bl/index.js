@@ -293,6 +293,7 @@ let bl = {
         let modelObj = bl.user.mt.getModel(soajs);
         options = {};
         options.mongoCore = modelObj.mongoCore;
+        inputmaskData.status = ["active", "pendingNew", "pendingJoin"];
         bl.user.getUserByUsername(soajs, inputmaskData, options, (error, userRecord) => {
             if (error) {
                 //close model
@@ -377,6 +378,7 @@ let bl = {
                     bl.user.mt.closeModel(modelObj);
                     return cb(bl.user.handleError(soajs, 526, error), null);
                 }
+                inputmaskData._id = userRecord._id;
                 bl.user.edit(soajs, inputmaskData, options, (error) => {
                     //close model
                     bl.user.mt.closeModel(modelObj);

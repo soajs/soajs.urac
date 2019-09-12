@@ -68,6 +68,7 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
  * @param data
  *  should have:
  *      required (username)
+ *      optional (status || [status, status])
  *
  * @param cb
  */
@@ -81,9 +82,16 @@ User.prototype.getUserByUsername = function (data, cb) {
         '$or': [
             {'username': data.username},
             {'email': data.username}
-        ],
-        'status': data.status
+        ]
     };
+    if (data.status) {
+        if (Array.isArray(data.status)) {
+            condition.status = {"$in": data.status};
+        }
+        else {
+            condition.status = data.status;
+        }
+    }
     __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
         return cb(err, record);
     });
@@ -224,18 +232,18 @@ User.prototype.getUsers = function (data, cb) {
  *
  * @param data
  *  should have:
- *      optional (limit, start, uIds, config)
+ *      optional (limit, start, ids, config)
  *
  * @param cb
  */
 User.prototype.getUsersByIds = function (data, cb) {
     let __self = this;
-    if (!data || !data.uIds || !Array.isArray(data.uIds)) {
+    if (!data || !data.ids || !Array.isArray(data.ids)) {
         let error = new Error("Token: An array of ids is required.");
         return cb(error, null);
     }
     let _ids = [];
-    async.each(data.uIds, function (id, callback) {
+    async.each(data.ids, function (id, callback) {
         __self.validateId(id, function (err, _id) {
             if (err) {
                 //ignore
@@ -383,7 +391,7 @@ User.prototype.add = function (data, cb) {
  */
 User.prototype.edit = function (data, cb) {
     let __self = this;
-    if (!data || !(data.id || data.uId || data._id)) {
+    if (!data || !(data.id || data._id)) {
         let error = new Error("User: either id or _id is required.");
         return cb(error, null);
     }
@@ -433,7 +441,7 @@ User.prototype.edit = function (data, cb) {
             return cb(error);
         }
     };
-    data.id = data.id || data.uId || null;
+    data.id = data.id || null;
     if (data.id) {
         __self.validateId(data.id, (err, _id) => {
             if (err) {

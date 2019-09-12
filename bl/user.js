@@ -68,7 +68,7 @@ let bl = {
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.id = inputmaskData.uId;
-        data.status = inputmaskData.status;
+        data.status = inputmaskData.status || "active";
         modelObj.getUser(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
@@ -87,8 +87,8 @@ let bl = {
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.id = inputmaskData.username;
-        data.status = "active";
-        modelObj.getUser(data, (err, record) => {
+        data.status = inputmaskData.status || "active";
+        modelObj.getUserByUsername(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
@@ -126,7 +126,7 @@ let bl = {
         let data = {};
         data.start = inputmaskData.start;
         data.limit = inputmaskData.limit;
-        data.uIds = inputmaskData.uIds;
+        data.ids = inputmaskData.uIds;
         data.config = inputmaskData.config;
         modelObj.getUsersByIds(data, (err, records) => {
             bl.mt.closeModel(modelObj);
@@ -227,6 +227,8 @@ let bl = {
         let modelObj = bl.mt.getModel(soajs, options);
 
         let data = {};
+        data.id = inputmaskData.id;
+        data._id = inputmaskData._id;
         data.username = inputmaskData.username;
         data.firstName = inputmaskData.firstName;
         data.lastName = inputmaskData.lastName;
