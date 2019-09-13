@@ -11,7 +11,6 @@ describe("Unit test for: model - user", function () {
             "code": "TES0",
             "id": "5c0e74ba9acc3c5a84a51259"
         },
-        "config": {"serviceName": "urac"},
         "registry": {
             "tenantMetaDB": {
                 "urac": {
@@ -47,7 +46,7 @@ describe("Unit test for: model - user", function () {
     let modelObj = null;
 
     it("Constructor - with tenant - open connection", function (done) {
-        modelObj = new Model(soajs);
+        modelObj = new Model(soajs, {"serviceName": "urac"}, null);
         done();
     });
 

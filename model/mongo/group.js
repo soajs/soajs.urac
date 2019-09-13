@@ -20,8 +20,6 @@ function Group(soajs, localConfig, mongoCore) {
 
         __self.mongoCore.createIndex(colName, {'code': 1}, {unique: true}, function (err, result) {
         });
-        __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {
-        });
         soajs.log.debug("Group: Indexes for " + soajs.tenant.id + " Updated!");
     }
 }
