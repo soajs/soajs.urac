@@ -212,7 +212,7 @@ Group.prototype.delete = function (data, cb) {
             if (err) {
                 return cb(err);
             }
-            if (!record){
+            if (!record) {
                 let error = new Error("Group: cannot delete record. Not found.");
                 return cb(error, null);
             }
@@ -233,22 +233,22 @@ Group.prototype.delete = function (data, cb) {
  *
  * @param data
  *  should have:
- *      required (groups[code, code], allowedEnvironments[env, env])
+ *      required (groups[code, code], environments[env, env])
  *
  * @param cb
  */
 Group.prototype.updateEnvironments = function (data, cb) {
     let __self = this;
-    if (!data || !data.allowedEnvironments || !data.groups) {
-        let error = new Error("Group: allowedEnvironments and groups are required.");
+    if (!data || !data.environments || !data.groups) {
+        let error = new Error("Group: environments and groups are required.");
         return cb(error, null);
     }
     let s = {
         '$set': {}
     };
-    if (data.allowedEnvironments) {
-        for (let i = 0; i < data.allowedEnvironments.length; i++) {
-            let env = data.allowedEnvironments[i].toUpperCase();
+    if (data.environments) {
+        for (let i = 0; i < data.environments.length; i++) {
+            let env = data.environments[i].toUpperCase();
             s['$set']['config.allowedEnvironments.' + env] = {};
         }
     }
@@ -268,22 +268,22 @@ Group.prototype.updateEnvironments = function (data, cb) {
  *
  * @param data
  *  should have:
- *      required (groups[code, code], allowedPackages[{product: "", package: ""}])
+ *      required (groups[code, code], packages[{product: "", package: ""}])
  *
  * @param cb
  */
 Group.prototype.updatePackages = function (data, cb) {
     let __self = this;
-    if (!data || !data.allowedPackages || !data.groups) {
-        let error = new Error("Group: allowedPackages and groups are required.");
+    if (!data || !data.packages || !data.groups) {
+        let error = new Error("Group: packages and groups are required.");
         return cb(error, null);
     }
     let s = {
         '$set': {}
     };
-    if (data.allowedPackages) {
-        for (let i = 0; i < data.allowedPackages.length; i++) {
-            let prodPack = data.allowedPackages[i];
+    if (data.packages) {
+        for (let i = 0; i < data.packages.length; i++) {
+            let prodPack = data.packages[i];
             if (s['$set']['config.allowedPackages.' + prodPack.product] && Array.isArray(s['$set']['config.allowedPackages.' + prodPack.product])) {
                 s['$set']['config.allowedPackages.' + prodPack.product].push(prodPack.package);
             }
@@ -301,6 +301,102 @@ Group.prototype.updatePackages = function (data, cb) {
     __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
         return cb(err, record);
     });
+};
+
+/**
+ * To delete environment(s) from a group
+ *
+ * @param data
+ *  should have:
+ *      required (code or id, environments["", ""])
+ *
+ * @param cb
+ */
+Group.prototype.deleteEnvironments = function (data, cb) {
+    let __self = this;
+    if (!data || !(data.id || data.code) || !data.environments) {
+        let error = new Error("Group: id or code in addition to environment(s) are required.");
+        return cb(error, null);
+    }
+    let remove = (condition) => {
+        let us = {
+            '$unset': {}
+        };
+
+        for (let i = 0; i < data.environments.length; i++) {
+            let env = data.environments[i];
+            us['$unset']['config.allowedEnvironments.' + env] = 1;
+        }
+        let extraOptions = {
+            'upsert': false,
+            'safe': true,
+            'multi': true
+        };
+        __self.mongoCore.update(colName, condition, us, extraOptions, (err, record) => {
+            return cb(err, record);
+        });
+    };
+    if (data.id) {
+        __self.validateId(data.id, (err, _id) => {
+            if (err) {
+                return cb(err, null);
+            }
+            let condition = {'_id': _id};
+            remove(condition);
+        });
+    }
+    else {
+        let condition = {'code': data.code};
+        remove(condition);
+    }
+};
+
+/**
+ * To delete product(s) from a group
+ *
+ * @param data
+ *  should have:
+ *      required (code or id, package["", ""])
+ *
+ * @param cb
+ */
+Group.prototype.deleteProduct = function (data, cb) {
+    let __self = this;
+    if (!data || !(data.id || data.code) || !data.product) {
+        let error = new Error("Group: id or code in addition to product(s) are required.");
+        return cb(error, null);
+    }
+    let remove = (condition) => {
+        let us = {
+            '$unset': {}
+        };
+
+        for (let i = 0; i < data.product.length; i++) {
+            let prod = data.product[i];
+            us['$unset']['config.allowedPackages.' + prod] = 1;
+        }
+        let extraOptions = {
+            'upsert': false,
+            'safe': true,
+            'multi': true
+        };
+        __self.mongoCore.update(colName, condition, us, extraOptions, (err, record) => {
+            return cb(err, record);
+        });
+    };
+    if (data.id) {
+        __self.validateId(data.id, (err, _id) => {
+            if (err) {
+                return cb(err, null);
+            }
+            let condition = {'_id': _id};
+            remove(condition);
+
+        });
+    } else {
+        let condition = {'code': data.code};
+        remove(condition);
+    }
 };
 
 

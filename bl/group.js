@@ -123,7 +123,7 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
-        data.allowedEnvironments = inputmaskData.environments;
+        data.environments = inputmaskData.environments;
         data.groups = inputmaskData.groups;
         modelObj.updateEnvironments(data, (err, records) => {
             bl.mt.closeModel(modelObj);
@@ -140,7 +140,7 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
-        data.allowedPackages = inputmaskData.packages;
+        data.packages = inputmaskData.packages;
         data.groups = inputmaskData.groups;
         modelObj.updatePackages(data, (err, records) => {
             bl.mt.closeModel(modelObj);

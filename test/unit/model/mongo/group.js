@@ -251,7 +251,7 @@ describe("Unit test for: model - group", function () {
 
     it("updateEnvironments - with data", function (done) {
         let data = {
-            "allowedEnvironments": ["test", "stg"],
+            "environments": ["test", "stg"],
             "groups": ["CCCC", "AAAA"]
         };
         modelObj.updateEnvironments(data, (error, record) => {
@@ -270,7 +270,7 @@ describe("Unit test for: model - group", function () {
 
     it("updatePackages - with data", function (done) {
         let data = {
-            "allowedPackages": [{product: "hage", package: "antoine"},
+            "packages": [{product: "hage", package: "antoine"},
                 {product: "hage", package: "mathieu"}, {product: "soajs", package: "gateway"}],
             "groups": ["CCCC", "AAAA"]
         };
@@ -288,7 +288,7 @@ describe("Unit test for: model - group", function () {
         });
     });
 
-    it("validateId - error", function (done) {
+    it("validateId - error invalid id", function (done) {
         modelObj.validateId("121212", (error, id) => {
             assert.ok(error);
             let index = error.message.indexOf("12 bytes or a string of 24 hex characters");
