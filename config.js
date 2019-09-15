@@ -347,81 +347,6 @@ module.exports = {
                     "required": true,
                     "validation": {"type": "string"}
                 },
-                "config": {
-                    "source": ['body.config'],
-                    "required": true,
-                    "validation": {
-                        "type": "object",
-                        "properties": {
-                            "allowedPackages": {
-                                "validation": {
-                                    "type": "object",
-                                    "patternProperties": {
-                                        "^([A-Za-z0-9]+)$": { //pattern to match an api route
-                                            "type": "array",
-                                            "required": true,
-                                            "items": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false
-                                }
-                            },
-                            "allowedEnvironments": {
-                                "validation": {
-                                    "type": "object",
-                                    "patternProperties": {
-                                        "^([A-Za-z]+)$": {
-                                            "type": "object",
-                                            "validation": {
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            '/admin/groups/environments': {
-                "_apiInfo": {
-                    "l": "Add environment(s) to group(s)",
-                    "group": "Administration"
-                },
-                "environments": {
-                    "source": ['body.environments'],
-                    "required": true,
-                    "validation": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "minItems": 1,
-                            "pattern": "^([A-Za-z]+)$"
-                        }
-                    }
-                },
-                "groups": {
-                    "source": ['body.groups'],
-                    "required": true,
-                    "validation": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "minItems": 1,
-                            "format": "alphanumeric",
-                            "maxLength": 20
-                        }
-                    }
-                }
-            },
-            '/admin/groups/packages': {
-                "_apiInfo": {
-                    "l": "Add package(s) to group(s)",
-                    "group": "Administration"
-                },
                 "packages": {
                     "source": ['body.packages'],
                     "required": true,
@@ -442,16 +367,15 @@ module.exports = {
                         }
                     }
                 },
-                "groups": {
-                    "source": ['body.groups'],
+                "environments": {
+                    "source": ['body.environments'],
                     "required": true,
                     "validation": {
                         "type": "array",
                         "items": {
                             "type": "string",
                             "minItems": 1,
-                            "format": "alphanumeric",
-                            "maxLength": 20
+                            "pattern": "^([A-Za-z]+)$"
                         }
                     }
                 }
@@ -667,41 +591,106 @@ module.exports = {
                     "required": true,
                     "validation": {"type": "string"}
                 },
-                "config": {
-                    "source": ['body.config'],
+                "packages": {
+                    "source": ['body.packages'],
                     "required": true,
                     "validation": {
-                        "type": "object",
-                        "properties": {
-                            "allowedPackages": {
-                                "validation": {
-                                    "type": "object",
-                                    "patternProperties": {
-                                        "^([A-Za-z0-9]+)$": { //pattern to match an api route
-                                            "type": "array",
-                                            "required": true,
-                                            "items": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "minItems": 1,
+                            "patternProperties": {
+                                "product": {
+                                    "type": "string"
+                                },
+                                "package": {
+                                    "type": "string"
                                 }
                             },
-                            "allowedEnvironments": {
-                                "validation": {
-                                    "type": "object",
-                                    "patternProperties": {
-                                        "^([A-Za-z]+)$": {
-                                            "type": "object",
-                                            "validation": {
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "additionalProperties": false
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                "environments": {
+                    "source": ['body.environments'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "minItems": 1,
+                            "pattern": "^([A-Za-z]+)$"
+                        }
+                    }
+                }
+            },
+
+            '/admin/groups/environments': {
+                "_apiInfo": {
+                    "l": "Update environment(s) to group(s)",
+                    "group": "Administration"
+                },
+                "environments": {
+                    "source": ['body.environments'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "minItems": 1,
+                            "pattern": "^([A-Za-z]+)$"
+                        }
+                    }
+                },
+                "groups": {
+                    "source": ['body.groups'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "minItems": 1,
+                            "format": "alphanumeric",
+                            "maxLength": 20
+                        }
+                    }
+                }
+            },
+            '/admin/groups/packages': {
+                "_apiInfo": {
+                    "l": "Update package(s) to group(s)",
+                    "group": "Administration"
+                },
+                "packages": {
+                    "source": ['body.packages'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "minItems": 1,
+                            "patternProperties": {
+                                "product": {
+                                    "type": "string"
+                                },
+                                "package": {
+                                    "type": "string"
                                 }
-                            }
+                            },
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                "groups": {
+                    "source": ['body.groups'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "minItems": 1,
+                            "format": "alphanumeric",
+                            "maxLength": 20
                         }
                     }
                 }

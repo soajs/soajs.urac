@@ -66,7 +66,8 @@ let bl = {
         let data = {};
         data.name = inputmaskData.name;
         data.description = inputmaskData.description;
-        data.config = inputmaskData.config;
+        data.allowedEnvironments = inputmaskData.environments;
+        data.allowedPackages = inputmaskData.packages;
         data.code = inputmaskData.code;
         data.tId = soajs.tenant.id;
         data.tCode = soajs.tenant.code;
@@ -104,7 +105,8 @@ let bl = {
         data.id = inputmaskData.gId;
         data.name = inputmaskData.name;
         data.description = inputmaskData.description;
-        data.config = inputmaskData.config;
+        data.allowedEnvironments = inputmaskData.environments;
+        data.allowedPackages = inputmaskData.packages;
 
         modelObj.edit(data, (err, record) => {
             bl.mt.closeModel(modelObj);
@@ -115,7 +117,7 @@ let bl = {
         });
     },
 
-    "addEnvironments": (soajs, inputmaskData, options, cb) => {
+    "updateEnvironments": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
@@ -123,7 +125,7 @@ let bl = {
         let data = {};
         data.allowedEnvironments = inputmaskData.environments;
         data.groups = inputmaskData.groups;
-        modelObj.addAllowedEnvironments(data, (err, records) => {
+        modelObj.updateEnvironments(data, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
@@ -132,7 +134,7 @@ let bl = {
         });
     },
 
-    "addPackages": (soajs, inputmaskData, options, cb) => {
+    "updatePackages": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
@@ -140,7 +142,7 @@ let bl = {
         let data = {};
         data.allowedPackages = inputmaskData.packages;
         data.groups = inputmaskData.groups;
-        modelObj.addAllowedPackages(data, (err, records) => {
+        modelObj.updatePackages(data, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));

@@ -84,6 +84,8 @@ service.init(() => {
             });
         });
 
+
+
         //PUT methods
         service.put("/password/reset", function (req, res) {
             bl.resetPassword(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
@@ -120,6 +122,16 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        service.put("admin/groups/environments", function (req, res) {
+            bl.group.updateEnvironments(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+        service.put("/admin/groups/packages", function (req, res) {
+            bl.group.updatePackages(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
 
         //POST methods
         service.post("/join", function (req, res) {
@@ -134,16 +146,6 @@ service.init(() => {
         });
         service.post("/admin/group", function (req, res) {
             bl.group.add(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
-                return res.json(req.soajs.buildResponse(error, data));
-            });
-        });
-        service.post("admin/groups/environments", function (req, res) {
-            bl.group.addEnvironments(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
-                return res.json(req.soajs.buildResponse(error, data));
-            });
-        });
-        service.post("/admin/groups/packages", function (req, res) {
-            bl.group.addPackages(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });

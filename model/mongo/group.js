@@ -97,14 +97,32 @@ Group.prototype.add = function (data, cb) {
         "name": data.name,
         "description": data.description
     };
-    if (data.config) {
-        record.config = data.config;
-    }
     if (data.tId && data.tCode) {
         record.tenant = {
             "id": data.tId,
             "code": data.tCode
         };
+    }
+    record.config = {
+        "allowedEnvironments": {},
+        "allowedPackages": {}
+    };
+    if (data.allowedEnvironments) {
+        for (let i = 0; i < data.allowedEnvironments.length; i++) {
+            let env = data.allowedEnvironments[i].toUpperCase();
+            record.config.allowedEnvironments[env] = {};
+        }
+    }
+    if (data.allowedPackages) {
+        for (let i = 0; i < data.allowedPackages.length; i++) {
+            let prodPack = data.allowedPackages[i];
+            if (record.config.allowedPackages[prodPack.product] && Array.isArray(record.config.allowedPackages[prodPack.product])) {
+                record.config.allowedPackages[prodPack.product].push(prodPack.package);
+            }
+            else {
+                record.config.allowedPackages[prodPack.product] = [prodPack.package];
+            }
+        }
     }
     __self.mongoCore.insert(colName, record, (err, record) => {
         if (record && Array.isArray(record))
@@ -119,7 +137,7 @@ Group.prototype.add = function (data, cb) {
  * @param data
  *  should have:
  *      required (id, name)
- *      optional (config, description)
+ *      optional (allowedEnvironments, allowedPackages, description)
  *
  * @param cb
  */
@@ -142,8 +160,22 @@ Group.prototype.edit = function (data, cb) {
         if (data.description) {
             s['$set'].description = data.description;
         }
-        if (data.config) {
-            s['$set'].config = data.config;
+        if (data.allowedEnvironments) {
+            for (let i = 0; i < data.allowedEnvironments.length; i++) {
+                let env = data.allowedEnvironments[i].toUpperCase();
+                s['$set']['config.allowedEnvironments.' + env] = {};
+            }
+        }
+        if (data.allowedPackages) {
+            for (let i = 0; i < data.allowedPackages.length; i++) {
+                let prodPack = data.allowedPackages[i];
+                if (s['$set']['config.allowedPackages.' + prodPack.product] && Array.isArray(s['$set']['config.allowedPackages.' + prodPack.product])) {
+                    s['$set']['config.allowedPackages.' + prodPack.product].push(prodPack.package);
+                }
+                else {
+                    s['$set']['config.allowedPackages.' + prodPack.product] = [prodPack.package];
+                }
+            }
         }
         let condition = {'_id': _id};
         let extraOptions = {
@@ -180,6 +212,10 @@ Group.prototype.delete = function (data, cb) {
             if (err) {
                 return cb(err);
             }
+            if (!record){
+                let error = new Error("Group: cannot delete record. Not found.");
+                return cb(error, null);
+            }
             if (record.locked) {
                 //return error msg that this record is locked
                 let error = new Error("Group: cannot delete a locked record.");
@@ -201,7 +237,7 @@ Group.prototype.delete = function (data, cb) {
  *
  * @param cb
  */
-Group.prototype.addAllowedEnvironments = function (data, cb) {
+Group.prototype.updateEnvironments = function (data, cb) {
     let __self = this;
     if (!data || !data.allowedEnvironments || !data.groups) {
         let error = new Error("Group: allowedEnvironments and groups are required.");
@@ -219,7 +255,8 @@ Group.prototype.addAllowedEnvironments = function (data, cb) {
     let condition = {'code': {'$in': data.groups}};
     let extraOptions = {
         'upsert': false,
-        'safe': true
+        'safe': true,
+        'multi': true
     };
     __self.mongoCore.update(colName, condition, s, extraOptions, (err, records) => {
         return cb(err, records);
@@ -235,7 +272,7 @@ Group.prototype.addAllowedEnvironments = function (data, cb) {
  *
  * @param cb
  */
-Group.prototype.addAllowedPackages = function (data, cb) {
+Group.prototype.updatePackages = function (data, cb) {
     let __self = this;
     if (!data || !data.allowedPackages || !data.groups) {
         let error = new Error("Group: allowedPackages and groups are required.");
@@ -247,13 +284,19 @@ Group.prototype.addAllowedPackages = function (data, cb) {
     if (data.allowedPackages) {
         for (let i = 0; i < data.allowedPackages.length; i++) {
             let prodPack = data.allowedPackages[i];
-            s['$set']['config.allowedPackages.' + prodPack.product] = [prodPack.package];
+            if (s['$set']['config.allowedPackages.' + prodPack.product] && Array.isArray(s['$set']['config.allowedPackages.' + prodPack.product])) {
+                s['$set']['config.allowedPackages.' + prodPack.product].push(prodPack.package);
+            }
+            else {
+                s['$set']['config.allowedPackages.' + prodPack.product] = [prodPack.package];
+            }
         }
     }
     let condition = {'code': {'$in': data.groups}};
     let extraOptions = {
         'upsert': false,
-        'safe': true
+        'safe': true,
+        'multi': true
     };
     __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
         return cb(err, record);
