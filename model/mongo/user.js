@@ -103,6 +103,7 @@ User.prototype.getUserByUsername = function (data, cb) {
  * @param data
  *  should have:
  *      required (id)
+ *      optional (status, keep{pwd:1})
  *
  * @param cb
  */
