@@ -393,6 +393,6 @@ let bl = {
 };
 
 bl["addUser"] = require("./lib/addUser.js")(bl);
-bl["join"] = require("./lib/addUser.js")(bl);
+bl["join"] = require("./lib/join.js")(bl);
 
 module.exports = bl;
