@@ -167,17 +167,61 @@ describe("Unit test for: model - user", function () {
         });
     });
 
+    it("checkUsername - error", function (done) {
+        modelObj.checkUsername(null, (error) => {
+            assert.ok(error);
+            done();
+        });
+    });
+
+    it("checkUsername - with username", function (done) {
+        let data = {
+            "username": "tony"
+        };
+
+        modelObj.checkUsername(data, (error, count) => {
+            assert.ok(count);
+            assert.equal(count, 1);
+            done();
+        });
+    });
+
+    it("checkUsername - with username and exclude_id", function (done) {
+        modelObj.validateId("5d7fee0876186d9ab9b36492", (error, _id) => {
+            let data = {
+                "username": "tony",
+                "exclude_id": _id
+            };
+            modelObj.checkUsername(data, (error, count) => {
+                assert.equal(count, 0);
+                done();
+            });
+        });
+    });
+
+    it("countUsers - with keywords", function (done) {
+        let data = {
+            "keywords": "ony"
+        };
+
+        modelObj.countUsers(data, (error, count) => {
+            assert.ok(count);
+            assert.equal(count, 1);
+            done();
+        });
+    });
+
 
 
     it("validateId - error", function (done) {
-        modelObj.validateId(null, (error, id) => {
+        modelObj.validateId(null, (error) => {
             assert.ok(error);
             done();
         });
     });
 
     it("validateId - error invalid id", function (done) {
-        modelObj.validateId("121212", (error, id) => {
+        modelObj.validateId("121212", (error,) => {
             assert.ok(error);
             let index = error.message.indexOf("12 bytes or a string of 24 hex characters");
             assert.ok(index > 0);
@@ -186,8 +230,8 @@ describe("Unit test for: model - user", function () {
     });
 
     it("validateId - with id", function (done) {
-        modelObj.validateId("5cfb05c22ac09278709d0141", (error, id) => {
-            assert.ok(id);
+        modelObj.validateId("5cfb05c22ac09278709d0141", (error, _id) => {
+            assert.ok(_id);
             done();
         });
     });
