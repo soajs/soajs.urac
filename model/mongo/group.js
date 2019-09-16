@@ -27,6 +27,8 @@ function Group(soajs, localConfig, mongoCore) {
 /**
  * To get all group(s)
  *
+ * @param data
+ *
  * @param cb
  */
 Group.prototype.getGroups = function (data, cb) {
@@ -107,15 +109,15 @@ Group.prototype.add = function (data, cb) {
         "allowedEnvironments": {},
         "allowedPackages": {}
     };
-    if (data.allowedEnvironments) {
-        for (let i = 0; i < data.allowedEnvironments.length; i++) {
-            let env = data.allowedEnvironments[i].toUpperCase();
+    if (data.environments) {
+        for (let i = 0; i < data.environments.length; i++) {
+            let env = data.environments[i].toUpperCase();
             record.config.allowedEnvironments[env] = {};
         }
     }
-    if (data.allowedPackages) {
-        for (let i = 0; i < data.allowedPackages.length; i++) {
-            let prodPack = data.allowedPackages[i];
+    if (data.packages) {
+        for (let i = 0; i < data.packages.length; i++) {
+            let prodPack = data.packages[i];
             if (record.config.allowedPackages[prodPack.product] && Array.isArray(record.config.allowedPackages[prodPack.product])) {
                 record.config.allowedPackages[prodPack.product].push(prodPack.package);
             }
@@ -160,15 +162,15 @@ Group.prototype.edit = function (data, cb) {
         if (data.description) {
             s['$set'].description = data.description;
         }
-        if (data.allowedEnvironments) {
-            for (let i = 0; i < data.allowedEnvironments.length; i++) {
-                let env = data.allowedEnvironments[i].toUpperCase();
+        if (data.environments) {
+            for (let i = 0; i < data.environments.length; i++) {
+                let env = data.environments[i].toUpperCase();
                 s['$set']['config.allowedEnvironments.' + env] = {};
             }
         }
-        if (data.allowedPackages) {
-            for (let i = 0; i < data.allowedPackages.length; i++) {
-                let prodPack = data.allowedPackages[i];
+        if (data.packages) {
+            for (let i = 0; i < data.packages.length; i++) {
+                let prodPack = data.packages[i];
                 if (s['$set']['config.allowedPackages.' + prodPack.product] && Array.isArray(s['$set']['config.allowedPackages.' + prodPack.product])) {
                     s['$set']['config.allowedPackages.' + prodPack.product].push(prodPack.package);
                 }
@@ -239,7 +241,7 @@ Group.prototype.delete = function (data, cb) {
  */
 Group.prototype.updateEnvironments = function (data, cb) {
     let __self = this;
-    if (!data || !data.environments || !data.groups) {
+    if (!data || !(data.environments || Array.isArray(data.environments)) || !data.groups) {
         let error = new Error("Group: environments and groups are required.");
         return cb(error, null);
     }
@@ -274,7 +276,7 @@ Group.prototype.updateEnvironments = function (data, cb) {
  */
 Group.prototype.updatePackages = function (data, cb) {
     let __self = this;
-    if (!data || !data.packages || !data.groups) {
+    if (!data || !(data.packages || Array.isArray(data.packages)) || !data.groups) {
         let error = new Error("Group: packages and groups are required.");
         return cb(error, null);
     }
@@ -314,7 +316,7 @@ Group.prototype.updatePackages = function (data, cb) {
  */
 Group.prototype.deleteEnvironments = function (data, cb) {
     let __self = this;
-    if (!data || !(data.id || data.code) || !data.environments) {
+    if (!data || !(data.id || data.code) || !(data.environments || Array.isArray(data.environments))) {
         let error = new Error("Group: id or code in addition to environment(s) are required.");
         return cb(error, null);
     }
@@ -356,14 +358,14 @@ Group.prototype.deleteEnvironments = function (data, cb) {
  *
  * @param data
  *  should have:
- *      required (code or id, package["", ""])
+ *      required (code or id, products["", ""])
  *
  * @param cb
  */
-Group.prototype.deleteProduct = function (data, cb) {
+Group.prototype.deleteProducts = function (data, cb) {
     let __self = this;
-    if (!data || !(data.id || data.code) || !data.product) {
-        let error = new Error("Group: id or code in addition to product(s) are required.");
+    if (!data || !(data.id || data.code) || !(data.products || Array.isArray(data.products))) {
+        let error = new Error("Group: id or code in addition to products are required.");
         return cb(error, null);
     }
     let remove = (condition) => {
@@ -371,8 +373,8 @@ Group.prototype.deleteProduct = function (data, cb) {
             '$unset': {}
         };
 
-        for (let i = 0; i < data.product.length; i++) {
-            let prod = data.product[i];
+        for (let i = 0; i < data.products.length; i++) {
+            let prod = data.products[i];
             us['$unset']['config.allowedPackages.' + prod] = 1;
         }
         let extraOptions = {

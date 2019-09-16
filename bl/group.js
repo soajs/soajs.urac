@@ -66,8 +66,8 @@ let bl = {
         let data = {};
         data.name = inputmaskData.name;
         data.description = inputmaskData.description;
-        data.allowedEnvironments = inputmaskData.environments;
-        data.allowedPackages = inputmaskData.packages;
+        data.environments = inputmaskData.environments;
+        data.packages = inputmaskData.packages;
         data.code = inputmaskData.code;
         data.tId = soajs.tenant.id;
         data.tCode = soajs.tenant.code;
@@ -105,8 +105,8 @@ let bl = {
         data.id = inputmaskData.gId;
         data.name = inputmaskData.name;
         data.description = inputmaskData.description;
-        data.allowedEnvironments = inputmaskData.environments;
-        data.allowedPackages = inputmaskData.packages;
+        data.environments = inputmaskData.environments;
+        data.packages = inputmaskData.packages;
 
         modelObj.edit(data, (err, record) => {
             bl.mt.closeModel(modelObj);

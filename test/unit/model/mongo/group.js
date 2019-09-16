@@ -65,8 +65,8 @@ describe("Unit test for: model - group", function () {
             "code": "AAAA",
             "name": "Unit test",
             "description": "Added by unit test.",
-            "allowedEnvironments": ["dev", "prod"],
-            "allowedPackages": [{product: "DSBRD", package: "DSBRD_DEVOP"},
+            "environments": ["dev", "prod"],
+            "packages": [{product: "DSBRD", package: "DSBRD_DEVOP"},
                 {product: "DSBRD", package: "DSBRD_CATAL"}, {product: "RERES", package: "WAITER"}],
             "tId": "5c0e74ba9acc3c5a84a51259",
             "tCode": "TES0"
@@ -166,8 +166,8 @@ describe("Unit test for: model - group", function () {
             "id": AAAA_group_id,
             "name": "test case",
             "description": "modified by unit test",
-            "allowedEnvironments": ["test", "stg"],
-            "allowedPackages": [{product: "hage", package: "spiro"},
+            "environments": ["test", "stg"],
+            "packages": [{product: "hage", package: "spiro"},
                 {product: "hage", package: "farid"}, {product: "soajs", package: "console"}]
         };
         modelObj.edit(data, (error, record) => {
@@ -182,8 +182,8 @@ describe("Unit test for: model - group", function () {
             "id": "121212",
             "name": "test case",
             "description": "modified by unit test",
-            "allowedEnvironments": ["test", "stg"],
-            "allowedPackages": [{product: "hage", package: "spiro"},
+            "environments": ["test", "stg"],
+            "packages": [{product: "hage", package: "spiro"},
                 {product: "hage", package: "farid"}, {product: "soajs", package: "console"}]
         };
         modelObj.edit(data, (error, record) => {
