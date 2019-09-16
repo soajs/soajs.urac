@@ -59,7 +59,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it("Get UserByUsername - with username", function (done) {
+    it("getUserByUsername- with username", function (done) {
         let data = {
             "username": "tony"
         };
@@ -71,7 +71,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it("Get UserByUsername - with email", function (done) {
+    it("getUserByUsername - with email", function (done) {
         let data = {
             "username": "tony@localhost.com"
         };
@@ -83,7 +83,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it("Get UserByUsername - with email and status", function (done) {
+    it("getUserByUsername - with email and status", function (done) {
         let data = {
             "username": "tony@localhost.com",
             "status": "active"
@@ -96,7 +96,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it("Get UserByUsername - with email and status as array", function (done) {
+    it("getUserByUsername - with email and status as array", function (done) {
         let data = {
             "username": "tony@localhost.com",
             "status": ["active", "pendingNew"]
@@ -109,14 +109,14 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it("Get user - error", function (done) {
+    it("getUser - error", function (done) {
         modelObj.getUser(null, (error) => {
             assert.ok(error);
             done();
         });
     });
 
-    it("Get user - with id", function (done) {
+    it("getUser - with id", function (done) {
         let data = {
             "id": "5d7fee0876186d9ab9b36492"
         };
@@ -128,7 +128,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it("Get user - with id and status", function (done) {
+    it("getUser - with id and status", function (done) {
         let data = {
             "id": "5d7fee0876186d9ab9b36492",
             "status": "active"
@@ -141,7 +141,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it("Get user - with id and status as well as keeping password", function (done) {
+    it("getUser - with id and status as well as keeping password", function (done) {
         let data = {
             "id": "5d7fee0876186d9ab9b36492",
             "status": "active",
@@ -156,13 +156,61 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it("Get user - with invalid id", function (done) {
+    it("getUser - with invalid id", function (done) {
         let data = {
             "id": "1212121"
         };
 
         modelObj.getUser(data, (error) => {
             assert.ok(error);
+            done();
+        });
+    });
+
+    it("getUsers - with keywords", function (done) {
+        let data = {
+            "keywords": "ony",
+            "limit": 10,
+            "start": 0,
+            "config": true
+        };
+
+        modelObj.getUsers(data, (error, records) => {
+            assert.ok(records);
+            done();
+        });
+    });
+
+    it("getUsersByIds - error", function (done) {
+        modelObj.getUsersByIds(null, (error) => {
+            assert.ok(error);
+            done();
+        });
+    });
+
+    it("getUsersByIds - invalid ids", function (done) {
+        let data = {
+            "ids": ["12121212"],
+            "limit": 10,
+            "start": 0,
+            "config": true
+        };
+        modelObj.getUsersByIds(data, (error, records) => {
+            assert.equal(records.length, 0);
+            done();
+        });
+    });
+
+    it("getUsersByIds", function (done) {
+        let data = {
+            "ids": ["5d7fee0876186d9ab9b36492"],
+            "limit": 10,
+            "start": 0,
+            "config": true
+        };
+
+        modelObj.getUsersByIds(data, (error, records) => {
+            assert.ok(records);
             done();
         });
     });
