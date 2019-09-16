@@ -86,7 +86,7 @@ describe("Unit test for: model - group", function () {
             "tId": "5c0e74ba9acc3c5a84a51259",
             "tCode": "TES0"
         };
-        modelObj.add(data, (error, record) => {
+        modelObj.add(data, (error) => {
             assert.ok(error);
             let index = error.message.indexOf("duplicate key");
             assert.ok(index > 0);
@@ -103,7 +103,7 @@ describe("Unit test for: model - group", function () {
     });
 
     it("Get group - error", function (done) {
-        modelObj.getGroup(null, (error, records) => {
+        modelObj.getGroup(null, (error) => {
             assert.ok(error);
             done();
         });
@@ -138,14 +138,14 @@ describe("Unit test for: model - group", function () {
             "id": "121212121"
         };
 
-        modelObj.getGroup(data, (error, record) => {
+        modelObj.getGroup(data, (error) => {
             assert.ok(error);
             done();
         });
     });
 
     it("Edit group - error", function (done) {
-        modelObj.edit(null, (error, record) => {
+        modelObj.edit(null, (error) => {
             assert.ok(error);
             done();
         });
@@ -186,14 +186,14 @@ describe("Unit test for: model - group", function () {
             "packages": [{product: "hage", package: "spiro"},
                 {product: "hage", package: "farid"}, {product: "soajs", package: "console"}]
         };
-        modelObj.edit(data, (error, record) => {
+        modelObj.edit(data, (error) => {
             assert.ok(error);
             done();
         });
     });
 
     it("Delete group - error", function (done) {
-        modelObj.delete(null, (error, record) => {
+        modelObj.delete(null, (error) => {
             assert.ok(error);
             done();
         });
@@ -214,7 +214,7 @@ describe("Unit test for: model - group", function () {
         let data = {
             "id": "12121212"
         };
-        modelObj.delete(data, (error, record) => {
+        modelObj.delete(data, (error) => {
             assert.ok(error);
             done();
         });
@@ -224,7 +224,7 @@ describe("Unit test for: model - group", function () {
         let data = {
             "id": "5d7e702727ef1b3178f5077e"
         };
-        modelObj.delete(data, (error, record) => {
+        modelObj.delete(data, (error) => {
             assert.ok(error);
             done();
         });
@@ -234,7 +234,7 @@ describe("Unit test for: model - group", function () {
         let data = {
             "id": "5d7e5d9127ef1b3178f5077d"
         };
-        modelObj.delete(data, (error, record) => {
+        modelObj.delete(data, (error) => {
             assert.ok(error);
             let index = error.message.indexOf("locked");
             assert.ok(index > 0);
@@ -243,7 +243,7 @@ describe("Unit test for: model - group", function () {
     });
 
     it("updateEnvironments - error", function (done) {
-        modelObj.updateEnvironments(null, (error, record) => {
+        modelObj.updateEnvironments(null, (error) => {
             assert.ok(error);
             done();
         });
@@ -262,7 +262,7 @@ describe("Unit test for: model - group", function () {
     });
 
     it("updatePackages - error", function (done) {
-        modelObj.updatePackages(null, (error, record) => {
+        modelObj.updatePackages(null, (error) => {
             assert.ok(error);
             done();
         });
@@ -282,14 +282,14 @@ describe("Unit test for: model - group", function () {
     });
 
     it("validateId - error", function (done) {
-        modelObj.validateId(null, (error, id) => {
+        modelObj.validateId(null, (error) => {
             assert.ok(error);
             done();
         });
     });
 
     it("validateId - error invalid id", function (done) {
-        modelObj.validateId("121212", (error, id) => {
+        modelObj.validateId("121212", (error) => {
             assert.ok(error);
             let index = error.message.indexOf("12 bytes or a string of 24 hex characters");
             assert.ok(index > 0);

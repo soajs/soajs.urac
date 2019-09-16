@@ -23,12 +23,49 @@ function User(soajs, localConfig, mongoCore) {
     if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
         indexing[soajs.tenant.id] = true;
 
-        __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1}, {}, function (err, result) {
-        });
         __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {
         });
-        __self.mongoCore.createIndex(colName, {'username': 1, 'tenant.id': 1}, {}, function (err, result) {
+        __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1, 'status': 1}, {}, function (err, result) {
         });
+        __self.mongoCore.createIndex(colName, {'_id': 1, 'status': 1}, {}, function (err, result) {
+        });
+        __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1, 'firstName': 1, 'lastName': 1}, {}, function (err, result) {
+        });
+
+        //the following are set @ urac.driver
+        __self.mongoCore.createIndex(colName, {"username": 1}, {unique: true}, function () {
+        });
+        __self.mongoCore.createIndex(colName, {"email": 1}, {unique: true}, function () {
+        });
+        __self.mongoCore.createIndex(colName,
+            {
+                "config.allowedTenants.tenant.pin.code": 1,
+                "config.allowedTenants.tenant.id": 1
+            },
+            {
+                unique: true,
+                partialFilterExpression: {
+                    "config.allowedTenants.tenant.pin.code": {
+                        "$exists": true
+                    }
+                }
+            }
+        );
+        __self.mongoCore.createIndex(colName,
+            {
+                "tenant.pin.code": 1,
+                "tenant.id": 1
+            },
+            {
+                unique: true,
+                partialFilterExpression: {
+                    "tenant.pin.code": {
+                        "$exists": true
+                    }
+                }
+            }
+        );
+
         soajs.log.debug("User: Indexes for " + soajs.tenant.id + " Updated!");
     }
 }

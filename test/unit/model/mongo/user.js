@@ -259,6 +259,59 @@ describe("Unit test for: model - user", function () {
         });
     });
 
+    it("add - error", function (done) {
+        modelObj.add(null, (error) => {
+            assert.ok(error);
+            done();
+        });
+    });
+
+    it("add", function (done) {
+        let data = {
+            "username": "test",
+            "firstName": "unit",
+            "lastName": "test",
+            "email": "test@soajs.org",
+
+            "password": "password",
+            "status": "active",
+
+            "tenant": {
+                "code": "TES0",
+                "id": "5c0e74ba9acc3c5a84a51259"
+            }
+        };
+        modelObj.add(data, (error, record) => {
+            assert.ok(record);
+            assert.ok(record._id);
+            done();
+        });
+    });
+
+    it("add - error duplicate", function (done) {
+        let data = {
+            "username": "test",
+            "firstName": "unit",
+            "lastName": "test",
+            "email": "test@soajs.org",
+
+            "password": "password",
+            "status": "active",
+
+            "tenant": {
+                "code": "TES0",
+                "id": "5c0e74ba9acc3c5a84a51259"
+            }
+        };
+        modelObj.add(data, (error, record) => {
+            assert.ok(error);
+            let index = error.message.indexOf("duplicate key");
+            assert.ok(index > 0);
+            done();
+        });
+    });
+
+
 
 
     it("validateId - error", function (done) {
