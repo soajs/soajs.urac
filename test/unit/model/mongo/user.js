@@ -52,6 +52,63 @@ describe("Unit test for: model - user", function () {
         done();
     });
 
+    it("Get user - error", function (done) {
+        modelObj.getUserByUsername(null, (error) => {
+            assert.ok(error);
+            done();
+        });
+    });
+
+    it("Get user - with username", function (done) {
+        let data = {
+            "username": "tony"
+        };
+
+        modelObj.getUserByUsername(data, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.username, "tony");
+            done();
+        });
+    });
+
+    it("Get user - with email", function (done) {
+        let data = {
+            "username": "tony@localhost.com"
+        };
+
+        modelObj.getUserByUsername(data, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.username, "tony");
+            done();
+        });
+    });
+
+    it("Get user - with email and status", function (done) {
+        let data = {
+            "username": "tony@localhost.com",
+            "status": "active"
+        };
+
+        modelObj.getUserByUsername(data, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.username, "tony");
+            done();
+        });
+    });
+
+
+    it("Get user - with email and status as array", function (done) {
+        let data = {
+            "username": "tony@localhost.com",
+            "status": ["active", "pendingNew"]
+        };
+
+        modelObj.getUserByUsername(data, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.username, "tony");
+            done();
+        });
+    });
 
     it("validateId - error", function (done) {
         modelObj.validateId(null, (error, id) => {
