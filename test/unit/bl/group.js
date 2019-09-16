@@ -49,43 +49,90 @@ describe("Unit test for: BL - group", () => {
     };
 
     before((done) => {
-        BL.model = helper.requireModule("model/mongo/group.js");
+
         BL.localConfig = helper.requireModule("config.js");
+
         done();
     });
 
     it("Get groups", function (done) {
+        function MODEL() {
+            console.log("group model");
+        }
+
+        MODEL.prototype.closeConnection = () => {
+        };
+        MODEL.prototype.getGroups = (data, cb) => {
+            if (data && data.error) {
+                let error = new Error("Group: getGroups - mongo error.");
+                return cb(error, null);
+            }
+            else {
+                return cb(null, []);
+            }
+        };
+        BL.model = MODEL;
+
         BL.getGroups(soajs, null, null, (error, records) => {
             assert.ok(records);
             assert.ok(Array.isArray(records));
-            done();
+
+            BL.getGroups(soajs, {"error": 1}, null, (error) => {
+                assert.ok(error);
+                done();
+            });
+
         });
     });
-    it("Get group - error", function (done) {
+    it("Get group ", function (done) {
+        function MODEL() {
+            console.log("group model");
+        }
+
+        MODEL.prototype.closeConnection = () => {
+        };
+        MODEL.prototype.getGroup = (data, cb) => {
+            if (data && data.code === "CCCC") {
+                return cb(null, null);
+            }
+            else if (data && data.code === "AAAA") {
+                let error = new Error("Group: getGroup - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, {"code": "BBBB"});
+            }
+        };
+        BL.model = MODEL;
+
         BL.getGroup(soajs, null, null, (error) => {
             assert.ok(error);
-            done();
+
+            let data = {
+                "id": "5cfb05c22ac09278709d0141",
+                "code": "BBBB"
+            };
+            BL.getGroup(soajs, data, null, (error, record) => {
+                assert.ok(record);
+                assert.equal(record.code, 'BBBB');
+
+                let data = {
+                    "code": "CCCC"
+                };
+                BL.getGroup(soajs, data, null, (error) => {
+                    assert.ok(error);
+
+                    let data = {
+                        "code": "AAAA"
+                    };
+                    BL.getGroup(soajs, data, null, (error) => {
+                        assert.ok(error);
+                        done();
+                    });
+                });
+            });
+
         });
     });
-    it("Get group - success", function (done) {
-        let data = {
-            "id": "5cfb05c22ac09278709d0141",
-            "code": "BBBB"
-        };
-        BL.getGroup(soajs, data, null, (error, record) => {
-            assert.ok(record);
-            assert.equal(record.code, 'BBBB');
-            done();
-        });
-    });
-    it("Get group - success - not found", function (done) {
-        let data = {
-            "code": "CCCC"
-        };
-        BL.getGroup(soajs, data, null, (error) => {
-            assert.ok(error);
-            done();
-        });
-    });
+
 
 });
