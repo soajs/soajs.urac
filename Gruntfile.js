@@ -89,14 +89,14 @@ module.exports = function (grunt) {
 		env: {
 			mochaTest: {
 				APP_DIR_FOR_CODE_COVERAGE: '../',
-				SOAJS_ENV: 'dev',
+				SOAJS_ENV: 'dashboard',
 				SOAJS_SRVIP: '127.0.0.1',
                 SOAJS_TEST: true,
                 SOAJS_SRVPORT: 4001
 			},
 			coverage: {
 				APP_DIR_FOR_CODE_COVERAGE: '../test/coverage/instrument/',
-				SOAJS_ENV: 'dev',
+				SOAJS_ENV: 'dashboard',
 				SOAJS_SRVIP: '127.0.0.1',
 				SOAJS_TEST: true,
 				SOAJS_SRVPORT: 4001

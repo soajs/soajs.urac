@@ -138,7 +138,7 @@ describe("Unit test for: BL - group", () => {
             };
             BL.add(soajs, data, null, (error, record) => {
                 assert.ok(record);
-                assert.equal(record.code, data.code);
+                assert.equal(record.code, "BBBB");
                 assert.equal(record.tId, soajs.tenant.id);
                 let data = {
                     "code": "AAAA"
