@@ -207,10 +207,10 @@ User.prototype.getUsers = function (data, cb) {
     if (data && data.keywords) {
         let rePattern = new RegExp(data.keywords, 'i');
         condition['$or'] = [
-            {"username": rePattern},
-            {"email": rePattern},
-            {"firstName": rePattern},
-            {"lastName": rePattern}
+            {"username": {"$regex": rePattern}},
+            {"email": {"$regex": rePattern}},
+            {"firstName": {"$regex": rePattern}},
+            {"lastName": {"$regex": rePattern}},
         ];
     }
     let fields = {
