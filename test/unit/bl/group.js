@@ -1,17 +1,20 @@
 "use strict";
+
 const coreModules = require("soajs.core.modules");
 const core = coreModules.core;
-const helper = require("../../../helper.js");
-const Model = helper.requireModule('./model/mongo/user.js');
+const helper = require("../../helper.js");
+const BL = helper.requireModule('bl/group.js');
 const assert = require('assert');
 
-describe("Unit test for: model - user", function () {
+
+describe("Unit test for: BL - group", () => {
     let soajs = {
         "meta": core.meta,
         "tenant": {
-            "code": "TES0",
-            "id": "5c0e74ba9acc3c5a84a51259"
+            id: "5c0e74ba9acc3c5a84a51251",
+            code: "TES1"
         },
+        "config": {"serviceName": "urac"},
         "registry": {
             "tenantMetaDB": {
                 "urac": {
@@ -44,40 +47,45 @@ describe("Unit test for: model - user", function () {
             }
         }
     };
-    let modelObj = null;
 
-    it("Constructor - with tenant - open connection", function (done) {
-        let localConfig = helper.requireModule("config.js");
-        modelObj = new Model(soajs, localConfig, null);
+    before((done) => {
+        BL.model = helper.requireModule("model/mongo/group.js");
+        BL.localConfig = helper.requireModule("config.js");
         done();
     });
 
-
-    it("validateId - error", function (done) {
-        modelObj.validateId(null, (error, id) => {
+    it("Get groups", function (done) {
+        BL.getGroups(soajs, null, null, (error, records) => {
+            assert.ok(records);
+            assert.ok(Array.isArray(records));
+            done();
+        });
+    });
+    it("Get group - error", function (done) {
+        BL.getGroup(soajs, null, null, (error) => {
+            assert.ok(error);
+            done();
+        });
+    });
+    it("Get group - success", function (done) {
+        let data = {
+            "id": "5cfb05c22ac09278709d0141",
+            "code": "BBBB"
+        };
+        BL.getGroup(soajs, data, null, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.code, 'BBBB');
+            done();
+        });
+    });
+    it("Get group - success - not found", function (done) {
+        let data = {
+            "code": "CCCC"
+        };
+        BL.getGroup(soajs, data, null, (error) => {
             assert.ok(error);
             done();
         });
     });
 
-    it("validateId - error invalid id", function (done) {
-        modelObj.validateId("121212", (error, id) => {
-            assert.ok(error);
-            let index = error.message.indexOf("12 bytes or a string of 24 hex characters");
-            assert.ok(index > 0);
-            done();
-        });
-    });
-
-    it("validateId - with id", function (done) {
-        modelObj.validateId("5cfb05c22ac09278709d0141", (error, id) => {
-            assert.ok(id);
-            done();
-        });
-    });
-
-    it("Constructor - with tenant - close connection", function (done) {
-        modelObj.closeConnection();
-        done();
-    });
 });

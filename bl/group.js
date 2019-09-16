@@ -2,7 +2,6 @@
 
 let bl = {
     "model": null,
-    "soajs_service": null,
     "localConfig": null,
 
     "handleError": (soajs, errCode, err) => {

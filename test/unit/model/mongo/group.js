@@ -50,7 +50,8 @@ describe("Unit test for: model - group", function () {
     let AAAA_group_id = null;
 
     it("Constructor - with tenant - open connection", function (done) {
-        modelObj = new Model(soajs, {"serviceName": "urac"}, null);
+        let localConfig = helper.requireModule("config.js");
+        modelObj = new Model(soajs, localConfig, null);
         done();
     });
 

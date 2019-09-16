@@ -24,7 +24,6 @@ function init(service, localConfig, cb) {
         if (SSOT[`${blName}Model`]) {
             let temp = require(`./${blName}.js`);
             temp.model = SSOT[`${blName}Model`];
-            temp.soajs_service = service;
             temp.localConfig = localConfig;
             bl[blName] = temp;
             return cb(null);
