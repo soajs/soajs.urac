@@ -85,7 +85,7 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
-        data.id = inputmaskData.gId;
+        data.id = inputmaskData.id;
         modelObj.delete(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
@@ -101,7 +101,7 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
-        data.id = inputmaskData.gId;
+        data.id = inputmaskData.id;
         data.name = inputmaskData.name;
         data.description = inputmaskData.description;
         data.environments = inputmaskData.environments;

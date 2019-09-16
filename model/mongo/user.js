@@ -384,8 +384,8 @@ User.prototype.add = function (data, cb) {
  *
  * @param data
  *  should have:
- *      required (username, firstName, lastName, email, password, status, tenant{id,code})
- *      optional (config, tId, tCode)
+ *      required (id, _id)
+ *      optional one of those (username, firstName, lastName, email, profile, groups, status)
  *
  * @param cb
  */

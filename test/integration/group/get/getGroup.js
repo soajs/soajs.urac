@@ -14,9 +14,20 @@ describe("Testing get group API", () => {
         done();
     });
 
-    it("Success - will return group record", (done) => {
+    it("Success - by id will return group record", (done) => {
         let params = {
             "qs": {"id": "5c8d0c505653de3985aa0ffe"}
+        };
+        requester('/admin/group', 'get', params, (error, body) => {
+            console.log(error);
+            console.log(body);
+            done();
+        });
+    });
+
+    it("Success - by code will return group record", (done) => {
+        let params = {
+            "qs": {"code": "owner"}
         };
         requester('/admin/group', 'get', params, (error, body) => {
             console.log(error);

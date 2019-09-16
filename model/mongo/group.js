@@ -44,8 +44,7 @@ Group.prototype.getGroups = function (data, cb) {
  *
  * @param data
  *  should have:
- *      required (id)
- *      optional (code)
+ *      required (id or code)
  *
  * @param cb
  */

@@ -190,12 +190,17 @@ module.exports = {
             },
             '/admin/group': {
                 "_apiInfo": {
-                    "l": "Get group by id",
+                    "l": "Get group by id or code",
                     "group": "Group administration"
                 },
                 "id": {
                     "source": ['query.id'],
-                    "required": true,
+                    "required": false,
+                    "validation": {"type": "string"}
+                },
+                "code": {
+                    "source": ['query.code'],
+                    "required": false,
                     "validation": {"type": "string"}
                 }
             },
@@ -387,8 +392,8 @@ module.exports = {
                     "l": "Delete Group",
                     "group": "Administration"
                 },
-                "gId": {
-                    "source": ['query.gId'],
+                "id": {
+                    "source": ['query.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 }
@@ -576,8 +581,8 @@ module.exports = {
                     "l": "Edit Group",
                     "group": "Administration"
                 },
-                "gId": {
-                    "source": ['query.gId'],
+                "id": {
+                    "source": ['query.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 },
