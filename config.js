@@ -131,8 +131,8 @@ module.exports = {
                     "l": "Get user record by id",
                     "group": "Administration"
                 },
-                "uId": {
-                    "source": ['query.uId'],
+                "id": {
+                    "source": ['query.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 }
@@ -150,15 +150,15 @@ module.exports = {
                     "validation": {"type": "boolean"}
                 }
             },
-            '/admin/users/uIds': {
+            '/admin/users/ids': {
                 "_apiInfo": {
                     "l": "List users by Id",
                     "group": "Administration",
                     "groupMain": true
                 },
                 "commonFields": ["start", "limit"],
-                "uIds": {
-                    "source": ['query.uIds'],
+                "ids": {
+                    "source": ['query.ids'],
                     "required": true,
                     "validation": {
                         "type": "array",
@@ -427,8 +427,8 @@ module.exports = {
                     "l": "Change Password",
                     "group": "My Account"
                 },
-                "uId": {
-                    "source": ['query.uId'],
+                "id": {
+                    "source": ['query.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 },
@@ -454,8 +454,8 @@ module.exports = {
                     "l": "Change Email",
                     "group": "My Account"
                 },
-                "uId": {
-                    "source": ['query.uId'],
+                "id": {
+                    "source": ['query.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 },
@@ -471,8 +471,8 @@ module.exports = {
                     "l": "Edit basic user info and profile",
                     "group": "My Account"
                 },
-                "uId": {
-                    "source": ['query.uId'],
+                "id": {
+                    "source": ['query.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 },
@@ -506,8 +506,8 @@ module.exports = {
                     "l": "Edit User Record",
                     "group": "Administration"
                 },
-                "uId": {
-                    "source": ['query.uId'],
+                "id": {
+                    "source": ['query.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 },
@@ -564,8 +564,8 @@ module.exports = {
                     "l": "Change user status",
                     "group": "Administration"
                 },
-                "uId": {
-                    "source": ['query.uId'],
+                "id": {
+                    "source": ['query.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 },

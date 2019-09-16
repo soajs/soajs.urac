@@ -83,7 +83,7 @@ Group.prototype.getGroup = function (data, cb) {
  * @param data
  *  should have:
  *      required (code, name, description)
- *      optional (config, tId, tCode)
+ *      optional (environments, packages, tId, tCode)
  *
  * @param cb
  */
@@ -138,7 +138,7 @@ Group.prototype.add = function (data, cb) {
  * @param data
  *  should have:
  *      required (id, name)
- *      optional (allowedEnvironments, allowedPackages, description)
+ *      optional (environments, packages, description)
  *
  * @param cb
  */

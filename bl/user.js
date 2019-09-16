@@ -66,7 +66,7 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
-        data.id = inputmaskData.uId;
+        data.id = inputmaskData.id;
         data.status = inputmaskData.status || "active";
         modelObj.getUser(data, (err, record) => {
             bl.mt.closeModel(modelObj);
@@ -125,7 +125,7 @@ let bl = {
         let data = {};
         data.start = inputmaskData.start;
         data.limit = inputmaskData.limit;
-        data.ids = inputmaskData.uIds;
+        data.ids = inputmaskData.ids;
         data.config = inputmaskData.config;
         modelObj.getUsersByIds(data, (err, records) => {
             bl.mt.closeModel(modelObj);
@@ -166,7 +166,7 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
-        data.id = inputmaskData.id || inputmaskData.uId || null;
+        data.id = inputmaskData.id || null;
         data._id = inputmaskData._id || null;
         data.what = inputmaskData.what;
         data[inputmaskData.what] = inputmaskData[inputmaskData.what];

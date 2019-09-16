@@ -38,14 +38,14 @@ function User(soajs, localConfig, mongoCore) {
  *
  * @param data
  *  should have:
- *      required (tId, groupCode)
+ *      required (tId, groupCode, tenant)
  *
  * @param cb
  */
 User.prototype.cleanDeletedGroup = function (data, cb) {
     let __self = this;
     if (!data || !data.tId || !data.groupCode || !data.tenant) {
-        let error = new Error("User: tenant ID and group Code are required.");
+        let error = new Error("User: tenant ID, group Code and tenant information are required.");
         return cb(error, null);
     }
     if (data.tenant.type === "client" && data.tenant.main) {
@@ -132,7 +132,7 @@ User.prototype.getUser = function (data, cb) {
 };
 
 /**
- * To update a filed
+ * To update a field
  *
  * @param data
  *  should have:
@@ -143,7 +143,7 @@ User.prototype.getUser = function (data, cb) {
 User.prototype.updateOneField = function (data, cb) {
     let __self = this;
     if (!data || !(data.id || data._id) || !(data.what && data[data.what])) {
-        let error = new Error("Token: either id or _id and the what field to update are required.");
+        let error = new Error("User: either id or _id and the what field to update are required.");
         return cb(error, null);
     }
 
@@ -232,6 +232,7 @@ User.prototype.getUsers = function (data, cb) {
  *
  * @param data
  *  should have:
+ *      required (ids [id, id])
  *      optional (limit, start, ids, config)
  *
  * @param cb
@@ -239,7 +240,7 @@ User.prototype.getUsers = function (data, cb) {
 User.prototype.getUsersByIds = function (data, cb) {
     let __self = this;
     if (!data || !data.ids || !Array.isArray(data.ids)) {
-        let error = new Error("Token: An array of ids is required.");
+        let error = new Error("User: An array of ids is required.");
         return cb(error, null);
     }
     let _ids = [];
@@ -288,6 +289,7 @@ User.prototype.getUsersByIds = function (data, cb) {
  * @param data
  *  should have:
  *      required (username)
+ *      optional (exclude_id)
  *
  * @param cb
  */
@@ -343,7 +345,7 @@ User.prototype.countUsers = function (data, cb) {
  * @param data
  *  should have:
  *      required (username, firstName, lastName, email, password, status, tenant{id,code})
- *      optional (config, tId, tCode)
+ *      optional (profile, groups, config)
  *
  * @param cb
  */

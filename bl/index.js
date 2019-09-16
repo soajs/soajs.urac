@@ -82,7 +82,7 @@ let bl = {
                 return cb(error, null);
             }
             let data = {};
-            data.uId = tokenRecord.userId;
+            data.id = tokenRecord.userId;
             bl.user.getUser(soajs, data, options, (error, userRecord) => {
                 if (error) {
                     //close model
@@ -128,7 +128,7 @@ let bl = {
                 return cb(error, null);
             }
             let data = {};
-            data.uId = tokenRecord.userId;
+            data.id = tokenRecord.userId;
             bl.user.getUser(soajs, data, options, (error, userRecord) => {
                 if (error) {
                     //close model
@@ -174,7 +174,7 @@ let bl = {
                 return cb(error, null);
             }
             let data = {};
-            data.uId = tokenRecord.userId;
+            data.id = tokenRecord.userId;
             bl.user.getUser(soajs, data, options, (error, userRecord) => {
                 if (error) {
                     //close model
@@ -228,7 +228,7 @@ let bl = {
                     return cb(bl.user.handleError(soajs, 526, error), null);
                 }
                 let data = {};
-                data.userId = userRecord._id.toString();
+                data.id = userRecord._id.toString();
                 data.username = userRecord.username;
                 data.service = "changeEmail";
                 data.email = inputmaskData.email;
