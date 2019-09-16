@@ -15,9 +15,12 @@ let prod = {
                         apisPermission: "restricted",
                         get: [
                             {
-                                group: "Administration",
+                                group: "Group administration",
                                 apis: {
                                     "/admin/groups": {
+                                        access: true
+                                    },
+                                    "/admin/group": {
                                         access: true
                                     }
                                 }
@@ -41,12 +44,10 @@ let prod = {
                         {
                             version: "3",
                             post: [
-                                "Guest Password Settings"
+                                "My account guest"
                             ],
                             get: [
-                                "Guest Password Settings",
-                                "Guest Email Validation",
-                                "Guest Login(s)"
+                                "My account guest"
                             ]
                         }
                     ]
@@ -65,8 +66,8 @@ let prod = {
                         {
                             version: "3",
                             get: [
-                                "Administration",
-                                "My Account"
+                                "Group administration",
+                                "My account"
                              ]
                         }
                     ]
@@ -85,7 +86,7 @@ let prod = {
                         {
                             version: "3",
                             get: [
-                                "My Account"
+                                "My account"
                             ]
                         }
                     ]

@@ -185,13 +185,13 @@ module.exports = {
             '/admin/groups': {
                 "_apiInfo": {
                     "l": "List groups",
-                    "group": "Administration"
+                    "group": "Group administration"
                 }
             },
             '/admin/group': {
                 "_apiInfo": {
-                    "l": "Get group record by id",
-                    "group": "Administration"
+                    "l": "Get group by id",
+                    "group": "Group administration"
                 },
                 "id": {
                     "source": ['query.id'],
