@@ -12,7 +12,6 @@ describe("Unit test for: model - group", function () {
             "code": "TES0",
             "id": "5c0e74ba9acc3c5a84a51259"
         },
-        "config": {"serviceName": "urac"},
         "registry": {
             "tenantMetaDB": {
                 "urac": {

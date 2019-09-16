@@ -9,34 +9,9 @@ const assert = require('assert');
 
 describe("Unit test for: BL - group", () => {
     let soajs = {
-        "meta": core.meta,
         "tenant": {
-            id: "5c0e74ba9acc3c5a84a51251",
-            code: "TES1"
-        },
-        "config": {"serviceName": "urac"},
-        "registry": {
-            "tenantMetaDB": {
-                "urac": {
-                    "prefix": "",
-                    "cluster": "test_cluster",
-                    "name": "#TENANT_NAME#_urac",
-                    "servers": [
-                        {
-                            "host": "127.0.0.1",
-                            "port": 27017
-                        }
-                    ],
-                    "credentials": null,
-                    "streaming": {
-                        "batchSize": 1000
-                    },
-                    "URLParam": {
-                        "bufferMaxEntries": 0
-                    },
-                    "timeConnected": 1552747598093
-                }
-            }
+            "code": "TES0",
+            "id": "5c0e74ba9acc3c5a84a51259"
         },
         "log": {
             "error": (msg) => {
@@ -133,6 +108,48 @@ describe("Unit test for: BL - group", () => {
 
         });
     });
+    it("Add group ", function (done) {
+        function MODEL() {
+            console.log("group model");
+        }
 
+        MODEL.prototype.closeConnection = () => {
+        };
+        MODEL.prototype.add = (data, cb) => {
+            if (data && data.code === "AAAA") {
+                let error = new Error("Group: Add - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, data);
+            }
+        };
+        BL.model = MODEL;
+
+        BL.add(soajs, null, null, (error) => {
+            assert.ok(error);
+
+            let data = {
+                "id": "5cfb05c22ac09278709d0141",
+                "code": "BBBB",
+                "name": "inputmaskData.name",
+                "description": "inputmaskData.description",
+                "environments": ["dev", "stg"],
+                "packages": [{"product": "prod", "package": "pack"}]
+            };
+            BL.add(soajs, data, null, (error, record) => {
+                assert.ok(record);
+                assert.equal(record.code, data.code);
+                assert.equal(record.tId, soajs.tenant.id);
+                let data = {
+                    "code": "AAAA"
+                };
+                BL.add(soajs, data, null, (error) => {
+                    assert.ok(error);
+                    done();
+                });
+            });
+
+        });
+    });
 
 });
