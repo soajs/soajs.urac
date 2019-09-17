@@ -28,6 +28,7 @@ describe("Starting URAC Unit test", () => {
     it ("Testing all bls", (done) => {
 
         require("./bl/group.js");
+        require("./bl/user.js");
         done();
     });
 
