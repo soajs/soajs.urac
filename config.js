@@ -129,7 +129,7 @@ module.exports = {
             '/admin/user': {
                 "_apiInfo": {
                     "l": "Get user record by id",
-                    "group": "Administration"
+                    "group": "User administration"
                 },
                 "id": {
                     "source": ['query.id'],

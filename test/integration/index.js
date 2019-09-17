@@ -27,6 +27,7 @@ describe("starting integration tests", () => {
 
     it("loading tests", (done) => {
         require("./group/index.js");
+        require("./user/index.js");
         done();
     });
 

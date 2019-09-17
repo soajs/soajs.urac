@@ -24,6 +24,14 @@ let prod = {
                                         access: true
                                     }
                                 }
+                            },
+                            {
+                                group: "User administration",
+                                apis: {
+                                    "/admin/user": {
+                                        access: true
+                                    }
+                                }
                             }
                         ]
                     }
@@ -67,6 +75,7 @@ let prod = {
                             version: "3",
                             get: [
                                 "Group administration",
+                                "User administration",
                                 "My account"
                              ]
                         }
