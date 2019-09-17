@@ -29,7 +29,12 @@ function User(soajs, localConfig, mongoCore) {
         });
         __self.mongoCore.createIndex(colName, {'_id': 1, 'status': 1}, {}, function (err, result) {
         });
-        __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1, 'firstName': 1, 'lastName': 1}, {}, function (err, result) {
+        __self.mongoCore.createIndex(colName, {
+            'username': 1,
+            'email': 1,
+            'firstName': 1,
+            'lastName': 1
+        }, {}, function (err, result) {
         });
 
         //the following are set @ urac.driver
@@ -410,7 +415,7 @@ User.prototype.add = function (data, cb) {
 
     record.profile = data.profile || {};
     record.groups = data.groups || [];
-    record.config = data.config || {"packages": {}, "keys": {}};
+    record.config = data.config || {};
 
     __self.mongoCore.insert(colName, record, (err, record) => {
         if (record && Array.isArray(record))
@@ -481,7 +486,6 @@ User.prototype.edit = function (data, cb) {
             return cb(error);
         }
     };
-    data.id = data.id || null;
     if (data.id) {
         __self.validateId(data.id, (err, _id) => {
             if (err) {

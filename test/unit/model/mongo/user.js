@@ -6,6 +6,7 @@ const Model = helper.requireModule('./model/mongo/user.js');
 const assert = require('assert');
 
 describe("Unit test for: model - user", function () {
+    let addedUser1_id = null;
     let soajs = {
         "meta": core.meta,
         "tenant": {
@@ -266,7 +267,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it("add", function (done) {
+    it("add - addedUser1_id", function (done) {
         let data = {
             "username": "test",
             "firstName": "unit",
@@ -284,6 +285,7 @@ describe("Unit test for: model - user", function () {
         modelObj.add(data, (error, record) => {
             assert.ok(record);
             assert.ok(record._id);
+            addedUser1_id = record._id;
             done();
         });
     });
@@ -311,7 +313,87 @@ describe("Unit test for: model - user", function () {
         });
     });
 
+    it("edit - error no id", function (done) {
+        modelObj.edit(null, (error) => {
+            assert.ok(error);
+            done();
+        });
+    });
 
+    it("edit - error nothing to edit", function (done) {
+        let data = {
+            _id: addedUser1_id
+        };
+        modelObj.edit(data, (error) => {
+            assert.ok(error);
+            done();
+        });
+    });
+
+    it("edit - using addedUser1_id _id", function (done) {
+        let data = {
+            _id : addedUser1_id,
+            "username": "test_edit",
+            "firstName": "unit_edit",
+            "lastName": "test_edit",
+            "email": "test_edit@soajs.org",
+            "status": "inactive",
+            "groups": ["tata"],
+            "profile": {
+                "venue": "la ronda",
+                "id": "11111111"
+            }
+        };
+        modelObj.edit(data, (error, record) => {
+            assert.ok(record);
+            done();
+        });
+    });
+
+    it("edit - using addedUser1_id id", function (done) {
+        let data = {
+            id : addedUser1_id.toString(),
+            "username": "test2_edit",
+            "firstName": "unit2_edit",
+            "lastName": "test2_edit",
+            "email": "test2_edit@soajs.org",
+            "status": "active"
+        };
+        modelObj.edit(data, (error, record) => {
+            assert.ok(record);
+            done();
+        });
+    });
+
+    it("edit - using addedUser1_id - error id", function (done) {
+        let data = {
+            id : "12121212121",
+            "username": "test2_edit",
+            "firstName": "unit2_edit",
+            "lastName": "test2_edit",
+            "email": "test2_edit@soajs.org",
+            "status": "active"
+        };
+        modelObj.edit(data, (error) => {
+            assert.ok(error);
+            done();
+        });
+    });
+
+    it("edit - using addedUser1_id - error not found", function (done) {
+        let data = {
+            id : "5cfb05c22ac09278709d0141",
+            "username": "test3_edit",
+            "firstName": "unit3_edit",
+            "lastName": "test3_edit",
+            "email": "test3_edit@soajs.org",
+            "status": "active"
+        };
+        modelObj.edit(data, (error) => {
+            assert.ok(error);
+            done();
+        });
+    });
 
 
     it("validateId - error", function (done) {

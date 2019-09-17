@@ -240,7 +240,7 @@ Group.prototype.delete = function (data, cb) {
  */
 Group.prototype.updateEnvironments = function (data, cb) {
     let __self = this;
-    if (!data || !(data.environments || Array.isArray(data.environments)) || !data.groups) {
+    if (!data || !(data.environments && Array.isArray(data.environments)) || !data.groups) {
         let error = new Error("Group: environments and groups are required.");
         return cb(error, null);
     }
@@ -275,7 +275,7 @@ Group.prototype.updateEnvironments = function (data, cb) {
  */
 Group.prototype.updatePackages = function (data, cb) {
     let __self = this;
-    if (!data || !(data.packages || Array.isArray(data.packages)) || !data.groups) {
+    if (!data || !(data.packages && Array.isArray(data.packages)) || !data.groups) {
         let error = new Error("Group: packages and groups are required.");
         return cb(error, null);
     }
@@ -315,7 +315,7 @@ Group.prototype.updatePackages = function (data, cb) {
  */
 Group.prototype.deleteEnvironments = function (data, cb) {
     let __self = this;
-    if (!data || !(data.id || data.code) || !(data.environments || Array.isArray(data.environments))) {
+    if (!data || !(data.id || data.code) || !(data.environments && Array.isArray(data.environments))) {
         let error = new Error("Group: id or code in addition to environment(s) are required.");
         return cb(error, null);
     }
@@ -363,7 +363,7 @@ Group.prototype.deleteEnvironments = function (data, cb) {
  */
 Group.prototype.deleteProducts = function (data, cb) {
     let __self = this;
-    if (!data || !(data.id || data.code) || !(data.products || Array.isArray(data.products))) {
+    if (!data || !(data.id || data.code) || !(data.products && Array.isArray(data.products))) {
         let error = new Error("Group: id or code in addition to products are required.");
         return cb(error, null);
     }
