@@ -25,7 +25,7 @@ let local = (soajs, inputmaskData, options, cb) => {
             return cb(bl.user.handleError(soajs, 402, null));
         }
 
-        inputmaskData.config = inputmaskData.config || {};
+        inputmaskData.config = {};
 
         let doAdd = (pin, pinCode) => {
             bl.user.add(soajs, inputmaskData, options, (error, userRecord) => {
@@ -48,59 +48,62 @@ let local = (soajs, inputmaskData, options, cb) => {
                         id: userRecord._id.toString()
                     });
                 }
-                let data = {};
-                data.userId = userRecord._id.toString();
-                data.username = userRecord.username;
-                data.service = "addUser";
-                bl.token.add(soajs, data, options, (error, tokenRecord) => {
-                    bl.user.mt.closeModel(modelObj);
-                    if (error) {
-                        return cb(error, null);
-                    }
-                    lib.mail.send(soajs, "addUser", userRecord, tokenRecord, function (error, mailRecord) {
+                else {
+                    let data = {};
+                    data.userId = userRecord._id.toString();
+                    data.username = userRecord.username;
+                    data.service = "addUser";
+                    bl.token.add(soajs, data, options, (error, tokenRecord) => {
+                        bl.user.mt.closeModel(modelObj);
                         if (error) {
-                            soajs.log.info('addUser: No Mail was sent: ' + error);
+                            return cb(error, null);
                         }
-                        return cb(null, {
-                            id: userRecord._id.toString(),
-                            token: tokenRecord.token,
-                            link: mailRecord.link || null
+                        lib.mail.send(soajs, "addUser", userRecord, tokenRecord, function (error, mailRecord) {
+                            if (error) {
+                                soajs.log.info('addUser: No Mail was sent: ' + error);
+                            }
+                            return cb(null, {
+                                id: userRecord._id.toString(),
+                                token: tokenRecord.token,
+                                link: mailRecord.link || null
+                            });
                         });
                     });
-                });
+                }
             });
         };
 
         let doPin = (mainTenant) => {
             let generatedPin = null;
-            if (inputmaskData.pin) {
-                if (inputmaskData.pin.code) {
-                    let pinConfig = lib.pin.config(soajs,bl.localConfig);
-                    try {
-                        generatedPin = lib.pin.generate(pinConfig);
-                        if (mainTenant) {
-                            inputmaskData.tenant.pin.code = generatedPin;
-                            inputmaskData.tenant.pin.allowed = !!inputmaskData.tenant.pin.allowed;
-                        }
-                        else {
-                            inputmaskData.config.allowedTenants[0].tenant.pin.code = generatedPin;
-                            inputmaskData.config.allowedTenants[0].tenant.pin.allowed = !!inputmaskData.tenant.pin.allowed;
-                        }
-                        doAdd(true, generatedPin);
-                    } catch (e) {
-                        //close model
-                        bl.user.mt.closeModel(modelObj);
-                        return cb(bl.user.handleError(soajs, 525, e));
+            if (inputmaskData.pin && inputmaskData.pin.code) {
+                let pinConfig = lib.pin.config(soajs, bl.user.localConfig);
+                try {
+                    generatedPin = lib.pin.generate(pinConfig);
+                    if (mainTenant) {
+                        inputmaskData.tenant.pin.code = generatedPin;
+                        inputmaskData.tenant.pin.allowed = !!inputmaskData.pin.allowed;
                     }
+                    else {
+                        inputmaskData.config.allowedTenants[0].tenant.pin.code = generatedPin;
+                        inputmaskData.config.allowedTenants[0].tenant.pin.allowed = !!inputmaskData.pin.allowed;
+                    }
+                    doAdd(true, generatedPin);
+                } catch (e) {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(bl.user.handleError(soajs, 525, e));
                 }
             }
-            doAdd(false, null);
+            else {
+                doAdd(false, null);
+            }
         };
 
         if (soajs.tenant.type === "client" && soajs.tenant.main) {
             inputmaskData.tenant = {
                 id: soajs.tenant.main.id,
-                code: soajs.tenant.main.code
+                code: soajs.tenant.main.code,
+                pin: {}
             };
             if (!inputmaskData.config.allowedTenants) {
                 inputmaskData.config.allowedTenants = [];
@@ -108,7 +111,8 @@ let local = (soajs, inputmaskData, options, cb) => {
             let allowedTenantObj = {
                 "tenant": {
                     "id": soajs.tenant.id,
-                    "code": soajs.tenant.code
+                    "code": soajs.tenant.code,
+                    "pin": {}
                 }
             };
             if (inputmaskData.groups) {
@@ -121,8 +125,9 @@ let local = (soajs, inputmaskData, options, cb) => {
             doPin(false);
         } else {
             inputmaskData.tenant = {
-                id: soajs.tenant.id,
-                code: soajs.tenant.code
+                "id": soajs.tenant.id,
+                "code": soajs.tenant.code,
+                "pin": {}
             };
 
             doPin(true);

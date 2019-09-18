@@ -128,7 +128,7 @@ module.exports = {
 
             '/admin/user': {
                 "_apiInfo": {
-                    "l": "Get user record by id",
+                    "l": "Get user by id",
                     "group": "User administration"
                 },
                 "id": {
@@ -253,8 +253,8 @@ module.exports = {
 
             '/admin/user': {
                 "_apiInfo": {
-                    "l": "Add new User",
-                    "group": "Administration"
+                    "l": "Add user",
+                    "group": "User administration"
                 },
                 "username": {
                     "source": ['body.username'],
@@ -316,7 +316,7 @@ module.exports = {
                         "properties": {
                             "code": {
                                 "required": true,
-                                "type": 'string'
+                                "type": 'boolean'
                             },
                             "allowed": {
                                 "required": true,

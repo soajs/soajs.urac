@@ -32,6 +32,10 @@ function init(service, localConfig, cb) {
         }
     };
     async.each(BLs, fillModels, function (err) {
+
+        bl["addUser"] = require("./lib/addUser.js")(bl);
+        bl["join"] = require("./lib/join.js")(bl);
+
         if (err) {
             service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);
             return cb({"code": 601, "msg": localConfig.errors[601]});
@@ -391,8 +395,5 @@ let bl = {
     }
 
 };
-
-bl["addUser"] = require("./lib/addUser.js")(bl);
-bl["join"] = require("./lib/join.js")(bl);
 
 module.exports = bl;
