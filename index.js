@@ -22,14 +22,14 @@ const BLModule = require('./lib/urac.js');
  * @param {Callback Function} cb
  */
 function initBLModel(req, res, cb) {
-	var modelName = config.model;
-	if (req.soajs.inputmaskData.model) {
-		modelName = req.soajs.inputmaskData.model;
-	}
-	if (req.soajs.servicesConfig && req.soajs.servicesConfig.model) {
-		modelName = req.soajs.servicesConfig.model;
-	}
-	BLModule.init(modelName, function (error, BL) {
+	//var modelName = config.model;
+	//if (req.soajs.inputmaskData.model) {
+	//	modelName = req.soajs.inputmaskData.model;
+	//}
+	//if (req.soajs.servicesConfig && req.soajs.servicesConfig.model) {
+	//	modelName = req.soajs.servicesConfig.model;
+	//}
+	BLModule.init(null, function (error, BL) {
 		if (error) {
 			req.soajs.log.error(error);
 			return res.json(req.soajs.buildResponse({"code": 601, "msg": config.errors[601]}));
