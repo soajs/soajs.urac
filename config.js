@@ -33,6 +33,9 @@ module.exports = {
         524: "Cannot join with a sub tenant key",
         525: "Unable to generate pin at this time.",
         526: "Email already exists.",
+        527: "username or id is required to invite user.",
+        528: "Cannot invite user with locked record.",
+        529: "User has already been invited.",
 
         599: "Token has expired.",
         600: "unable to find token.",
@@ -386,6 +389,7 @@ module.exports = {
                 }
             }
         },
+
         "delete": {
             '/admin/group': {
                 "_apiInfo": {
@@ -399,6 +403,7 @@ module.exports = {
                 }
             }
         },
+
         "put": {
             '/password/reset': {
                 "_apiInfo": {
@@ -696,6 +701,49 @@ module.exports = {
                             "minItems": 1,
                             "format": "alphanumeric",
                             "maxLength": 20
+                        }
+                    }
+                }
+            },
+            '/admin/user/invite': {
+                "_apiInfo": {
+                    "l": "Invite user",
+                    "group": "User administration"
+                },
+                "id": {
+                    "source": ['body.id'],
+                    "required": false,
+                    "validation": {"type": "string"}
+                },
+                "username": {
+                    "source": ['body.username'],
+                    "required": false,
+                    "validation": {"type": "string"}
+                },
+                "groups": {
+                    "source": ['body.groups'],
+                    "required": false,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "pin": {
+                    "source": ['body.pin'],
+                    "required": false,
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "boolean",
+                                "required": true
+                            },
+                            "allowed": {
+                                "type": "boolean",
+                                "required": true
+                            }
                         }
                     }
                 }

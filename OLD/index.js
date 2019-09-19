@@ -4,15 +4,16 @@ const config = require('./config.js');
 config.packagejson = require("./package.json");
 const service = new soajs.server.service(config);
 const uracDriver = require("soajs.urac.driver");
-const provision = soajs.provision;
-
+const coreModules = require("soajs");
+const provision = coreModules.provision;
 let BL = {
 	product: require("./lib/product.js")
 };
-let SSOT = {};
+let SSOT = {
+	product: require('./model/product'),
+};
 
 const BLModule = require('./lib/urac.js');
-let modelInit = false;
 
 /**
  * Initialize the Business Logic model
@@ -21,30 +22,26 @@ let modelInit = false;
  * @param {Callback Function} cb
  */
 function initBLModel(req, res, cb) {
-    if (modelInit)
-        return cb(null);
-    let modelName = config.model;
-    if (req.soajs.servicesConfig && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.model)
-        modelName = soajs.servicesConfig.urac.model;
-    let userModel = __dirname + "/model/" + modelName + "/user.js";
-    if (fs.existsSync(userModel))
-        SSOT.user = require(userModel);
-    let groupModel = __dirname + "/model/" + modelName + "/group.js";
-    if (fs.existsSync(groupModel))
-        SSOT.group = require(groupModel);
-
-    if (SSOT.user && SSOT.group) {
-        modelInit = true;
-        return cb(null);
-    }
-    else {
-        req.soajs.log.error('Requested model not found. make sure you have a model for user and another one for group!');
-        return cb({"code": 601, "msg": config.errors[601]});
-    }
+	//var modelName = config.model;
+	//if (req.soajs.inputmaskData.model) {
+	//	modelName = req.soajs.inputmaskData.model;
+	//}
+	//if (req.soajs.servicesConfig && req.soajs.servicesConfig.model) {
+	//	modelName = req.soajs.servicesConfig.model;
+	//}
+	BLModule.init(null, function (error, BL) {
+		if (error) {
+			req.soajs.log.error(error);
+			return res.json(req.soajs.buildResponse({"code": 601, "msg": config.errors[601]}));
+		} else {
+			return cb(BL);
+		}
+	});
 }
 
 service.init(function () {
-	let reg = service.registry.get();
+	var reg = service.registry.get();
+
     let dbConfig = reg.coreDB.provision;
     if (reg.coreDB.oauth) {
         dbConfig = {
@@ -53,8 +50,8 @@ service.init(function () {
         };
     }
     provision.init(dbConfig, service.log);
-    //provision.init(reg.coreDB.provision, service.log);
-
+	//provision.init(reg.coreDB.provision, service.log);
+	
 	/**
 	 * Login through passport
 	 * @param {String} API route
@@ -676,6 +673,20 @@ service.init(function () {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.user.addEditPinCode(req, function (error, data) {
+				return res.json(req.soajs.buildResponse(error, data));
+			});
+		});
+	});
+	
+	/**
+	 * Recover  User pin code
+	 * @param {String} API route
+	 * @param {Function} API middleware
+	 */
+	service.get("/admin/recoverPinCode", function (req, res) {
+		initBLModel(req, res, function (BLInstance) {
+			req.soajs.config = config;
+			BLInstance.admin.user.recoverPinCode(req, function (error, data) {
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});

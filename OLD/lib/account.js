@@ -75,7 +75,14 @@ var libProduct = {
 						libProduct.model.closeConnection(req.soajs);
 						data.error = err;
 						utils.checkIfError(req, cb, data, false, function () {
-							
+                            let data = JSON.parse(JSON.stringify(userRecord));
+                            data.email = req.soajs.inputmaskData['email'];
+                            utils.sendMail(req, 'changeEmail', data, tokenRecord, function (error) {
+                                if (error)
+                                    req.soajs.log.info('No Mail was sent: ' + error);
+                                return cb(null, tokenRecord.token);
+                            });
+                            /*
 							//email notification
 							if (req.soajs.servicesConfig.mail && req.soajs.servicesConfig.urac && req.soajs.servicesConfig.urac.mail && req.soajs.servicesConfig.urac.mail.changeEmail) {
 								//send an email to the user
@@ -92,6 +99,7 @@ var libProduct = {
 							else {
 								return cb(null, tokenRecord.token);
 							}
+							*/
 						});
 					});
 				});

@@ -35,6 +35,7 @@ function init(service, localConfig, cb) {
 
         bl["addUser"] = require("./lib/addUser.js")(bl);
         bl["join"] = require("./lib/join.js")(bl);
+        bl["inviteUser"] =  require("./lib/inviteUser.js")(bl);
 
         if (err) {
             service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);
@@ -226,7 +227,7 @@ let bl = {
                     bl.user.mt.closeModel(modelObj);
                     return cb(error, null);
                 }
-                if (found){
+                if (found) {
                     //close model
                     bl.user.mt.closeModel(modelObj);
                     return cb(bl.user.handleError(soajs, 526, error), null);

@@ -175,11 +175,12 @@ User.prototype.getUser = function (data, cb) {
 };
 
 /**
- * To update a field
+ * To update a field and optional the status
  *
  * @param data
  *  should have:
  *      required (id || _id, what, whatField)
+ *      optional (status)
  *
  * @param cb
  */
@@ -498,6 +499,34 @@ User.prototype.edit = function (data, cb) {
         doUpdate(data._id);
     }
 };
+
+/**
+ * To save user record
+ *
+ * @param data
+ *  should have:
+ *      required (_id)
+ *
+ * @param cb
+ */
+User.prototype.save = function (data, cb) {
+    let __self = this;
+    if (!data || !data._id) {
+        let error = new Error("User: _id is required.");
+        return cb(error, null);
+    }
+    let condition = {
+        "_id": data._id
+    };
+    __self.mongoCore.update(colName, condition, null, null, (err, record) => {
+        if (!record) {
+            let error = new Error("User: user [" + _id.toString() + "] was not saved.");
+            return cb(error);
+        }
+        return cb(err, record);
+    });
+};
+
 
 User.prototype.validateId = function (id, cb) {
     let __self = this;

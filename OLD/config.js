@@ -97,6 +97,7 @@ module.exports = {
 		428: "A username or an email must be provided.",
 		429: "You already invited this user.",
 		430: "Tenant not found for this user.",
+		431: "Sub Tenants are not allowed to add a user.",
 		
 		436: "Invalid tenant Id provided",
 		437: "Unable to get the environment records",
@@ -199,10 +200,10 @@ module.exports = {
 			"model": {
 				"source": ['query.model'],
 				"required": false,
-				"default": "mongo",
+				"default": "user",
 				"validation": {
 					"type": "string",
-					"enum": ["memory", "mongo"]
+					"enum": ["memory", "user"]
 				}
 			},
 			"soajs_project": {
@@ -462,11 +463,6 @@ module.exports = {
 					"groupMain": true
 				},
 				"commonFields": ["model", "start", "limit", "keywords"],
-				"tId": {
-					"source": ['query.tId'],
-					"required": false,
-					"validation": {"type": "string"}
-				},
 				"config": {
 					"source": ['query.config'],
 					"required": false,
@@ -480,11 +476,6 @@ module.exports = {
 					"groupMain": true
 				},
 				"commonFields": ["model", "start", "limit"],
-				"tId": {
-					"source": ['query.tId'],
-					"required": false,
-					"validation": {"type": "string"}
-				},
 				"uId": {
 					"source": ['query.uId'],
 					"required": true,
@@ -507,12 +498,7 @@ module.exports = {
 					"l": "Total users count",
 					"group": "Administration"
 				},
-				"commonFields": ["model", "keywords"],
-				"tId": {
-					"source": ['query.tId'],
-					"required": false,
-					"validation": {"type": "string"}
-				}
+				"commonFields": ["model", "keywords"]
 			},
 			'/admin/getUser': {
 				"_apiInfo": {
@@ -531,11 +517,14 @@ module.exports = {
 					"l": "List groups",
 					"group": "Administration"
 				},
-				"commonFields": ["model"],
-				"tId": {
-					"source": ['query.tId'],
+				"model": {
+					"source": ['query.model'],
 					"required": false,
-					"validation": {"type": "string"}
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "group"]
+					}
 				}
 			},
 			'/admin/group': {
@@ -543,7 +532,15 @@ module.exports = {
 					"l": "Get group record by _id",
 					"group": "Administration"
 				},
-				"commonFields": ["model"],
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "group"]
+					}
+				},
 				"id": {
 					"source": ['query.id'],
 					"required": true,
@@ -556,6 +553,338 @@ module.exports = {
 					"group": "Administration"
 				},
 				"commonFields": ["model", "isOwner"]
+			},
+			
+			"/admin/recoverPinCode": {
+				"_apiInfo": {
+					"l": "Recover Pin Information",
+					"group": "Administration"
+				},
+				"commonFields": ["model"],
+				"username": {
+					"source": ['query.username'],
+					"required": false,
+					"validation": {"type": "string"}
+				},
+				"email": {
+					"source": ['query.email'],
+					"required": false,
+					"validation": {"type": "string"}
+				}
+			},
+			
+			// "/tenant/list": {
+			//     _apiInfo: {
+			//         "l": "List tenants",
+			//         "group": "Tenant"
+			//     },
+			//     "type": {
+			//         "source": ['query.type'],
+			//         "required": false,
+			//         "validation": {
+			//             "type": "string",
+			//             "enum": ["admin", "product", "client"]
+			//         }
+			//     },
+			//     "negate": {
+			//         "source": ['query.negate'],
+			//         "required": false,
+			//         "default": false,
+			//         "validation": {
+			//             "type": "boolean"
+			//         }
+			//     }
+			// },
+			// "/tenant/getUserAclInfo": {
+			//     "_apiInfo": {
+			//         "l": "Get user acl info",
+			//         "group": "Tenant"
+			//     },
+			//     "tenantId": {
+			//         "source": ['query.tenantId'],
+			//         "required": true,
+			//         "validation": {
+			//             "type": "string"
+			//         }
+			//     }
+			// }
+			
+			/**
+			 * product routes
+			 */
+			"/product/list": {
+				_apiInfo: {
+					"l": "List Products",
+					"group": "Product",
+					"groupMain": true
+				},
+				"commonFields": ['soajs_project']
+			},
+			
+			"/product/console/list": {
+				_apiInfo: {
+					"l": "List Console Products",
+					"group": "Console Product"
+				},
+				"commonFields": ['soajs_project']
+			},
+			
+			"/product": {
+				_apiInfo: {
+					"l": "Get Product",
+					"group": "Product"
+				},
+				"commonFields": ['soajs_project'],
+				"id": {
+					"source": ['query.id'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"productCode": {
+					"source": ["query.productCode"],
+					"required": false,
+					"validation": {
+						"type": "string",
+						"format": "alphanumeric",
+						"maxLength": 6
+					}
+				}
+			},
+			
+			"/product/purge": {
+				_apiInfo: {
+					"l": "Purge Product",
+					"group": "Product"
+				},
+				"commonFields": ['id', 'description', 'soajs_project']
+			},
+			
+			"/product/packages/list": {
+				_apiInfo: {
+					"l": "List Product Packages",
+					"group": "Product"
+				},
+				"commonFields": ['id', 'soajs_project']
+			},
+			
+			"/product/package": {
+				_apiInfo: {
+					"l": "Get Product Package",
+					"group": "Product"
+				},
+				"commonFields": ['soajs_project'],
+				"packageCode": {
+					"source": ["query.packageCode"],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"productCode": {
+					"source": ["query.productCode"],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"format": "alphanumeric",
+						"maxLength": 6
+					}
+				}
+			},
+			
+			/**
+			 * tenant routes
+			 */
+			
+			"/tenant/list": {
+				_apiInfo: {
+					"l": "List Tenants",
+					"group": "Tenant"
+				},
+				"commonFields": ['soajs_project'],
+				"type": {
+					"source": ['query.type'],
+					"required": false,
+					"validation": {
+						"type": "string",
+						"enum": ["admin", "product", "client"]
+					}
+				},
+				"negate": {
+					"source": ['query.negate'],
+					"required": false,
+					"default": false,
+					"validation": {
+						"type": "boolean"
+					}
+				}
+			},
+			
+			"/tenant/acl": { //TODO: should be changed from post to get
+				_apiInfo: {
+					"l": "Get Current Tenant Access Level",
+					"group": "Private Tenant ACL"
+				},
+				"commonFields": ['id', 'soajs_project']
+			},
+			
+			"/console/tenant/list": {
+				_apiInfo: {
+					"l": "List Console Tenants",
+					"group": "Console Tenant"
+				},
+				"commonFields": ['soajs_project'],
+				"type": {
+					"source": ['query.type'],
+					"required": false,
+					"validation": {
+						"type": "string",
+						"enum": ["admin", "product", "client"]
+					}
+				},
+				"negate": {
+					"source": ['query.negate'],
+					"required": false,
+					"default": false,
+					"validation": {
+						"type": "boolean"
+					}
+				}
+			},
+			
+			"/tenant": {
+				_apiInfo: {
+					"l": "Get Tenant",
+					"group": "Tenant"
+				},
+				"commonFields": ['soajs_project'],
+				"id": {
+					"source": ['query.id'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"code": {
+					"source": ["query.code"],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				}
+			},
+			
+			"/tenant/oauth/list": {
+				_apiInfo: {
+					"l": "Get Tenant oAuth Configuration",
+					"group": "Tenant oAuth"
+				},
+				"commonFields": ['id', 'soajs_project']
+			},
+			
+			"/tenant/oauth/users/list": {
+				_apiInfo: {
+					"l": "List Tenant oAuth Users",
+					"group": "Tenant oAuth"
+				},
+				"commonFields": ['id', 'soajs_project']
+			},
+			
+			"/tenant/application/list": {
+				_apiInfo: {
+					"l": "List Tenant Applications",
+					"group": "Tenant Application"
+				},
+				"commonFields": ['id', 'soajs_project']
+			},
+			
+			"/tenant/application/key/list": {
+				_apiInfo: {
+					"l": "List Tenant Application Keys",
+					"group": "Tenant Application"
+				},
+				"commonFields": ['id', 'appId', 'soajs_project']
+			},
+			
+			"/tenant/application/key/ext/list": {
+				_apiInfo: {
+					"l": "List Tenant Application External Keys",
+					"group": "Tenant Application"
+				},
+				"commonFields": ['id', 'appId', 'key', 'soajs_project']
+			},
+			
+			"/tenant/application/key/config/list": {
+				_apiInfo: {
+					"l": "List Tenant Application Key Configuration",
+					"group": "Tenant Application"
+				},
+				"commonFields": ['id', 'appId', 'key', 'soajs_project']
+			},
+			
+			"/tenant/db/keys/list": {
+				_apiInfo: {
+					"l": "List Dashboard Tenant Keys",
+					"group": "Dashboard Tenants"
+				},
+				"commonFields": ['soajs_project']
+			},
+			
+			"/tenant/settings": {
+				_apiInfo: {
+					"l": "Get Tenant",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['soajs_project']
+			},
+			
+			"/tenant/settings/oauth/list": {
+				_apiInfo: {
+					"l": "Get Tenant oAuth Configuration",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['soajs_project']
+			},
+			
+			"/tenant/settings/oauth/users/list": {
+				_apiInfo: {
+					"l": "List Tenant oAuth Users",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['soajs_project']
+			},
+			
+			"/tenant/settings/application/list": {
+				_apiInfo: {
+					"l": "List Tenant Applications",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['soajs_project']
+			},
+			
+			"/tenant/settings/application/key/list": {
+				_apiInfo: {
+					"l": "List Tenant Application Keys",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['appId', 'soajs_project']
+			},
+			
+			"/tenant/settings/application/key/ext/list": {
+				_apiInfo: {
+					"l": "List Tenant Application External Keys",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['appId', 'key', 'soajs_project']
+			},
+			
+			"/tenant/settings/application/key/config/list": {
+				_apiInfo: {
+					"l": "List Tenant Application Key Configuration",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['appId', 'key', 'soajs_project']
 			}
 		},
 		
@@ -739,11 +1068,6 @@ module.exports = {
 					"groupMain": true
 				},
 				"commonFields": ["model", "start", "limit"],
-				"tId": {
-					"source": ['query.tId'],
-					"required": false,
-					"validation": {"type": "string"}
-				},
 				"uId": {
 					"source": ['body.uId'],
 					"required": true,
@@ -766,7 +1090,7 @@ module.exports = {
 					"l": "Add new User",
 					"group": "Administration"
 				},
-				"commonFields": ["model", 'tId', 'tCode', 'soajs_project'],
+				"commonFields": ["model", 'soajs_project'],
 				"username": {
 					"source": ['body.username'],
 					"required": true,
@@ -832,7 +1156,7 @@ module.exports = {
 						"properties": {
 							"code": {
 								"required": true,
-								"type": 'string'
+								"type": 'boolean'
 							},
 							"allowed": {
 								"required": true,
@@ -976,7 +1300,7 @@ module.exports = {
 						"properties": {
 							"code": {
 								"required": false,
-								"type": 'string'
+								"type": 'boolean'
 							},
 							"allowed": {
 								"required": false,
@@ -1036,7 +1360,7 @@ module.exports = {
 													"type": 'object',
 													"properties": {
 														"code": {
-															"type": 'string'
+															"type": 'boolean'
 														},
 														"allowed": {
 															"type": 'boolean'
@@ -1062,7 +1386,15 @@ module.exports = {
 					"l": "Add new Group",
 					"group": "Administration"
 				},
-				"commonFields": ["model", 'tId', 'tCode'],
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "group"]
+					}
+				},
 				"code": {
 					"source": ['body.code'],
 					"required": true,
@@ -1126,7 +1458,15 @@ module.exports = {
 					"l": "Edit Group",
 					"group": "Administration"
 				},
-				"commonFields": ["model"],
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "group"]
+					}
+				},
 				"gId": {
 					"source": ['query.gId'],
 					"required": true,
@@ -1186,7 +1526,16 @@ module.exports = {
 					"l": "Add Users to Group",
 					"group": "Administration"
 				},
-				"commonFields": ["model", 'tId'],
+				"commonFields": ["model"],
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "group"]
+					}
+				},
 				"code": {
 					"source": ['body.groupCode'],
 					"required": true,
@@ -1207,6 +1556,15 @@ module.exports = {
 				"_apiInfo": {
 					"l": "Add Allowed Environment to Group",
 					"group": "Administration"
+				},
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "group"]
+					}
 				},
 				"groups": {
 					"source": ['body.groups'],
@@ -1242,20 +1600,6 @@ module.exports = {
 					"source": ['query.email'],
 					"required": false,
 					"validation": {"type": "string"}
-				},
-				"tenantId": {
-					"source": ['body.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
-				},
-				"tenantCode": {
-					"source": ['body.tenantCode'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
 				},
 				"groups": {
 					"source": ['body.groups'],
@@ -1309,14 +1653,6 @@ module.exports = {
 									"required": false,
 									"type": "string",
 								},
-								"tenantId": {
-									"required": true,
-									"type": "string"
-								},
-								"tenantCode": {
-									"required": true,
-									"type": "string"
-								},
 								"pin": {
 									"required": false,
 									"type": "object",
@@ -1356,20 +1692,6 @@ module.exports = {
 					"source": ['query.uId'],
 					"required": true,
 					"validation": {"type": "string"}
-				},
-				"tenantId": {
-					"source": ['body.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
-				},
-				"tenantCode": {
-					"source": ['body.tenantCode'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
 				},
 				"groups": {
 					"source": ['body.groups'],
@@ -1417,13 +1739,6 @@ module.exports = {
 					"required": false,
 					"validation": {"type": "string"}
 				},
-				"tenantId": {
-					"source": ['body.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
-				},
 				"pin": {
 					"source": ['body.pin'],
 					"required": false,
@@ -1432,7 +1747,7 @@ module.exports = {
 						"properties": {
 							"code": {
 								"type": "boolean",
-								"required": true
+								"required": false
 							},
 							"allowed": {
 								"type": "boolean",
@@ -1441,8 +1756,229 @@ module.exports = {
 						},
 						"additionalProperties": false
 					}
+				},
+				"groups": {
+					"source": ['body.groups'],
+					"required": false,
+					"validation": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
 				}
-			}
+			},
+			
+			/**
+			 * product routes
+			 */
+			
+			"/product": {
+				_apiInfo: {
+					"l": "Add Product",
+					"group": "Product"
+				},
+				"commonFields": ['description', 'name', 'soajs_project'],
+				"code": {
+					"source": ['body.code'],
+					"required": false,
+					"validation": {
+						"type": "string",
+						"format": "alphanumeric",
+						"minLength": 4,
+						"maxLength": 5
+					}
+				}
+			},
+			
+			"/product/package": {
+				_apiInfo: {
+					"l": "Add Product Package",
+					"group": "Product"
+				},
+				"commonFields": ['id', 'name', 'description', '_TTL', 'acl', 'soajs_project'],
+				"code": {
+					"source": ["body.code"],
+					"required": false,
+					"validation": {
+						"type": "string",
+						"format": "alphanumeric",
+						"minLength": 4,
+						"maxLength": 5
+					}
+				}
+			},
+			
+			"/product/console/package": {
+				_apiInfo: {
+					"l": "Add Product Package",
+					"group": "Product"
+				},
+				"commonFields": ['id', 'name', 'description', '_TTL', 'acl', 'soajs_project'],
+				"code": {
+					"source": ["body.code"],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"format": "alphanumeric",
+						"minLength": 4,
+						"maxLength": 5
+					}
+				}
+			},
+			
+			/**
+			 * tenant routes
+			 */
+			
+			"/tenant": {
+				_apiInfo: {
+					"l": "Add Tenant",
+					"group": "Tenant"
+				},
+				"commonFields": ['name', 'description', 'soajs_project'],
+				"code": {
+					"source": ['body.code'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"format": "alphanumeric",
+						"maxLength": 4
+					}
+				},
+				"type": {
+					"source": ['body.type'],
+					"required": true,
+					"default": "client",
+					"validation": {
+						"type": "string",
+						"enum": ["product", "client"]
+					}
+				},
+				"tag": {
+					"source": ['body.tag'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"console": {
+					"source": ['body.console'],
+					"required": false,
+					"validation": {
+						"type": "boolean"
+					}
+				},
+				"subTenant": {
+					"source": ['body.subTenant'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				},
+			},
+			
+			"/tenant/oauth": {
+				_apiInfo: {
+					"l": "Add Tenant oAuth Configuration",
+					"group": "Tenant oAuth"
+				},
+				"commonFields": ['id', 'secret', 'redirectURI', 'oauthType', 'availableEnv', 'soajs_project']
+			},
+			
+			"/tenant/oauth/users": {
+				_apiInfo: {
+					"l": "Add Tenant oAuth User",
+					"group": "Tenant oAuth"
+				},
+				"commonFields": ['id', 'userId', 'password', 'soajs_project']
+			},
+			
+			"/tenant/application": {
+				_apiInfo: {
+					"l": "Add Tenant Application",
+					"group": "Tenant Application"
+				},
+				"commonFields": ['id', '_TTL', 'description', 'acl', 'productCode', 'packageCode', 'soajs_project']
+			},
+			
+			"/tenant/application/key": {
+				_apiInfo: {
+					"l": "Add Tenant Application Key",
+					"group": "Tenant Application"
+				},
+				"commonFields": ['id', 'appId', 'soajs_project']
+			},
+			
+			"/tenant/application/key/ext": {
+				_apiInfo: {
+					"l": "Add Tenant Application External Key",
+					"group": "Tenant Application"
+				},
+				"commonFields": ['id', 'appId', 'key', 'expDate', 'device', 'geo', 'soajs_project'],
+				"env": {
+					"source": ['body.env'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"dashboardAccess": {
+					"source": ['body.dashboardAccess'],
+					"required": true,
+					"default": false,
+					"validation": {
+						"type": "boolean"
+					}
+				}
+			},
+			
+			"/tenant/settings/oauth": {
+				_apiInfo: {
+					"l": "Add Tenant oAuth Configuration",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['secret', 'redirectURI', 'oauthType', 'availableEnv', 'soajs_project']
+			},
+			
+			"/tenant/settings/oauth/users": {
+				_apiInfo: {
+					"l": "Add Tenant oAuth User",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['userId', 'password', 'soajs_project']
+			},
+			
+			"/tenant/settings/application/key": {
+				_apiInfo: {
+					"l": "Add Tenant Application Key",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['appId', 'soajs_project']
+			},
+			
+			"/tenant/settings/application/key/ext": {
+				_apiInfo: {
+					"l": "Add Tenant Application External Key",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['soajs_project', 'appId', 'key', 'expDate', 'device', 'geo'],
+				"env": {
+					"source": ['body.env'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"dashboardAccess": {
+					"source": ['body.dashboardAccess'],
+					"required": true,
+					"default": false,
+					"validation": {
+						"type": "boolean"
+					}
+				},
+			},
 		},
 		
 		"put": {
@@ -1462,13 +1998,6 @@ module.exports = {
 					"required": false,
 					"validation": {"type": "string"}
 				},
-				"tenantId": {
-					"source": ['body.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
-				},
 				"pin": {
 					"source": ['body.pin'],
 					"required": false,
@@ -1477,7 +2006,7 @@ module.exports = {
 						"properties": {
 							"code": {
 								"type": "boolean",
-								"required": true
+								"required": false
 							},
 							"allowed": {
 								"type": "boolean",
@@ -1526,13 +2055,6 @@ module.exports = {
 							"min": 1
 						}
 					}
-				},
-				"tenantId": {
-					"source": ['query.tenantId'],
-					"required": true,
-					"validation": {
-						"type": "string"
-					}
 				}
 			},
 			
@@ -1548,15 +2070,239 @@ module.exports = {
 					"validation": {
 						"type": "string"
 					}
+				}
+			},
+			
+			/**
+			 * product routes
+			 */
+			"/product": {
+				_apiInfo: {
+					"l": "Update Product",
+					"group": "Product"
 				},
-				"tenantId": {
-					"source": ['query.tenantId'],
+				"commonFields": ['id', 'name', 'description', 'soajs_project']
+			},
+			
+			"/product/package": {
+				_apiInfo: {
+					"l": "Update Product Package",
+					"group": "Product"
+				},
+				"commonFields": ['id', 'name', 'description', '_TTL', 'acl', 'soajs_project'],
+				"code": {
+					"source": ["query.code"],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"format": "alphanumeric"
+					}
+				}
+			},
+			
+			"/product/scope": {
+				_apiInfo: {
+					"l": "Update Product Package",
+					"group": "Product"
+				},
+				"commonFields": ['id', 'acl', 'soajs_project'],
+				"scope": {
+					"source": ["body.scope"],
+					"required": true,
+					"validation": {
+						"type": "object"
+					}
+				}
+			},
+			
+			/**
+			 * tenant routes
+			 */
+			"/tenant": {
+				_apiInfo: {
+					"l": "Update Tenant",
+					"group": "Tenant"
+				},
+				"commonFields": ['id', 'name', 'description', 'soajs_project'],
+				"type": {
+					"source": ['body.type'],
+					"required": false,
+					"default": "client",
+					"validation": {
+						"type": "string",
+						"enum": ["admin", "product", "client", 'soajs_project']
+					}
+				},
+				"tag": {
+					"source": ['body.tag'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				}
+			},
+			
+			"/tenant/oauth": {
+				_apiInfo: {
+					"l": "Update Tenant oAuth Configuration",
+					"group": "Tenant oAuth"
+				},
+				"commonFields": ['id', 'secret', 'redirectURI', 'availableEnv', 'soajs_project'],
+				"type": {
+					"source": ['body.type'],
+					"required": false,
+					"validation": {
+						"type": "number",
+						"enum": [0, 2]
+					}
+				},
+				"oauthType": {
+					"source": ['body.oauthType'],
+					"required": false,
+					"validation": {
+						"type": "string",
+						"enum": ["urac", "miniurac", "off"]
+					}
+				},
+				"pin": {
+					"source": ['body.pin'],
+					"required": false,
+					"validation": {
+						"type": "object"
+					}
+				},
+			},
+			
+			"/tenant/oauth/users": {
+				_apiInfo: {
+					"l": "Update Tenant oAuth User",
+					"group": "Tenant oAuth"
+				},
+				"commonFields": ['id', 'uId', 'soajs_project'],
+				"userId": {
+					"source": ['body.userId'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"password": {
+					"source": ['body.password'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				}
+			},
+			
+			"/tenant/application": {
+				_apiInfo: {
+					"l": "Update Tenant Application",
+					"group": "Tenant Application"
+				},
+				"_TTL": {
+					"source": ['body._TTL'],
+					"required": false,
+					"validation": {
+						"type": "string",
+						"enum": ['6', '12', '24', '48', '72', '96', '120', '144', '168']
+					}
+				},
+				"commonFields": ['soajs_project', 'id', 'appId', 'description', 'acl', 'productCode', 'packageCode', 'clearAcl']
+			},
+			
+			"/tenant/application/key/ext": {
+				_apiInfo: {
+					"l": "Update Tenant Application External Key",
+					"group": "Tenant Application"
+				},
+				"commonFields": ['id', 'appId', 'key', 'extKey', 'expDate', 'device', 'geo', 'soajs_project'],
+				"extKeyEnv": {
+					"source": ['query.extKeyEnv'],
 					"required": true,
 					"validation": {
 						"type": "string"
 					}
 				}
-			}
+			},
+			
+			"/tenant/application/key/config": {
+				_apiInfo: {
+					"l": "Update Tenant Application Key Configuration",
+					"group": "Tenant Application"
+				},
+				"commonFields": ['id', 'appId', 'key', 'envCode', 'config', 'soajs_project']
+			},
+			
+			"/tenant/settings": {
+				_apiInfo: {
+					"l": "Update Tenant",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['name', 'description', 'soajs_project'],
+				"type": {
+					"source": ['body.type'],
+					"required": false,
+					"default": "client",
+					"validation": {
+						"type": "string",
+						"enum": ["admin", "product", "client"]
+					}
+				}
+			},
+			
+			"/tenant/settings/oauth": {
+				_apiInfo: {
+					"l": "Update Tenant oAuth Configuration",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['secret', 'redirectURI', 'oauthType', 'availableEnv', 'soajs_project']
+			},
+			
+			"/tenant/settings/oauth/users": {
+				_apiInfo: {
+					"l": "Update Tenant oAuth User",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['uId', 'soajs_project'],
+				"userId": {
+					"source": ['body.userId'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"password": {
+					"source": ['body.password'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				}
+			},
+			
+			"/tenant/settings/application/key/ext": {
+				_apiInfo: {
+					"l": "Update Tenant Application External Key",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['appId', 'key', 'extKey', 'expDate', 'device', 'geo', 'soajs_project'],
+				"extKeyEnv": {
+					"source": ['query.extKeyEnv'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				}
+			},
+			
+			"/tenant/settings/application/key/config": {
+				_apiInfo: {
+					"l": "Update Tenant Application Key Configuration",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['appId', 'key', 'envCode', 'config', 'soajs_project']
+			},
 		},
 		
 		"delete": {
@@ -1579,7 +2325,16 @@ module.exports = {
 					"l": "Delete Group",
 					"group": "Administration"
 				},
-				"commonFields": ["model", "soajs_project"],
+				"commonFields": ["soajs_project"],
+				"model": {
+					"source": ['query.model'],
+					"required": false,
+					"default": "group",
+					"validation": {
+						"type": "string",
+						"enum": ["memory", "group"]
+					}
+				},
 				"gId": {
 					"source": ['query.gId'],
 					"required": true,
@@ -1602,15 +2357,163 @@ module.exports = {
 					"source": ['query.email'],
 					"required": false,
 					"validation": {"type": "string"}
+				}
+			},
+			
+			/**
+			 * product routes
+			 */
+			"/product": {
+				_apiInfo: {
+					"l": "Delete Product",
+					"group": "Product"
 				},
-				"tenantId": {
-					"source": ['query.tenantId'],
+				"commonFields": ['soajs_project'],
+				"id": {
+					"source": ['query.id'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"code": {
+					"source": ['query.code'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				}
+			},
+			
+			"/product/package": {
+				_apiInfo: {
+					"l": "Delete Product Package",
+					"group": "Product"
+				},
+				"commonFields": ['id', 'soajs_project'],
+				"code": {
+					"source": ['query.code'],
+					"required": true,
+					"validation": {
+						"type": "string",
+						"format": "alphanumeric"
+					}
+				}
+			},
+			
+			/**
+			 * tenant routes
+			 */
+			
+			
+			"/tenant": {
+				_apiInfo: {
+					"l": "Delete Tenant",
+					"group": "Tenant"
+				},
+				"commonFields": ['soajs_project'],
+				"id": {
+					"source": ['query.id'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				},
+				"code": {
+					"source": ['query.code'],
+					"required": false,
+					"validation": {
+						"type": "string"
+					}
+				}
+			},
+			
+			"/tenant/oauth": {
+				_apiInfo: {
+					"l": "Delete Tenant oAuth Configuration",
+					"group": "Tenant oAuth"
+				},
+				"commonFields": ['id', 'soajs_project']
+			},
+			
+			"/tenant/oauth/users": {
+				_apiInfo: {
+					"l": "Delete Tenant oAuth User",
+					"group": "Tenant oAuth"
+				},
+				"commonFields": ['id', 'uId', 'soajs_project']
+			},
+			
+			"/tenant/application": {
+				_apiInfo: {
+					"l": "Delete Tenant Application",
+					"group": "Tenant Application"
+				},
+				"commonFields": ['id', 'appId', 'soajs_project']
+			},
+			
+			"/tenant/application/key": {
+				_apiInfo: {
+					"l": "Delete Tenant Application Key",
+					"group": "Tenant Application"
+				},
+				"commonFields": ['id', 'appId', 'key', 'soajs_project']
+			},
+			
+			"/tenant/application/key/ext": { //TODO: should be delete, remove params passed in body and change its method
+				_apiInfo: {
+					"l": "Delete Tenant Application External Key",
+					"group": "Tenant Application"
+				},
+				"commonFields": ['id', 'appId', 'key', 'extKey', 'soajs_project'],
+				"extKeyEnv": {
+					"source": ['body.extKeyEnv'],
 					"required": true,
 					"validation": {
 						"type": "string"
 					}
 				}
-			}
+			},
+			
+			"/tenant/settings/oauth": {
+				_apiInfo: {
+					"l": "Delete Tenant oAuth Configuration",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['soajs_project']
+			},
+			
+			"/tenant/settings/oauth/users": {
+				_apiInfo: {
+					"l": "Delete Tenant oAuth User",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['uId', 'soajs_project']
+			},
+			
+			"/tenant/settings/application/key": {
+				_apiInfo: {
+					"l": "Delete Tenant Application Key",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['appId', 'key', 'soajs_project']
+			},
+			
+			"/tenant/settings/application/key/ext": { //TODO: should be delete, remove params passed in body and change its method
+				_apiInfo: {
+					"l": "Delete Tenant Application External Key",
+					"group": "Tenant Settings"
+				},
+				"commonFields": ['appId', 'key', 'extKey', 'soajs_project'],
+				"extKeyEnv": {
+					"source": ['body.extKeyEnv'],
+					"required": true,
+					"validation": {
+						"type": "string"
+					}
+				}
+			},
+		}
 		
 	}
 };

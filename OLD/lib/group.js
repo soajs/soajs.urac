@@ -18,10 +18,7 @@ var libProduct = {
      */
     "list": function (req, cb) {
         libProduct.model.initConnection(req.soajs);
-        var condition = {};
-        if (req.soajs.inputmaskData['tId']) {
-            condition = {"tenant.id": req.soajs.inputmaskData['tId']};
-        }
+        var condition = {"tenant.id":req.soajs.tenant.id.toString()};
         var combo = {
             collection: groupsCollectionName,
             condition: condition
@@ -60,25 +57,20 @@ var libProduct = {
         var condition = {
             'code': grpRecord.code
         };
-        if (req.soajs.inputmaskData['tId']) {
-            libProduct.model.validateId(req.soajs, req.soajs.inputmaskData['tId'], function (err, id) {
-                if (err) {
-                    libProduct.model.closeConnection(req.soajs);
-                    return cb({"code": 611, "msg": req.soajs.config.errors[611]});
-                }
-                req.soajs.inputmaskData['tId'] = id;
-
-                grpRecord.tenant = {
-                    "id": req.soajs.inputmaskData['tId'].toString(),
-                    "code": req.soajs.inputmaskData['tCode']
-                };
-                condition['tenant.id'] = grpRecord.tenant.id;
-                addGroup();
-            });
-        }
-        else {
-            addGroup();
-        }
+	    libProduct.model.validateId(req.soajs, req.soajs.tenant.id.toString(), function (err, id) {
+		    if (err) {
+			    libProduct.model.closeConnection(req.soajs);
+			    return cb({"code": 611, "msg": req.soajs.config.errors[611]});
+		    }
+		    req.soajs.inputmaskData['tId'] = id;
+		
+		    grpRecord.tenant = {
+			    "id": req.soajs.tenant.id.toString(),
+			    "code": req.soajs.tenant.code
+		    };
+		    condition['tenant.id'] = grpRecord.tenant.id;
+		    addGroup();
+	    });
 
         function addGroup() {
             var combo = {
@@ -300,13 +292,11 @@ var libProduct = {
     "addUsers": function (req, cb) {
         libProduct.model.initConnection(req.soajs);
         // delete from all users
-        var grp = req.soajs.inputmaskData['code'];
+        var grp = req.soajs.tenant.code;
         var grpCondition = {
             'groups': grp
         };
-        if (req.soajs.inputmaskData['tId']) {
-            grpCondition['tenant.id'] = req.soajs.inputmaskData['tId'];
-        }
+        grpCondition['tenant.id'] = req.soajs.tenant.id.toString();
 
         var combo = {
             collection: userCollectionName,
@@ -330,9 +320,8 @@ var libProduct = {
                     var conditionUsers = {
                         'username': {$in: users}
                     };
-                    if (req.soajs.inputmaskData['tId']) {
-                        conditionUsers['tenant.id'] = req.soajs.inputmaskData['tId'];
-                    }
+                    conditionUsers['tenant.id'] = req.soajs.tenant.id.toString();
+                    
                     var combo = {
                         collection: userCollectionName,
                         condition: conditionUsers,

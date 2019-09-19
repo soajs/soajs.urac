@@ -85,7 +85,7 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
-        data.id = inputmaskData.username;
+        data.username = inputmaskData.username;
         data.status = inputmaskData.status || "active";
         modelObj.getUserByUsername(data, (err, record) => {
             bl.mt.closeModel(modelObj);
