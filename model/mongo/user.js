@@ -527,6 +527,61 @@ User.prototype.save = function (data, cb) {
     });
 };
 
+/**
+ * To uninvite a user
+ *
+ * @param data
+ *  should have:
+ *      required ((id || username), status, tenant)
+ *
+ * @param cb
+ */
+User.prototype.uninvite = function (data, cb) {
+    let __self = this;
+
+    if (!data || !(data.id || data.username) || !data.status || !data.tenant) {
+        let error = new Error("User: id or username in addition to status and tenant information are required.");
+        return cb(error, null);
+    }
+
+    let doUninvite = (condition) => {
+        let s = {
+            "$pull": {
+                "config.allowedTenants": {"tenant.id": data.tenant.id}
+            }
+        };
+        condition.status = data.status;
+        __self.mongoCore.update(colName, condition, s, null, (err, record) => {
+            if (!record) {
+                let user = data.id || data.username;
+                let error = new Error("User: user [" + user + "] was not uninvited.");
+                return cb(error);
+            }
+            return cb(err, record);
+        });
+    };
+
+    if (data.username) {
+        let condition = {
+            '$or': [
+                {'username': data.username},
+                {'email': data.username}
+            ]
+        };
+        doUninvite(condition);
+    }
+    else {
+        __self.validateId(data.id, (err, _id) => {
+            if (err) {
+                return cb(err, null);
+            }
+            let condition = {
+                "_id": _id
+            };
+            doUninvite(condition);
+        });
+    }
+};
 
 User.prototype.validateId = function (id, cb) {
     let __self = this;

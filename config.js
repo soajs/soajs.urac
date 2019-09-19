@@ -747,6 +747,22 @@ module.exports = {
                         }
                     }
                 }
+            },
+            "/admin/user/uninvite" :{
+                "_apiInfo": {
+                    "l": "un-Invite user",
+                    "group": "User administration"
+                },
+                "id": {
+                    "source": ['body.id'],
+                    "required": false,
+                    "validation": {"type": "string"}
+                },
+                "username": {
+                    "source": ['body.username'],
+                    "required": false,
+                    "validation": {"type": "string"}
+                }
             }
         }
     }

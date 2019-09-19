@@ -264,6 +264,26 @@ let bl = {
             data.status = 'active';
             bl.updateOneField(soajs, data, options, cb);
         });
+    },
+
+    "uninvite": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+
+        let data = {};
+        data.tenant = soajs.tenant;
+        data.status = 'active';
+        data.id = inputmaskData.id;
+        data.username = inputmaskData.username;
+
+        modelObj.uninvite(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
     }
 };
 

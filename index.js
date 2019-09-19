@@ -51,7 +51,7 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-        service.get("/admin/users/uIds", function (req, res) {
+        service.get("/admin/users/ids", function (req, res) {
             bl.user.getUsersByIds(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
@@ -134,6 +134,11 @@ service.init(() => {
         });
         service.put("/admin/user/invite", function (req, res) {
             bl.inviteUser(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+        service.put("/admin/user/uninvite", function (req, res) {
+            bl.user.uninvite(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
