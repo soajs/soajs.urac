@@ -52,8 +52,8 @@ let local = (soajs, inputmaskData, options, cb) => {
             }
         };
         obj.tenant.pin = {};
-        if (soajs.inputmaskData.groups) {
-            obj.groups = soajs.inputmaskData.groups;
+        if (inputmaskData.groups) {
+            obj.groups = inputmaskData.groups;
         }
 
         let generatedPin = null;
@@ -97,7 +97,7 @@ let local = (soajs, inputmaskData, options, cb) => {
     if (inputmaskData.username) {
         data.username = inputmaskData.username;
         bl.user.getUserByUsername(soajs, data, options, (error, userRecord) => {
-            return goInvite(userRecord);
+            return goInvite(error, userRecord);
         });
     }
     else {
