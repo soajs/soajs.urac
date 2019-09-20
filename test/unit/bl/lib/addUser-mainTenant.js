@@ -126,7 +126,7 @@ describe("Unit test for: BL - addUser main tenant", () => {
             else {
                 data._id = "5cfb05c22ac09278709d0141";
                 assert.ok(data.tenant.pin.code);
-                return cb(null, data)
+                return cb(null, data);
             }
         };
         BL.user.model = MODEL_USER;

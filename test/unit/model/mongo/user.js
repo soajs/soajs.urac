@@ -7,6 +7,8 @@ const assert = require('assert');
 
 describe("Unit test for: model - user", function () {
     let addedUser1_id = null;
+    let user2 = null;
+    let user3 = null;
     let soajs = {
         "meta": core.meta,
         "tenant": {
@@ -146,7 +148,7 @@ describe("Unit test for: model - user", function () {
         let data = {
             "id": "5d7fee0876186d9ab9b36492",
             "status": "active",
-            "keep": {"pwd":1}
+            "keep": {"pwd": 1}
         };
 
         modelObj.getUser(data, (error, record) => {
@@ -332,7 +334,7 @@ describe("Unit test for: model - user", function () {
 
     it("edit - using addedUser1_id _id", function (done) {
         let data = {
-            _id : addedUser1_id,
+            _id: addedUser1_id,
             "username": "test_edit",
             "firstName": "unit_edit",
             "lastName": "test_edit",
@@ -352,7 +354,7 @@ describe("Unit test for: model - user", function () {
 
     it("edit - using addedUser1_id id", function (done) {
         let data = {
-            id : addedUser1_id.toString(),
+            id: addedUser1_id.toString(),
             "username": "test2_edit",
             "firstName": "unit2_edit",
             "lastName": "test2_edit",
@@ -367,7 +369,7 @@ describe("Unit test for: model - user", function () {
 
     it("edit - using addedUser1_id - error id", function (done) {
         let data = {
-            id : "12121212121",
+            id: "12121212121",
             "username": "test2_edit",
             "firstName": "unit2_edit",
             "lastName": "test2_edit",
@@ -382,7 +384,7 @@ describe("Unit test for: model - user", function () {
 
     it("edit - using addedUser1_id - error not found", function (done) {
         let data = {
-            id : "5cfb05c22ac09278709d0141",
+            id: "5cfb05c22ac09278709d0141",
             "username": "test3_edit",
             "firstName": "unit3_edit",
             "lastName": "test3_edit",
@@ -395,6 +397,139 @@ describe("Unit test for: model - user", function () {
         });
     });
 
+    it("add - user2", function (done) {
+        let data = {
+            "username": "user2",
+            "firstName": "user",
+            "lastName": "two",
+            "email": "two@soajs.org",
+
+            "password": "password",
+            "status": "active",
+
+            "tenant": {
+                "code": "TES0",
+                "id": "5c0e74ba9acc3c5a84a51259"
+            }
+        };
+        modelObj.add(data, (error, record) => {
+            assert.ok(record);
+            assert.ok(record._id);
+            user2 = record;
+            done();
+        });
+    });
+
+    it('Success - uninvite user  - user2', (done) => {
+        let data = {
+            "username": user2.username
+        };
+
+        modelObj.getUserByUsername(data, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.username, "user2");
+            data.id = record._id;
+            data.status = record.status;
+            data.tenant = record.tenant;
+
+            modelObj.uninvite(data, (err, result) => {
+                assert.ok(result);
+                done();
+            });
+        });
+    });
+
+    it('Fails - uninvite user  - null data', (done) => {
+        modelObj.uninvite(null, (err, result) => {
+            assert.ok(err);
+            assert.deepEqual(err, new Error("User: id or username in addition to status and tenant information are required."));
+            done();
+        });
+    });
+
+    it("add - user for uninvite no username", function (done) {
+        let data = {
+            "username": "user3",
+            "firstName": "user",
+            "lastName": "three",
+            "email": "three@soajs.org",
+
+            "password": "password",
+            "status": "active",
+
+            "tenant": {
+                "code": "TES0",
+                "id": "5c0e74ba9acc3c5a84a51259"
+            }
+        };
+        modelObj.add(data, (error, record) => {
+            assert.ok(record);
+            assert.ok(record._id);
+            user3 = record;
+            done();
+        });
+    });
+
+    it('Success - uninvite user - user3', (done) => {
+        let data = {
+            "username": user3.username
+        };
+
+        modelObj.getUserByUsername(data, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.username, "user3");
+            delete data.username;
+            data.id = record._id;
+            data.status = record.status;
+            data.tenant = record.tenant;
+
+            modelObj.uninvite(data, (err, result) => {
+                assert.ok(result);
+                done();
+            });
+        });
+    });
+
+    it('Fails - uninvite user - invalid ID', (done) => {
+        let data = {
+            "username": user3.username
+        };
+
+        modelObj.getUserByUsername(data, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.username, "user3");
+            delete data.username;
+            data.id = "123123";
+            data.status = record.status;
+            data.tenant = record.tenant;
+
+            modelObj.uninvite(data, (err, result) => {
+                assert.ok(err);
+                done();
+            });
+        });
+    });
+
+    it('Fails - uninvite user  - null data', (done) => {
+        let data = {
+            "username": user3.username
+        };
+
+        modelObj.getUserByUsername(data, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.username, "user3");
+            data.username = "notfoundUsername";
+            data.id = "5cdc190fd52c82e0ddb1dcd5";
+            data.status = record.status;
+            data.tenant = record.tenant;
+
+            modelObj.uninvite(data, (err, result) => {
+                assert.ok(err);
+                done();
+            });
+        });
+    });
+
     it("validateId - error", function (done) {
         modelObj.validateId(null, (error) => {
             assert.ok(error);
@@ -403,7 +538,7 @@ describe("Unit test for: model - user", function () {
     });
 
     it("validateId - error invalid id", function (done) {
-        modelObj.validateId("121212", (error,) => {
+        modelObj.validateId("121212", (error) => {
             assert.ok(error);
             let index = error.message.indexOf("12 bytes or a string of 24 hex characters");
             assert.ok(index > 0);

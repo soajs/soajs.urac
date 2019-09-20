@@ -271,6 +271,8 @@ let bl = {
             return cb(bl.handleError(soajs, 400, null));
         }
 
+        let modelObj = bl.mt.getModel(soajs, options);
+
         let data = {};
         data.tenant = soajs.tenant;
         data.status = 'active';
