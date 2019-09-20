@@ -273,6 +273,85 @@ describe("Unit test for: model - group", function () {
         });
     });
 
+    it("Fails - deleteEnvironments - null data", (done) => {
+        modelObj.deleteEnvironments(null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("Group: id or code in addition to environment(s) are required."));
+            done();
+        });
+    });
+
+    it("Fails - deleteEnvironments - empty data", (done) => {
+        modelObj.deleteEnvironments({}, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("Group: id or code in addition to environment(s) are required."));
+            done();
+        });
+    });
+
+    it("Fails - deleteEnvironments - no environments", (done) => {
+        modelObj.deleteEnvironments({
+            id: "someid"
+        }, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("Group: id or code in addition to environment(s) are required."));
+            done();
+        });
+    });
+
+    it("Fails - deleteEnvironments - environments not array", (done) => {
+        modelObj.deleteEnvironments({
+            id: "someid",
+            environments: {}
+        }, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("Group: id or code in addition to environment(s) are required."));
+            done();
+        });
+    });
+
+    it('Success - deleteEnvironments - Data - id', (done) => {
+        let data = {
+            code: 'BBBB',
+            environments: ['DEV']
+        };
+
+        modelObj.getGroup(data, (err, record) => {
+            assert.deepEqual(record.code, 'BBBB');
+
+            data.id = record._id;
+            modelObj.deleteEnvironments(data, (err, result) => {
+                assert.ok(result);
+                assert.deepEqual(result, 1);
+                done();
+            });
+        });
+    });
+
+    it('Success - deleteEnvironments - Data - code', (done) => {
+        let data = {
+            code: 'CCCC',
+            environments: ['DEV']
+        };
+
+        modelObj.deleteEnvironments(data, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Fails - deleteEnvironments - Data - no valid id', (done) => {
+        let data = {
+            id: '123123',
+            environments: ['DEV']
+        };
+        modelObj.deleteEnvironments(data, (err, result) => {
+            assert.ok(err);
+            done();
+        });
+    });
+
     it("Delete group - error", function (done) {
         modelObj.delete(null, (error) => {
             assert.ok(error);

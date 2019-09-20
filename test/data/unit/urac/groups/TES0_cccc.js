@@ -11,6 +11,9 @@ let group = {
             "DSBRD": [
                 "DSBRD_OWNER"
             ]
+        },
+        "allowedEnvironments": {
+            "DEV": {}
         }
     },
     "tenant": {
