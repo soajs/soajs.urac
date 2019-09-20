@@ -60,6 +60,7 @@ describe("Unit test for: model - group", function () {
             done();
         });
     });
+
     it("Add group - with data", function (done) {
         let data = {
             "code": "AAAA",
@@ -78,6 +79,7 @@ describe("Unit test for: model - group", function () {
             done();
         });
     });
+
     it("Add group - with same data to test index", function (done) {
         let data = {
             "code": "AAAA",
@@ -188,6 +190,85 @@ describe("Unit test for: model - group", function () {
         };
         modelObj.edit(data, (error) => {
             assert.ok(error);
+            done();
+        });
+    });
+
+    it("Fails - deleteProducts - null data", (done) => {
+        modelObj.deleteProducts(null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("Group: id or code in addition to products are required."));
+            done();
+        });
+    });
+
+    it("Fails - deleteProducts - empty data", (done) => {
+        modelObj.deleteProducts({}, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("Group: id or code in addition to products are required."));
+            done();
+        });
+    });
+
+    it("Fails - deleteProducts - no products", (done) => {
+        modelObj.deleteProducts({
+            id: "someid"
+        }, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("Group: id or code in addition to products are required."));
+            done();
+        });
+    });
+
+    it("Fails - deleteProducts - products not array", (done) => {
+        modelObj.deleteProducts({
+            id: "someid",
+            products: {}
+        }, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("Group: id or code in addition to products are required."));
+            done();
+        });
+    });
+
+    it('Success - deleteProducts - Data - code', (done) => {
+        let data = {
+            code: 'CCCC',
+            products: ['DSBRD']
+        };
+
+        modelObj.deleteProducts(data, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Success - deleteProducts - Data - id', (done) => {
+        let data = {
+            code: 'BBBB',
+            products: ['DSBRD']
+        };
+
+        modelObj.getGroup(data, (err, record) => {
+            assert.deepEqual(record.code, 'BBBB');
+
+            data.id = record._id;
+            modelObj.deleteProducts(data, (err, result) => {
+                assert.ok(result);
+                assert.deepEqual(result, 1);
+                done();
+            });
+        });
+    });
+
+    it('Fails - deleteProducts - Data - no valid id', (done) => {
+        let data = {
+            id: '123123',
+            products: ['DSBRD']
+        };
+        modelObj.deleteProducts(data, (err, result) => {
+            assert.ok(err);
             done();
         });
     });
@@ -304,10 +385,8 @@ describe("Unit test for: model - group", function () {
         });
     });
 
-
     it("Constructor - with tenant - close connection", function (done) {
         modelObj.closeConnection();
         done();
     });
-})
-;
+});
