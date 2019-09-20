@@ -485,6 +485,7 @@ describe("Unit test for: model - user", function () {
 
             modelObj.uninvite(data, (err, result) => {
                 assert.ok(result);
+                assert.deepEqual(result, 1);
                 done();
             });
         });
@@ -527,6 +528,148 @@ describe("Unit test for: model - user", function () {
                 assert.ok(err);
                 done();
             });
+        });
+    });
+
+    it.skip("Success - save record - data", (done) => {
+        let data = {
+            "username": user3.username
+        };
+
+        modelObj.getUserByUsername(data, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.username, "user3");
+            data._id = record._id;
+            
+            modelObj.save(data, (error, result) => {
+                console.log("resolta", result, error);
+                assert.ok(result);
+                done();
+            });
+        });
+    });
+
+    it("Fails - save record - null data", (done) => {
+        modelObj.save(null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, new Error("User: _id is required."));
+            done();
+        });
+    });
+
+    it('Success - updateOneField - data with _id (intenal usage)', (done) => {
+        let data = {
+            _id: user3._id,
+            what: 'username',
+            username: 'user1Updt',
+            status: 'active'
+        };
+
+        modelObj.updateOneField(data, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Success - updateOneField - data with id (external usage)', (done) => {
+        let data = {
+            id: user3._id,
+            what: 'username',
+            username: 'user1Updt2',
+            status: 'active'
+        };
+
+        modelObj.updateOneField(data, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Fails - updateOneField - data with id (external usage) - invalid id', (done) => {
+        let data = {
+            id: '12123',
+            what: 'username',
+            username: 'user1Updt2',
+            status: 'active'
+        };
+
+        modelObj.updateOneField(data, (err, result) => {
+            assert.ok(err);
+            done();
+        });
+    });
+
+    it('Fails - updateOneField - data - update error', (done) => {
+        let data = {
+            id: "5cdc190fd52c82e0ddb1dcd5", //Doesn't exist
+            what: 'username',
+            username: 'user1Updt2',
+            status: 'active'
+        };
+
+        modelObj.updateOneField(data, (err, result) => {
+            assert.ok(err);
+            done();
+        });
+    });
+
+    it('Fails - updateOneField - null data', (done) => {
+        modelObj.updateOneField(null, (err) => {
+            assert.ok(err);
+            assert.deepEqual(err, new Error("User: either id or _id and the what field to update are required."));
+            done();
+        });
+    });
+
+    it('Fails - updateOneField - empty data', (done) => {
+        modelObj.updateOneField({}, (err) => {
+            assert.ok(err);
+            assert.deepEqual(err, new Error("User: either id or _id and the what field to update are required."));
+            done();
+        });
+    });
+
+    it('Fails - cleanDeletedGroup - null data', (done) => {
+        modelObj.cleanDeletedGroup(null, (err) => {
+            assert.ok(err);
+            assert.deepEqual(err, new Error("User: tenant ID, group Code and tenant information are required."));
+            done();
+        });
+    });
+
+    it('Fails - cleanDeletedGroup - empty data', (done) => {
+        modelObj.cleanDeletedGroup({}, (err) => {
+            assert.ok(err);
+            assert.deepEqual(err, new Error("User: tenant ID, group Code and tenant information are required."));
+            done();
+        });
+    });
+
+    it('Fails - cleanDeletedGroup - data no group code', (done) => {
+        modelObj.cleanDeletedGroup({
+            tId: "someid",
+            tenant: {}
+        }, (err) => {
+            assert.ok(err);
+            assert.deepEqual(err, new Error("User: tenant ID, group Code and tenant information are required."));
+            done();
+        });
+    });
+
+    it('Success - cleanDeletedGroup - data', (done) => {
+        modelObj.cleanDeletedGroup({
+            tId: "5c0e74ba9acc3c5a84a51259",
+            groupCode: 'BBBB',
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51259",
+                code: "TES0",
+            }
+        }, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 4);
+            done();
         });
     });
 
