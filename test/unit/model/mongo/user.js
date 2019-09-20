@@ -395,7 +395,6 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-
     it("validateId - error", function (done) {
         modelObj.validateId(null, (error) => {
             assert.ok(error);

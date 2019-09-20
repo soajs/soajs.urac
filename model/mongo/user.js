@@ -520,7 +520,7 @@ User.prototype.save = function (data, cb) {
     };
     __self.mongoCore.update(colName, condition, null, null, (err, record) => {
         if (!record) {
-            let error = new Error("User: user [" + _id.toString() + "] was not saved.");
+            let error = new Error("User: user [" + data._id.toString() + "] was not saved.");
             return cb(error);
         }
         return cb(err, record);
