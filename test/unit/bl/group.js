@@ -162,7 +162,7 @@ describe("Unit test for: BL - group", () => {
                 let error = new Error("Group: Edit - mongo error.");
                 return cb(error, null);
             } else {
-                return cb(null, data);
+                return cb(null, 1);
             }
         };
         BL.model = MODEL;
@@ -188,8 +188,7 @@ describe("Unit test for: BL - group", () => {
 
             BL.edit(soajs, data, null, (err, result) => {
                 assert.ok(result);
-                assert.deepEqual(result.id, '5cfb05c22ac09278709d0141');
-                assert.deepEqual(result.name, 'unit test');
+                assert.deepEqual(result, 1);
 
                 data.name = "ExistGroup";
                 data.id = "ExistGroupID";
@@ -215,7 +214,7 @@ describe("Unit test for: BL - group", () => {
                 let error = new Error("Group: Update Environment - mongo error.");
                 return cb(error, null);
             } else {
-                return cb(null, data);
+                return cb(null, 2);
             }
         };
 
@@ -235,7 +234,7 @@ describe("Unit test for: BL - group", () => {
 
             BL.updateEnvironments(soajs, data, null, (err, result) => {
                 assert.ok(result);
-                assert.deepEqual(result, {environments: ['test', 'stg'], groups: ['CCCC', 'AAAA']});
+                assert.deepEqual(result, 2);
 
                 done();
 
@@ -263,7 +262,7 @@ describe("Unit test for: BL - group", () => {
                 let error = new Error("Group: Update Packages - mongo error.");
                 return cb(error, null);
             } else {
-                return cb(null, data);
+                return cb(null, 2);
             }
         };
 
@@ -287,10 +286,7 @@ describe("Unit test for: BL - group", () => {
             BL.updatePackages(soajs, data, null, (err, result) => {
                 console.log("reso", result);
                 assert.ok(result);
-                assert.deepEqual(result, { packages:
-                        [ { product: 'test', package: 'PACK' },
-                            { product: 'soajs', package: 'gateway' } ],
-                    groups: [ 'CCCC', 'AAAA' ] });
+                assert.deepEqual(result, 2);
 
                 done();
 
