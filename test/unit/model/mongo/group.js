@@ -57,6 +57,7 @@ describe("Unit test for: model - group", function () {
     it("Add group - error", function (done) {
         modelObj.add(null, (error, record) => {
             assert.ok(error);
+            assert.deepEqual(error, new Error("Group: code, name, and description are required."));
             done();
         });
     });
@@ -107,6 +108,7 @@ describe("Unit test for: model - group", function () {
     it("Get group - error", function (done) {
         modelObj.getGroup(null, (error) => {
             assert.ok(error);
+            assert.deepEqual(error, new Error("Group: must provide either id or code."));
             done();
         });
     });
@@ -149,6 +151,7 @@ describe("Unit test for: model - group", function () {
     it("Edit group - error", function (done) {
         modelObj.edit(null, (error) => {
             assert.ok(error);
+            assert.deepEqual(error, new Error("Group: name and id are required."));
             done();
         });
     });
@@ -159,6 +162,7 @@ describe("Unit test for: model - group", function () {
         };
         modelObj.edit(data, (error, record) => {
             assert.ok(error);
+            assert.deepEqual(error, new Error("Group: name and id are required."));
             done();
         });
     });
@@ -355,6 +359,7 @@ describe("Unit test for: model - group", function () {
     it("Delete group - error", function (done) {
         modelObj.delete(null, (error) => {
             assert.ok(error);
+            assert.deepEqual(error, new Error("Group: id is required."));
             done();
         });
     });
@@ -386,6 +391,7 @@ describe("Unit test for: model - group", function () {
         };
         modelObj.delete(data, (error) => {
             assert.ok(error);
+            assert.deepEqual(error, new Error("Group: cannot delete record. Not found."));
             done();
         });
     });
@@ -405,6 +411,7 @@ describe("Unit test for: model - group", function () {
     it("updateEnvironments - error", function (done) {
         modelObj.updateEnvironments(null, (error) => {
             assert.ok(error);
+            assert.deepEqual(error, new Error("Group: environments and groups are required."));
             done();
         });
     });
@@ -424,6 +431,7 @@ describe("Unit test for: model - group", function () {
     it("updatePackages - error", function (done) {
         modelObj.updatePackages(null, (error) => {
             assert.ok(error);
+            assert.deepEqual(error, new Error("Group: packages and groups are required."));
             done();
         });
     });
@@ -444,6 +452,7 @@ describe("Unit test for: model - group", function () {
     it("validateId - error", function (done) {
         modelObj.validateId(null, (error) => {
             assert.ok(error);
+            assert.deepEqual(error, new Error("Group: must provide an id."));
             done();
         });
     });

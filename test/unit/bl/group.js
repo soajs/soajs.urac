@@ -202,6 +202,110 @@ describe("Unit test for: BL - group", () => {
             });
         });
     });
+    it('Update environment in Group', (done) => {
+        function MODEL() {
+            console.log("group model");
+        }
+
+        MODEL.prototype.closeConnection = () => {
+        };
+
+        MODEL.prototype.updateEnvironments = (data, cb) => {
+            if (data && data.environments === ["notFound"]) {
+                let error = new Error("Group: Update Environment - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, data);
+            }
+        };
+
+        BL.model = MODEL;
+
+        BL.updateEnvironments(soajs, null, null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, {
+                code: 400,
+                msg: BL.localConfig.errors[400]
+            });
+
+            let data = {
+                "environments": ["test", "stg"],
+                "groups": ["CCCC", "AAAA"]
+            };
+
+            BL.updateEnvironments(soajs, data, null, (err, result) => {
+                assert.ok(result);
+                assert.deepEqual(result, {environments: ['test', 'stg'], groups: ['CCCC', 'AAAA']});
+
+                done();
+
+                //TODO: Check with Antoine for err coverage
+                // data.environments = ["notFound"];
+                //
+                // BL.updateEnvironments(soajs, data, null, (err) => {
+                //     assert.ok(err);
+                //     assert.deepEqual(err.code, 602);
+                //     done();
+                // });
+            });
+        });
+    });
+    it('Update packages in Group', (done) => {
+        function MODEL() {
+            console.log("group model");
+        }
+
+        MODEL.prototype.closeConnection = () => {
+        };
+
+        MODEL.prototype.updatePackages = (data, cb) => {
+            if (data && data.packages === ["notFound"]) {
+                let error = new Error("Group: Update Packages - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, data);
+            }
+        };
+
+        BL.model = MODEL;
+
+        BL.updatePackages(soajs, null, null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, {
+                code: 400,
+                msg: BL.localConfig.errors[400]
+            });
+
+            let data = {
+                "packages": [
+                    {product: "test", package: "PACK"},
+                    {product: "soajs", package: "gateway"}
+                ],
+                "groups": ["CCCC", "AAAA"]
+            };
+
+            BL.updatePackages(soajs, data, null, (err, result) => {
+                console.log("reso", result);
+                assert.ok(result);
+                assert.deepEqual(result, { packages:
+                        [ { product: 'test', package: 'PACK' },
+                            { product: 'soajs', package: 'gateway' } ],
+                    groups: [ 'CCCC', 'AAAA' ] });
+
+                done();
+
+                //TODO: Check with Antoine for err coverage
+                // data.packages = ["notFound"];
+                //
+                // BL.updatePackages(soajs, data, null, (err) => {
+                //     assert.ok(err);
+                //     assert.deepEqual(err.code, 602);
+                //     done();
+                // });
+            });
+        });
+    });
+
     it('Delete Group', (done) => {
         function MODEL() {
             console.log("group model");
@@ -237,11 +341,12 @@ describe("Unit test for: BL - group", () => {
                 data.id = 'notFoundID';
                 BL.deleteGroup(soajs, data, null, (error) => {
                     assert.ok(error);
-                    assert.deepEqual(error, { code: 602, msg: 'Model error: Group: Delete - mongo error.' });
+                    assert.deepEqual(error, {code: 602, msg: 'Model error: Group: Delete - mongo error.'});
                     done();
                 });
             });
         });
     });
+
 
 });
