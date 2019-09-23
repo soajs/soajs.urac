@@ -145,7 +145,7 @@ let bl = {
         data.tId = inputmaskData.tId;
         data.groupCode = inputmaskData.groupCode;
         data.tenant = soajs.tenant;
-        modelObj.cleanDeleteGroup(data, (err, record) => {
+        modelObj.cleanDeletedGroup(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));

@@ -171,17 +171,19 @@ describe("Unit test for: BL - user", () => {
             } else if (data && data.username && data.username === "empty") {
                 return cb(null, null);
             } else {
-                return cb(null, { _id: "UserID",
+                return cb(null, {
+                    _id: "UserID",
                     username: 'userTest',
                     firstName: 'user',
                     lastName: 'test',
                     email: 'test@soajs.org',
                     status: 'active',
-                    tenant: { code: 'TES0', id: '5c0e74ba9acc3c5a84a51259' },
+                    tenant: {code: 'TES0', id: '5c0e74ba9acc3c5a84a51259'},
                     ts: 1569246037145,
                     profile: {},
                     groups: [],
-                    config: {} });
+                    config: {}
+                });
             }
         };
         BL.model = MODEL;
@@ -229,7 +231,7 @@ describe("Unit test for: BL - user", () => {
         };
 
         MODEL.prototype.getUsers = (data, cb) => {
-            if (data && data.keywords && (data.keywords === "error" || Array.isArray(data.keywords)) ) {
+            if (data && data.keywords && (data.keywords === "error" || Array.isArray(data.keywords))) {
                 let error = new Error("User: Get Users - mongo error.");
                 return cb(error, null);
             } else {
@@ -279,7 +281,7 @@ describe("Unit test for: BL - user", () => {
         };
 
         MODEL.prototype.getUsersByIds = (data, cb) => {
-            if (data && data.ids && !(Array.isArray(data.ids)) ) {
+            if (data && data.ids && !(Array.isArray(data.ids))) {
                 let error = new Error("User: An array of ids is required - mongo error.");
                 return cb(error, null);
             } else {
@@ -316,5 +318,55 @@ describe("Unit test for: BL - user", () => {
                 });
             });
         });
+    });
+    it('Clean Deleted Group', (done) => {
+        function MODEL() {
+            console.log("user model");
+        }
+
+        MODEL.prototype.closeConnection = () => {
+        };
+
+        MODEL.prototype.cleanDeletedGroup = (data, cb) => {
+            if (data && data.tId && data.tId === "error") {
+                let error = new Error("User: Clean Deleted Group - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, 2);
+            }
+        };
+        BL.model = MODEL;
+
+        BL.cleanDeletedGroup(soajs, null, null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, {
+                code: 400,
+                msg: BL.localConfig.errors[400]
+            });
+
+            let data = {
+                tId: "TID",
+                groupCode: 'Group Code',
+                tenant: {
+                    id: "Tenant ID",
+                    code: "Tenant Code",
+                }
+            };
+
+            BL.cleanDeletedGroup(soajs, data, null, (error, result) => {
+                assert.ok(result);
+                assert.deepEqual(result, 2);
+
+                data.tId = 'error';
+
+                BL.cleanDeletedGroup(soajs, data, null, (err) => {
+                    assert.ok(err);
+                    assert.deepEqual(err.code, 602);
+
+                    done();
+                });
+            });
+        });
+
     });
 });
