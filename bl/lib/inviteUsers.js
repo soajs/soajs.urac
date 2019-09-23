@@ -21,7 +21,7 @@ let local = (soajs, inputmaskData, options, cb) => {
         "status": "active"
     };
 
-    let records = {"succeeded": [], "failed": [], "extra": []};
+    let records = {"succeeded": [], "failed": []};
     async.each(inputmaskData.users, function (oneUser, callback) {
 
         let goInvite = (error, userRecord, responseObj) => {
@@ -107,7 +107,8 @@ let local = (soajs, inputmaskData, options, cb) => {
             });
         }
         else {
-            records.extra.push("Cannot invite a user without providing its id or username.");
+            let responseObj = {"reason": "Cannot invite a user without providing its id or username."};
+            records.failed.push(responseObj);
             return callback();
         }
     }, function () {

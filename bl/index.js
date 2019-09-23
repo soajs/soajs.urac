@@ -36,6 +36,8 @@ function init(service, localConfig, cb) {
         bl["addUser"] = require("./lib/addUser.js")(bl);
         bl["join"] = require("./lib/join.js")(bl);
         bl["inviteUser"] =  require("./lib/inviteUser.js")(bl);
+        bl["inviteUsers"] =  require("./lib/inviteUsers.js")(bl);
+        bl["uninviteUsers"] =  require("./lib/uninviteUsers.js")(bl);
 
         if (err) {
             service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);
