@@ -367,6 +367,75 @@ describe("Unit test for: BL - user", () => {
                 });
             });
         });
-
     });
+    it('Update Status and Update One Field', (done) => {
+        function MODEL() {
+            console.log("user model");
+        }
+
+        MODEL.prototype.closeConnection = () => {
+        };
+
+        MODEL.prototype.updateOneField = (data, cb) => {
+            if (data && data.what && data.what === "error") {
+                let error = new Error("User: Update One Field - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, 1);
+            }
+        };
+        BL.model = MODEL;
+
+        BL.updateOneField(soajs, null, null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, {
+                code: 400,
+                msg: BL.localConfig.errors[400]
+            });
+
+            let data = {
+                what: 'status',
+                status: 'pending',
+                id: 'userID'
+            };
+
+            BL.updateStatus(soajs, data, null, (error, result) => {
+                assert.ok(result);
+                assert.deepEqual(result, 1);
+
+                data.what = 'firstName';
+                data.firstName = 'fadi';
+
+                BL.updateOneField(soajs, data, null, (error, result) => {
+                    assert.ok(result);
+                    assert.deepEqual(result, 1);
+
+                    let data = {
+                        what: 'status',
+                        status: 'pending',
+                        _id: 'userID'
+                    };
+
+                    BL.updateOneField(soajs, data, null, (error, result) => {
+                        assert.ok(result);
+                        assert.deepEqual(result, 1);
+
+                        data.what = 'error';
+                        BL.updateOneField(soajs, data, null, (err) => {
+                            assert.ok(err);
+                            assert.deepEqual(err.code, 602);
+
+                            BL.updateStatus(soajs, null, null, (err, result) => {
+                                assert.ok(result);
+                                assert.deepEqual(result, 1);
+
+                                done();
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });
+
 });

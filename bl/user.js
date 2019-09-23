@@ -161,7 +161,7 @@ let bl = {
     },
 
     "updateOneField": (soajs, inputmaskData, options, cb) => {
-        if (!inputmaskData && !inputmaskData.what) {
+        if (!inputmaskData || !inputmaskData.what) {
             return cb(bl.handleError(soajs, 400, null));
         }
         let modelObj = bl.mt.getModel(soajs, options);
