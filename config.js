@@ -73,7 +73,6 @@ module.exports = {
         },
         "get": {
 
-
             '/password/forgot': {
                 "_apiInfo": {
                     "l": "Forgot Password",
@@ -149,30 +148,6 @@ module.exports = {
                     "groupMain": true
                 },
                 "commonFields": ["start", "limit", "keywords"],
-                "config": {
-                    "source": ['query.config'],
-                    "required": false,
-                    "validation": {"type": "boolean"}
-                }
-            },
-            '/admin/users/ids': {
-                "_apiInfo": {
-                    "l": "List users by Id",
-                    "group": "Administration",
-                    "groupMain": true
-                },
-                "commonFields": ["start", "limit"],
-                "ids": {
-                    "source": ['query.ids'],
-                    "required": true,
-                    "validation": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "minItems": 1
-                        }
-                    }
-                },
                 "config": {
                     "source": ['query.config'],
                     "required": false,
@@ -389,7 +364,32 @@ module.exports = {
                         }
                     }
                 }
-            }
+            },
+
+            '/admin/users/ids': {
+                "_apiInfo": {
+                    "l": "List users by Id",
+                    "group": "User administration",
+                    "groupMain": true
+                },
+                "commonFields": ["start", "limit"],
+                "ids": {
+                    "source": ['body.ids'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "minItems": 1
+                        }
+                    }
+                },
+                "config": {
+                    "source": ['query.config'],
+                    "required": false,
+                    "validation": {"type": "boolean"}
+                }
+            },
         },
 
         "delete": {

@@ -51,11 +51,6 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-        service.get("/admin/users/ids", function (req, res) {
-            bl.user.getUsersByIds(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
-                return res.json(req.soajs.buildResponse(error, data));
-            });
-        });
         service.get("/admin/users/count", function (req, res) {
             bl.user.countUsers(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
@@ -166,6 +161,11 @@ service.init(() => {
         });
         service.post("/admin/group", function (req, res) {
             bl.group.add(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+        service.post("/admin/users/ids", function (req, res) {
+            bl.user.getUsersByIds(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
