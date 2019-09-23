@@ -118,7 +118,7 @@ describe("Unit test for: BL - user", () => {
         };
 
         MODEL.prototype.countUsers = (data, cb) => {
-            if (data && data.keywords && data.keywords === "error") {
+            if (data && data.keywords && (data.keywords === "error" || Array.isArray(data.keywords))) {
                 let error = new Error("User: Count Users - mongo error.");
                 return cb(error, null);
             } else {
@@ -145,7 +145,13 @@ describe("Unit test for: BL - user", () => {
                 BL.countUsers(soajs, data, null, (error) => {
                     assert.ok(error);
                     assert.deepEqual(error.code, 602);
-                    done();
+
+                    data.keywords = [];
+                    BL.countUsers(soajs, data, null, (error) => {
+                        assert.ok(error);
+                        assert.deepEqual(error.code, 602);
+                        done();
+                    });
                 });
             });
         });
@@ -224,7 +230,7 @@ describe("Unit test for: BL - user", () => {
 
         MODEL.prototype.getUsers = (data, cb) => {
             if (data && data.keywords && (data.keywords === "error" || Array.isArray(data.keywords)) ) {
-                let error = new Error("User: Count Users - mongo error.");
+                let error = new Error("User: Get Users - mongo error.");
                 return cb(error, null);
             } else {
                 return cb(null, []);
@@ -264,5 +270,51 @@ describe("Unit test for: BL - user", () => {
             });
         });
     });
+    it('Get Users By Ids', (done) => {
+        function MODEL() {
+            console.log("user model");
+        }
 
+        MODEL.prototype.closeConnection = () => {
+        };
+
+        MODEL.prototype.getUsersByIds = (data, cb) => {
+            if (data && data.ids && !(Array.isArray(data.ids)) ) {
+                let error = new Error("User: An array of ids is required - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, []);
+            }
+        };
+        BL.model = MODEL;
+
+        BL.getUsersByIds(soajs, null, null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, {
+                code: 400,
+                msg: BL.localConfig.errors[400]
+            });
+
+            let data = {
+                ids: ["id1", 'id2'],
+                "limit": 10,
+                "start": 0,
+                "config": true
+            };
+
+            BL.getUsersByIds(soajs, data, null, (error, records) => {
+                assert.ok(records);
+                assert.deepEqual(records, []);
+
+                data.ids = "ids";
+
+                BL.getUsersByIds(soajs, data, null, (err) => {
+                    assert.ok(err);
+                    assert.deepEqual(err.code, 602);
+
+                    done();
+                });
+            });
+        });
+    });
 });
