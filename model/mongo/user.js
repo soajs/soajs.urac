@@ -86,15 +86,21 @@ function User(soajs, localConfig, mongoCore) {
  */
 User.prototype.cleanDeletedGroup = function (data, cb) {
     let __self = this;
-    if (!data || !data.tId || !data.groupCode || !data.tenant) {
-        let error = new Error("User: tenant ID, group Code and tenant information are required.");
+    if (!data || !data.groupCode || !data.tenant) {
+        let error = new Error("User: group Code and tenant information are required.");
         return cb(error, null);
     }
     if (data.tenant.type === "client" && data.tenant.main) {
-        //TODO: clean up from sub tenant
+        //TODO: clean up from sub tenant & index
+        let condition = {"config.allowedTenants.tenant.id": data.tenant.id};
+        let extraOptions = {multi: true};
+        let s = {"$pull": {"config.allowedTenants.groups": data.groupCode}};
+        __self.mongoCore.update(colName, condition, s, extraOptions, (err, response) => {
+            return cb(err, response);
+        });
     }
     else {
-        let condition = {"tenant.id": data.tId};
+        let condition = {"tenant.id": data.tenant.id};
         let extraOptions = {multi: true};
         let s = {"$pull": {groups: data.groupCode}};
         __self.mongoCore.update(colName, condition, s, extraOptions, (err, response) => {

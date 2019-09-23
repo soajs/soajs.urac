@@ -142,7 +142,6 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
-        data.tId = inputmaskData.tId;
         data.groupCode = inputmaskData.groupCode;
         data.tenant = soajs.tenant;
         modelObj.cleanDeletedGroup(data, (err, record) => {

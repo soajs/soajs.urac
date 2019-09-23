@@ -634,7 +634,7 @@ describe("Unit test for: model - user", function () {
     it('Fails - cleanDeletedGroup - null data', (done) => {
         modelObj.cleanDeletedGroup(null, (err) => {
             assert.ok(err);
-            assert.deepEqual(err, new Error("User: tenant ID, group Code and tenant information are required."));
+            assert.deepEqual(err, new Error("User: group Code and tenant information are required."));
             done();
         });
     });
@@ -642,7 +642,7 @@ describe("Unit test for: model - user", function () {
     it('Fails - cleanDeletedGroup - empty data', (done) => {
         modelObj.cleanDeletedGroup({}, (err) => {
             assert.ok(err);
-            assert.deepEqual(err, new Error("User: tenant ID, group Code and tenant information are required."));
+            assert.deepEqual(err, new Error("User: group Code and tenant information are required."));
             done();
         });
     });
@@ -653,14 +653,13 @@ describe("Unit test for: model - user", function () {
             tenant: {}
         }, (err) => {
             assert.ok(err);
-            assert.deepEqual(err, new Error("User: tenant ID, group Code and tenant information are required."));
+            assert.deepEqual(err, new Error("User: group Code and tenant information are required."));
             done();
         });
     });
 
     it('Success - cleanDeletedGroup - data', (done) => {
         modelObj.cleanDeletedGroup({
-            tId: "5c0e74ba9acc3c5a84a51259",
             groupCode: 'BBBB',
             tenant: {
                 id: "5c0e74ba9acc3c5a84a51259",

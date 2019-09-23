@@ -328,7 +328,7 @@ describe("Unit test for: BL - user", () => {
         };
 
         MODEL.prototype.cleanDeletedGroup = (data, cb) => {
-            if (data && data.tId && data.tId === "error") {
+            if (data && data.groupCode && data.groupCode === "error") {
                 let error = new Error("User: Clean Deleted Group - mongo error.");
                 return cb(error, null);
             } else {
@@ -345,7 +345,6 @@ describe("Unit test for: BL - user", () => {
             });
 
             let data = {
-                tId: "TID",
                 groupCode: 'Group Code',
                 tenant: {
                     id: "Tenant ID",
@@ -357,7 +356,7 @@ describe("Unit test for: BL - user", () => {
                 assert.ok(result);
                 assert.deepEqual(result, 2);
 
-                data.tId = 'error';
+                data.groupCode = 'error';
 
                 BL.cleanDeletedGroup(soajs, data, null, (err) => {
                     assert.ok(err);
