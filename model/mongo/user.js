@@ -42,6 +42,9 @@ function User(soajs, localConfig, mongoCore) {
         });
         __self.mongoCore.createIndex(colName, {"email": 1}, {unique: true}, function () {
         });
+
+        __self.mongoCore.createIndex(colName, {'config.allowedTenants.tenant.id': 1}, {}, function (err, result) {
+        });
         __self.mongoCore.createIndex(colName,
             {
                 "config.allowedTenants.tenant.pin.code": 1,
