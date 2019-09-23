@@ -546,4 +546,66 @@ describe("Unit test for: BL - user", () => {
             });
         });
     });
+
+    it('un invite user', (done) => {
+        function MODEL() {
+            console.log("user model");
+        }
+
+        MODEL.prototype.closeConnection = () => {
+        };
+
+        MODEL.prototype.uninvite = (data, cb) => {
+            if (data && data.tenant && data.tenant === {}) {
+                let error = new Error("User: UnInvite User - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, 1);
+            }
+        };
+        BL.model = MODEL;
+
+        BL.uninvite(soajs, null, null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, {
+                code: 400,
+                msg: BL.localConfig.errors[400]
+            });
+
+            let data = {
+                id: 'userID',
+                status: 'active',
+                tenant: {
+                    id: 'tenant id',
+                    code: 'tenant code'
+                }
+            };
+
+            BL.uninvite(soajs, data, null, (error, result) => {
+                assert.ok(result);
+                assert.deepEqual(result, 1);
+
+                delete data.id;
+                data.username = "usernametest";
+
+                BL.uninvite(soajs, data, null, (error, result) => {
+                    assert.ok(result);
+                    assert.deepEqual(result, 1);
+
+                    done();
+
+                    //todo: check error coverage
+                    // data.tenant = {};
+                    //
+                    // BL.uninvite(soajs, data, null, (err) => {
+                    //     assert.ok(err);
+                    //     assert.deepEqual(err.code, 602);
+                    //
+                    //     done();
+                    // });
+                });
+            });
+        });
+    });
+
 });
