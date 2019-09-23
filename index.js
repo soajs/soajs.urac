@@ -107,6 +107,13 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+
+        service.put("/admin/user/groups", function (req, res) {
+            bl.user.editGroups(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+
         service.put("/admin/user/status", function (req, res) {
             bl.user.updateStatus(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));

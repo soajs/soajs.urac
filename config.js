@@ -413,7 +413,7 @@ module.exports = {
                     "group": "Guest Password Settings"
                 },
                 "token": {
-                    "source": ['query.token'],
+                    "source": ['body.token'],
                     "required": true,
                     "validation": {"type": "string"}
                 },
@@ -435,7 +435,7 @@ module.exports = {
                     "group": "My Account"
                 },
                 "id": {
-                    "source": ['query.id'],
+                    "source": ['body.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 },
@@ -462,7 +462,7 @@ module.exports = {
                     "group": "My Account"
                 },
                 "id": {
-                    "source": ['query.id'],
+                    "source": ['body.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 },
@@ -479,7 +479,7 @@ module.exports = {
                     "group": "My Account"
                 },
                 "id": {
-                    "source": ['query.id'],
+                    "source": ['body.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 },
@@ -514,7 +514,7 @@ module.exports = {
                     "group": "Administration"
                 },
                 "id": {
-                    "source": ['query.id'],
+                    "source": ['body.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 },
@@ -566,18 +566,41 @@ module.exports = {
                 }
             },
 
+
+            '/admin/user/groups': {
+                "_apiInfo": {
+                    "l": "Edit user's groups by id",
+                    "group": "USer administration"
+                },
+                "id": {
+                    "source": ['body.id'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "groups": {
+                    "source": ['body.groups'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+
             '/admin/user/status': {
                 "_apiInfo": {
                     "l": "Change user status",
                     "group": "Administration"
                 },
                 "id": {
-                    "source": ['query.id'],
+                    "source": ['body.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 },
                 "status": {
-                    "source": ['query.status'],
+                    "source": ['body.status'],
                     "required": true,
                     "validation": {"type": "string", "enum": ['active', 'inactive']}
                 }
@@ -589,7 +612,7 @@ module.exports = {
                     "group": "Administration"
                 },
                 "id": {
-                    "source": ['query.id'],
+                    "source": ['body.id'],
                     "required": true,
                     "validation": {"type": "string"}
                 },
@@ -668,6 +691,7 @@ module.exports = {
                     }
                 }
             },
+
             '/admin/groups/packages': {
                 "_apiInfo": {
                     "l": "Update package(s) to group(s)",
@@ -707,6 +731,7 @@ module.exports = {
                     }
                 }
             },
+
             '/admin/user/invite': {
                 "_apiInfo": {
                     "l": "Invite user by id or username as username or email",
@@ -750,6 +775,7 @@ module.exports = {
                     }
                 }
             },
+
             "/admin/user/uninvite": {
                 "_apiInfo": {
                     "l": "un-Invite user",
@@ -766,6 +792,7 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
+
             '/admin/users/invite': {
                 "_apiInfo": {
                     "l": "Invite users by id or username as username or email",
@@ -822,6 +849,7 @@ module.exports = {
                     }
                 }
             },
+
             '/admin/users/uninvite': {
                 "_apiInfo": {
                     "l": "un-Invite users by id or username as username or email",
