@@ -1,5 +1,5 @@
 "use strict";
-const colName = "token";
+const colName = "tokens";
 const core = require("soajs");
 const Mongo = core.mongo;
 const uuid = require('uuid');
@@ -58,6 +58,7 @@ Token.prototype.updateStatus = function (data, cb) {
         'upsert': false,
         'safe': true
     };
+
     __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
         if (!record) {
             let error = new Error("Token: status for token [" + data.token + "] was not update.");
@@ -114,7 +115,7 @@ Token.prototype.get = function (data, cb) {
         'status': data.status
     };
 
-    //At this point service ot services are available
+    //At this point service or services are available
     if (data.service) {
         condition.service = data.service;
     }

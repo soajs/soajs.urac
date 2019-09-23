@@ -123,6 +123,37 @@ let lib = {
         }
         else
             return cb();
+    },
+    tokens: (dataPath, profile, cb) => {
+        let records = [];
+        fs.readdirSync(dataPath).forEach(function (file) {
+            let rec = require(dataPath + file);
+            //TODO: validate token
+            records.push(rec);
+        });
+        if (records && Array.isArray(records) && records.length > 0) {
+            async.each(
+                records,
+                (e, cb) => {
+                    console.log("somereco", e);
+                    profile.name = "TES0" + "_urac";
+                    let mongoConnection = new Mongo(profile);
+                    mongoConnection.dropCollection("tokens", () => {
+                        let condition = {code: e.code};
+                        e._id = mongoConnection.ObjectId(e._id);
+                        mongoConnection.update("tokens", condition, e, {'upsert': true}, (error, result) => {
+                            console.log("tokens", error, result);
+                            mongoConnection.closeDb();
+                            return cb();
+                        });
+                    });
+                },
+                () => {
+                    return cb();
+                });
+        }
+        else
+            return cb();
     }
 };
 
@@ -257,6 +288,14 @@ module.exports = (profilePath, dataPath, callback) => {
                     //check for groups data
                     if (fs.existsSync(dataPath + "urac/groups/")) {
                         return lib.groups(dataPath + "urac/groups/", profile, cb);
+                    }
+                    else
+                        return cb(null);
+                },
+                function (cb) {
+                    //check for tokens data
+                    if (fs.existsSync(dataPath + "urac/tokens/")) {
+                        return lib.tokens(dataPath + "urac/tokens/", profile, cb);
                     }
                     else
                         return cb(null);

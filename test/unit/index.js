@@ -22,6 +22,7 @@ describe("Starting URAC Unit test", () => {
 
         require("./model/mongo/group.js");
         require("./model/mongo/user.js");
+        require("./model/mongo/token.js");
         done();
     });
 
