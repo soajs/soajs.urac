@@ -135,7 +135,7 @@ describe("Unit test for: BL - user", () => {
             });
 
             let data = {
-                keywords: ["usernameToTest"]
+                keywords: "usernameToTest"
             };
             BL.countUsers(soajs, data, null, (err, result) => {
                 assert.ok(result);
@@ -208,6 +208,56 @@ describe("Unit test for: BL - user", () => {
                         assert.ok(error);
                         assert.deepEqual(error, {code: 520, msg: BL.localConfig.errors[520]});
 
+                        done();
+                    });
+                });
+            });
+        });
+    });
+    it('Get Users', (done) => {
+        function MODEL() {
+            console.log("user model");
+        }
+
+        MODEL.prototype.closeConnection = () => {
+        };
+
+        MODEL.prototype.getUsers = (data, cb) => {
+            if (data && data.keywords && (data.keywords === "error" || Array.isArray(data.keywords)) ) {
+                let error = new Error("User: Count Users - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, []);
+            }
+        };
+        BL.model = MODEL;
+
+        BL.getUsers(soajs, null, null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, {
+                code: 400,
+                msg: BL.localConfig.errors[400]
+            });
+
+            let data = {
+                "keywords": "usernameToTest",
+                "limit": 10,
+                "start": 0,
+                "config": true
+            };
+            BL.getUsers(soajs, data, null, (err, result) => {
+                assert.ok(result);
+                assert.deepEqual(result, []);
+
+                data.keywords = [];
+                BL.getUsers(soajs, data, null, (error) => {
+                    assert.ok(error);
+                    assert.deepEqual(error.code, 602);
+
+                    data.keywords = "error";
+                    BL.getUsers(soajs, data, null, (error) => {
+                        assert.ok(error);
+                        assert.deepEqual(error.code, 602);
                         done();
                     });
                 });
