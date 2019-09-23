@@ -492,4 +492,58 @@ describe("Unit test for: BL - user", () => {
             });
         });
     });
+    it('Reset Users Password', (done) => {
+        function MODEL() {
+            console.log("user model");
+        }
+
+        MODEL.prototype.closeConnection = () => {
+        };
+
+        MODEL.prototype.updateOneField = (data, cb) => {
+            if (data && data.password && data.password === "error") {
+                let error = new Error("User: Reset Password - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, 1);
+            }
+        };
+        BL.model = MODEL;
+
+        BL.resetPassword(soajs, null, null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, {
+                code: 400,
+                msg: BL.localConfig.errors[400]
+            });
+
+            let data = {
+                id: 'userID',
+                what: 'password',
+                password: 'someNewOne'
+            };
+
+            BL.resetPassword(soajs, data, null, (error, result) => {
+                assert.ok(result);
+                assert.deepEqual(result, 1);
+
+                data._id = "userIDExternal";
+                BL.resetPassword(soajs, data, null, (error, result) => {
+                    assert.ok(result);
+                    assert.deepEqual(result, 1);
+
+                    done();
+
+                    //TODO: CHECK ERROR COVERAGE
+                    // data.password = 'error';
+                    // BL.resetPassword(soajs, data, null, (err) => {
+                    //     assert.ok(err);
+                    //     assert.deepEqual(err.code, 602);
+                    //
+                    //     done();
+                    // });
+                });
+            });
+        });
+    });
 });
