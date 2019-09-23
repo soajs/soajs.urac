@@ -41,8 +41,7 @@ describe("Unit test for: BL - group", () => {
             if (data && data.error) {
                 let error = new Error("Group: getGroups - mongo error.");
                 return cb(error, null);
-            }
-            else {
+            } else {
                 return cb(null, []);
             }
         };
@@ -69,8 +68,7 @@ describe("Unit test for: BL - group", () => {
         MODEL.prototype.getGroup = (data, cb) => {
             if (data && data.code === "CCCC") {
                 return cb(null, null);
-            }
-            else if (data && data.code === "AAAA") {
+            } else if (data && data.code === "AAAA") {
                 let error = new Error("Group: getGroup - mongo error.");
                 return cb(error, null);
             } else {
@@ -149,6 +147,49 @@ describe("Unit test for: BL - group", () => {
                 });
             });
 
+        });
+    });
+
+
+    it('Delete Group', (done) => {
+        function MODEL() {
+            console.log("group model");
+        }
+
+        MODEL.prototype.closeConnection = () => {
+        };
+
+        MODEL.prototype.delete = (data, cb) => {
+            if (data && data.id === "ownerID") {
+                let error = new Error("Group: Delete - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, data);
+            }
+        };
+        BL.model = MODEL;
+
+        BL.deleteGroup(soajs, null, null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, {
+                code: 400,
+                msg: BL.localConfig.errors[400]
+            });
+
+            let data = {
+                id: '5cfb05c22ac09278709d0141'
+            };
+            BL.deleteGroup(soajs, data, null, (err, result) => {
+                assert.ok(result);
+                assert.deepEqual(result, { id: '5cfb05c22ac09278709d0141' });
+
+                data.id = 'ownerID';
+                BL.deleteGroup(soajs, data, null, (error, res) => {
+                    console.log("errora", error);
+                    assert.ok(error);
+                    done();
+                });
+            });
         });
     });
 
