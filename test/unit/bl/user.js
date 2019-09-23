@@ -437,5 +437,59 @@ describe("Unit test for: BL - user", () => {
             });
         });
     });
+    it('Edit User', (done) => {
+        function MODEL() {
+            console.log("user model");
+        }
 
+        MODEL.prototype.closeConnection = () => {
+        };
+
+        MODEL.prototype.edit = (data, cb) => {
+            if (data && data.id && data.id === "error") {
+                let error = new Error("User: Edit User - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, 1);
+            }
+        };
+        BL.model = MODEL;
+
+        BL.edit(soajs, null, null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, {
+                code: 400,
+                msg: BL.localConfig.errors[400]
+            });
+
+            let data = {
+                id: "userID",
+                username: "USERname",
+                firstName: "First",
+                lastName: "Last",
+                email: "f.l@local.com",
+                profile: {"test": "test"},
+                groups: ["test", "some"],
+                status: "active",
+            };
+            BL.edit(soajs, data, null, (error, result) => {
+                assert.ok(result);
+                assert.deepEqual(result, 1);
+
+                data._id = 'userIDExt';
+                BL.edit(soajs, data, null, (error, result) => {
+                    assert.ok(result);
+                    assert.deepEqual(result, 1);
+
+                    data.id = 'error';
+                    BL.edit(soajs, data, null, (err) => {
+                        assert.ok(err);
+                        assert.deepEqual(err.code, 602);
+
+                        done();
+                    });
+                });
+            });
+        });
+    });
 });

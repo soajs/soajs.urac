@@ -135,7 +135,6 @@ let lib = {
             async.each(
                 records,
                 (e, cb) => {
-                    console.log("somereco", e);
                     profile.name = "TES0" + "_urac";
                     let mongoConnection = new Mongo(profile);
                     mongoConnection.dropCollection("tokens", () => {
