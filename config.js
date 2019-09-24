@@ -613,7 +613,7 @@ module.exports = {
 
             '/admin/user/pin': {
                 "_apiInfo": {
-                    "l": "Edit, reset, or delete user's pin information",
+                    "l": "Edit, reset, or delete user's pin information by id, username, or email",
                     "group": "User administration"
                 },
                 "user": {
