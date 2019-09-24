@@ -545,7 +545,6 @@ describe("Unit test for: BL - user", () => {
             });
         });
     });
-
     it('un invite user', (done) => {
         function MODEL() {
             console.log("user model");
@@ -606,5 +605,141 @@ describe("Unit test for: BL - user", () => {
             });
         });
     });
+    it('Edit Groups', (done) => {
+        function MODEL() {
+            console.log("user model");
+        }
 
+        MODEL.prototype.closeConnection = () => {
+        };
+
+        MODEL.prototype.edit = (data, cb) => {
+            if (data && data.id && data.id === "error") {
+                let error = new Error("User: Edit Groups - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, 1);
+            }
+        };
+        BL.model = MODEL;
+
+        BL.editGroups(soajs, null, null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, {
+                code: 400,
+                msg: BL.localConfig.errors[400]
+            });
+
+            let data = {
+                id: "UserID",
+                groups: ['Group1', "Group2"]
+            };
+
+            BL.editGroups(soajs, data, null, (err, result) => {
+                assert.ok(result);
+                assert.deepEqual(result, 1);
+
+                data.id = 'error';
+
+                BL.editGroups(soajs, data, null, (err) => {
+                    assert.ok(err);
+                    assert.deepEqual(err.code, 602);
+
+                    done();
+                });
+            });
+        });
+    });
+    it('Add User', (done) => {
+        function MODEL() {
+            console.log("user model");
+        }
+
+        MODEL.prototype.closeConnection = () => {
+        };
+
+        MODEL.prototype.add = (data, cb) => {
+            if (data && data.username && data.username === "error") {
+                let error = new Error("User: Add User - mongo error.");
+                return cb(error, null);
+            } else {
+                return cb(null, { username: 'usernameTest',
+                    firstName: 'user',
+                    lastName: 'name',
+                    email: 'testmail@soajs.org',
+                    status: 'active',
+                    tenant: { code: 'TES0', id: '5c0e74ba9acc3c5a84a51259' },
+                    ts: 1569316601637,
+                    profile: {
+                        'user': 'test'
+                    },
+                    groups: ['group1', 'groupOwner'],
+                    config: {},
+                    _id: "USERID"
+                });
+            }
+        };
+        BL.model = MODEL;
+
+        BL.add(soajs, null, null, (error) => {
+            assert.ok(error);
+            assert.deepEqual(error, {
+                code: 400,
+                msg: BL.localConfig.errors[400]
+            });
+
+            let data = {
+                username: 'usernameTest',
+                firstName: 'user',
+                lastName: 'name',
+                email: 'testmail@soajs.org',
+                password: 'password123',
+                status: 'active',
+                tenant: { code: 'TES0', id: '5c0e74ba9acc3c5a84a51259' },
+                ts: 1569316601637,
+                profile: {
+                    'user': 'test'
+                },
+                groups: ['group1', 'groupOwner'],
+            };
+
+            BL.add(soajs, data, null, (err, record) => {
+                assert.ok(record);
+                assert.deepEqual(record._id, "USERID");
+                assert.deepEqual(record.firstName, "user");
+                assert.deepEqual(record.tenant, { code: 'TES0', id: '5c0e74ba9acc3c5a84a51259' });
+                assert.deepEqual(record.config, {});
+
+                data = {
+                    username: 'usernameTest',
+                    firstName: 'user',
+                    lastName: 'name',
+                    email: 'testmail@soajs.org',
+                    status: 'active',
+                    tenant: { code: 'TES0', id: '5c0e74ba9acc3c5a84a51259' },
+                    ts: 1569316601637,
+                    profile: {
+                        'user': 'test'
+                    },
+                    groups: ['group1', 'groupOwner'],
+                };
+
+                BL.add(soajs, data, null, (err, record) => {
+                    assert.ok(record);
+                    assert.deepEqual(record._id, "USERID");
+                    assert.deepEqual(record.firstName, "user");
+                    assert.deepEqual(record.tenant, { code: 'TES0', id: '5c0e74ba9acc3c5a84a51259' });
+                    assert.deepEqual(record.config, {});
+
+                    data.username = 'error';
+                    BL.add(soajs, data, null, (err) => {
+                        assert.ok(err);
+                        assert.deepEqual(err.code, 602);
+
+                        done();
+                    });
+                });
+            });
+        });
+    });
 });
