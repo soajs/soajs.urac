@@ -38,6 +38,7 @@ module.exports = {
         529: "User has already been invited.",
         530: "Users array is required.",
         531: "Error while trying to invite users.",
+        532: "user [id | username | email] is required",
 
         599: "Token has expired.",
         600: "unable to find token.",
