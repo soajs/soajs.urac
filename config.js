@@ -55,7 +55,7 @@ module.exports = {
             },
             "start": {
                 "required": false,
-                "source": ["query.start"],
+                "source": ["query.start", "body.start"],
                 "default": 0,
                 "validation": {
                     "type": "integer",
@@ -64,11 +64,37 @@ module.exports = {
             },
             "limit": {
                 "required": false,
-                "source": ["query.limit"],
+                "source": ["query.limit", "body.limit"],
                 "default": 1000,
                 "validation": {
                     "type": "integer",
                     "max": 2000
+                }
+            },
+            "user": {
+                "source": ['body.user'],
+                "required": true,
+                "validation": {
+                    "type": "object",
+                    "properties": {
+                        "oneOf": [
+                            {
+                                "id": {
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "email": {
+                                    "type": "email",
+                                    "required": true
+                                }
+                            }
+                        ],
+                        "additionalProperties": false
+                    }
                 }
             }
         },
@@ -76,7 +102,7 @@ module.exports = {
 
             '/password/forgot': {
                 "_apiInfo": {
-                    "l": "Forgot password - an email will be sent with a link to reset the password",
+                    "l": "Forgot password by username as (username or email) - an email will be sent with a link to reset the password",
                     "group": "My account guest"
                 },
                 "username": {
@@ -98,7 +124,7 @@ module.exports = {
             },
             '/checkUsername': {
                 "_apiInfo": {
-                    "l": "Check if a username is available or taken",
+                    "l": "Check if a username as (username or email) is available or taken",
                     "group": "Guest join"
                 },
                 "username": {
@@ -120,7 +146,7 @@ module.exports = {
             },
             '/user': {
                 "_apiInfo": {
-                    "l": "Get user account information",
+                    "l": "Get user account information by username as (username or email)",
                     "group": "My account",
                     "groupMain": true
                 },
@@ -144,7 +170,7 @@ module.exports = {
             },
             '/admin/users': {
                 "_apiInfo": {
-                    "l": "List users",
+                    "l": "List users matching certain keywords",
                     "group": "User Administration",
                     "groupMain": true
                 },
@@ -165,7 +191,7 @@ module.exports = {
 
             '/admin/groups': {
                 "_apiInfo": {
-                    "l": "List groups",
+                    "l": "List all groups",
                     "group": "Group administration"
                 }
             },
@@ -432,7 +458,7 @@ module.exports = {
 
             '/account/password': {
                 "_apiInfo": {
-                    "l": "Change account's password",
+                    "l": "Change account's password by id",
                     "group": "My account"
                 },
                 "id": {
@@ -459,7 +485,7 @@ module.exports = {
 
             '/account/email': {
                 "_apiInfo": {
-                    "l": "Change account's email",
+                    "l": "Change account's email by id",
                     "group": "My account"
                 },
                 "id": {
@@ -476,7 +502,7 @@ module.exports = {
 
             '/account': {
                 "_apiInfo": {
-                    "l": "Edit account's information",
+                    "l": "Edit account's information by id",
                     "group": "My account"
                 },
                 "id": {
@@ -486,7 +512,7 @@ module.exports = {
                 },
                 "username": {
                     "source": ['body.username'],
-                    "required": true,
+                    "required": false,
                     "validation": {
                         "type": "string",
                         "pattern": /^[a-zA-Z0-9_-]+$/
@@ -494,12 +520,12 @@ module.exports = {
                 },
                 "firstName": {
                     "source": ['body.firstName'],
-                    "required": true,
+                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "lastName": {
                     "source": ['body.lastName'],
-                    "required": true,
+                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "profile": {
@@ -511,7 +537,7 @@ module.exports = {
 
             '/admin/user': {
                 "_apiInfo": {
-                    "l": "Edit user",
+                    "l": "Edit user by id",
                     "group": "User administration"
                 },
                 "id": {
@@ -521,7 +547,7 @@ module.exports = {
                 },
                 "username": {
                     "source": ['body.username'],
-                    "required": true,
+                    "required": false,
                     "validation": {
                         "type": "string",
                         "pattern": /^[a-zA-Z0-9_-]+$/
@@ -529,17 +555,17 @@ module.exports = {
                 },
                 "firstName": {
                     "source": ['body.firstName'],
-                    "required": true,
+                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "lastName": {
                     "source": ['body.lastName'],
-                    "required": true,
+                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "email": {
                     "source": ['body.email'],
-                    "required": true,
+                    "required": false,
                     "validation": {"type": "string", 'format': 'email'}
                 },
                 "groups": {
@@ -554,7 +580,7 @@ module.exports = {
                 },
                 "status": {
                     "source": ['body.status'],
-                    "required": true,
+                    "required": false,
                     "validation": {
                         "type": "string",
                         "enum": ['active', 'inactive', 'pendingNew']
@@ -572,32 +598,7 @@ module.exports = {
                     "l": "Edit user's groups by id, username, or email",
                     "group": "User administration"
                 },
-                "user": {
-                    "source": ['body.user'],
-                    "required": true,
-                    "validation": {
-                        "type": "object",
-                        "properties": {
-                            "oneOf": [
-                                {
-                                    "id": {
-                                        "type": "string",
-                                        "required": true
-                                    },
-                                    "username": {
-                                        "type": "string",
-                                        "required": true
-                                    },
-                                    "email": {
-                                        "type": "email",
-                                        "required": true
-                                    }
-                                }
-                            ],
-                            "additionalProperties": false
-                        }
-                    }
-                },
+                "commonFields": ["user"],
                 "groups": {
                     "source": ['body.groups'],
                     "required": true,
@@ -616,32 +617,7 @@ module.exports = {
                     "l": "Edit, reset, or delete user's pin information by id, username, or email",
                     "group": "User administration"
                 },
-                "user": {
-                    "source": ['body.user'],
-                    "required": true,
-                    "validation": {
-                        "type": "object",
-                        "properties": {
-                            "oneOf": [
-                                {
-                                    "id": {
-                                        "type": "string",
-                                        "required": true
-                                    },
-                                    "username": {
-                                        "type": "string",
-                                        "required": true
-                                    },
-                                    "email": {
-                                        "type": "email",
-                                        "required": true
-                                    }
-                                }
-                            ],
-                            "additionalProperties": false
-                        }
-                    }
-                },
+                "commonFields": ["user"],
                 "pin": {
                     "source": ['body.pin'],
                     "required": true,
@@ -706,12 +682,12 @@ module.exports = {
                 },
                 "description": {
                     "source": ['body.description'],
-                    "required": true,
+                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "packages": {
                     "source": ['body.packages'],
-                    "required": true,
+                    "required": false,
                     "validation": {
                         "type": "array",
                         "items": {
@@ -731,7 +707,7 @@ module.exports = {
                 },
                 "environments": {
                     "source": ['body.environments'],
-                    "required": true,
+                    "required": false,
                     "validation": {
                         "type": "array",
                         "items": {

@@ -35,9 +35,9 @@ function init(service, localConfig, cb) {
 
         bl["addUser"] = require("./lib/addUser.js")(bl);
         bl["join"] = require("./lib/join.js")(bl);
-        bl["inviteUser"] =  require("./lib/inviteUser.js")(bl);
-        bl["inviteUsers"] =  require("./lib/inviteUsers.js")(bl);
-        bl["uninviteUsers"] =  require("./lib/uninviteUsers.js")(bl);
+        bl["inviteUser"] = require("./lib/inviteUser.js")(bl);
+        bl["inviteUsers"] = require("./lib/inviteUsers.js")(bl);
+        bl["uninviteUsers"] = require("./lib/uninviteUsers.js")(bl);
         bl["editPin"] = require("./lib/editPin.js")(bl);
 
         if (err) {
@@ -365,27 +365,17 @@ let bl = {
         options = {};
         options.mongoCore = modelObj.mongoCore;
 
+        inputmaskData = inputmaskData || {};
+
         bl.user.getUser(soajs, inputmaskData, options, (error, userRecord) => {
             if (error) {
                 //close model
                 bl.user.mt.closeModel(modelObj);
                 return cb(error, null);
             }
-            let data = {};
-            data.username = inputmaskData.email;
-            data.exclude_id = userRecord._id;
-            bl.user.countUser(soajs, data, options, (error, found) => {
-                if (error) {
-                    //close model
-                    bl.user.mt.closeModel(modelObj);
-                    return cb(error, null);
-                }
-                if (found) {
-                    //close model
-                    bl.user.mt.closeModel(modelObj);
-                    return cb(bl.user.handleError(soajs, 526, error), null);
-                }
-                inputmaskData._id = userRecord._id;
+            inputmaskData._id = userRecord._id;
+
+            let doEdit = () => {
                 bl.user.edit(soajs, inputmaskData, options, (error) => {
                     //close model
                     bl.user.mt.closeModel(modelObj);
@@ -394,7 +384,28 @@ let bl = {
                     }
                     return cb(null, true);
                 });
-            });
+            };
+            if (inputmaskData.email) {
+                let data = {};
+                data.username = inputmaskData.email;
+                data.exclude_id = userRecord._id;
+                bl.user.countUser(soajs, data, options, (error, found) => {
+                    if (error) {
+                        //close model
+                        bl.user.mt.closeModel(modelObj);
+                        return cb(error, null);
+                    }
+                    if (found) {
+                        //close model
+                        bl.user.mt.closeModel(modelObj);
+                        return cb(bl.user.handleError(soajs, 526, error), null);
+                    }
+                    doEdit();
+                });
+            }
+            else {
+                doEdit();
+            }
         });
     }
 
