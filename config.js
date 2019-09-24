@@ -76,8 +76,8 @@ module.exports = {
 
             '/password/forgot': {
                 "_apiInfo": {
-                    "l": "Forgot Password",
-                    "group": "Guest Password Settings"
+                    "l": "Forgot password - an email will be sent with a link to reset the password",
+                    "group": "My account guest"
                 },
                 "username": {
                     "source": ['query.username'],
@@ -87,8 +87,8 @@ module.exports = {
             },
             '/validate/join': {
                 "_apiInfo": {
-                    "l": "Validate registered account",
-                    "group": "Guest Join"
+                    "l": "To validate user account after joining",
+                    "group": "Guest join"
                 },
                 "token": {
                     "source": ['query.token'],
@@ -98,8 +98,8 @@ module.exports = {
             },
             '/checkUsername': {
                 "_apiInfo": {
-                    "l": "Check If Username Exists",
-                    "group": "Guest Check Username"
+                    "l": "Check if a username is available or taken",
+                    "group": "Guest join"
                 },
                 "username": {
                     "source": ['query.username'],
@@ -109,8 +109,8 @@ module.exports = {
             },
             '/validate/changeEmail': {
                 "_apiInfo": {
-                    "l": "Validate change email address",
-                    "group": "Guest Email Validation"
+                    "l": "To validate change email",
+                    "group": "My account guest"
                 },
                 "token": {
                     "source": ['query.token'],
@@ -120,8 +120,8 @@ module.exports = {
             },
             '/user': {
                 "_apiInfo": {
-                    "l": "Get User Info by username",
-                    "group": "My Account",
+                    "l": "Get user account information",
+                    "group": "My account",
                     "groupMain": true
                 },
                 "username": {
@@ -145,7 +145,7 @@ module.exports = {
             '/admin/users': {
                 "_apiInfo": {
                     "l": "List users",
-                    "group": "Administration",
+                    "group": "User Administration",
                     "groupMain": true
                 },
                 "commonFields": ["start", "limit", "keywords"],
@@ -157,8 +157,8 @@ module.exports = {
             },
             '/admin/users/count': {
                 "_apiInfo": {
-                    "l": "Total users count",
-                    "group": "Administration"
+                    "l": "Get users count matching certain keywords",
+                    "group": "User administration"
                 },
                 "commonFields": ["keywords"]
             },
@@ -188,7 +188,7 @@ module.exports = {
 
             '/admin/all': {
                 "_apiInfo": {
-                    "l": "Get all users & groups",
+                    "l": "Get all users and groups of a main tenant",
                     "group": "Administration"
                 }
             }
@@ -199,7 +199,7 @@ module.exports = {
 
             '/join': {
                 "_apiInfo": {
-                    "l": "Register",
+                    "l": "Join and create an account",
                     "group": "Guest Join"
                 },
                 "username": {
@@ -311,8 +311,8 @@ module.exports = {
 
             '/admin/group': {
                 "_apiInfo": {
-                    "l": "Add new Group",
-                    "group": "Administration"
+                    "l": "Add group",
+                    "group": "Group administration"
                 },
                 "code": {
                     "source": ['body.code'],
@@ -396,8 +396,8 @@ module.exports = {
         "delete": {
             '/admin/group': {
                 "_apiInfo": {
-                    "l": "Delete Group",
-                    "group": "Administration"
+                    "l": "Delete group",
+                    "group": "Group administration"
                 },
                 "id": {
                     "source": ['query.id'],
@@ -410,8 +410,8 @@ module.exports = {
         "put": {
             '/password/reset': {
                 "_apiInfo": {
-                    "l": "Reset Password",
-                    "group": "Guest Password Settings"
+                    "l": "Reset password",
+                    "group": "My account guest"
                 },
                 "token": {
                     "source": ['body.token'],
@@ -432,8 +432,8 @@ module.exports = {
 
             '/account/password': {
                 "_apiInfo": {
-                    "l": "Change Password",
-                    "group": "My Account"
+                    "l": "Change account's password",
+                    "group": "My account"
                 },
                 "id": {
                     "source": ['body.id'],
@@ -459,8 +459,8 @@ module.exports = {
 
             '/account/email': {
                 "_apiInfo": {
-                    "l": "Change Email",
-                    "group": "My Account"
+                    "l": "Change account's email",
+                    "group": "My account"
                 },
                 "id": {
                     "source": ['body.id'],
@@ -476,8 +476,8 @@ module.exports = {
 
             '/account': {
                 "_apiInfo": {
-                    "l": "Edit basic user info and profile",
-                    "group": "My Account"
+                    "l": "Edit account's information",
+                    "group": "My account"
                 },
                 "id": {
                     "source": ['body.id'],
@@ -511,8 +511,8 @@ module.exports = {
 
             '/admin/user': {
                 "_apiInfo": {
-                    "l": "Edit User Record",
-                    "group": "Administration"
+                    "l": "Edit user",
+                    "group": "User administration"
                 },
                 "id": {
                     "source": ['body.id'],
@@ -567,11 +567,10 @@ module.exports = {
                 }
             },
 
-
             '/admin/user/groups': {
                 "_apiInfo": {
                     "l": "Edit user's groups by id, username, or email",
-                    "group": "USer administration"
+                    "group": "User administration"
                 },
                 "user": {
                     "source": ['body.user'],
@@ -614,8 +613,8 @@ module.exports = {
 
             '/admin/user/pin': {
                 "_apiInfo": {
-                    "l": "Edit user's pin by id, username, or email",
-                    "group": "USer administration"
+                    "l": "Edit, reset, or delete user's pin information",
+                    "group": "User administration"
                 },
                 "user": {
                     "source": ['body.user'],
@@ -675,8 +674,8 @@ module.exports = {
 
             '/admin/user/status': {
                 "_apiInfo": {
-                    "l": "Change user status",
-                    "group": "Administration"
+                    "l": "Change the status of a user by id",
+                    "group": "User administration"
                 },
                 "id": {
                     "source": ['body.id'],
@@ -692,8 +691,8 @@ module.exports = {
 
             '/admin/group': {
                 "_apiInfo": {
-                    "l": "Edit Group",
-                    "group": "Administration"
+                    "l": "Edit group by id",
+                    "group": "Group administration"
                 },
                 "id": {
                     "source": ['body.id'],
@@ -746,8 +745,8 @@ module.exports = {
 
             '/admin/groups/environments': {
                 "_apiInfo": {
-                    "l": "Update environment(s) to group(s)",
-                    "group": "Administration"
+                    "l": "Update environment(s) of group(s) by code",
+                    "group": "Group administration"
                 },
                 "environments": {
                     "source": ['body.environments'],
@@ -778,8 +777,8 @@ module.exports = {
 
             '/admin/groups/packages': {
                 "_apiInfo": {
-                    "l": "Update package(s) to group(s)",
-                    "group": "Administration"
+                    "l": "Update package(s) of group(s) by code",
+                    "group": "Group administration"
                 },
                 "packages": {
                     "source": ['body.packages'],
@@ -862,7 +861,7 @@ module.exports = {
 
             "/admin/user/uninvite": {
                 "_apiInfo": {
-                    "l": "un-Invite user",
+                    "l": "un-Invite user by id or username as username or email",
                     "group": "User administration"
                 },
                 "id": {
@@ -879,7 +878,7 @@ module.exports = {
 
             '/admin/users/invite': {
                 "_apiInfo": {
-                    "l": "Invite users by id or username as username or email",
+                    "l": "Invite users by id, username or email",
                     "group": "User administration"
                 },
                 "users": {
@@ -936,7 +935,7 @@ module.exports = {
 
             '/admin/users/uninvite': {
                 "_apiInfo": {
-                    "l": "un-Invite users by id or username as username or email",
+                    "l": "un-Invite users by id, username or email",
                     "group": "User administration"
                 },
                 "users": {
