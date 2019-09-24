@@ -58,7 +58,7 @@ let bl = {
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.token = inputmaskData.token;
-        data.id = inputmaskData.service; //todo: ask Antoine
+        data.service = inputmaskData.service;
         data.status = 'active';
         modelObj.get(data, (err, record) => {
             bl.mt.closeModel(modelObj);

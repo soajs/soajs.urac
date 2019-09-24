@@ -114,6 +114,12 @@ service.init(() => {
             });
         });
 
+        service.put("/admin/user/pin", function (req, res) {
+            bl.user.editPin(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
+
         service.put("/admin/user/status", function (req, res) {
             bl.user.updateStatus(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));

@@ -569,13 +569,34 @@ module.exports = {
 
             '/admin/user/groups': {
                 "_apiInfo": {
-                    "l": "Edit user's groups by id",
+                    "l": "Edit user's groups by id, username, or email",
                     "group": "USer administration"
                 },
-                "id": {
-                    "source": ['body.id'],
+                "user": {
+                    "source": ['body.user'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "oneOf": [
+                                {
+                                    "id": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "username": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "email": {
+                                        "type": "email",
+                                        "required": true
+                                    }
+                                }
+                            ],
+                            "additionalProperties": false
+                        }
+                    }
                 },
                 "groups": {
                     "source": ['body.groups'],
@@ -583,7 +604,69 @@ module.exports = {
                     "validation": {
                         "type": "array",
                         "items": {
-                            "type": "string"
+                            "type": "string",
+                            "minItems": 1
+                        }
+                    }
+                }
+            },
+
+            '/admin/user/pin': {
+                "_apiInfo": {
+                    "l": "Edit user's pin by id, username, or email",
+                    "group": "USer administration"
+                },
+                "user": {
+                    "source": ['body.user'],
+                    "required": true,
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "oneOf": [
+                                {
+                                    "id": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "username": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "email": {
+                                        "type": "email",
+                                        "required": true
+                                    }
+                                }
+                            ],
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                "pin": {
+                    "source": ['body.pin'],
+                    "required": true,
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "oneOf": [
+                                {
+                                    "delete": {
+                                        "type": "boolean",
+                                        "required": true
+                                    }
+                                },
+                                {
+                                    "reset": {
+                                        "type": "boolean",
+                                        "required": true
+                                    },
+                                    "allowed": {
+                                        "type": "boolean",
+                                        "required": true
+                                    }
+                                }
+                            ],
+                            "additionalProperties": false
                         }
                     }
                 }
@@ -876,7 +959,9 @@ module.exports = {
                                                 {"type": "email", "required": true}
                                             ]
                                         }
-                                    }]
+                                    }
+                                ],
+                                "additionalProperties": false
                             }
                         }
                     }

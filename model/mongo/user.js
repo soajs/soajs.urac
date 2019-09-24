@@ -554,6 +554,12 @@ User.prototype.uninvite = function (data, cb) {
         return cb(error, null);
     }
 
+
+    if (data.tenant.type !== "client" && !data.tenant.main) {
+        let error = new Error("User: uninvite only works for sub tenant.");
+        return cb(error, null);
+    }
+
     let doUninvite = (condition) => {
         let s = {
             "$pull": {
@@ -589,6 +595,179 @@ User.prototype.uninvite = function (data, cb) {
                 "_id": _id
             };
             doUninvite(condition);
+        });
+    }
+};
+
+/**
+ * To edit user's groups
+ *
+ * @param data
+ *  should have:
+ *      required ((id || username), status, tenant)
+ *
+ * @param cb
+ */
+User.prototype.editGroups = function (data, cb) {
+    let __self = this;
+    if (!data || !data.user || !(data.user.id || data.user.username || data.user.email) || !data.status || !data.tenant || !data.groups) {
+        let error = new Error("User: user [id | username | email], status, groups, and tenant information are required.");
+        return cb(error, null);
+    }
+
+    let doEdit = (condition) => {
+        let s = null;
+        if (data.tenant.type === "client" && data.tenant.main) {
+            s = {
+                "$set": {
+                    "config.allowedTenants.tenant.groups": data.groups
+                }
+            };
+            condition["config.allowedTenants.tenant.id"] = data.tenant.id;
+        }
+        else {
+            s = {
+                "$set": {
+                    "groups": data.groups
+                }
+            };
+            condition["tenant.id"] = data.tenant.id;
+        }
+        condition.status = data.status;
+        __self.mongoCore.update(colName, condition, s, null, (err, record) => {
+            if (!record) {
+                let user = data.id || data.username;
+                let error = new Error("User: Groups of user [" + user + "] was not updated.");
+                return cb(error);
+            }
+            return cb(err, record);
+        });
+    };
+
+    if (data.username) {
+        let condition = {'username': data.username};
+        doEdit(condition);
+    }
+    else if (data.email) {
+        let condition = {'email': data.email};
+        doEdit(condition);
+    } else {
+        __self.validateId(data.id, (err, _id) => {
+            if (err) {
+                return cb(err, null);
+            }
+            let condition = {"_id": _id};
+            doEdit(condition);
+        });
+    }
+};
+
+/**
+ * To delete or update a user pin
+ *
+ * @param data
+ *  should have:
+ *      required (user[id | username | email], status, pin[delete || (code || allowed)], tenant)
+ *
+ * @param cb
+ */
+User.prototype.deleteUpdatePin = function (data, cb) {
+    let __self = this;
+
+    if (!data || !data.user || !(data.user.id || data.user.username || data.user.email) || !data.status || !data.pin || !data.tenant) {
+        let error = new Error("User: user [id | username | email], status, pin and tenant information are required.");
+        return cb(error, null);
+    }
+
+    let doDelete = (condition) => {
+        let s = null;
+        if (data.tenant.type === "client" && data.tenant.main) {
+            s = {
+                "$unset": {
+                    "config.allowedTenants.tenant.pin": 1
+                }
+            };
+            condition["config.allowedTenants.tenant.id"] = data.tenant.id;
+        }
+        else {
+            s = {
+                "$unset": {
+                    "tenant.pin": 1
+                }
+            };
+            condition["tenant.id"] = data.tenant.id;
+        }
+
+        __self.mongoCore.update(colName, condition, s, null, (err, record) => {
+            if (!record) {
+                let user = data.id || data.username;
+                let error = new Error("User: Pin of user [" + user + "] was not deleted.");
+                return cb(error);
+            }
+            return cb(err, record);
+        });
+    };
+
+    let doUpdate = (condition) => {
+        let s = {"$set": {}};
+        if (data.tenant.type === "client" && data.tenant.main) {
+            if (data.pin.code) {
+                s["$set"]["config.allowedTenants.tenant.pin"] = data.pin;
+            }
+            if (data.pin.hasOwnProperty("allowed")){
+                s["$set"]["config.allowedTenants.tenant.allowed"] = data.allowed;
+            }
+            condition["config.allowedTenants.tenant.id"] = data.tenant.id;
+        }
+        else {
+
+            if (data.pin.code) {
+                s["$set"]["tenant.pin"] = data.pin;
+            }
+            if (data.pin.hasOwnProperty("allowed")){
+                s["$set"]["tenant.allowed"] = data.allowed;
+            }
+            condition["tenant.id"] = data.tenant.id;
+        }
+
+        __self.mongoCore.update(colName, condition, s, null, (err, record) => {
+            if (!record) {
+                let user = data.id || data.username;
+                let error = new Error("User: Pin of user [" + user + "] was not updated.");
+                return cb(error);
+            }
+            return cb(err, record);
+        });
+    };
+
+    let doPin = (condition) => {
+        condition.status = data.status;
+        if (data.pin.delete) {
+            doDelete(condition);
+        }
+        else {
+            if (!(data.pin.code || data.pin.hasOwnProperty("allowed"))) {
+                let error = new Error("User: pin [code or allowed] is required.");
+                return cb(error, null);
+            }
+            doUpdate(condition);
+        }
+    };
+
+    if (data.username) {
+        let condition = {'username': data.username};
+        doPin(condition);
+    }
+    else if (data.email) {
+        let condition = {'email': data.email};
+        doPin(condition);
+    } else {
+        __self.validateId(data.id, (err, _id) => {
+            if (err) {
+                return cb(err, null);
+            }
+            let condition = {"_id": _id};
+            doPin(condition);
         });
     }
 };

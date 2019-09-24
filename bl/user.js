@@ -295,9 +295,11 @@ let bl = {
         let modelObj = bl.mt.getModel(soajs, options);
 
         let data = {};
-        data.id = inputmaskData.id;
+        data.user = inputmaskData.user;
         data.groups = inputmaskData.groups;
-        modelObj.edit(data, (err, record) => {
+        data.tenant = soajs.tenant;
+        data.status = 'active';
+        modelObj.editGroups(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
