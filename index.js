@@ -115,7 +115,7 @@ service.init(() => {
         });
 
         service.put("/admin/user/pin", function (req, res) {
-            bl.user.editPin(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+            bl.editPin(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
