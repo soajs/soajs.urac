@@ -92,16 +92,23 @@ let local = (soajs, inputmaskData, options, cb) => {
             });
         };
 
-        if (oneUser.id) {
-            let responseObj = {"id": oneUser.id};
-            data.id = oneUser.id;
+        if (oneUser.user.id) {
+            let responseObj = {"id": oneUser.user.id};
+            data.id = oneUser.user.id;
             bl.user.getUser(soajs, data, options, (error, userRecord) => {
                 return goInvite(error, userRecord, responseObj);
             });
         }
-        else if (oneUser.username) {
-            let responseObj = {"username": oneUser.username};
-            data.username = oneUser.username;
+        else if (oneUser.user.username) {
+            let responseObj = {"username": oneUser.user.username};
+            data.username = oneUser.user.username;
+            bl.user.getUserByUsername(soajs, data, options, (error, userRecord) => {
+                return goInvite(error, userRecord, responseObj);
+            });
+        }
+        else if  (oneUser.user.email) {
+            let responseObj = {"email": oneUser.user.email};
+            data.username = oneUser.user.email;
             bl.user.getUserByUsername(soajs, data, options, (error, userRecord) => {
                 return goInvite(error, userRecord, responseObj);
             });

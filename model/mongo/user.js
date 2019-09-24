@@ -542,21 +542,19 @@ User.prototype.save = function (data, cb) {
  *
  * @param data
  *  should have:
- *      required ((id || username), status, tenant)
+ *      required (user[id | username | email], status, tenant)
  *
  * @param cb
  */
 User.prototype.uninvite = function (data, cb) {
     let __self = this;
-
-    if (!data || !(data.id || data.username) || !data.status || !data.tenant) {
-        let error = new Error("User: id or username in addition to status and tenant information are required.");
+    if (!data || !data.user || !(data.user.id || data.user.username || data.user.email) || !data.status || !data.tenant) {
+        let error = new Error("User: user [id | username | email], status, and tenant information are required.");
         return cb(error, null);
     }
 
-
     if (data.tenant.type !== "client" && !data.tenant.main) {
-        let error = new Error("User: uninvite only works for sub tenant.");
+        let error = new Error("User: un-invite only works for sub tenant.");
         return cb(error, null);
     }
 
@@ -569,7 +567,7 @@ User.prototype.uninvite = function (data, cb) {
         condition.status = data.status;
         __self.mongoCore.update(colName, condition, s, null, (err, record) => {
             if (!record) {
-                let user = data.id || data.username;
+                let user = data.user.id || data.user.username || data.user.email;
                 let error = new Error("User: user [" + user + "] was not uninvited.");
                 return cb(error);
             }
@@ -577,23 +575,19 @@ User.prototype.uninvite = function (data, cb) {
         });
     };
 
-    if (data.username) {
-        let condition = {
-            '$or': [
-                {'username': data.username},
-                {'email': data.username}
-            ]
-        };
+    if (data.user.username) {
+        let condition = {'username': data.user.username};
         doUninvite(condition);
     }
-    else {
-        __self.validateId(data.id, (err, _id) => {
+    else if (data.user.email) {
+        let condition = {'email': data.user.email};
+        doUninvite(condition);
+    } else {
+        __self.validateId(data.user.id, (err, _id) => {
             if (err) {
                 return cb(err, null);
             }
-            let condition = {
-                "_id": _id
-            };
+            let condition = {"_id": _id};
             doUninvite(condition);
         });
     }
@@ -604,7 +598,7 @@ User.prototype.uninvite = function (data, cb) {
  *
  * @param data
  *  should have:
- *      required ((id || username), status, tenant)
+ *      required (user[id | username | email], status, tenant, groups)
  *
  * @param cb
  */
@@ -644,15 +638,15 @@ User.prototype.editGroups = function (data, cb) {
         });
     };
 
-    if (data.username) {
-        let condition = {'username': data.username};
+    if (data.user.username) {
+        let condition = {'username': data.user.username};
         doEdit(condition);
     }
-    else if (data.email) {
-        let condition = {'email': data.email};
+    else if (data.user.email) {
+        let condition = {'email': data.user.email};
         doEdit(condition);
     } else {
-        __self.validateId(data.id, (err, _id) => {
+        __self.validateId(data.user.id, (err, _id) => {
             if (err) {
                 return cb(err, null);
             }
@@ -667,7 +661,7 @@ User.prototype.editGroups = function (data, cb) {
  *
  * @param data
  *  should have:
- *      required (user[id | username | email], status, pin[delete || (code || allowed)], tenant)
+ *      required (user[id | username | email], status, tenant, pin[delete || (code || allowed)])
  *
  * @param cb
  */

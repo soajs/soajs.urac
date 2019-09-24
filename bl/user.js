@@ -273,10 +273,9 @@ let bl = {
         let modelObj = bl.mt.getModel(soajs, options);
 
         let data = {};
+        data.user = inputmaskData.user;
         data.tenant = soajs.tenant;
         data.status = 'active';
-        data.id = inputmaskData.id;
-        data.username = inputmaskData.username;
 
         modelObj.uninvite(data, (err, record) => {
             bl.mt.closeModel(modelObj);
@@ -296,9 +295,10 @@ let bl = {
 
         let data = {};
         data.user = inputmaskData.user;
-        data.groups = inputmaskData.groups;
         data.tenant = soajs.tenant;
         data.status = 'active';
+        data.groups = inputmaskData.groups;
+
         modelObj.editGroups(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {

@@ -7,6 +7,7 @@ const lib = {
 
 let bl = null;
 let local = (soajs, inputmaskData, options, cb) => {
+    /*
     let modelObj = bl.user.mt.getModel(soajs);
     options = {};
     options.mongoCore = modelObj.mongoCore;
@@ -103,6 +104,7 @@ let local = (soajs, inputmaskData, options, cb) => {
     else {
         return cb(bl.user.handleError(soajs, 527, null), null);
     }
+    */
 };
 
 

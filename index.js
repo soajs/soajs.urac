@@ -140,6 +140,7 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        /*
         service.put("/admin/user/invite", function (req, res) {
             bl.inviteUser(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
@@ -150,6 +151,7 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        */
         service.put("/admin/users/invite", function (req, res) {
             bl.inviteUsers(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));

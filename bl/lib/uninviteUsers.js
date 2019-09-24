@@ -17,8 +17,7 @@ let local = (soajs, inputmaskData, options, cb) => {
     async.each(inputmaskData.users, function (oneUser, callback) {
 
         let data = {
-            "id": inputmaskData.id || null,
-            "username": inputmaskData.username || null
+            "user": inputmaskData.user || null
         };
         bl.user.uninvite(soajs, data, options, (error, response) => {
             if (error) {
@@ -26,12 +25,17 @@ let local = (soajs, inputmaskData, options, cb) => {
                 records.failed.push(responseObj);
             }
             else {
-                if (data.id) {
-                    let responseObj = {"id": data.id};
-                    records.succeeded.push(responseObj);
-                } else {
-                    let responseObj = {"username": data.username};
-                    records.succeeded.push(responseObj);
+                if (data && response) {
+                    if (data.user.id) {
+                        let responseObj = {"id": data.user.id};
+                        records.succeeded.push(responseObj);
+                    } else if (data.user.email) {
+                        let responseObj = {"email": data.user.email};
+                        records.succeeded.push(responseObj);
+                    } else {
+                        let responseObj = {"username": data.user.username};
+                        records.succeeded.push(responseObj);
+                    }
                 }
             }
             return callback();

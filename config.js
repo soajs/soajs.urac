@@ -791,6 +791,11 @@ module.exports = {
                 }
             },
 
+            /*
+            *
+            * since we have invite and un-invite users, no need for these 2
+            *
+
             '/admin/user/invite': {
                 "_apiInfo": {
                     "l": "Invite user by id or username as username or email",
@@ -851,6 +856,7 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
+            */
 
             '/admin/users/invite': {
                 "_apiInfo": {
@@ -866,43 +872,49 @@ module.exports = {
                             "type": "object",
                             "minItems": 1,
                             "properties": {
-                                "oneOf": [
-                                    {
-                                        "id": {
-                                            "required": true,
-                                            "type": "string"
-                                        },
-                                        "username": {
-                                            "oneOf": [
-                                                {"type": "string", "required": true},
-                                                {"type": "email", "required": true}
-                                            ]
+                                "type": "object",
+                                "properties": {
+                                    "oneOf": [
+                                        {
+                                            "id": {
+                                                "type": "string",
+                                                "required": true
+                                            },
+                                            "username": {
+                                                "type": "string",
+                                                "required": true
+                                            },
+                                            "email": {
+                                                "type": "email",
+                                                "required": true
+                                            }
                                         }
-                                    }],
-                                "pin": {
-                                    "required": false,
-                                    "type": "object",
-                                    "properties": {
-                                        "code": {
-                                            "type": "boolean",
-                                            "required": true
-                                        },
-                                        "allowed": {
-                                            "type": "boolean",
-                                            "required": true
+                                    ],
+                                    "pin": {
+                                        "required": false,
+                                        "type": "object",
+                                        "properties": {
+                                            "code": {
+                                                "type": "boolean",
+                                                "required": true
+                                            },
+                                            "allowed": {
+                                                "type": "boolean",
+                                                "required": true
+                                            }
                                         }
-                                    }
-                                },
-                                "groups": {
-                                    "required": false,
-                                    "validation": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
+                                    },
+                                    "groups": {
+                                        "required": false,
+                                        "validation": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
                                         }
-                                    }
-                                },
-                                "additionalProperties": false
+                                    },
+                                    "additionalProperties": false
+                                }
                             }
                         }
                     }
@@ -923,21 +935,26 @@ module.exports = {
                             "type": "object",
                             "minItems": 1,
                             "properties": {
-                                "oneOf": [
-                                    {
-                                        "id": {
-                                            "required": true,
-                                            "type": "string"
-                                        },
-                                        "username": {
-                                            "oneOf": [
-                                                {"type": "string", "required": true},
-                                                {"type": "email", "required": true}
-                                            ]
+                                "type": "object",
+                                "properties": {
+                                    "oneOf": [
+                                        {
+                                            "id": {
+                                                "type": "string",
+                                                "required": true
+                                            },
+                                            "username": {
+                                                "type": "string",
+                                                "required": true
+                                            },
+                                            "email": {
+                                                "type": "email",
+                                                "required": true
+                                            }
                                         }
-                                    }
-                                ],
-                                "additionalProperties": false
+                                    ],
+                                    "additionalProperties": false
+                                }
                             }
                         }
                     }
