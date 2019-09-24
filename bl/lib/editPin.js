@@ -31,7 +31,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                 };
                 let doMail = (error, userRecord) => {
                     bl.user.mt.closeModel(modelObj);
-                    if (error){
+                    if (error) {
                         soajs.log.info('resetPin: No Mail was sent: ' + error);
                     }
                     else {
@@ -42,7 +42,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                         });
                     }
                 };
-                if (inputmaskData.user && inputmaskData.user.id){
+                if (inputmaskData.user && inputmaskData.user.id) {
                     data.id = inputmaskData.user.id;
                     bl.user.getUser(soajs, data, options, (error, userRecord) => {
                         return doMail(error, userRecord);
