@@ -58,7 +58,7 @@ let bl = {
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.token = inputmaskData.token;
-        data.id = inputmaskData.service;
+        data.id = inputmaskData.service; //todo: ask Antoine
         data.status = 'active';
         modelObj.get(data, (err, record) => {
             bl.mt.closeModel(modelObj);
@@ -69,7 +69,7 @@ let bl = {
                 return cb(bl.handleError(soajs, 600, err));
             }
             //check if token expired
-            if (new Date(record.expires).getTime() < new Date().getTime()) {
+            if (new Date(record.expires).getTime() < new Date().getTime()) { //TODO: Check new Date(record.expires).getTime() return
                 return cb(bl.handleError(soajs, 599, err));
             }
             return cb(null, record);

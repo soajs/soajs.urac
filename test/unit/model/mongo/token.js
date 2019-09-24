@@ -165,6 +165,7 @@ describe("Unit test for: model - token", function () {
         };
         modelObj.updateStatus(data, (err, result) => {
             assert.ok(result);
+            assert.deepEqual(result, 1);
             done();
         });
     });
