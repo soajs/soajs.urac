@@ -140,7 +140,7 @@ let bl = {
 
     "resetPassword": (soajs, inputmaskData, options, cb) => {
         inputmaskData = inputmaskData || {};
-        if (inputmaskData['password'] !== inputmaskData['confirmation']) {
+        if (inputmaskData.password !== inputmaskData.confirmation) {
             return cb(bl.user.handleError(soajs, 522, null));
         }
         //get model since token and user are in the same db always, aka main tenant db
@@ -403,12 +403,12 @@ function init(service, localConfig, cb) {
     };
     async.each(BLs, fillModels, function (err) {
 
-        bl["addUser"] = require("./lib/addUser.js")(bl);
-        bl["join"] = require("./lib/join.js")(bl);
-        bl["inviteUser"] = require("./lib/inviteUser.js")(bl);
-        bl["inviteUsers"] = require("./lib/inviteUsers.js")(bl);
-        bl["uninviteUsers"] = require("./lib/uninviteUsers.js")(bl);
-        bl["editPin"] = require("./lib/editPin.js")(bl);
+        bl.addUser = require("./lib/addUser.js")(bl);
+        bl.join = require("./lib/join.js")(bl);
+        bl.inviteUser = require("./lib/inviteUser.js")(bl);
+        bl.inviteUsers = require("./lib/inviteUsers.js")(bl);
+        bl.uninviteUsers = require("./lib/uninviteUsers.js")(bl);
+        bl.editPin = require("./lib/editPin.js")(bl);
 
         if (err) {
             service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);

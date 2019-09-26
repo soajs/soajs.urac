@@ -169,22 +169,22 @@ Group.prototype.edit = function (data, cb) {
             }
         };
         if (data.description) {
-            s['$set'].description = data.description;
+            s.$set.description = data.description;
         }
         if (data.environments) {
             for (let i = 0; i < data.environments.length; i++) {
                 let env = data.environments[i].toUpperCase();
-                s['$set']['config.allowedEnvironments.' + env] = {};
+                s.$set['config.allowedEnvironments.' + env] = {};
             }
         }
         if (data.packages) {
             for (let i = 0; i < data.packages.length; i++) {
                 let prodPack = data.packages[i];
-                if (s['$set']['config.allowedPackages.' + prodPack.product] && Array.isArray(s['$set']['config.allowedPackages.' + prodPack.product])) {
-                    s['$set']['config.allowedPackages.' + prodPack.product].push(prodPack.package);
+                if (s.$set['config.allowedPackages.' + prodPack.product] && Array.isArray(s.$set['config.allowedPackages.' + prodPack.product])) {
+                    s.$set['config.allowedPackages.' + prodPack.product].push(prodPack.package);
                 }
                 else {
-                    s['$set']['config.allowedPackages.' + prodPack.product] = [prodPack.package];
+                    s.$set['config.allowedPackages.' + prodPack.product] = [prodPack.package];
                 }
             }
         }
@@ -260,7 +260,7 @@ Group.prototype.updateEnvironments = function (data, cb) {
     if (data.environments) {
         for (let i = 0; i < data.environments.length; i++) {
             let env = data.environments[i].toUpperCase();
-            s['$set']['config.allowedEnvironments.' + env] = {};
+            s.$set['config.allowedEnvironments.' + env] = {};
         }
     }
     let condition = {'code': {'$in': data.groups}};
@@ -295,11 +295,11 @@ Group.prototype.updatePackages = function (data, cb) {
     if (data.packages) {
         for (let i = 0; i < data.packages.length; i++) {
             let prodPack = data.packages[i];
-            if (s['$set']['config.allowedPackages.' + prodPack.product] && Array.isArray(s['$set']['config.allowedPackages.' + prodPack.product])) {
-                s['$set']['config.allowedPackages.' + prodPack.product].push(prodPack.package);
+            if (s.$set['config.allowedPackages.' + prodPack.product] && Array.isArray(s.$set['config.allowedPackages.' + prodPack.product])) {
+                s.$set['config.allowedPackages.' + prodPack.product].push(prodPack.package);
             }
             else {
-                s['$set']['config.allowedPackages.' + prodPack.product] = [prodPack.package];
+                s.$set['config.allowedPackages.' + prodPack.product] = [prodPack.package];
             }
         }
     }
@@ -336,7 +336,7 @@ Group.prototype.deleteEnvironments = function (data, cb) {
 
         for (let i = 0; i < data.environments.length; i++) {
             let env = data.environments[i];
-            us['$unset']['config.allowedEnvironments.' + env] = 1;
+            us.$unset['config.allowedEnvironments.' + env] = 1;
         }
         let extraOptions = {
             'upsert': false,
@@ -384,7 +384,7 @@ Group.prototype.deleteProducts = function (data, cb) {
 
         for (let i = 0; i < data.products.length; i++) {
             let prod = data.products[i];
-            us['$unset']['config.allowedPackages.' + prod] = 1;
+            us.$unset['config.allowedPackages.' + prod] = 1;
         }
         let extraOptions = {
             'upsert': false,
