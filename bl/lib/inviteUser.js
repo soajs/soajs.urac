@@ -1,5 +1,13 @@
 'use strict';
 
+/**
+ * @license
+ * Copyright SOAJS All Rights Reserved.
+ *
+ * Use of this source code is governed by an Apache license that can be
+ * found in the LICENSE file at the root of this repository
+ */
+
 const lib = {
     "mail": require("../../lib/mail.js"),
     "pin": require("../../lib/pin.js")
