@@ -45,8 +45,9 @@ let local = (soajs, inputmaskData, options, cb) => {
                 if (pin) {
                     userRecord.pin = pinCode;
                     lib.mail.send(soajs, 'invitePin', userRecord, null, function (error) {
-                        if (error)
+                        if (error) {
                             soajs.log.info('invitePin: No Mail was sent: ' + error);
+                        }
                     });
                 }
                 if (userRecord.status !== "pendingNew") {

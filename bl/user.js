@@ -29,8 +29,9 @@ let bl = {
     "mt": {
         "getModel": (soajs, options) => {
             let mongoCore = null;
-            if (options && options.mongoCore)
+            if (options && options.mongoCore) {
                 mongoCore = options.mongoCore;
+            }
             return new bl.model(soajs, bl.localConfig, mongoCore);
         },
         "closeModel": (modelObj) => {

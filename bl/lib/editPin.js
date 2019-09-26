@@ -45,8 +45,9 @@ let local = (soajs, inputmaskData, options, cb) => {
                     else {
                         userRecord.pin = generatedPin;
                         lib.mail.send(soajs, 'resetPin', userRecord, null, function (error) {
-                            if (error)
+                            if (error) {
                                 soajs.log.info('resetPin: No Mail was sent: ' + error);
+                            }
                         });
                     }
                 };

@@ -21,41 +21,6 @@ let model = process.env.SOAJS_SERVICE_MODEL || "mongo";
 
 const BLs = ["user", "group", "token"];
 
-function init(service, localConfig, cb) {
-
-    let fillModels = (blName, cb) => {
-        let typeModel = __dirname + `/../model/${model}/${blName}.js`;
-
-        if (fs.existsSync(typeModel)) {
-            SSOT[`${blName}Model`] = require(typeModel);
-        }
-        if (SSOT[`${blName}Model`]) {
-            let temp = require(`./${blName}.js`);
-            temp.model = SSOT[`${blName}Model`];
-            temp.localConfig = localConfig;
-            bl[blName] = temp;
-            return cb(null);
-        } else {
-            return cb({name: blName, model: typeModel});
-        }
-    };
-    async.each(BLs, fillModels, function (err) {
-
-        bl["addUser"] = require("./lib/addUser.js")(bl);
-        bl["join"] = require("./lib/join.js")(bl);
-        bl["inviteUser"] = require("./lib/inviteUser.js")(bl);
-        bl["inviteUsers"] = require("./lib/inviteUsers.js")(bl);
-        bl["uninviteUsers"] = require("./lib/uninviteUsers.js")(bl);
-        bl["editPin"] = require("./lib/editPin.js")(bl);
-
-        if (err) {
-            service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);
-            return cb({"code": 601, "msg": localConfig.errors[601]});
-        }
-        return cb(null);
-    });
-}
-
 let bl = {
     init: init,
     group: null,
@@ -109,7 +74,7 @@ let bl = {
                 tokenData.token = tokenRecord.token;
                 tokenData.status = 'used';
                 //update token status and do not wait for result
-                bl.token.updateStatus(soajs, tokenData, options, (error, tokenRecord) => {
+                bl.token.updateStatus(soajs, tokenData, options, () => {
                     // no need to do anything here.
                 });
                 if (userRecord.status === "active") {
@@ -416,7 +381,41 @@ let bl = {
             }
         });
     }
-
 };
+
+function init(service, localConfig, cb) {
+
+    let fillModels = (blName, cb) => {
+        let typeModel = __dirname + `/../model/${model}/${blName}.js`;
+
+        if (fs.existsSync(typeModel)) {
+            SSOT[`${blName}Model`] = require(typeModel);
+        }
+        if (SSOT[`${blName}Model`]) {
+            let temp = require(`./${blName}.js`);
+            temp.model = SSOT[`${blName}Model`];
+            temp.localConfig = localConfig;
+            bl[blName] = temp;
+            return cb(null);
+        } else {
+            return cb({name: blName, model: typeModel});
+        }
+    };
+    async.each(BLs, fillModels, function (err) {
+
+        bl["addUser"] = require("./lib/addUser.js")(bl);
+        bl["join"] = require("./lib/join.js")(bl);
+        bl["inviteUser"] = require("./lib/inviteUser.js")(bl);
+        bl["inviteUsers"] = require("./lib/inviteUsers.js")(bl);
+        bl["uninviteUsers"] = require("./lib/uninviteUsers.js")(bl);
+        bl["editPin"] = require("./lib/editPin.js")(bl);
+
+        if (err) {
+            service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);
+            return cb({"code": 601, "msg": localConfig.errors[601]});
+        }
+        return cb(null);
+    });
+}
 
 module.exports = bl;

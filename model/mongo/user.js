@@ -32,18 +32,18 @@ function User(soajs, localConfig, mongoCore) {
     if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
         indexing[soajs.tenant.id] = true;
 
-        __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function (err, result) {
+        __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function () {
         });
-        __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1, 'status': 1}, {}, function (err, result) {
+        __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1, 'status': 1}, {}, function () {
         });
-        __self.mongoCore.createIndex(colName, {'_id': 1, 'status': 1}, {}, function (err, result) {
+        __self.mongoCore.createIndex(colName, {'_id': 1, 'status': 1}, {}, function () {
         });
         __self.mongoCore.createIndex(colName, {
             'username': 1,
             'email': 1,
             'firstName': 1,
             'lastName': 1
-        }, {}, function (err, result) {
+        }, {}, function () {
         });
 
         //the following are set @ urac.driver
@@ -52,7 +52,7 @@ function User(soajs, localConfig, mongoCore) {
         __self.mongoCore.createIndex(colName, {"email": 1}, {unique: true}, function () {
         });
 
-        __self.mongoCore.createIndex(colName, {'config.allowedTenants.tenant.id': 1}, {}, function (err, result) {
+        __self.mongoCore.createIndex(colName, {'config.allowedTenants.tenant.id': 1}, {}, function () {
         });
         __self.mongoCore.createIndex(colName,
             {
@@ -223,7 +223,7 @@ User.prototype.updateOneField = function (data, cb) {
             }
         };
         if (data.status && data.what !== "status") {
-            s['$set'].status = data.status;
+            s.$set.status = data.status;
         }
 
         __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
@@ -261,13 +261,13 @@ User.prototype.getUsers = function (data, cb) {
     let condition = {};
     let pagination = {};
     if (data && data.limit) {
-        pagination['skip'] = data.start;
-        pagination['limit'] = data.limit;
+        pagination.skip = data.start;
+        pagination.limit = data.limit;
         pagination.sort = {};
     }
     if (data && data.keywords) {
         let rePattern = new RegExp(data.keywords, 'i');
-        condition['$or'] = [
+        condition.$or = [
             {"username": {"$regex": rePattern}},
             {"email": {"$regex": rePattern}},
             {"firstName": {"$regex": rePattern}},
@@ -325,8 +325,8 @@ User.prototype.getUsersByIds = function (data, cb) {
         };
         let pagination = {};
         if (data && data.limit) {
-            pagination['skip'] = data.start;
-            pagination['limit'] = data.limit;
+            pagination.skip = data.start;
+            pagination.limit = data.limit;
             pagination.sort = {};
         }
         let fields = {
@@ -368,7 +368,7 @@ User.prototype.checkUsername = function (data, cb) {
         ],
     };
     if (data.exclude_id) {
-        condition["_id"] = {"$ne": data.exclude_id};
+        condition._id = {"$ne": data.exclude_id};
     }
     __self.mongoCore.count(colName, condition, (err, count) => {
         return cb(err, count);
@@ -389,7 +389,7 @@ User.prototype.countUsers = function (data, cb) {
     let condition = {};
     if (data && data.keywords) {
         let rePattern = new RegExp(data.keywords, 'i');
-        condition['$or'] = [
+        condition.$or = [
             {"username": {"$regex": rePattern}},
             {"email": {"$regex": rePattern}},
             {"firstName": {"$regex": rePattern}},
@@ -437,8 +437,9 @@ User.prototype.add = function (data, cb) {
     record.config = data.config || {};
 
     __self.mongoCore.insert(colName, record, (err, record) => {
-        if (record && Array.isArray(record))
+        if (record && Array.isArray(record)) {
             record = record [0];
+        }
         return cb(err, record);
     });
 };
@@ -472,25 +473,25 @@ User.prototype.edit = function (data, cb) {
             let s = {'$set': {}};
 
             if (data.username) {
-                s['$set'].username = data.username;
+                s.$set.username = data.username;
             }
             if (data.firstName) {
-                s['$set'].firstName = data.firstName;
+                s.$set.firstName = data.firstName;
             }
             if (data.lastName) {
-                s['$set'].lastName = data.lastName;
+                s.$set.lastName = data.lastName;
             }
             if (data.email) {
-                s['$set'].email = data.email;
+                s.$set.email = data.email;
             }
             if (data.profile) {
-                s['$set'].profile = data.profile;
+                s.$set.profile = data.profile;
             }
             if (data.groups) {
-                s['$set'].groups = data.groups;
+                s.$set.groups = data.groups;
             }
             if (data.status) {
-                s['$set'].status = data.status;
+                s.$set.status = data.status;
             }
             __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
                 if (!record) {
@@ -715,20 +716,20 @@ User.prototype.deleteUpdatePin = function (data, cb) {
         let s = {"$set": {}};
         if (data.tenant.type === "client" && data.tenant.main) {
             if (data.pin.code) {
-                s["$set"]["config.allowedTenants.tenant.pin"] = data.pin;
+                s.$set["config.allowedTenants.tenant.pin"] = data.pin;
             }
-            if (data.pin.hasOwnProperty("allowed")){
-                s["$set"]["config.allowedTenants.tenant.allowed"] = data.allowed;
+            if (data.pin.hasOwnProperty("allowed")) {
+                s.$set["config.allowedTenants.tenant.allowed"] = data.allowed;
             }
             condition["config.allowedTenants.tenant.id"] = data.tenant.id;
         }
         else {
 
             if (data.pin.code) {
-                s["$set"]["tenant.pin"] = data.pin;
+                s.$set["tenant.pin"] = data.pin;
             }
-            if (data.pin.hasOwnProperty("allowed")){
-                s["$set"]["tenant.allowed"] = data.allowed;
+            if (data.pin.hasOwnProperty("allowed")) {
+                s.$set["tenant.allowed"] = data.allowed;
             }
             condition["tenant.id"] = data.tenant.id;
         }
@@ -794,8 +795,9 @@ User.prototype.validateId = function (id, cb) {
 User.prototype.closeConnection = function () {
     let __self = this;
 
-    if (!__self.mongoCoreExternal)
+    if (!__self.mongoCoreExternal) {
         __self.mongoCore.closeDb();
+    }
 };
 
 module.exports = User;

@@ -27,7 +27,7 @@ function Group(soajs, localConfig, mongoCore) {
     if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
         indexing[soajs.tenant.id] = true;
 
-        __self.mongoCore.createIndex(colName, {'code': 1}, {unique: true}, function (err, result) {
+        __self.mongoCore.createIndex(colName, {'code': 1}, {unique: true}, function () {
         });
         soajs.log.debug("Group: Indexes for " + soajs.tenant.id + " Updated!");
     }
@@ -135,8 +135,9 @@ Group.prototype.add = function (data, cb) {
         }
     }
     __self.mongoCore.insert(colName, record, (err, record) => {
-        if (record && Array.isArray(record))
+        if (record && Array.isArray(record)) {
             record = record [0];
+        }
         return cb(err, record);
     });
 };
@@ -429,8 +430,9 @@ Group.prototype.validateId = function (id, cb) {
 Group.prototype.closeConnection = function () {
     let __self = this;
 
-    if (!__self.mongoCoreExternal)
+    if (!__self.mongoCoreExternal) {
         __self.mongoCore.closeDb();
+    }
 };
 
 module.exports = Group;

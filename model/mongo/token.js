@@ -36,13 +36,13 @@ function Token(soajs, localConfig, mongoCore) {
             'userId': 1,
             'service': 1,
             'status': 1
-        }, {unique: true}, function (err, result) {
+        }, {unique: true}, function () {
         });
         __self.mongoCore.createIndex(colName, {
             'token': 1,
             'service': 1,
             'status': 1
-        }, {unique: true}, function (err, result) {
+        }, {unique: true}, function () {
         });
 
         soajs.log.debug("Token: Indexes for " + soajs.tenant.id + " Updated!");
@@ -140,8 +140,9 @@ Token.prototype.get = function (data, cb) {
 Token.prototype.closeConnection = function () {
     let __self = this;
 
-    if (!__self.mongoCoreExternal)
+    if (!__self.mongoCoreExternal) {
         __self.mongoCore.closeDb();
+    }
 };
 
 module.exports = Token;

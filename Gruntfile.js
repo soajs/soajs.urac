@@ -42,7 +42,9 @@ let lib = {
      */
     loadTasks: function (grunt, rootPath, tasks) {
         tasks.forEach(function (name) {
-            if (name === 'grunt-cli') return;
+            if (name === 'grunt-cli') {
+                return;
+            }
             let cwd = process.cwd();
             process.chdir(rootPath); // load files from proper root, I don't want to install everything locally per module!
             grunt.loadNpmTasks(name);
@@ -59,23 +61,29 @@ module.exports = function (grunt) {
         //Defining jshint tasks
         jshint: {
             options: {
-                "esversion": 6,
                 "bitwise": true,
+                "curly": true,
                 "eqeqeq": true,
-                "forin": true,
-                "newcap": true,
-                "noarg": true,
-                "undef": true,
-                "unused": false,
                 "eqnull": true,
-                "laxcomma": true,
-                "loopfunc": true,
-                "sub": true,
-                "supernew": true,
-                "validthis": true,
-                "node": true,
+                "esversion": 6,
+                "forin": true,
+                "latedef": "nofunc",
+                "leanswitch": true,
                 "maxerr": 100,
-                "indent": 2,
+                "noarg": true,
+                "nonbsp": true,
+                "strict": "global",
+                "undef": true,
+                "unused": true,
+                "varstmt": true,
+
+                //"validthis": true,
+                //"loopfunc": true,
+                //"sub": true,
+                //"supernew": true,
+
+                "node": true,
+
                 "globals": {
                     "describe": false,
                     "it": false,
@@ -86,7 +94,7 @@ module.exports = function (grunt) {
                 }
             },
             files: {
-                src: ['config.js', 'index.js', 'bl/*.js', 'bl/lib/*.js', 'lib/*.js', 'model/mongo/*.js', 'test/helper.js', 'test/unit/**/*.js', 'test/integration/**/*.js']
+                src: ['config.js', 'index.js', 'Gruntfile.js', 'bl/*.js', 'bl/lib/*.js', 'lib/*.js', 'model/mongo/*.js', 'test/helper.js', 'test/unit/**/*.js', 'test/integration/**/*.js']
             },
             gruntfile: {
                 src: 'Gruntfile.js'

@@ -91,8 +91,9 @@ let local = (soajs, inputmaskData, options, cb) => {
                 if (response) {
                     userRecord.pin = generatedPin;
                     lib.mail.send(soajs, 'invitePin', userRecord, null, function (error) {
-                        if (error)
+                        if (error) {
                             soajs.log.info('invitePin: No Mail was sent: ' + error);
+                        }
                     });
                 }
                 records.succeeded.push(responseObj);
@@ -114,7 +115,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                 return goInvite(error, userRecord, responseObj);
             });
         }
-        else if  (oneUser.user.email) {
+        else if (oneUser.user.email) {
             let responseObj = {"email": oneUser.user.email};
             data.username = oneUser.user.email;
             bl.user.getUserByUsername(soajs, data, options, (error, userRecord) => {
