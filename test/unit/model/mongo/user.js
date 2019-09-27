@@ -47,11 +47,27 @@ describe("Unit test for: model - user", function () {
             }
         }
     };
+    let soajs_sub = {
+        "meta": soajs.meta,
+        "tenant": {
+            "code": "TES2",
+            "id": "5c8d0c4f5653de3985aa0ff2",
+            "type": "client",
+            "main":{
+                "code": "TES0",
+                "id": "5c0e74ba9acc3c5a84a51259"
+            }
+        },
+        "registry": soajs.registry,
+        "log": soajs.log
+    };
     let modelObj = null;
+    let modelObj_sub = null;
 
     it("Constructor - with tenant - open connection", function (done) {
         let localConfig = helper.requireModule("config.js");
         modelObj = new Model(soajs, localConfig, null);
+        modelObj_sub = new Model(soajs_sub, localConfig, null);
         done();
     });
 
@@ -428,11 +444,12 @@ describe("Unit test for: model - user", function () {
         modelObj.getUserByUsername(data, (error, record) => {
             assert.ok(record);
             assert.equal(record.username, "user2");
-            data.id = record._id;
+            data = {};
+            data.user = {"id": record._id};
             data.status = record.status;
-            data.tenant = record.tenant;
+            data.tenant = soajs_sub.tenant;
 
-            modelObj.uninvite(data, (err, result) => {
+            modelObj_sub.uninvite(data, (err, result) => {
                 assert.ok(result);
                 done();
             });
@@ -440,14 +457,14 @@ describe("Unit test for: model - user", function () {
     });
 
     it('Fails - uninvite user  - null data', (done) => {
-        modelObj.uninvite(null, (err, result) => {
+        modelObj.uninvite(null, (err) => {
             assert.ok(err);
-            assert.deepEqual(err, new Error("User: id or username in addition to status and tenant information are required."));
+            assert.deepEqual(err, new Error("User: user [id | username | email], status, and tenant information are required."));
             done();
         });
     });
 
-    it("add - user for uninvite no username", function (done) {
+    it("add - user for uninvite with username", function (done) {
         let data = {
             "username": "user3",
             "firstName": "user",
@@ -478,12 +495,12 @@ describe("Unit test for: model - user", function () {
         modelObj.getUserByUsername(data, (error, record) => {
             assert.ok(record);
             assert.equal(record.username, "user3");
-            delete data.username;
-            data.id = record._id;
+            data = {};
+            data.user = {"id": record._id};
             data.status = record.status;
-            data.tenant = record.tenant;
+            data.tenant = soajs_sub.tenant;
 
-            modelObj.uninvite(data, (err, result) => {
+            modelObj_sub.uninvite(data, (err, result) => {
                 assert.ok(result);
                 assert.deepEqual(result, 1);
                 done();
@@ -499,12 +516,12 @@ describe("Unit test for: model - user", function () {
         modelObj.getUserByUsername(data, (error, record) => {
             assert.ok(record);
             assert.equal(record.username, "user3");
-            delete data.username;
-            data.id = "123123";
+            data = {};
+            data.user = {"id": "123123"};
             data.status = record.status;
-            data.tenant = record.tenant;
+            data.tenant = soajs_sub.tenant;
 
-            modelObj.uninvite(data, (err, result) => {
+            modelObj_sub.uninvite(data, (err) => {
                 assert.ok(err);
                 done();
             });
@@ -519,12 +536,13 @@ describe("Unit test for: model - user", function () {
         modelObj.getUserByUsername(data, (error, record) => {
             assert.ok(record);
             assert.equal(record.username, "user3");
-            data.username = "notfoundUsername";
+            data = {};
+            data.user = {"username": "notfoundUsername"};
             data.id = "5cdc190fd52c82e0ddb1dcd5";
             data.status = record.status;
-            data.tenant = record.tenant;
+            data.tenant = soajs_sub.tenant;
 
-            modelObj.uninvite(data, (err, result) => {
+            modelObj_sub.uninvite(data, (err) => {
                 assert.ok(err);
                 done();
             });
@@ -540,9 +558,9 @@ describe("Unit test for: model - user", function () {
             assert.ok(record);
             assert.equal(record.username, "user3");
             data._id = record._id;
-            
+
             modelObj.save(data, (error, result) => {
-                console.log("resolta", result, error);
+                console.log("result", result, error);
                 assert.ok(result);
                 done();
             });
@@ -697,6 +715,7 @@ describe("Unit test for: model - user", function () {
 
     it("Constructor - with tenant - close connection", function (done) {
         modelObj.closeConnection();
+        modelObj_sub.closeConnection();
         done();
     });
 });

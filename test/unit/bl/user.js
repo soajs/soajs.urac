@@ -613,7 +613,7 @@ describe("Unit test for: BL - user", () => {
         MODEL.prototype.closeConnection = () => {
         };
 
-        MODEL.prototype.edit = (data, cb) => {
+        MODEL.prototype.editGroups = (data, cb) => {
             if (data && data.id && data.id === "error") {
                 let error = new Error("User: Edit Groups - mongo error.");
                 return cb(error, null);
