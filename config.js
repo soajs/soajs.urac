@@ -1474,17 +1474,17 @@ module.exports = {
 				},
 				"name": {
 					"source": ['body.name'],
-					"required": true,
+					"required": false,
 					"validation": {"type": "string"}
 				},
 				"description": {
 					"source": ['body.description'],
-					"required": true,
+					"required": false,
 					"validation": {"type": "string"}
 				},
 				"config": {
 					"source": ['body.config'],
-					"required": true,
+					"required": false,
 					"validation": {
 						"type": "object",
 						"properties": {
