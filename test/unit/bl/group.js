@@ -1,7 +1,5 @@
 "use strict";
 
-const coreModules = require("soajs.core.modules");
-const core = coreModules.core;
 const helper = require("../../helper.js");
 const BL = helper.requireModule('bl/group.js');
 const assert = require('assert');
@@ -301,7 +299,6 @@ describe("Unit test for: BL - group", () => {
             });
         });
     });
-
     it('Delete Group', (done) => {
         function MODEL() {
             console.log("group model");
@@ -343,6 +340,4 @@ describe("Unit test for: BL - group", () => {
             });
         });
     });
-
-
 });

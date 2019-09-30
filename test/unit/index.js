@@ -9,10 +9,12 @@ describe("Starting URAC Unit test", () => {
         console.log ("Import unit test data ....");
         let rootPath = process.cwd();
         imported(rootPath + "/test/data/soajs_profile.js", rootPath + "/test/data/unit/", (err, msg) => {
-            if (err)
+            if (err) {
                 console.log(err);
-            if (msg)
+            }
+            if (msg) {
                 console.log(msg);
+            }
 
             done();
         });

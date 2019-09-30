@@ -1,7 +1,5 @@
 "use strict";
 
-const coreModules = require("soajs.core.modules");
-const core = coreModules.core;
 const helper = require("../../../helper.js");
 const BL = helper.requireModule('bl/index.js');
 const assert = require('assert');

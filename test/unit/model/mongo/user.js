@@ -323,7 +323,7 @@ describe("Unit test for: model - user", function () {
                 "id": "5c0e74ba9acc3c5a84a51259"
             }
         };
-        modelObj.add(data, (error, record) => {
+        modelObj.add(data, (error) => {
             assert.ok(error);
             let index = error.message.indexOf("duplicate key");
             assert.ok(index > 0);
@@ -613,7 +613,7 @@ describe("Unit test for: model - user", function () {
             status: 'active'
         };
 
-        modelObj.updateOneField(data, (err, result) => {
+        modelObj.updateOneField(data, (err) => {
             assert.ok(err);
             done();
         });
@@ -627,7 +627,7 @@ describe("Unit test for: model - user", function () {
             status: 'active'
         };
 
-        modelObj.updateOneField(data, (err, result) => {
+        modelObj.updateOneField(data, (err) => {
             assert.ok(err);
             done();
         });

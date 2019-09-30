@@ -55,7 +55,7 @@ describe("Unit test for: model - group", function () {
     });
 
     it("Add group - error", function (done) {
-        modelObj.add(null, (error, record) => {
+        modelObj.add(null, (error) => {
             assert.ok(error);
             assert.deepEqual(error, new Error("Group: code, name, and description are required."));
             done();
@@ -160,7 +160,7 @@ describe("Unit test for: model - group", function () {
         let data = {
             "id": AAAA_group_id
         };
-        modelObj.edit(data, (error, record) => {
+        modelObj.edit(data, (error) => {
             assert.ok(error);
             assert.deepEqual(error, new Error("Group: name and id are required."));
             done();
@@ -271,7 +271,7 @@ describe("Unit test for: model - group", function () {
             id: '123123',
             products: ['DSBRD']
         };
-        modelObj.deleteProducts(data, (err, result) => {
+        modelObj.deleteProducts(data, (err) => {
             assert.ok(err);
             done();
         });
@@ -350,7 +350,7 @@ describe("Unit test for: model - group", function () {
             id: '123123',
             environments: ['DEV']
         };
-        modelObj.deleteEnvironments(data, (err, result) => {
+        modelObj.deleteEnvironments(data, (err) => {
             assert.ok(err);
             done();
         });
