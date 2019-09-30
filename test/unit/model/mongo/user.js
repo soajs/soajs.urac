@@ -54,7 +54,7 @@ describe("Unit test for: model - user", function () {
             "code": "TES2",
             "id": "5c8d0c4f5653de3985aa0ff2",
             "type": "client",
-            "main":{
+            "main": {
                 "code": "TES0",
                 "id": "5c0e74ba9acc3c5a84a51259"
             }
@@ -765,6 +765,88 @@ describe("Unit test for: model - user", function () {
     it("validateId - with id", function (done) {
         modelObj.validateId("5cfb05c22ac09278709d0141", (error, _id) => {
             assert.ok(_id);
+            done();
+        });
+    });
+
+    it('Success - editGroups - null data', (done) => {
+        modelObj.editGroups(null, (err, result) => {
+            assert.ok(err);
+            assert.deepEqual(err, new Error("User: user [id | username | email], status, groups, and tenant information are required."));
+            done();
+        });
+    });
+
+    it('Fails - editGroups - data', (done) => {
+        modelObj.editGroups({
+            groups: ['BBBB'],
+            user: {
+                id: '5c8d0c505653de3985aa0ffd',
+                username: 'johnd',
+                email: 'john@localhost.com'
+            },
+            status: 'active',
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51251",
+                code: "TES1"
+            }
+        }, (err) => {
+            assert.ok(err);
+            assert.deepEqual(err, new Error("User: Groups of user [5c8d0c505653de3985aa0ffd] was not updated."));
+            done();
+        });
+    });
+
+    it('Success - editGroups - username', (done) => {
+        modelObj.editGroups({
+            groups: ['BBBB'],
+            user: {
+                username: 'johnd'
+            },
+            status: 'active',
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51259",
+                code: "TES0",
+            }
+        }, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Success - editGroups - id', (done) => {
+        modelObj.editGroups({
+            groups: ['CCCC'],
+            user: {
+                id: '5c8d0c505653de3985aa0ffd'
+            },
+            status: 'active',
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51259",
+                code: "TES0",
+            }
+        }, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Success - editGroups - id', (done) => {
+        modelObj.editGroups({
+            groups: ['EEEE'],
+            user: {
+                email: 'john@localhost.com'
+            },
+            status: 'active',
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51259",
+                code: "TES0",
+            }
+        }, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
             done();
         });
     });
