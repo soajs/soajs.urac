@@ -552,7 +552,7 @@ describe("Unit test for: BL - user", () => {
         };
 
         MODEL.prototype.uninvite = (data, cb) => {
-            if (data && data.tenant && data.tenant === {}) {
+            if (data && data.user && data.user.id === 'error' && data.user.username === 'error') {
                 let error = new Error("User: UnInvite User - mongo error.");
                 return cb(error, null);
             } else {
@@ -569,7 +569,11 @@ describe("Unit test for: BL - user", () => {
             });
 
             let data = {
-                id: 'userID',
+                user: {
+                    id: 'userID',
+                    username: 'username',
+                    email: 'email'
+                },
                 status: 'active',
                 tenant: {
                     id: 'tenant id',
@@ -581,24 +585,22 @@ describe("Unit test for: BL - user", () => {
                 assert.ok(result);
                 assert.deepEqual(result, 1);
 
-                delete data.id;
-                data.username = "usernametest";
+                delete data.user.id;
+                data.user.username = "usernametest";
 
                 BL.uninvite(soajs, data, null, (error, result) => {
                     assert.ok(result);
                     assert.deepEqual(result, 1);
 
-                    done();
+                    data.user.id = 'error';
+                    data.user.username= 'error';
 
-                    //todo: check error coverage
-                    // data.tenant = {};
-                    //
-                    // BL.uninvite(soajs, data, null, (err) => {
-                    //     assert.ok(err);
-                    //     assert.deepEqual(err.code, 602);
-                    //
-                    //     done();
-                    // });
+                    BL.uninvite(soajs, data, null, (err) => {
+                        assert.ok(err);
+                        assert.deepEqual(err.code, 602);
+
+                        done();
+                    });
                 });
             });
         });
@@ -612,7 +614,7 @@ describe("Unit test for: BL - user", () => {
         };
 
         MODEL.prototype.editGroups = (data, cb) => {
-            if (data && data.id && data.id === "error") {
+            if (data && data.groups && data.user.id === 'error') {
                 let error = new Error("User: Edit Groups - mongo error.");
                 return cb(error, null);
             } else {
@@ -629,20 +631,24 @@ describe("Unit test for: BL - user", () => {
             });
 
             let data = {
-                id: "UserID",
-                groups: ['Group1', "Group2"]
+                groups: ['Group1', "Group2"],
+                user: {
+                    id: 'userID',
+                    username: 'userName',
+                    email: 'userEmail'
+                },
+                tenant: soajs.tenant,
             };
 
             BL.editGroups(soajs, data, null, (err, result) => {
                 assert.ok(result);
                 assert.deepEqual(result, 1);
 
-                data.id = 'error';
+                data.user.id = 'error';
 
-                BL.editGroups(soajs, data, null, (err) => {
+                BL.editGroups(soajs, data, null, (err, result) => {
                     assert.ok(err);
                     assert.deepEqual(err.code, 602);
-
                     done();
                 });
             });

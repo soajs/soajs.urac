@@ -9,6 +9,7 @@ describe("Unit test for: model - user", function () {
     let addedUser1_id = null;
     let user2 = null;
     let user3 = null;
+    let user4 = null;
     let soajs = {
         "meta": core.meta,
         "tenant": {
@@ -445,7 +446,7 @@ describe("Unit test for: model - user", function () {
             assert.ok(record);
             assert.equal(record.username, "user2");
             data = {};
-            data.user = {"id": record._id};
+            data.user = {"id": record._id, email: record.email};
             data.status = record.status;
             data.tenant = soajs_sub.tenant;
 
@@ -503,6 +504,50 @@ describe("Unit test for: model - user", function () {
             modelObj_sub.uninvite(data, (err, result) => {
                 assert.ok(result);
                 assert.deepEqual(result, 1);
+                done();
+            });
+        });
+    });
+
+    it("add - user for uninvite with username no client", function (done) {
+        let data = {
+            "username": "user4",
+            "firstName": "User",
+            "lastName": "Four",
+            "email": "four@soajs.org",
+
+            "password": "password",
+            "status": "active",
+
+            "tenant": {
+                "code": "TES0",
+                "id": "5c0e74ba9acc3c5a84a51259"
+            }
+        };
+        modelObj.add(data, (error, record) => {
+            assert.ok(record);
+            assert.ok(record._id);
+            user4 = record;
+            done();
+        });
+    });
+
+    it('Success - uninvite user - user4 no client', (done) => {
+        let data = {
+            "username": user4.username
+        };
+
+        modelObj.getUserByUsername(data, (error, record) => {
+            assert.ok(record);
+            assert.equal(record.username, "user4");
+            data = {};
+            data.user = {"id": record._id};
+            data.status = record.status;
+            data.tenant = soajs.tenant;
+
+            modelObj.uninvite(data, (err, result) => {
+                assert.ok(err);
+                assert.deepEqual(err, new Error("User: un-invite only works for sub tenant."));
                 done();
             });
         });
@@ -684,10 +729,22 @@ describe("Unit test for: model - user", function () {
             }
         }, (err, result) => {
             assert.ok(result);
-            assert.deepEqual(result, 4);
+            assert.deepEqual(result, 6);
             done();
         });
     });
+
+    it.skip('Success - cleanDeletedGroup - data - client tenant', (done) => {
+        modelObj_sub.cleanDeletedGroup({
+            groupCode: 'AAAA',
+            tenant: soajs_sub.tenant
+        }, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 5);
+            done();
+        });
+    });
+
 
     it("validateId - error", function (done) {
         modelObj.validateId(null, (error) => {
