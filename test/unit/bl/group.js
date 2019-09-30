@@ -282,7 +282,6 @@ describe("Unit test for: BL - group", () => {
             };
 
             BL.updatePackages(soajs, data, null, (err, result) => {
-                console.log("reso", result);
                 assert.ok(result);
                 assert.deepEqual(result, 2);
 

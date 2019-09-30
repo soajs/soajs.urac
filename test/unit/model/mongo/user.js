@@ -560,7 +560,6 @@ describe("Unit test for: model - user", function () {
             data._id = record._id;
 
             modelObj.save(data, (error, result) => {
-                console.log("result", result, error);
                 assert.ok(result);
                 done();
             });

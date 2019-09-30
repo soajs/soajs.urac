@@ -150,7 +150,6 @@ describe("Unit test for: BL - token", () => {
                         // data.token = 'expired';
                         //
                         // BL.get(soajs, data, null, (err, result) => {
-                        //     console.log("resos", err, result);
                         //     done();
                         // });
                     });
