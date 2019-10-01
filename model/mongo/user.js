@@ -704,7 +704,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
 
         __self.mongoCore.update(colName, condition, s, null, (err, record) => {
             if (!record) {
-                let user = data.user.id || data.user.username;
+                let user = data.user.id || data.user.username || data.user.email;
                 let error = new Error("User: Pin of user [" + user + "] was not deleted.");
                 return cb(error);
             }
@@ -737,7 +737,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
         __self.mongoCore.update(colName, condition, s, null, (err, record) => {
             console.log(err, record, 'resss')
             if (!record) {
-                let user = data.user.id || data.user.username;
+                let user = data.user.id || data.user.username || data.user.email;
                 let error = new Error("User: Pin of user [" + user + "] was not updated.");
                 return cb(error);
             }
