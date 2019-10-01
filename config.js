@@ -648,7 +648,7 @@ module.exports = {
                                     },
                                     "allowed": {
                                         "type": "boolean",
-                                        "required": true
+                                        "required": false
                                     }
                                 }
                             ],
