@@ -33,6 +33,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                 return cb(bl.user.handleError(soajs, 602, err));
             }
 
+            cb(null, record);
             if (generatedPin) {
                 let data = {
                     "status": "active"
@@ -73,7 +74,6 @@ let local = (soajs, inputmaskData, options, cb) => {
             else {
                 bl.user.mt.closeModel(modelObj);
             }
-            return cb(null, record);
         });
     };
 
