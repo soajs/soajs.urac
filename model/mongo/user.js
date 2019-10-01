@@ -704,7 +704,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
 
         __self.mongoCore.update(colName, condition, s, null, (err, record) => {
             if (!record) {
-                let user = data.id || data.username;
+                let user = data.user.id || data.user.username;
                 let error = new Error("User: Pin of user [" + user + "] was not deleted.");
                 return cb(error);
             }
@@ -735,8 +735,9 @@ User.prototype.deleteUpdatePin = function (data, cb) {
         }
 
         __self.mongoCore.update(colName, condition, s, null, (err, record) => {
+            console.log(err, record, 'resss')
             if (!record) {
-                let user = data.id || data.username;
+                let user = data.user.id || data.user.username;
                 let error = new Error("User: Pin of user [" + user + "] was not updated.");
                 return cb(error);
             }
@@ -750,7 +751,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
             doDelete(condition);
         }
         else {
-            if (!(data.pin.code || data.pin.hasOwnProperty("allowed"))) {
+            if (!(data.pin.code) || !(data.pin.hasOwnProperty("allowed"))) {
                 let error = new Error("User: pin [code or allowed] is required.");
                 return cb(error, null);
             }
@@ -758,15 +759,15 @@ User.prototype.deleteUpdatePin = function (data, cb) {
         }
     };
 
-    if (data.username) {
-        let condition = {'username': data.username};
+    if (data.user.username) {
+        let condition = {'username': data.user.username};
         doPin(condition);
     }
-    else if (data.email) {
-        let condition = {'email': data.email};
+    else if (data.user.email) {
+        let condition = {'email': data.user.email};
         doPin(condition);
     } else {
-        __self.validateId(data.id, (err, _id) => {
+        __self.validateId(data.user.id, (err, _id) => {
             if (err) {
                 return cb(err, null);
             }

@@ -745,7 +745,6 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-
     it("validateId - error", function (done) {
         modelObj.validateId(null, (error) => {
             assert.ok(error);
@@ -769,8 +768,8 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it('Success - editGroups - null data', (done) => {
-        modelObj.editGroups(null, (err, result) => {
+    it('Fails - editGroups - null data', (done) => {
+        modelObj.editGroups(null, (err) => {
             assert.ok(err);
             assert.deepEqual(err, new Error("User: user [id | username | email], status, groups, and tenant information are required."));
             done();
@@ -845,6 +844,205 @@ describe("Unit test for: model - user", function () {
                 code: "TES0",
             }
         }, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Fails - deleteUpdatePin - null data', (done) => {
+        modelObj.deleteUpdatePin(null, (err) => {
+            assert.ok(err);
+            assert.deepEqual(err, new Error("User: user [id | username | email], status, pin and tenant information are required."));
+            done();
+        });
+    });
+
+    it('Success - deleteUpdatePin - Update - id', (done) => {
+        let data = {
+            user: {
+                id: '5d7fee0876186d9ab9b36492'
+            },
+            status: 'active',
+            pin: {
+                code: '1235',
+                allowed: true
+            },
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51259",
+                code: "TES0",
+            }
+        };
+        modelObj.deleteUpdatePin(data, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Success - deleteUpdatePin - Update - username', (done) => {
+        let data = {
+            user: {
+                username: 'tony'
+            },
+            status: 'active',
+            pin: {
+                code: "5678",
+                allowed: true
+            },
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51259",
+                code: "TES0",
+            }
+        };
+        modelObj.deleteUpdatePin(data, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Success - deleteUpdatePin - Update - email', (done) => {
+        let data = {
+            user: {
+                email: 'john@localhost.com'
+            },
+            status: 'active',
+            pin: {
+                code: '1235',
+                allowed: true
+            },
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51259",
+                code: "TES0"
+            }
+        };
+        modelObj.deleteUpdatePin(data, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Fails - deleteUpdatePin - Update - no code in pin', (done) => {
+        let data = {
+            user: {
+                email: 'john@localhost.com'
+            },
+            status: 'active',
+            pin: {
+                allowed: true
+            },
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51259",
+                code: "TES0"
+            }
+        };
+        modelObj.deleteUpdatePin(data, (err) => {
+            assert.ok(err);
+            assert.deepEqual(err, new Error("User: pin [code or allowed] is required."));
+            done();
+        });
+    });
+
+    it('Fails - deleteUpdatePin - Update - no allowed in pin', (done) => {
+        let data = {
+            user: {
+                email: 'john@localhost.com'
+            },
+            status: 'active',
+            pin: {
+                code: '1235'
+            },
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51259",
+                code: "TES0"
+            }
+        };
+        modelObj.deleteUpdatePin(data, (err) => {
+            assert.ok(err);
+            assert.deepEqual(err, new Error("User: pin [code or allowed] is required."));
+            done();
+        });
+    });
+
+    it('Success - deleteUpdatePin - Delete - email', (done) => {
+        let data = {
+            user: {
+                username: 'tony'
+            },
+            status: 'active',
+            pin: {
+                delete: true,
+                code: "5678",
+                allowed: true
+            },
+            tenant: {
+                id: "5c0e74ba9acc3c5a84a51259",
+                code: "TES0",
+            }
+        };
+        modelObj.deleteUpdatePin(data, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Success - deleteUpdatePin - Delete - username - not found', (done) => {
+        let data = {
+            user: {
+                username: 'tony'
+            },
+            status: 'active',
+            pin: {
+                delete: true,
+                code: "1234",
+                allowed: true
+            },
+            tenant: {
+                id: "10d2cb5fc04ce51e06000004",
+                code: "anyy",
+            }
+        };
+        modelObj.deleteUpdatePin(data, (err) => {
+            assert.ok(err);
+            assert.deepEqual(err, new Error("User: Pin of user [tony] was not deleted."));
+            done();
+        });
+    });
+
+    it.skip('Success - deleteUpdatePin - Update - username', (done) => {
+        let data = {
+            user: {
+                username: 'johnd'
+            },
+            status: 'active',
+            pin: {
+                code: "1235",
+                allowed: true
+            },
+            tenant: soajs_sub.tenant,
+        };
+        modelObj_sub.deleteUpdatePin(data, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Success - deleteUpdatePin - Delete - username', (done) => {
+        let data = {
+            user: {
+                username: 'johnd'
+            },
+            status: 'active',
+            pin: {
+                delete: true,
+            },
+            tenant: soajs.tenant,
+        };
+        modelObj_sub.deleteUpdatePin(data, (err, result) => {
             assert.ok(result);
             assert.deepEqual(result, 1);
             done();
