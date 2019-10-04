@@ -32,27 +32,34 @@ function User(soajs, localConfig, mongoCore) {
     if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
         indexing[soajs.tenant.id] = true;
 
-        __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, function () {
+        __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, (err, index) => {
+            soajs.log.debug("Index: " + index + " created with error: " + err);
         });
-        __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1, 'status': 1}, {}, function () {
+        __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1, 'status': 1}, {}, (err, index) => {
+            soajs.log.debug("Index: " + index + " created with error: " + err);
         });
-        __self.mongoCore.createIndex(colName, {'_id': 1, 'status': 1}, {}, function () {
+        __self.mongoCore.createIndex(colName, {'_id': 1, 'status': 1}, {}, (err, index) => {
+            soajs.log.debug("Index: " + index + " created with error: " + err);
         });
         __self.mongoCore.createIndex(colName, {
             'username': 1,
             'email': 1,
             'firstName': 1,
             'lastName': 1
-        }, {}, function () {
+        }, {}, (err, index) => {
+            soajs.log.debug("Index: " + index + " created with error: " + err);
         });
 
         //the following are set @ urac.driver
-        __self.mongoCore.createIndex(colName, {"username": 1}, {unique: true}, function () {
+        __self.mongoCore.createIndex(colName, {"username": 1}, {unique: true}, (err, index) => {
+            soajs.log.debug("Index: " + index + " created with error: " + err);
         });
-        __self.mongoCore.createIndex(colName, {"email": 1}, {unique: true}, function () {
+        __self.mongoCore.createIndex(colName, {"email": 1}, {unique: true}, (err, index) => {
+            soajs.log.debug("Index: " + index + " created with error: " + err);
         });
 
-        __self.mongoCore.createIndex(colName, {'config.allowedTenants.tenant.id': 1}, {}, function () {
+        __self.mongoCore.createIndex(colName, {'config.allowedTenants.tenant.id': 1}, (err, index) => {
+            soajs.log.debug("Index: " + index + " created with error: " + err);
         });
         __self.mongoCore.createIndex(colName,
             {
@@ -66,8 +73,9 @@ function User(soajs, localConfig, mongoCore) {
                         "$exists": true
                     }
                 }
-            }
-        );
+            }, (err, index) => {
+                soajs.log.debug("Index: " + index + " created with error: " + err);
+            });
         __self.mongoCore.createIndex(colName,
             {
                 "tenant.pin.code": 1,
@@ -80,8 +88,9 @@ function User(soajs, localConfig, mongoCore) {
                         "$exists": true
                     }
                 }
-            }
-        );
+            }, (err, index) => {
+                soajs.log.debug("Index: " + index + " created with error: " + err);
+            });
 
         soajs.log.debug("User: Indexes for " + soajs.tenant.id + " Updated!");
     }
