@@ -41,7 +41,7 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
-        data.id = inputmaskData.userId;
+        data.userId = inputmaskData.userId;
         data.username = inputmaskData.username;
         data.service = inputmaskData.service;
         data.status = 'active';

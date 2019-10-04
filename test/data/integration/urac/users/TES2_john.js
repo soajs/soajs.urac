@@ -6,7 +6,7 @@ let user = {
     password: "$2a$12$geJJfv33wkYIXEAlDkeeuOgiQ6y6MjP/YxbqLdHdDSK7LDG.7n7Pq",
     firstName: "John",
     lastName: "Doe",
-    email: "john@localhost.com",
+        email: "john@localhost.com",
     ts: 1552747600152.0,
     status: "active",
     profile: {

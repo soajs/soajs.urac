@@ -107,12 +107,10 @@ describe("Unit test for: BL - addUser main tenant", () => {
         MODEL_USER.prototype.checkUsername = (data, cb) => {
             if (data && data.username && data.username === "found") {
                 return cb(null, 1);
-            }
-            else if (data && data.username && data.username === "error") {
+            } else if (data && data.username && data.username === "error") {
                 let error = new Error("User: checkUsername - mongo error.");
                 return cb(error, null);
-            }
-            else {
+            } else {
                 return cb(null, null);
             }
         };
@@ -120,8 +118,7 @@ describe("Unit test for: BL - addUser main tenant", () => {
             if (data && data.firstName && data.firstName === "error") {
                 let error = new Error("User: add - mongo error.");
                 return cb(error, null);
-            }
-            else {
+            } else {
                 data._id = "5cfb05c22ac09278709d0141";
                 assert.ok(data.tenant.pin.code);
                 return cb(null, data);
@@ -189,8 +186,14 @@ describe("Unit test for: BL - addUser main tenant", () => {
                         }
                     };
                     BL.addUser(soajs, data, null, (error, record) => {
-                        console.log(error);
-                        console.log(record);
+                        assert.ifError(error);
+                        assert.ok(record);
+                        assert.deepEqual(record, {
+                                id: '5cfb05c22ac09278709d0141',
+                                token: '12673218763782168721',
+                                link: {addUser: 'https://dev-site.rockspoon.io/#/setNewPassword?token=12673218763782168721'}
+                            }
+                        );
                         done();
                     });
                 });

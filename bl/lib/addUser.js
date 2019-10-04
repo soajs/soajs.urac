@@ -25,12 +25,12 @@ let local = (soajs, inputmaskData, options, cb) => {
         if (error) {
             //close model
             bl.user.mt.closeModel(modelObj);
-            return cb(error, null);
+            return cb(bl.user.handleError(soajs, 602, error), null);
         }
         if (found) {
             //close model
             bl.user.mt.closeModel(modelObj);
-            return cb(bl.user.handleError(soajs, 402, null));
+            return cb(bl.user.handleError(soajs, 602, null));
         }
 
         inputmaskData.config = {};

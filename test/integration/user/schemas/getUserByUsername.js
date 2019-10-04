@@ -8,7 +8,7 @@
 
 "use strict";
 
-let getUserSchema = {
+let getUserByUsernameSchema = {
     "type": "object",
     "required": true,
     "additionalProperties": false,
@@ -98,5 +98,5 @@ let getUserSchema = {
     }
 };
 
-module.exports = getUserSchema;
+module.exports = getUserByUsernameSchema;
 

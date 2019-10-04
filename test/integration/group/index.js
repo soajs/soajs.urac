@@ -13,8 +13,11 @@ describe("starting group integration tests", () => {
 
     it("loading group integration tests", (done) => {
         // GET
-        require("./get/getGroups.js");
-        require("./get/getGroup.js");
+        require("./get/getGroups.test.js");
+        require("./get/getGroup.test.js");
+
+        //POST
+        require("./post/addGroup.test.js");
 
         done();
     });
