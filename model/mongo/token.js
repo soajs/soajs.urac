@@ -36,13 +36,15 @@ function Token(soajs, localConfig, mongoCore) {
             'userId': 1,
             'service': 1,
             'status': 1
-        }, {unique: true}, function () {
+        }, {unique: true}, (err, index) => {
+            soajs.log.debug("Index: " + index + " created with error: " + err);
         });
         __self.mongoCore.createIndex(colName, {
             'token': 1,
             'service': 1,
             'status': 1
-        }, {unique: true}, function () {
+        }, {unique: true}, (err, index) => {
+            soajs.log.debug("Index: " + index + " created with error: " + err);
         });
 
         soajs.log.debug("Token: Indexes for " + soajs.tenant.id + " Updated!");
