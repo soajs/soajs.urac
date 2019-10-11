@@ -1188,17 +1188,17 @@ module.exports = {
 				},
 				"firstName": {
 					"source": ['body.firstName'],
-					"required": true,
+					"required": false,
 					"validation": {"type": "string"}
 				},
 				"lastName": {
 					"source": ['body.lastName'],
-					"required": true,
+					"required": false,
 					"validation": {"type": "string"}
 				},
 				"email": {
 					"source": ['body.email'],
-					"required": true,
+					"required": false,
 					"validation": {"type": "string", 'format': 'email'}
 				},
 				"groups": {
@@ -1271,7 +1271,7 @@ module.exports = {
 				},
 				"status": {
 					"source": ['body.status'],
-					"required": true,
+					"required": false,
 					"validation": {
 						"type": "string",
 						"enum": ['active', 'inactive', 'pendingNew']

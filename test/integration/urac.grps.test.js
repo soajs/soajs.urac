@@ -40,6 +40,9 @@ function requester(apiName, method, params, cb) {
 	if (params.form) {
 		options.form = params.form;
 	}
+	if (params.body) {
+		options.body = params.body;
+	}
 	if (params.qs) {
 		options.qs = params.qs;
 	}
@@ -310,7 +313,7 @@ describe("urac group tests", function () {
 			it("SUCCESS - will update user account - no groups", function (done) {
 				var params = {
 					qs: { 'uId': uId },
-					form: {
+					body: {
 						'firstName': 'david',
 						'lastName': 'smith',
 						"email": "user1@domain.com",
