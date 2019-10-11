@@ -54,6 +54,11 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        service.get("/admin/users/ids", function (req, res) {
+            bl.user.getUsersByIds(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
         service.get("/admin/users", function (req, res) {
             bl.user.getUsers(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
@@ -87,8 +92,6 @@ service.init(() => {
             });
         });
 
-
-
         //PUT methods
         service.put("/password/reset", function (req, res) {
             bl.resetPassword(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
@@ -115,19 +118,17 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-
         service.put("/admin/user/groups", function (req, res) {
+            console.log(req, res, 'here')
             bl.user.editGroups(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-
         service.put("/admin/user/pin", function (req, res) {
             bl.editPin(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-
         service.put("/admin/user/status", function (req, res) {
             bl.user.updateStatus(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
@@ -138,7 +139,7 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-        service.put("admin/groups/environments", function (req, res) {
+        service.put("/admin/groups/environments", function (req, res) {
             bl.group.updateEnvironments(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
@@ -187,12 +188,6 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-        service.post("/admin/users/ids", function (req, res) {
-            bl.user.getUsersByIds(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
-                return res.json(req.soajs.buildResponse(error, data));
-            });
-        });
-
 
         service.start();
     });

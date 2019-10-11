@@ -47,7 +47,7 @@ let listGroupsSchema = {
                             "code": {"type": "string", "required": true},
                             "pin": {
                                 "type": "object",
-                                "required": true,
+                                "required": false,
                                 "additionalProperties": false,
                                 "properties": {
                                     "code": {"type": "string", "required": false},

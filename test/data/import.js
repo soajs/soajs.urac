@@ -124,6 +124,39 @@ let lib = {
         } else
             return cb();
     },
+    tokens: (dataPath, profile, cb) => {
+        let records = [];
+        fs.readdirSync(dataPath).forEach(function (file) {
+            let rec = require(dataPath + file);
+            //TODO: validate group
+            records.push(rec);
+        });
+        if (records && Array.isArray(records) && records.length > 0) {
+            async.each(
+                records,
+                (e, cb) => {
+                    profile.name = e.tenant.code + "_urac";
+                    let mongoConnection = new Mongo(profile);
+                    mongoConnection.dropCollection("tokens", () => {
+                        if (e.record) {
+                            let condition = {token: e.record.token};
+                            e.record._id = mongoConnection.ObjectId(e.record._id);
+                            mongoConnection.update("tokens", condition, e.record, {'upsert': true}, (error, result) => {
+                                console.log("tokens", error);
+                                mongoConnection.closeDb();
+                                return cb();
+                            });
+                        } else {
+                            return cb();
+                        }
+                    });
+                },
+                () => {
+                    return cb();
+                });
+        } else
+            return cb();
+    },
     tenants: (dataPath, mongoConnection, cb) => {
         let records = [];
         fs.readdirSync(dataPath).forEach(function (file) {
@@ -259,7 +292,13 @@ module.exports = (profilePath, dataPath, callback) => {
                         return lib.groups(dataPath + "urac/groups/", profile, cb);
                     } else
                         return cb(null);
-                }
+                },
+                function (cb) {
+                    if (fs.existsSync(dataPath + "urac/tokens/")) {
+                        return lib.tokens(dataPath + "urac/tokens/", profile, cb);
+                    } else
+                        return cb(null);
+                },
             ],
             () => {
                 mongoConnection.closeDb();

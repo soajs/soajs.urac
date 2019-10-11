@@ -16,7 +16,7 @@ describe("Testing get users API", () => {
         done();
     });
 
-    it("Success - by id will return all user records - keywords", (done) => {
+    it("Success - will return all user records - keywords", (done) => {
         let params = {
             qs: {
                 "keywords": "john",
@@ -36,7 +36,7 @@ describe("Testing get users API", () => {
         });
     });
 
-    it("Success - by id will return all user records - no data", (done) => {
+    it("Success - will return all user records - no data", (done) => {
         let params = {
             qs: {
             }

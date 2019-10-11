@@ -19,6 +19,9 @@ describe("starting group integration tests", () => {
         //POST
         require("./post/addGroup.test.js");
 
+        //PUT
+        require("./put/editGroup.test.js");
+
         done();
     });
 

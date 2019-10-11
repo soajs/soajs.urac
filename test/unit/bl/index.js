@@ -5,7 +5,7 @@ const BL = helper.requireModule('bl/index.js');
 const assert = require('assert');
 
 
-describe("Unit test for: BL - index", () => {
+describe.skip("Unit test for: BL - index", () => {
     let soajs = {
         "tenant": {
             "code": "TES0",
@@ -22,9 +22,16 @@ describe("Unit test for: BL - index", () => {
     };
 
     before((done) => {
-
         BL.localConfig = helper.requireModule("config.js");
-
         done();
     });
+
+    it("Edit user", (done) =>  {
+
+        BL.editUser(soajs, null, null, (error, reso) => {
+            assert.ok(error);
+            done();
+        });
+    });
+
 });

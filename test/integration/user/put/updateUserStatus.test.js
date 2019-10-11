@@ -3,10 +3,10 @@ const assert = require('assert');
 const requester = require('../../requester');
 let core = require('soajs').core;
 let validator = new core.validator.Validator();
+let editAccountSchema = require("../schemas/editAccount");
 let listUsersSchema = require("../schemas/getUsers.js");
-let getUserSchema = require("../schemas/getUser.js");
 
-describe("Testing get user API", () => {
+describe("Testing update User status API", () => {
 
     before(function (done) {
         done();
@@ -17,7 +17,7 @@ describe("Testing get user API", () => {
         done();
     });
 
-    let users = [];
+    let users;
     let selectedUser;
 
     it("Success - by id will return all user records - no data", (done) => {
@@ -41,61 +41,55 @@ describe("Testing get user API", () => {
         });
     });
 
-    it("Success - by id will return user record", (done) => {
+    it("Success - by id will change status of User", (done) => {
         let params = {
-            "qs": {"id": selectedUser._id}
+            body: {
+                id: selectedUser._id,
+                status: 'active'
+            }
         };
-        requester('/admin/user', 'get', params, (error, body) => {
+        requester('/admin/user/status', 'put', params, (error, body) => {
+            assert.ifError(error);
             assert.ok(body);
             assert.ok(body.data);
-            assert.deepEqual(body.data.username, 'johnd');
-            assert.deepEqual(body.data.firstName, 'John');
-            assert.deepEqual(body.data.lastName, 'Doe');
-            assert.deepEqual(body.data.email, 'john@localhost.com');
-            let check = validator.validate(body, getUserSchema);
+            assert.deepEqual(body.data, 1);
+            let check = validator.validate(body, editAccountSchema);
             assert.deepEqual(check.valid, true);
             assert.deepEqual(check.errors, []);
             done();
         });
     });
 
-    it("Error - will not return - no data", (done) => {
+    it("Fails - will not update status - No data", (done) => {
         let params = {
         };
-        requester('/admin/user', 'get', params, (error, body) => {
+        requester('/admin/user/status', 'put', params, (error, body) => {
+            assert.ifError(error);
             assert.ok(body);
             assert.ok(body.errors);
-            assert.deepEqual(body.errors.details, [ { code: 172, message: 'Missing required field: id' } ]);
-            let check = validator.validate(body, getUserSchema);
+            assert.deepEqual(body.errors.details, [ { code: 172, message: 'Missing required field: id, status' } ]);
+            let check = validator.validate(body, editAccountSchema);
             assert.deepEqual(check.valid, true);
             assert.deepEqual(check.errors, []);
             done();
         });
     });
 
-    it("Error - will return - not valid error", (done) => {
+    it("Error - will not update status  - Not valid", (done) => {
         let params = {
-            "qs": {"id": "notFound"}
+            body: {
+                id: 'notvalid',
+                status: 'active'
+            }
         };
-        requester('/admin/user', 'get', params, (error, body) => {
+        requester('/admin/user/status', 'put', params, (error, body) => {
+            assert.ifError(error);
             assert.ok(body);
+            assert.ok(body.errors);
             assert.deepEqual(body.errors.details, [ { code: 602,
-                message: 'Model error: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters' } ]);
-            let check = validator.validate(body, getUserSchema);
-            assert.deepEqual(check.valid, true);
-            assert.deepEqual(check.errors, []);
-            done();
-        });
-    });
-
-    it("Error - will return - not found error", (done) => {
-        let params = {
-            "qs": {"id": "5d63ce63617982b55a1c1800"}
-        };
-        requester('/admin/user', 'get', params, (error, body) => {
-            assert.ok(body);
-            assert.deepEqual(body.errors.details, [ { code: 520, message: 'Unable to find user.' } ]);
-            let check = validator.validate(body, getUserSchema);
+                message:
+                    'Model error: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters' } ]);
+            let check = validator.validate(body, editAccountSchema);
             assert.deepEqual(check.valid, true);
             assert.deepEqual(check.errors, []);
             done();

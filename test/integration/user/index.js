@@ -17,9 +17,14 @@ describe("starting user integration tests", () => {
         require("./get/getUsers.test");
         require("./get/getUserByUsername.test");
         require("./get/countUsers.test");
+        require("./get/checkUsername.test");
+        require("./get/getUsersbyIds.test");
 
         //PUT
         require("./put/editAccount.test");
+        require("./put/updateUserStatus.test");
+        require("./put/editUser.test");
+        require("./put/editUserGroups.test");
 
         //POST
         require("./post/addUser.test");

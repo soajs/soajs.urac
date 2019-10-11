@@ -227,7 +227,31 @@ module.exports = {
                     "l": "Get all users and groups of a main tenant",
                     "group": "Administration"
                 }
-            }
+            },
+            '/admin/users/ids': {
+                "_apiInfo": {
+                    "l": "List users by Id",
+                    "group": "User administration",
+                    "groupMain": true
+                },
+                "commonFields": ["start", "limit"],
+                "ids": {
+                    "source": ['body.ids', 'query.ids'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "minItems": 1
+                        }
+                    }
+                },
+                "config": {
+                    "source": ['query.config'],
+                    "required": false,
+                    "validation": {"type": "boolean"}
+                }
+            },
 
         },
 
@@ -401,32 +425,7 @@ module.exports = {
                         }
                     }
                 }
-            },
-
-            '/admin/users/ids': {
-                "_apiInfo": {
-                    "l": "List users by Id",
-                    "group": "User administration",
-                    "groupMain": true
-                },
-                "commonFields": ["start", "limit"],
-                "ids": {
-                    "source": ['body.ids'],
-                    "required": true,
-                    "validation": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "minItems": 1
-                        }
-                    }
-                },
-                "config": {
-                    "source": ['query.config'],
-                    "required": false,
-                    "validation": {"type": "boolean"}
-                }
-            },
+            }
         },
 
         "delete": {
@@ -602,7 +601,6 @@ module.exports = {
                     "validation": {"type": "object"}
                 }
             },
-
             '/admin/user/groups': {
                 "_apiInfo": {
                     "l": "Edit user's groups by id, username, or email",
@@ -621,7 +619,6 @@ module.exports = {
                     }
                 }
             },
-
             '/admin/user/pin': {
                 "_apiInfo": {
                     "l": "Edit, reset, or delete user's pin information by id, username, or email",

@@ -139,6 +139,14 @@ Token.prototype.get = function (data, cb) {
     });
 };
 
+Token.prototype.list = function (data, cb) {
+    let __self = this;
+
+    __self.mongoCore.find(colName, null, null, null, (err, record) => {
+        return cb(err, record);
+    });
+};
+
 Token.prototype.closeConnection = function () {
     let __self = this;
 

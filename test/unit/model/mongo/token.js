@@ -45,6 +45,8 @@ describe("Unit test for: model - token", function () {
         }
     };
     let modelObj = null;
+    let tokens = [];
+    let selectedToken;
 
     it("Constructor - with tenant - open connection", (done) => {
         let localConfig = helper.requireModule("config.js");
@@ -52,23 +54,37 @@ describe("Unit test for: model - token", function () {
         done();
     });
 
+    it('Success - list tokens', (done) => {
+        modelObj.list(null, (err, records) => {
+            assert.ok(records);
+            tokens = records;
+            console.log(records, 'tokins');
+            tokens.forEach(token => {
+                if (token.userId === '5c8d0c505653de3985aa0ffd') {
+                    selectedToken = token;
+                }
+            });
+            done();
+        });
+    });
+
     it('Success - get token - Data', (done) => {
         let data = {
-            "token": "f65e8358-ce1d-47cb-b478-82e10c93f70e",
+            "token": selectedToken.token,
             "service": "addUser",
             "status": "active"
         };
         modelObj.get(data, (err, record) => {
             assert.ok(record);
             assert.deepEqual(record.userId, '5c8d0c505653de3985aa0ffd');
-            assert.deepEqual(record.username, 'owner');
+            assert.deepEqual(record.username, 'johnd');
             done();
         });
     });
 
-    it('Success - get token - Data - Multiple services', (done) => {
+    it.skip('Success - get token - Data - Multiple services', (done) => {
         let data = {
-            "token": "f65e8358-ce1d-47cb-b478-82e10c93f70e",
+            "token": selectedToken.token,
             "services": ["addUser", "changeEmail"],
             "status": "active"
         };
@@ -160,7 +176,7 @@ describe("Unit test for: model - token", function () {
 
     it('Success - updateStatus - Data', (done) => {
         let data = {
-            token: "f65e8358-ce1d-47cb-b478-82e10c93f70e",
+            token: selectedToken.token,
             status: 'pending',
         };
         modelObj.updateStatus(data, (err, result) => {
@@ -224,8 +240,8 @@ describe("Unit test for: model - token", function () {
 
     it('Success - add token - Data', (done) => {
         let data = {
-            userId: "userIdToTest",
-            username: 'usernameToTest',
+            userId: "5d7fee0876186d9ab9b36492",
+            username: 'tony',
             service: "changeEmail",
             tokenExpiryTTL: '12'
         };
