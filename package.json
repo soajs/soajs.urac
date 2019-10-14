@@ -27,13 +27,13 @@
     "grunt-istanbul": "0.8.0",
     "grunt-jsdoc": "2.4.0",
     "grunt-mocha-test": "0.13.3",
-    "mocha": "6.2.0",
+    "mocha":"6.2.1",
     "request": "2.88.0",
     "soajs.controller": "2.5.*"
   },
   "dependencies": {
-    "async": "2.1.4",
-    "soajs": "2.5.14",
+    "async":"3.1.0",
+    "soajs":"2.5.19",
     "uuid": "3.3.3"
   }
 }
