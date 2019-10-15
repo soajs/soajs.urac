@@ -119,7 +119,6 @@ service.init(() => {
             });
         });
         service.put("/admin/user/groups", function (req, res) {
-            console.log(req, res, 'here')
             bl.user.editGroups(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });

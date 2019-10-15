@@ -69,7 +69,20 @@ let lib = {
                                         "subject": 'Welcome to SOAJS'
                                     },
                                     "forgotPassword": {
-                                        "subject": 'Reset Your Password at SOAJS'
+	                                    "subject": "Reset Your Password at SOAJS",
+	                                    "path": "/node_modules/soajs.urac/mail/urac/forgotPassword.tmpl",
+	                                    "from": "soajs@your.cloud.io",
+	                                    "transport": {
+		                                    "type": "smtp",
+		                                    "options": {
+			                                    "host": "smtp.mailgun.org",
+			                                    "port": 465,
+			                                    "auth": {
+				                                    "user": "soajs@your.cloud.io",
+				                                    "pass": "xxxxxx"
+			                                    }
+		                                    }
+	                                    }
                                     },
                                     "addUser": {
                                         "subject": 'Account Created at SOAJS'
@@ -117,23 +130,75 @@ let lib = {
                             "geo": {}
                         }
                     ],
-                    "config": {
-                        "dev": {
-                            "commonFields": {
-                                "SOAJS_SAAS": {
-                                    "demo": {}
-                                }
-                            },
-                            "oauth": {
-                                "loginMode": 'urac'
-                            },
-                            "urac": {
-                                "hashIterations": 1024, //used by hasher
-                                "seedLength": 32, //used by hasher
-                                "tokenExpiryTTL": 2 * 24 * 3600 * 1000
-                            }
-                        }
-                    }
+	                "config": {
+		                "dev": {
+			                "oauth": {
+				                "loginMode": 'urac'
+			                },
+			                "mail": {
+				                "from": 'me@localhost.com',
+				                "transport": {
+					                "type": "sendmail",
+					                "options": {}
+				                }
+			                },
+			                "urac": {
+				                "hashIterations": 1024, //used by hasher
+				                "seedLength": 32, //used by hasher
+				                "link": {
+					                "addUser": "http://dashboard.soajs.org/#/setNewPassword",
+					                "changeEmail": "http://dashboard.soajs.org/#/changeEmail/validate",
+					                "forgotPassword": "http://dashboard.soajs.org/#/resetPassword",
+					                "join": "http://dashboard.soajs.org/#/join/validate"
+				                },
+				                "tokenExpiryTTL": 2 * 24 * 3600 * 1000,// token expiry limit in seconds
+				                "validateJoin": true, //true if registration needs validation
+				                "mail": { //urac mail options
+					                "join": {
+						                "subject": 'Welcome to SOAJS'
+					                },
+					                "forgotPassword": {
+						                "subject": "Reset Your Password at SOAJS",
+						                "path": "/node_modules/soajs.urac/mail/urac/forgotPassword.tmpl",
+						                "from": "soajs@your.cloud.io",
+						                "transport": {
+							                "type": "smtp",
+							                "options": {
+								                "host": "smtp.mailgun.org",
+								                "port": 465,
+								                "auth": {
+									                "user": "soajs@your.cloud.io",
+									                "pass": "xxxxxx"
+								                }
+							                }
+						                }
+					                },
+					                "addUser": {
+						                "subject": 'Account Created at SOAJS'
+					                },
+					                "changeUserStatus": {
+						                "subject": "Account Status changed at SOAJS",
+						                //use custom HTML
+						                "content": "<p>Dear <b>{{ username }}</b>, <br />The administrator update your account status to <b>{{ status }}</b> on {{ts}}.<br /><br />Regards,<br/>SOAJS Team.</p>"
+					                },
+					                "changeEmail": {
+						                "subject": "Change Account Email at SOAJS"
+					                }
+				                }
+			                },
+			                "dashboard": {
+				                "ownerPackage": "DSBRD_OWNER",
+				                "defaultClientPackage": "DSBRD_CLIENT",
+				                "clientspackage": {}
+			                },
+			                "commonFields": {
+				                "SOAJS_SAAS": {},
+				                "HT_PROJECT": {
+					                "name": "demo"
+				                }
+			                }
+		                }
+	                }
                 }
             ]
         }

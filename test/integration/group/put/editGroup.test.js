@@ -4,6 +4,7 @@ const requester = require('../../requester');
 let core = require('soajs').core;
 let validator = new core.validator.Validator();
 let getGroupsSchema = require("../schemas/getGroups");
+let editGroupSchema = require("../schemas/editGroup");
 
 describe("Testing edit group API", () => {
 
@@ -34,7 +35,6 @@ describe("Testing edit group API", () => {
                 }
             });
             let check = validator.validate(body, getGroupsSchema);
-            console.log('chikos', check)
             assert.deepEqual(check.valid, true);
             assert.deepEqual(check.errors, []);
             done();
@@ -56,9 +56,9 @@ describe("Testing edit group API", () => {
             assert.ok(body);
             assert.ok(body.data);
             assert.deepEqual(body.data, 1);
-            // let check = validator.validate(body, editAccountSchema);
-            // assert.deepEqual(check.valid, true);
-            // assert.deepEqual(check.errors, []);
+            let check = validator.validate(body, editGroupSchema);
+            assert.deepEqual(check.valid, true);
+            assert.deepEqual(check.errors, []);
             done();
         });
     });
@@ -71,9 +71,9 @@ describe("Testing edit group API", () => {
             assert.ok(body);
             assert.ok(body.errors);
             assert.deepEqual(body.errors.details, [ { code: 172, message: 'Missing required field: id, name' } ]);
-            // let check = validator.validate(body, editAccountSchema);
-            // assert.deepEqual(check.valid, true);
-            // assert.deepEqual(check.errors, []);
+            let check = validator.validate(body, editGroupSchema);
+            assert.deepEqual(check.valid, true);
+            assert.deepEqual(check.errors, []);
             done();
         });
     });
@@ -92,9 +92,9 @@ describe("Testing edit group API", () => {
             assert.deepEqual(body.errors.details, [ { code: 602,
                 message:
                     'Model error: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters' } ]);
-            // let check = validator.validate(body, editAccountSchema);
-            // assert.deepEqual(check.valid, true);
-            // assert.deepEqual(check.errors, []);
+            let check = validator.validate(body, editGroupSchema);
+            assert.deepEqual(check.valid, true);
+            assert.deepEqual(check.errors, []);
             done();
         });
     });

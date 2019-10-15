@@ -21,7 +21,6 @@ describe("Testing get groups API", () => {
         requester('/admin/groups', 'get', params, (error, body) => {
             assert.ifError(error);
             assert.ok(body);
-            console.log('bouday', body.data);
             assert.ok(body.data.length > 0);
             let check = validator.validate(body, listGroupsSchema);
             assert.deepEqual(check.valid, true);

@@ -21,6 +21,8 @@ describe("starting group integration tests", () => {
 
         //PUT
         require("./put/editGroup.test.js");
+	    require("./put/updateEnvironments.test.js");
+	    require("./put/updatePackages.test.js");
 
         done();
     });

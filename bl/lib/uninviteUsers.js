@@ -25,7 +25,7 @@ let local = (soajs, inputmaskData, options, cb) => {
     async.each(inputmaskData.users, function (oneUser, callback) {
 
         let data = {
-            "user": inputmaskData.user || null
+            "user": oneUser.user || null
         };
         bl.user.uninvite(soajs, data, options, (error, response) => {
             if (error) {

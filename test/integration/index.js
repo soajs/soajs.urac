@@ -30,9 +30,10 @@ describe("starting integration tests", () => {
     });
 
     it("loading tests", (done) => {
-        require("./group/index.js");
+	    require("./group/index.js");
         require("./user/index.js");
-        done();
+	    require("./index/index.js");
+	    done();
     });
 
 });

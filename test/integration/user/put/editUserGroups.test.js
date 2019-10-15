@@ -6,7 +6,7 @@ let validator = new core.validator.Validator();
 let getUsersSchema = require("../schemas/getUsers");
 let editUserSchema = require("../schemas/editUserGroups");
 
-describe("Testing edit User Groups API", () => {
+describe.skip("Testing edit User Groups API", () => {
 
     before(function (done) {
         done();

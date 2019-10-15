@@ -39,7 +39,7 @@ let bl = {
                 if (record && record.tenant) {
                     data.tId = record.tenant.id;
                     data.groupCode = record.code;
-                    bl.user.cleanDeletedGroup(soajs, data, (error) => {
+                    bl.user.cleanDeletedGroup(soajs, data, options,(error) => {
                         if (error) {
                             soajs.log.error(error);
                         }
@@ -209,7 +209,7 @@ let bl = {
                     return cb(bl.user.handleError(soajs, 526, error), null);
                 }
                 let data = {};
-                data.id = userRecord._id.toString();
+                data.userId = userRecord._id.toString();
                 data.username = userRecord.username;
                 data.service = "changeEmail";
                 data.email = inputmaskData.email;
