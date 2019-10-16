@@ -401,6 +401,8 @@ service.init(function () {
 		initBLModel(req, res, function (BLInstance) {
 			req.soajs.config = config;
 			BLInstance.admin.user.addUser(req, function (error, data) {
+				console.log(error)
+                console.log(data)
 				return res.json(req.soajs.buildResponse(error, data));
 			});
 		});
