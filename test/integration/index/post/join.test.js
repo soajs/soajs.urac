@@ -16,7 +16,7 @@ describe("Testing add user API", () => {
 		done();
 	});
 	
-	it.skip("Success - will join", (done) => {
+	it("Success - will join", (done) => {
 		let params = {
 			body: {
 				username: 'joiner',

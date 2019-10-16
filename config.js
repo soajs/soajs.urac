@@ -103,8 +103,7 @@ module.exports = {
 									"required": true
 								}
 							}
-						],
-						"additionalProperties": false
+						]
 					}
 				}
 			}
@@ -648,8 +647,7 @@ module.exports = {
 										"required": false
 									}
 								}
-							],
-							"additionalProperties": false
+							]
 						}
 					}
 				}

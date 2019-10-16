@@ -16,7 +16,7 @@ describe("Testing forgot password API", () => {
 		done();
 	});
 	
-	it.skip("Success - will forgot password send link and email", (done) => {
+	it("Success - will forgot password send link and email", (done) => {
 		let params = {
 			qs: {
 				username: "johnd"
@@ -26,9 +26,11 @@ describe("Testing forgot password API", () => {
 			assert.ifError(error);
 			assert.ok(body);
 			assert.ok(body.data);
+			console.log(body.data.link, 'link flag')
 			assert.ok(body.data.hasOwnProperty('token'));
 			assert.ok(body.data.hasOwnProperty('link'));
 			let check = validator.validate(body, forgotPasswordSchema);
+			console.log(check, 'flag')
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
 			done();

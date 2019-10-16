@@ -70,7 +70,7 @@ let lib = {
                                     },
                                     "forgotPassword": {
 	                                    "subject": "Reset Your Password at SOAJS",
-	                                    "path": "/node_modules/soajs.urac/mail/urac/forgotPassword.tmpl",
+	                                    "path": "/mail/urac/forgotPassword.tmpl",
 	                                    "from": "soajs@your.cloud.io",
 	                                    "transport": {
 		                                    "type": "smtp",
@@ -115,7 +115,7 @@ let lib = {
         },
         {
             "product": "TPROD",
-            "package": "TPROD_BASIC",
+            "package": "TPROD_EXA3",
             "appId": "30d2cb5fc04ce51e06000002",
             "description": "this is a description for app for test tenant for test product and basic package, and with example03 in acl",
             "_TTL": 86400000, // 24 hours
@@ -131,16 +131,9 @@ let lib = {
                         }
                     ],
 	                "config": {
-		                "dev": {
+		                "dashboard": {
 			                "oauth": {
 				                "loginMode": 'urac'
-			                },
-			                "mail": {
-				                "from": 'me@localhost.com',
-				                "transport": {
-					                "type": "sendmail",
-					                "options": {}
-				                }
 			                },
 			                "urac": {
 				                "hashIterations": 1024, //used by hasher
@@ -149,53 +142,61 @@ let lib = {
 					                "addUser": "http://dashboard.soajs.org/#/setNewPassword",
 					                "changeEmail": "http://dashboard.soajs.org/#/changeEmail/validate",
 					                "forgotPassword": "http://dashboard.soajs.org/#/resetPassword",
-					                "join": "http://dashboard.soajs.org/#/join/validate"
+					                "join": "http://dashboard.soajs.org/#/join/validate",
 				                },
 				                "tokenExpiryTTL": 2 * 24 * 3600 * 1000,// token expiry limit in seconds
 				                "validateJoin": true, //true if registration needs validation
 				                "mail": { //urac mail options
 					                "join": {
-						                "subject": 'Welcome to SOAJS'
+						                "subject": 'Welcome to SOAJS',
+						                "path": "/mail/urac/join.tmpl"
 					                },
 					                "forgotPassword": {
-						                "subject": "Reset Your Password at SOAJS",
-						                "path": "/node_modules/soajs.urac/mail/urac/forgotPassword.tmpl",
-						                "from": "soajs@your.cloud.io",
-						                "transport": {
-							                "type": "smtp",
-							                "options": {
-								                "host": "smtp.mailgun.org",
-								                "port": 465,
-								                "auth": {
-									                "user": "soajs@your.cloud.io",
-									                "pass": "xxxxxx"
-								                }
-							                }
-						                }
+						                "subject": "Reset Your Password",
+						                "path": "/mail/urac/forgotPassword.tmpl"
 					                },
 					                "addUser": {
-						                "subject": 'Account Created at SOAJS'
+						                "subject": 'Account Created',
+						                "path": "/mail/urac/addUser.tmpl"
 					                },
 					                "changeUserStatus": {
-						                "subject": "Account Status changed at SOAJS",
+						                "subject": "Account Status changed",
 						                //use custom HTML
 						                "content": "<p>Dear <b>{{ username }}</b>, <br />The administrator update your account status to <b>{{ status }}</b> on {{ts}}.<br /><br />Regards,<br/>SOAJS Team.</p>"
 					                },
 					                "changeEmail": {
-						                "subject": "Change Account Email at SOAJS"
+						                "subject": "Change Account Email",
+						                "path": "/mail/urac/changeEmail.tmpl"
+					                },
+					                "invitePin": {
+						                "subject": "Invite User Pin",
+						                "path": "/mail/urac/invitePin.tmpl"
+					                },
+					                "changePin": {
+						                "subject": "Change User Pin",
+						                "path": "/mail/urac/changePin.tmpl"
+					                },
+					                "resetPin": {
+						                "subject": "Reset User Pin",
+						                "path": "/mail/urac/resetPin.tmpl"
 					                }
 				                }
 			                },
-			                "dashboard": {
-				                "ownerPackage": "DSBRD_OWNER",
-				                "defaultClientPackage": "DSBRD_CLIENT",
-				                "clientspackage": {}
-			                },
 			                "commonFields": {
-				                "SOAJS_SAAS": {},
-				                "HT_PROJECT": {
-					                "name": "demo"
-				                }
+				                "mail": {
+					                "from": "fadi@soajs.org",
+					                "transport": {
+						                "type": "smtp",
+						                "options": {
+							                "host": "secure.emailsrvr.com",
+							                "port": 465,
+							                "auth": {
+								                "user": "fadi@soajs.org",
+								                "pass": "Default_2019"
+							                }
+						                }
+					                }
+				                },
 			                }
 		                }
 	                }

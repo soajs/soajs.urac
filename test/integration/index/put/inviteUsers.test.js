@@ -4,7 +4,9 @@ const requester = require('../../requester');
 let core = require('soajs').core;
 let validator = new core.validator.Validator();
 let listUsersSchema = require("../../user/schemas/getUsers.js");
-let editUserSchema = require("../schemas/editUser.js");
+let inviteUsersSchema = require("../schemas/inviteUsers.js");
+
+let stExtKey = 'e267a49b84bfa1e95dffe1efd45e443f36d7dced1dc97e8c46ce1965bac78faaa0b6fe18d50efa5a9782838841cba9659fac52a77f8fa0a69eb0188eef4038c49ee17f191c1d280fde4d34580cc3e6d00a05a7c58b07a504f0302915bbe58c18';
 
 describe("Testing edit user API", () => {
 	
@@ -22,12 +24,15 @@ describe("Testing edit user API", () => {
 	
 	it("Success - will return all user records", (done) => {
 		let params = {
+			headers: {
+				key: stExtKey
+			}
 		};
 		requester('/admin/users', 'get', params, (error, body) => {
 			assert.ok(body);
 			assert.ok(body.data.length > 0);
 			body.data.forEach(user => {
-				if (user.username === 'kamil' || user.username === 'samouel') {
+				if (user.username === 'inviteTest') {
 					users.push(user);
 				}
 			});
@@ -40,6 +45,9 @@ describe("Testing edit user API", () => {
 	
 	it("Success - will invite Users", (done) => {
 		let params = {
+			headers: {
+				key: stExtKey
+			},
 			body: {
 				users: [
 					{
@@ -50,17 +58,7 @@ describe("Testing edit user API", () => {
 							allowed: true,
 							code: true
 						},
-						groups: ['dev','devop']
-					},
-					{
-						user: {
-							username: users[1].username
-						},
-						pin: {
-							allowed: false,
-							code: true
-						},
-						groups: ['devop']
+						groups: ['dev']
 					}
 				],
 			}
@@ -69,8 +67,8 @@ describe("Testing edit user API", () => {
 			assert.ifError(error);
 			assert.ok(body);
 			assert.ok(body.data);
-			assert.deepEqual(body.data, true);
-			let check = validator.validate(body, editUserSchema);
+			assert.ok(body.data.succeeded.length > 0);
+			let check = validator.validate(body, inviteUsersSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
 			done();
@@ -79,6 +77,9 @@ describe("Testing edit user API", () => {
 	
 	it("Fails - will not invite User - found", (done) => {
 		let params = {
+			headers: {
+				key: stExtKey
+			},
 			body: {
 				user: [
 					{
@@ -96,7 +97,7 @@ describe("Testing edit user API", () => {
 			assert.ifError(error);
 			assert.ok(body);
 			assert.ok(body.errors);
-			let check = validator.validate(body, editUserSchema);
+			let check = validator.validate(body, inviteUsersSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
 			done();
@@ -105,6 +106,9 @@ describe("Testing edit user API", () => {
 	
 	it("Fails - invite user - No data", (done) => {
 		let params = {
+			headers: {
+				key: stExtKey
+			},
 		};
 		requester('/admin/users/invite', 'put', params, (error, body) => {
 			assert.ifError(error);
@@ -112,9 +116,9 @@ describe("Testing edit user API", () => {
 			assert.ok(body.errors);
 			assert.deepEqual(body.errors.details, [{
 				code: 172,
-				message: 'Missing required field: id'
+				message: 'Missing required field: users'
 			}]);
-			let check = validator.validate(body, editUserSchema);
+			let check = validator.validate(body, inviteUsersSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
 			done();

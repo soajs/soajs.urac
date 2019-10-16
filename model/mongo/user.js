@@ -546,8 +546,8 @@ User.prototype.save = function (data, cb) {
     let condition = {
         "_id": data._id
     };
-
-    __self.mongoCore.update(colName, condition, null, null, (err, record) => {
+    
+    __self.mongoCore.update(colName, condition, data, null, (err, record) => {
         if (!record) {
             let error = new Error("User: user [" + data._id.toString() + "] was not saved.");
             return cb(error);

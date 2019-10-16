@@ -12,12 +12,6 @@ let lib = {
                     "3": {
                         "access": true,
                         "get": [
-                            {
-                                "apis": {
-                                    
-                                },
-                                "group": "User Administration"
-                            }
                         ]
                     }
                 }

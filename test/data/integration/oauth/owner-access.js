@@ -36,7 +36,16 @@ let token = {
                     groups: [
                         "manager"
                     ]
-                }
+                },
+	            {
+		            tenant: {
+			            id: "5da6d6280067e20d5fe67667",
+			            code: "COD1"
+		            },
+		            groups: [
+		            	'group1'
+		            ]
+	            }
             ]
         },
         "ts": new Date().getTime(),

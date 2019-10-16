@@ -49,8 +49,7 @@ let user = {
             code: "1235",
             allowed: true
         }
-    },
-    lastLogin: 1567004442409
+    }
 };
 
 module.exports = user;

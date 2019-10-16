@@ -38,14 +38,6 @@ let lib = {
                             env: "DASHBOARD",
                             expDate: null,
                             dashboardAccess: true
-                        },
-                        {
-                            extKey: "a6843d9da8e73271b68d046f2d11f65eab7022e6fc88a691005d7b685e613605aea35637c1e77016bf3f342019eeb24795f3c4195e0c6cba36731d0be27d1ae64d6e776deed5427908672cf1a7d58a343fe4b0d3ce9b374e17e108bff3daf274",
-                            device: null,
-                            geo: null,
-                            env: "DEV",
-                            expDate: null,
-                            dashboardAccess: true
                         }
                     ],
                     config: {

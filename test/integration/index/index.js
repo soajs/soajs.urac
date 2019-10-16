@@ -26,8 +26,8 @@ describe("starting index integration tests", () => {
 		require('./put/resetPassword.test');
 		require('./put/accountEmail.test');
 		require('./put/userPin.test');
-		require('./put/uninviteUsers.test');
 		require('./put/inviteUsers.test');
+		require('./put/uninviteUsers.test');
 		
 		//DELETE
 		require('./delete/deleteGroup.test');

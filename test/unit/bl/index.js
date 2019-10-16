@@ -6,32 +6,5 @@ const assert = require('assert');
 
 
 describe.skip("Unit test for: BL - index", () => {
-    let soajs = {
-        "tenant": {
-            "code": "TES0",
-            "id": "5c0e74ba9acc3c5a84a51259"
-        },
-        "log": {
-            "error": (msg) => {
-                console.log(msg);
-            },
-            "debug": (msg) => {
-                console.log(msg);
-            }
-        }
-    };
-
-    before((done) => {
-        BL.localConfig = helper.requireModule("config.js");
-        done();
-    });
-
-    it("Edit user", (done) =>  {
-
-        BL.editUser(soajs, null, null, (error, reso) => {
-            assert.ok(error);
-            done();
-        });
-    });
 
 });

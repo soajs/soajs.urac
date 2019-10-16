@@ -4,7 +4,7 @@ const requester = require('../../requester');
 let core = require('soajs').core;
 let validator = new core.validator.Validator();
 let listUsersSchema = require("../../user/schemas/getUsers.js");
-let editUserSchema = require("../schemas/editUser.js");
+let editPinSchema = require("../schemas/userPin.js");
 
 describe("Testing edit user pin API", () => {
 	
@@ -28,7 +28,7 @@ describe("Testing edit user pin API", () => {
 			assert.ok(body.data.length > 0);
 			users = body.data;
 			users.forEach(user => {
-				if (user.username === 'kamil') {
+				if (user.username === 'change') {
 					selectedUser = user;
 				}
 			});
@@ -39,10 +39,10 @@ describe("Testing edit user pin API", () => {
 		});
 	});
 	
-	it.skip("Success - will edit User pin - reset", (done) => {
+	it("Success - will edit User pin - reset", (done) => {
 		let params = {
 			body: {
-				id: selectedUser._id,
+				user: {id: selectedUser._id},
 				pin: {
 					reset: true,
 					allowed: true
@@ -52,20 +52,20 @@ describe("Testing edit user pin API", () => {
 		requester('/admin/user/pin', 'put', params, (error, body) => {
 			assert.ifError(error);
 			assert.ok(body);
-			console.log(body.errors, 'erora')
 			assert.ok(body.data);
 			assert.deepEqual(body.data, true);
-			let check = validator.validate(body, editUserSchema);
+			console.log(body.data, 'diti')
+			let check = validator.validate(body, editPinSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
 			done();
 		});
 	});
 	
-	it.skip("Success - will edit User pin - delete", (done) => {
+	it("Success - will edit User pin - delete", (done) => {
 		let params = {
 			body: {
-				id: selectedUser._id,
+				user: {id: selectedUser._id},
 				pin: {
 					delete: true
 				}
@@ -76,7 +76,7 @@ describe("Testing edit user pin API", () => {
 			assert.ok(body);
 			assert.ok(body.data);
 			assert.deepEqual(body.data, true);
-			let check = validator.validate(body, editUserSchema);
+			let check = validator.validate(body, editPinSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
 			done();
@@ -97,7 +97,7 @@ describe("Testing edit user pin API", () => {
 			assert.ifError(error);
 			assert.ok(body);
 			assert.ok(body.errors);
-			let check = validator.validate(body, editUserSchema);
+			let check = validator.validate(body, editPinSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
 			done();
@@ -115,7 +115,7 @@ describe("Testing edit user pin API", () => {
 				code: 172,
 				message: 'Missing required field: pin, user'
 			}]);
-			let check = validator.validate(body, editUserSchema);
+			let check = validator.validate(body, editPinSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
 			done();

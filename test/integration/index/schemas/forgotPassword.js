@@ -26,7 +26,7 @@ let forgotPasswordSchema = {
 					"required": true
 				},
 				"link": {
-					"type": "string",
+					"type": "object",
 					"required": false
 				}
 			}
