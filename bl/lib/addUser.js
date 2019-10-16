@@ -53,8 +53,14 @@ let local = (soajs, inputmaskData, options, cb) => {
                 if (userRecord.status !== "pendingNew") {
                     //close model
                     bl.user.mt.closeModel(modelObj);
-                    return cb(null, {
-                        id: userRecord._id.toString()
+
+                    lib.mail.send(soajs, "addUserNotPending", userRecord, null, function (error) {
+                        if (error) {
+                            soajs.log.info('addUserNotPending: No Mail was sent: ' + error);
+                        }
+                        return cb(null, {
+                            id: userRecord._id.toString()
+                        });
                     });
                 }
                 else {
