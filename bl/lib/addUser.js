@@ -54,7 +54,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                     //close model
                     bl.user.mt.closeModel(modelObj);
 
-                    lib.mail.send(soajs, "addUserNotPending", userRecord, null, function (error) {
+                    lib.mail.send(soajs, "addUser", userRecord, null, function (error) {
                         if (error) {
                             soajs.log.info('addUserNotPending: No Mail was sent: ' + error);
                         }
