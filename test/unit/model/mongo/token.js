@@ -58,7 +58,6 @@ describe("Unit test for: model - token", function () {
         modelObj.list(null, (err, records) => {
             assert.ok(records);
             tokens = records;
-            console.log(records, 'tokins');
             tokens.forEach(token => {
                 if (token.userId === '5c8d0c505653de3985aa0ffd') {
                     selectedToken = token;

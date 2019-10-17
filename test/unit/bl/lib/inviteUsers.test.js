@@ -241,15 +241,6 @@ describe("Unit test for: BL - invite users", () => {
 			}
 		};
 		
-		UserModel.prototype.uninvite = (data, cb) => {
-			if (data && data.user.id && data.user.id === "error") {
-				let error = new Error("User: uninvite - mongo error.");
-				return cb(error, null);
-			} else {
-				return cb(null, 1);
-			}
-		};
-		
 		BL.user.model = UserModel;
 		
 		let data = {

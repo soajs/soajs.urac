@@ -38,6 +38,7 @@ describe("Starting URAC Unit test", () => {
         require("./bl/lib/addUser-subTenant.js");
 	    require("./bl/lib/join.test.js");
 	    require("./bl/lib/inviteUsers.test.js");
+	    require("./bl/lib/uninviteUsers.test.js");
 	    require("./bl/lib/editPin.test.js");
 	    
         done();

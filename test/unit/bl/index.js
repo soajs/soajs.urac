@@ -393,7 +393,6 @@ describe("Unit test for: BL - index", () => {
 			};
 			
 			BL.resetPassword(soajs, data, null, (error, result) => {
-				console.log(error, result, 'erora')
 				assert.ok(result);
 				assert.deepEqual(result, true);
 				
@@ -401,7 +400,6 @@ describe("Unit test for: BL - index", () => {
 			});
 		});
 	});
-	
 	it('tests changeEmail', (done) => {
 		function TokenModel() {
 			console.log("token model");
@@ -461,9 +459,235 @@ describe("Unit test for: BL - index", () => {
 			};
 			
 			BL.changeEmail(soajs, data, null, (error, result) => {
-				console.log(result, 'resos');
 				assert.ok(result);
 				done();
+			});
+		});
+	});
+	it('tests changePassword', (done) => {
+		function UserModel() {
+			console.log("user model");
+		}
+		
+		UserModel.prototype.closeConnection = () => {
+		};
+		
+		UserModel.prototype.getUser = (data, cb) => {
+			if (data && data.id && data.id === 'error') {
+				let error = new Error('Model error: User: Check Username - mongo error.');
+				return cb(error, null);
+			} else {
+				return cb(null, user);
+			}
+		};
+		
+		UserModel.prototype.updateOneField = (data, cb) => {
+			return cb(null, true);
+		};
+		
+		BL.user.model = UserModel;
+		
+		let data = {
+			id: 'error'
+		};
+		
+		BL.changePassword(soajs, data, null, (error) => {
+			assert.ok(error);
+			
+			let data = {
+				id: '',
+				oldPassword: 'password',
+				password: 'newpassword',
+				confirmation: 'newpassword'
+			};
+			BL.changePassword(soajs, data, null, (error, result) => {
+				assert.ok(result);
+				assert.deepEqual(result, true);
+				done();
+			});
+		});
+		
+	});
+	it('tests forgot password', (done) => {
+		function TokenModel() {
+			console.log("token model");
+		}
+		
+		TokenModel.prototype.closeConnection = () => {
+		};
+		TokenModel.prototype.add = (data, cb) => {
+			let token = {
+				"token": "f65e8358-ce1d-32fb-b478-82e10c93e61f"
+			};
+			return cb(null, token);
+		};
+		
+		BL.token.model = TokenModel;
+		
+		function UserModel() {
+			console.log("user model");
+		}
+		
+		UserModel.prototype.closeConnection = () => {
+		};
+		
+		UserModel.prototype.getUserByUsername = (data, cb) => {
+			if (data && data.username && data.username === 'error') {
+				let error = new Error('User: get user by Username - mongo error.');
+				return cb(error, null);
+			} else {
+				return cb(null, user);
+			}
+		};
+		
+		BL.user.model = UserModel;
+		
+		let data = {
+			username: 'error'
+		};
+		
+		BL.forgotPassword(soajs, data, null, (error) => {
+			assert.ok(error);
+			
+			let data = {
+				username: 'tony'
+			};
+			BL.forgotPassword(soajs, data, null, (error, result) => {
+				assert.ok(result);
+				assert.deepEqual(result.token, 'f65e8358-ce1d-32fb-b478-82e10c93e61f');
+				done();
+			});
+		});
+		
+	});
+	it('tests getUsersAndGroups ', (done) => {
+		function UserModel() {
+			console.log("user model");
+		}
+		
+		UserModel.prototype.closeConnection = () => {
+		};
+		
+		UserModel.prototype.getUsers = (data, cb) => {
+			return cb(null, [user]);
+		};
+		
+		BL.user.model = UserModel;
+		
+		function GroupModel() {
+			console.log("group model");
+		}
+		
+		GroupModel.prototype.closeConnection = () => {
+		};
+		
+		GroupModel.prototype.getGroups = (data, cb) => {
+			return cb(null, [group]);
+		};
+		
+		BL.group.model = GroupModel;
+		
+		BL.getUsersAndGroups(soajs, {}, null, (error, result) => {
+			assert.ok(result);
+			
+			let soajsClient = {
+				"tenant": {
+					"type": "client",
+					"main": {
+						"code": "TES0",
+						"id": "5c0e74ba9acc3c5a84a51259"
+					},
+					"code": "TES1",
+					"id": "5c0e74ba9acc3c5a84a5125a"
+				},
+				"log": {
+					"error": (msg) => {
+						console.log(msg);
+					},
+					"debug": (msg) => {
+						console.log(msg);
+					},
+					"info": (msg) => {
+						console.log(msg);
+					},
+				}
+			};
+			
+			BL.getUsersAndGroups(soajsClient, {}, null, (error, result) => {
+				assert.ok(result);
+				done();
+			});
+		});
+	});
+	
+	it('tests editUser', (done) => {
+		function UserModel() {
+			console.log("user model");
+		}
+		
+		UserModel.prototype.closeConnection = () => {
+		};
+		
+		UserModel.prototype.getUser = (data, cb) => {
+			if (data && data.id && data.id === 'error') {
+				let error = new Error('User: edit user - mongo error.');
+				return cb(error, null);
+			} else {
+				return cb(null, user);
+			}
+		};
+		
+		UserModel.prototype.checkUsername = (data, cb) => {
+			if (data && data.username && data.username === "found") {
+				return cb(null, 1);
+			} else if (data && data.username && data.username === "error") {
+				let error = new Error("User: checkUsername - mongo error.");
+				return cb(error, null);
+			} else {
+				return cb(null, null);
+			}
+		};
+		
+		UserModel.prototype.edit = (data, cb) => {
+			return cb(null, 1);
+		};
+		
+		BL.user.model = UserModel;
+		
+		let data = {
+			id: 'error'
+		};
+		
+		BL.editUser(soajs, data, null, (error) => {
+			assert.ok(error);
+			
+			let data = {
+				id: '5d7fee0876186d9ab9b36492',
+				username: 'fadinasr',
+				firstName: 'fadi',
+				lastName: 'nasr',
+				email: 'edit@rmail.com',
+				groups: ['devop'],
+				status: 'active',
+				profile: {}
+			};
+			
+			BL.editUser(soajs, data, null, (error, result) => {
+				assert.ok(result);
+				
+				let data = {
+					id: '5d7fee0876186d9ab9b36492',
+					username: 'fadinasr',
+					firstName: 'fadi',
+					lastName: 'nasr',
+					groups: ['devop'],
+					status: 'active',
+					profile: {}
+				};
+				BL.editUser(soajs, data, null, (error, result) => {
+					assert.ok(result);
+					done();
+				});
 			});
 		});
 	});
