@@ -67,7 +67,7 @@ let user = {
 	}
 };
 
-describe("Unit test for: BL - addUser main tenant", () => {
+describe("Unit test for: BL - editPin main tenant", () => {
 	let soajs = {
 		"registry": {
 			"custom": {
@@ -166,66 +166,78 @@ describe("Unit test for: BL - addUser main tenant", () => {
 		UserModel.prototype.closeConnection = () => {
 		};
 		
-		UserModel.deleteUpdatePin = (data, cb) => {
-			if (data && data.user && data.user === {id: "error"}) {
+		UserModel.prototype.deleteUpdatePin = (data, cb) => {
+			if (data && !data.user) {
 				let error = new Error("User: deleteUpdatePin - mongo error.");
 				return cb(error, null);
 			} else if (data.pin.delete) {
 				assert.ok(data.pin.delete);
 				return cb(null, true);
 			} else {
-				assert.ok(data.pin.allowed);
 				return cb(null, true);
 			}
 		};
 		
-		UserModel.getUser = (data, cb) => {
-			if (data && data.id && data.id === "error") {
-				let error = new Error("User: getUser - mongo error.");
-				return cb(error, null);
-			} else {
-				return cb(null, user);
-			}
+		UserModel.prototype.getUser = (data, cb) => {
+			return cb(null, user);
 		};
 		
-		UserModel.getUserByUsername = (data, cb) => {
-			if (data && data.username && data.username === "error") {
-				let error = new Error("User: getUserByUsername - mongo error.");
-				return cb(error, null);
-			} else {
-				return cb(null, user);
-			}
+		UserModel.prototype.getUserByUsername = (data, cb) => {
+			return cb(null, user);
 		};
 		
 		BL.user.model = UserModel;
 		
+		
 		let data = {
-			"username": "error"
+		
 		};
 		
 		BL.editPin(soajs, data, null, (error) => {
 			assert.ok(error);
 			
 			let data = {
-				id: "error"
+				"user": {
+					id: '5d7fee0876186d9ab9b36492'
+				},
+				"pin": {
+					delete: true
+				}
 			};
 			
-			BL.editPin(soajs, data, null, (error) => {
-				assert.ok(error);
+			BL.editPin(soajs, data, null, (error, result) => {
+				assert.ok(result);
 				
 				let data = {
-					"status": "active",
 					"user": {
 						id: '5d7fee0876186d9ab9b36492'
 					},
-					"tenant": soajs.tenant
+					"pin": {
+						reset: true,
+						allowed: true
+					}
 				};
 				
 				BL.editPin(soajs, data, null, (error, result) => {
-					console.log(result, 'reso');
 					assert.ok(result);
+					
+					let data = {
+						"user": {
+							username: 'tony'
+						},
+						"pin": {
+							reset: true,
+							allowed: true
+						}
+					};
+					
+					BL.editPin(soajs, data, null, (error, result) => {
+						assert.ok(result);
+						done();
+					});
 				});
 			});
+			
 		});
 	});
 });

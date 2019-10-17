@@ -285,7 +285,6 @@ let bl = {
         data.user = inputmaskData.user;
         data.tenant = soajs.tenant;
         data.status = 'active';
-        console.log(data, 'didi')
         modelObj.uninvite(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {

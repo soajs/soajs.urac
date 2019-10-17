@@ -137,7 +137,11 @@ describe("Unit test for: BL - join", () => {
 			"code": "TES0",
 			"id": "5c0e74ba9acc3c5a84a51259"
 		},
-		"servicesConfig": {},
+		"servicesConfig": {
+			"urac": {
+				"validateJoin": true,
+			}
+		},
 		"log": {
 			"error": (msg) => {
 				console.log(msg);
@@ -165,67 +169,65 @@ describe("Unit test for: BL - join", () => {
 		
 		UserModel.prototype.closeConnection = () => {
 		};
-		
-		UserModel.deleteUpdatePin = (data, cb) => {
-			if (data && data.user && data.user === {id: "error"}) {
-				let error = new Error("User: deleteUpdatePin - mongo error.");
+		UserModel.prototype.checkUsername = (data, cb) => {
+			if (data && data.username && data.username === "found") {
+				return cb(null, 1);
+			} else if (data && data.username && data.username === "error") {
+				let error = new Error("User: checkUsername - mongo error.");
 				return cb(error, null);
-			} else if (data.pin.delete) {
-				assert.ok(data.pin.delete);
-				return cb(null, true);
 			} else {
-				assert.ok(data.pin.allowed);
-				return cb(null, true);
+				return cb(null, null);
 			}
 		};
 		
-		UserModel.getUser = (data, cb) => {
-			if (data && data.id && data.id === "error") {
-				let error = new Error("User: getUser - mongo error.");
-				return cb(error, null);
-			} else {
-				return cb(null, user);
-			}
-		};
-		
-		UserModel.getUserByUsername = (data, cb) => {
-			if (data && data.username && data.username === "error") {
-				let error = new Error("User: getUserByUsername - mongo error.");
-				return cb(error, null);
-			} else {
-				return cb(null, user);
-			}
+		UserModel.prototype.add = (data, cb) => {
+			data._id = "5cfb05c22ac09278709d0141";
+			return cb(null, data);
 		};
 		
 		BL.user.model = UserModel;
 		
-		let data = {
-			"username": "error"
-		};
+		function TokenModel() {
+			console.log("user model");
+		}
 		
-		BL.editPin(soajs, data, null, (error) => {
+		TokenModel.prototype.closeConnection = () => {
+		};
+		TokenModel.prototype.add = (data, cb) => {
+			let token = {
+				"token": "f65e8358-ce1d-47ff-b478-82e10c93f70e"
+			};
+			return cb(null, token);
+		};
+		BL.token.model = TokenModel;
+		
+		let data = {
+			"username": "found"
+		};
+		BL.join(soajs, data, null, (error) => {
 			assert.ok(error);
 			
 			let data = {
-				id: "error"
+				"username": "error"
 			};
 			
-			BL.editPin(soajs, data, null, (error) => {
+			BL.join(soajs, data, null, (error) => {
 				assert.ok(error);
 				
 				let data = {
-					"status": "active",
-					"user": {
-						id: '5d7fee0876186d9ab9b36492'
-					},
-					"tenant": soajs.tenant
+					"token": "f65e8358-ce1d-47ff-b478-82e10c93f70e"
 				};
 				
-				BL.editPin(soajs, data, null, (error, result) => {
-					console.log(result, 'reso');
+				BL.join(soajs, data, null, (error, result) => {
 					assert.ok(result);
+					assert.deepEqual(result, {
+						token: 'f65e8358-ce1d-47ff-b478-82e10c93f70e',
+						link: {join: 'https://dev-site.rockspoon.io/#/join/validate?token=f65e8358-ce1d-47ff-b478-82e10c93f70e'}
+					});
+					done();
 				});
 			});
 		});
+		
 	});
 });
