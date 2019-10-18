@@ -54,16 +54,6 @@ let lib = {
                                 }
                             },
                             urac: {
-                                passportLogin: {
-                                    azure: {
-                                        identityMetadata: "https://login.microsoftonline.com/07f5f2cb-e225-4fe2-b0dc-d1c0412956d3/v2.0/.well-known/openid-configuration",
-                                        clientID: "a3fca555-4bf8-4caa-a8d3-ba6388e390fc",
-                                        passReqToCallback: false,
-                                        scope: [
-                                            "User.Read"
-                                        ]
-                                    }
-                                },
                                 hashIterations: 1024,
                                 seedLength: 32,
                                 link: {

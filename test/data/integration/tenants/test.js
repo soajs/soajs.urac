@@ -71,18 +71,6 @@ let lib = {
                                     "forgotPassword": {
 	                                    "subject": "Reset Your Password at SOAJS",
 	                                    "path": "/mail/urac/forgotPassword.tmpl",
-	                                    "from": "soajs@your.cloud.io",
-	                                    "transport": {
-		                                    "type": "smtp",
-		                                    "options": {
-			                                    "host": "smtp.mailgun.org",
-			                                    "port": 465,
-			                                    "auth": {
-				                                    "user": "soajs@your.cloud.io",
-				                                    "pass": "xxxxxx"
-			                                    }
-		                                    }
-	                                    }
                                     },
                                     "addUser": {
                                         "subject": 'Account Created at SOAJS'
@@ -97,16 +85,7 @@ let lib = {
                                     }
                                 }
                             },
-                            "dashboard": {
-                                "ownerPackage": "DSBRD_OWNER",
-                                "defaultClientPackage": "DSBRD_CLIENT",
-                                "clientspackage": {}
-                            },
                             "commonFields": {
-                                "SOAJS_SAAS": {},
-                                "HT_PROJECT": {
-                                    "name": "demo"
-                                }
                             }
                         }
                     }
