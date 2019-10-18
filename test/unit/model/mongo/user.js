@@ -545,7 +545,7 @@ describe("Unit test for: model - user", function () {
             data.status = record.status;
             data.tenant = soajs.tenant;
 
-            modelObj.uninvite(data, (err, result) => {
+            modelObj.uninvite(data, (err) => {
                 assert.ok(err);
                 assert.deepEqual(err, new Error("User: un-invite only works for sub tenant."));
                 done();

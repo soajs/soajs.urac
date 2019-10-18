@@ -20,7 +20,6 @@ describe("Testing edit user API", () => {
 	});
 	
 	let users = [];
-	let selectedUser;
 	
 	it("Success - will return all user records", (done) => {
 		let params = {

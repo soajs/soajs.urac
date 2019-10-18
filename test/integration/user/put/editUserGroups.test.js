@@ -52,7 +52,6 @@ describe.skip("Testing edit User Groups API", () => {
         requester('/admin/user/groups', 'put', params, (error, body) => {
             assert.ifError(error);
             assert.ok(body);
-            console.log(body.data, body.errors, 'flag')
             assert.ok(body.data);
             assert.deepEqual(body.data, 1);
             let check = validator.validate(body, editUserSchema);

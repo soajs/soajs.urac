@@ -646,7 +646,7 @@ describe("Unit test for: BL - user", () => {
 
                 data.user.id = 'error';
 
-                BL.editGroups(soajs, data, null, (err, result) => {
+                BL.editGroups(soajs, data, null, (err) => {
                     assert.ok(err);
                     assert.deepEqual(err.code, 602);
                     done();

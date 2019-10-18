@@ -54,7 +54,6 @@ describe("Testing edit user pin API", () => {
 			assert.ok(body);
 			assert.ok(body.data);
 			assert.deepEqual(body.data, true);
-			console.log(body.data, 'diti')
 			let check = validator.validate(body, editPinSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
