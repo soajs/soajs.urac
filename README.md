@@ -97,3 +97,9 @@ Templates are located in the [registry](https://soajsorg.atlassian.net/wiki/spac
 ---
 
 More information is available on SOAJS website section for [URAC](https://soajsorg.atlassian.net/wiki/spaces/URAC).
+
+
+### License
+*Copyright SOAJS All Rights Reserved.*
+
+Use of this source code is governed by an Apache license that can be found in the LICENSE file at the root of this repository.
