@@ -2,31 +2,57 @@ language: node_js
 
 node_js: 8
 
-services:
-  - mongodb
+jobs:
+  include:
 
-env:
-  - CXX=g++-4.8
+  - stage: install, check code style and coverage
+    services:
+    - mongodb
+    env:
+    - CXX=g++-4.8
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - g++-4.8
+      hosts:
+      - localhost
+    before_script:
+    - npm install -g grunt-cli
+    - sleep 10
+    script:
+    - grunt
+    - if [ "$TRAVIS_BRANCH" != "master" ]; then grunt test; fi
+    - if [ "$TRAVIS_BRANCH" = "master" ]; then grunt coverage; fi
 
-branches:
-  only:
-    - master
+  - stage: Publish to npm
+    if: branch =~ /(release)/
+    script:
+    - echo "PUBLISH npm"
+    deploy:
+      provider: npm
+      email: $NPM_EMAIL
+      api_key: $NPM_TOKEN
+      on:
+        all_branches: true
+        condition: $TRAVIS_BRANCH =~ ^(release)*
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
-  hosts:
-    - localhost
+  - stage: Publish to docker registry
+    if: branch =~ /(release)/
+    script:
+    - echo "PUBLISH docker"
+    - export PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -Fn '{ print $2 }' | sed 's/[n:",]//g' | tr -d '[[:space:]]')
+    - export MAJOR_VERSION=$(echo ${PACKAGE_VERSION} | awk -F. '{ print $1 }')
+    - echo Package version ${PACKAGE_VERSION}
+    - echo Major version ${MAJOR_VERSION}
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
-before_install:
-  - sudo apt-get update && sudo apt-get install sendmail python make g++
+    - docker build -t soajsorg/multitenant .
 
-before_script:
-  - npm install -g grunt-cli
-  - sleep 10
+    - docker images
 
-script:
-  - grunt coverage
+    - docker tag soajsorg/multitenant:latest soajsorg/multitenant:${PACKAGE_VERSION}
+    - docker tag soajsorg/multitenant:latest soajsorg/multitenant:${MAJOR_VERSION}.x
+
+    - docker push soajsorg/multitenant
