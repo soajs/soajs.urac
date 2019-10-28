@@ -48,11 +48,11 @@ jobs:
     - echo Major version ${MAJOR_VERSION}
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
-    - docker build -t soajsorg/multitenant .
+    - docker build -t soajsorg/urac .
 
     - docker images
 
-    - docker tag soajsorg/multitenant:latest soajsorg/multitenant:${PACKAGE_VERSION}
-    - docker tag soajsorg/multitenant:latest soajsorg/multitenant:${MAJOR_VERSION}.x
+    - docker tag soajsorg/urac:latest soajsorg/urac:${PACKAGE_VERSION}
+    - docker tag soajsorg/urac:latest soajsorg/urac:${MAJOR_VERSION}.x
 
-    - docker push soajsorg/multitenant
+    - docker push soajsorg/urac
