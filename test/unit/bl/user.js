@@ -23,7 +23,7 @@ describe("Unit test for: BL - user", () => {
 
     before((done) => {
 
-        BL.localConfig = helper.requireModule("config.js");
+	    BL.localConfig = helper.requireModule("config.js");
 
         done();
     });

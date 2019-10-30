@@ -38,8 +38,7 @@ let lib = {
 							},
 							env: "DASHBOARD",
 							dashboardAccess: false,
-							label: "extsub",
-							expDate: 1571432400000.0
+							label: "extsub"
 						}
 					],
 					config: {

@@ -33,7 +33,7 @@ let local = (soajs, inputmaskData, options, cb) => {
         if (found) {
             //close model
             bl.user.mt.closeModel(modelObj);
-            return cb(bl.user.handleError(soajs, 402, null));
+            return cb(bl.user.handleError(soajs, 402, null)); //todo: add 402
         }
 
         let requireValidation = true;
