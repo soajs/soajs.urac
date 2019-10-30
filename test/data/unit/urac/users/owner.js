@@ -28,7 +28,7 @@ let user = {
                     id: "THYME_tID",
                     code: "THYME_CODE",
                     pin: {
-                        code: "5678",
+                        code: "1221",
                         allowed: true
                     }
                 },

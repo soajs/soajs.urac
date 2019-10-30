@@ -56,7 +56,7 @@ let user = {
         id: "5c0e74ba9acc3c5a84a51259",
         code: "TES0",
         pin: {
-            code: "1235",
+            code: "1239",
             allowed: true
         }
     }

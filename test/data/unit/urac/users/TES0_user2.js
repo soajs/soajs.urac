@@ -19,7 +19,7 @@ let user = {
         id: "10d2cb5fc04ce51e06000004",
         code: "anyy",
         pin: {
-            code: "1235",
+            code: "1234",
             allowed: true
         }
     }
