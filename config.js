@@ -414,7 +414,7 @@ module.exports = {
 				},
 				"environments": {
 					"source": ['body.environments'],
-					"required": true,
+					"required": false,
 					"validation": {
 						"type": "array",
 						"items": {
