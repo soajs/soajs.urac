@@ -32,7 +32,7 @@ describe("Testing get users by ids API", () => {
 
     it("Success - by ids will return user records", (done) => {
         let params = {
-            qs: {
+            body: {
                 ids: [users[0]._id],
                 limit: 10,
                 start: 0,
@@ -40,7 +40,7 @@ describe("Testing get users by ids API", () => {
             }
         };
 
-        requester('/admin/users/ids', 'get', params, (error, body) => {
+        requester('/admin/users/ids', 'post', params, (error, body) => {
             assert.ok(body);
             assert.ok(body.data);
             let check = validator.validate(body, getUsersSchema);
@@ -53,9 +53,9 @@ describe("Testing get users by ids API", () => {
 
     it("Error - will no data", (done) => {
         let params = {
-            qs: {}
+            body: {}
         };
-        requester('/admin/users/ids', 'get', params, (error, body) => {
+        requester('/admin/users/ids', 'post', params, (error, body) => {
             assert.ok(body);
             assert.ok(body.errors);
             assert.deepEqual(body.errors.details, [{code: 172, message: 'Missing required field: ids'}]);

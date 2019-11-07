@@ -54,7 +54,7 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-        service.get("/admin/users/ids", function (req, res) {
+        service.post("/admin/users/ids", function (req, res) {
             bl.user.getUsersByIds(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });

@@ -227,32 +227,7 @@ module.exports = {
 					"l": "Get all users and groups of a main tenant",
 					"group": "Administration"
 				}
-			},
-			'/admin/users/ids': {
-				"_apiInfo": {
-					"l": "List users by Id",
-					"group": "User administration",
-					"groupMain": true
-				},
-				"commonFields": ["start", "limit"],
-				"ids": {
-					"source": ['body.ids', 'query.ids'],
-					"required": true,
-					"validation": {
-						"type": "array",
-						"items": {
-							"type": "string",
-							"minItems": 1
-						}
-					}
-				},
-				"config": {
-					"source": ['query.config'],
-					"required": false,
-					"validation": {"type": "boolean"}
-				}
-			},
-			
+			}
 		},
 		
 		"post": {
@@ -365,6 +340,31 @@ module.exports = {
 						},
 						"additionalProperties": false
 					}
+				}
+			},
+			
+			'/admin/users/ids': {
+				"_apiInfo": {
+					"l": "List users by Id",
+					"group": "User administration",
+					"groupMain": true
+				},
+				"commonFields": ["start", "limit"],
+				"ids": {
+					"source": ['body.ids'],
+					"required": true,
+					"validation": {
+						"type": "array",
+						"items": {
+							"type": "string",
+							"minItems": 1
+						}
+					}
+				},
+				"config": {
+					"source": ['body.config'],
+					"required": false,
+					"validation": {"type": "boolean"}
 				}
 			},
 			
