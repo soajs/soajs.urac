@@ -23,6 +23,9 @@ function requester(apiName, method, params, cb) {
             }
         }
     }
+    if(params.uri) {
+    	options.uri = params.uri + apiName;
+    }
     if (params.form) {
         options.form = params.form;
     }
