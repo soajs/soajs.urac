@@ -726,7 +726,7 @@ module.exports = {
 			
 			'/admin/groups/environments': {
 				"_apiInfo": {
-					"l": "Update environment(s) of group(s) by code",
+					"l": "Update environment(s) of group(s) by code(s) or id(s)",
 					"group": "Group administration"
 				},
 				"environments": {
@@ -766,7 +766,7 @@ module.exports = {
 			
 			'/admin/groups/packages': {
 				"_apiInfo": {
-					"l": "Update package(s) of group(s) by code",
+					"l": "Update package(s) of group(s) by code(s) or id(s)",
 					"group": "Group administration"
 				},
 				"packages": {
