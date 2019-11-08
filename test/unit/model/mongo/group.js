@@ -407,19 +407,38 @@ describe("Unit test for: model - group", function () {
             done();
         });
     });
+	
+	let groupC, groupA;
+	
+	it("Get groups", function (done) {
+		modelObj.getGroups(null, (error, records) => {
+			assert.ok(records);
+			assert.ok(Array.isArray(records));
+			records.forEach(record => {
+				if (record.code === 'CCCC') {
+					groupC = record;
+				} else if (record.code === 'AAAA') {
+					groupA = record;
+				}
+			});
+			done();
+		});
+	});
 
     it("updateEnvironments - error", function (done) {
         modelObj.updateEnvironments(null, (error) => {
             assert.ok(error);
-            assert.deepEqual(error, new Error("Group: environments and groups are required."));
+            assert.deepEqual(error, new Error("Group: environments and group codes or ids are required."));
             done();
         });
     });
 
-    it("updateEnvironments - with data", function (done) {
+    it("updateEnvironments - with data - CODES", function (done) {
         let data = {
             "environments": ["test", "stg"],
-            "groups": ["CCCC", "AAAA"]
+            "groups": {
+            	"codes": ["CCCC", "AAAA"]
+            }
         };
         modelObj.updateEnvironments(data, (error, record) => {
             assert.ok(record);
@@ -427,20 +446,36 @@ describe("Unit test for: model - group", function () {
             done();
         });
     });
+	
+	it("updateEnvironments - with data - CODES", function (done) {
+		let data = {
+			"environments": ["testid", "devoping"],
+			"groups": {
+				"ids": [groupC._id, groupA._id]
+			}
+		};
+		modelObj.updateEnvironments(data, (error, record) => {
+			assert.ok(record);
+			assert.equal(record, 2);
+			done();
+		});
+	});
 
     it("updatePackages - error", function (done) {
         modelObj.updatePackages(null, (error) => {
             assert.ok(error);
-            assert.deepEqual(error, new Error("Group: packages and groups are required."));
+            assert.deepEqual(error, new Error("Group: packages and group codes or ids are required."));
             done();
         });
     });
 
-    it("updatePackages - with data", function (done) {
+    it("updatePackages - with data - CODES", function (done) {
         let data = {
             "packages": [{product: "hage", package: "antoine"},
                 {product: "hage", package: "mathieu"}, {product: "soajs", package: "gateway"}],
-            "groups": ["CCCC", "AAAA"]
+            "groups": {
+            	codes: ["CCCC", "AAAA"]
+            }
         };
         modelObj.updatePackages(data, (error, record) => {
             assert.ok(record);
@@ -448,6 +483,21 @@ describe("Unit test for: model - group", function () {
             done();
         });
     });
+	
+	it("updatePackages - with data - IDS", function (done) {
+		let data = {
+			"packages": [{product: "hage", package: "cal"},
+				{product: "hage", package: "something"}, {product: "soajs", package: "gateway"}],
+			"groups": {
+				ids: [groupA._id, groupC._id]
+			}
+		};
+		modelObj.updatePackages(data, (error, record) => {
+			assert.ok(record);
+			assert.equal(record, 2);
+			done();
+		});
+	});
 
     it("validateId - error", function (done) {
         modelObj.validateId(null, (error) => {

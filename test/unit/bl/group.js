@@ -278,7 +278,9 @@ describe("Unit test for: BL - group", () => {
                     {product: "test", package: "PACK"},
                     {product: "soajs", package: "gateway"}
                 ],
-                "groups": ["CCCC", "AAAA"]
+                "groups": {
+                	codes: ["CCCC", "AAAA"]
+                }
             };
 
             BL.updatePackages(soajs, data, null, (err, result) => {

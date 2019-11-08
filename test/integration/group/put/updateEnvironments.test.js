@@ -40,11 +40,34 @@ describe("Testing Update environments API", () => {
 		});
 	});
 	
-	it("Success - will update environments", (done) => {
+	it("Success - will update environments - CODES", (done) => {
 		let params = {
 			body: {
-				"groups": [groups[0].code, groups[1].code],
+				"groups": {
+					codes: [groups[0].code, groups[1].code]
+				},
 				"environments": ["dev", "devop"],
+			}
+		};
+		requester('/admin/groups/environments', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, 2);
+			let check = validator.validate(body, updateEnvironmentsSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - will update environments - IDS", (done) => {
+		let params = {
+			body: {
+				"groups": {
+					"ids": [groups[0]._id, groups[1]._id]
+				},
+				"environments": ["devid", "devopid"],
 			}
 		};
 		requester('/admin/groups/environments', 'put', params, (error, body) => {

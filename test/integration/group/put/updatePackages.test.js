@@ -40,10 +40,33 @@ describe("Testing Update Packages API", () => {
 		});
 	});
 	
-	it("Success - will update Packages", (done) => {
+	it("Success - will update Packages - CODES", (done) => {
 		let params = {
 			body: {
-				"groups": [selectedGroup.code],
+				"groups": {
+					codes: [selectedGroup.code]
+				},
+				"packages": [{product: "client", package: "client_DEVOP"}, {product: "client", package: "client_SOME"},],
+			}
+		};
+		requester('/admin/groups/packages', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, 1);
+			let check = validator.validate(body, updatePackagesSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - will update Packages - IDS", (done) => {
+		let params = {
+			body: {
+				"groups": {
+					ids: [selectedGroup._id]
+				},
 				"packages": [{product: "client", package: "client_DEVOP"}, {product: "client", package: "client_SOME"},],
 			}
 		};

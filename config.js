@@ -745,12 +745,20 @@ module.exports = {
 					"source": ['body.groups'],
 					"required": true,
 					"validation": {
-						"type": "array",
-						"items": {
-							"type": "string",
-							"minItems": 1,
-							"format": "alphanumeric",
-							"maxLength": 20
+						"type": "object",
+						"properties": {
+							"oneOf": [
+								{
+									"ids": {
+										"type": "array",
+										"required": true
+									},
+									"codes": {
+										"type": "array",
+										"required": true
+									}
+								}
+							]
 						}
 					}
 				}
@@ -785,12 +793,20 @@ module.exports = {
 					"source": ['body.groups'],
 					"required": true,
 					"validation": {
-						"type": "array",
-						"items": {
-							"type": "string",
-							"minItems": 1,
-							"format": "alphanumeric",
-							"maxLength": 20
+						"type": "object",
+						"properties": {
+							"oneOf": [
+								{
+									"ids": {
+										"type": "array",
+										"required": true
+									},
+									"codes": {
+										"type": "array",
+										"required": true
+									}
+								}
+							]
 						}
 					}
 				}
