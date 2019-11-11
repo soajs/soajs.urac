@@ -735,7 +735,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
         else {
 
             if (data.pin.code) {
-                s.$set["tenant.pin.con"] = data.pin.code;
+                s.$set["tenant.pin.code"] = data.pin.code;
             }
             if (data.pin.hasOwnProperty("allowed")) {
                 s.$set["tenant.pin.allowed"] = data.pin.allowed;
