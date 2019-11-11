@@ -725,20 +725,20 @@ User.prototype.deleteUpdatePin = function (data, cb) {
         let s = {"$set": {}};
         if (data.tenant.type === "client" && data.tenant.main) {
             if (data.pin.code) {
-                s.$set["config.allowedTenants.tenant.pin"] = data.pin;
+                s.$set["config.allowedTenants.tenant.pin.code"] = data.pin.code;
             }
             if (data.pin.hasOwnProperty("allowed")) {
-                s.$set["config.allowedTenants.tenant.allowed"] = data.allowed;
+                s.$set["config.allowedTenants.tenant.pin.allowed"] = data.pin.allowed;
             }
             condition["config.allowedTenants.tenant.id"] = data.tenant.id;
         }
         else {
 
             if (data.pin.code) {
-                s.$set["tenant.pin"] = data.pin;
+                s.$set["tenant.pin.con"] = data.pin.code;
             }
             if (data.pin.hasOwnProperty("allowed")) {
-                s.$set["tenant.allowed"] = data.allowed;
+                s.$set["tenant.pin.allowed"] = data.pin.allowed;
             }
             condition["tenant.id"] = data.tenant.id;
         }
