@@ -759,7 +759,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
             doDelete(condition);
         }
         else {
-            if (!(data.pin.code) || !(data.pin.hasOwnProperty("allowed"))) {
+            if (!(data.pin.code || data.pin.hasOwnProperty("allowed"))) {
                 let error = new Error("User: pin [code or allowed] is required.");
                 return cb(error, null);
             }
