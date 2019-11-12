@@ -57,7 +57,7 @@ let bl = {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			return cb(null, (count > 0));
+			return cb(null, bl.handleUpdateResponse(count));
 		});
 	},
 	"countUsers": (soajs, inputmaskData, options, cb) => {
@@ -318,7 +318,7 @@ let bl = {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			return cb(null, record);
+			return cb(null, bl.handleUpdateResponse(record));
 		});
 	}
 };

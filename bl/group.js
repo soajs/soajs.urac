@@ -21,7 +21,13 @@ let bl = {
             "msg": bl.localConfig.errors[errCode] + ((err && errCode === 602) ? err.message : "")
         });
     },
-
+	"handleUpdateResponse": (response) => {
+		if (response) {
+			return true;
+		} else {
+			return false;
+		}
+	},
     "mt": {
         "getModel": (soajs, options) => {
             let mongoCore = null;
@@ -121,7 +127,7 @@ let bl = {
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
             }
-            return cb(null, record);
+            return cb(null, bl.handleUpdateResponse(record));
         });
     },
 
@@ -138,7 +144,7 @@ let bl = {
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
             }
-            return cb(null, records);
+            return cb(null, bl.handleUpdateResponse(records));
         });
     },
 
@@ -155,7 +161,7 @@ let bl = {
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
             }
-            return cb(null, records);
+            return cb(null, bl.handleUpdateResponse(records));
         });
     }
 

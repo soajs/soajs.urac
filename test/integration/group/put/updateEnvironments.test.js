@@ -53,7 +53,7 @@ describe("Testing Update environments API", () => {
 			assert.ifError(error);
 			assert.ok(body);
 			assert.ok(body.data);
-			assert.deepEqual(body.data, 2);
+			assert.deepEqual(body.data, true);
 			let check = validator.validate(body, updateEnvironmentsSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
@@ -74,7 +74,7 @@ describe("Testing Update environments API", () => {
 			assert.ifError(error);
 			assert.ok(body);
 			assert.ok(body.data);
-			assert.deepEqual(body.data, 2);
+			assert.deepEqual(body.data, true);
 			let check = validator.validate(body, updateEnvironmentsSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);

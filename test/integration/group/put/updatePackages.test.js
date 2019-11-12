@@ -53,7 +53,7 @@ describe("Testing Update Packages API", () => {
 			assert.ifError(error);
 			assert.ok(body);
 			assert.ok(body.data);
-			assert.deepEqual(body.data, 1);
+			assert.deepEqual(body.data, true);
 			let check = validator.validate(body, updatePackagesSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
@@ -74,7 +74,7 @@ describe("Testing Update Packages API", () => {
 			assert.ifError(error);
 			assert.ok(body);
 			assert.ok(body.data);
-			assert.deepEqual(body.data, 1);
+			assert.deepEqual(body.data, true);
 			let check = validator.validate(body, updatePackagesSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);

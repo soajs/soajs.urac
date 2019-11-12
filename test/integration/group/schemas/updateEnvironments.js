@@ -18,7 +18,7 @@ let updateEnvironmentsSchema = {
 			"required": true
 		},
 		"data": {
-			"type": "integer",
+			"type": "boolean",
 			"required": false,
 		},
 		"errors": {

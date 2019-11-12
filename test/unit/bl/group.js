@@ -212,7 +212,7 @@ describe("Unit test for: BL - group", () => {
                 let error = new Error("Group: Update Environment - mongo error.");
                 return cb(error, null);
             } else {
-                return cb(null, 2);
+                return cb(null, true);
             }
         };
 
@@ -232,18 +232,9 @@ describe("Unit test for: BL - group", () => {
 
             BL.updateEnvironments(soajs, data, null, (err, result) => {
                 assert.ok(result);
-                assert.deepEqual(result, 2);
+                assert.deepEqual(result, true);
 
                 done();
-
-                //TODO: Check with Antoine for err coverage
-                // data.environments = ["notFound"];
-                //
-                // BL.updateEnvironments(soajs, data, null, (err) => {
-                //     assert.ok(err);
-                //     assert.deepEqual(err.code, 602);
-                //     done();
-                // });
             });
         });
     });
@@ -260,7 +251,7 @@ describe("Unit test for: BL - group", () => {
                 let error = new Error("Group: Update Packages - mongo error.");
                 return cb(error, null);
             } else {
-                return cb(null, 2);
+                return cb(null, true);
             }
         };
 
@@ -285,7 +276,7 @@ describe("Unit test for: BL - group", () => {
 
             BL.updatePackages(soajs, data, null, (err, result) => {
                 assert.ok(result);
-                assert.deepEqual(result, 2);
+                assert.deepEqual(result, true);
 
                 done();
 

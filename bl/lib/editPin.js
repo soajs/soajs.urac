@@ -14,6 +14,15 @@ const lib = {
 };
 
 let bl = null;
+
+function handleUpdateResponse (response) {
+	if (response) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 let local = (soajs, inputmaskData, options, cb) => {
     let modelObj = bl.user.mt.getModel(soajs);
     options = {};
@@ -32,8 +41,9 @@ let local = (soajs, inputmaskData, options, cb) => {
                 bl.user.mt.closeModel(modelObj);
                 return cb(bl.user.handleError(soajs, 602, err));
             }
-
-            cb(null, record);
+	
+	        cb(null, handleUpdateResponse(record));
+            
             if (generatedPin) {
                 let data = {
                     "status": "active"

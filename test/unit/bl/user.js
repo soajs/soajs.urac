@@ -364,7 +364,7 @@ describe("Unit test for: BL - user", () => {
                 });
             });
         });
-    });
+    });//todo: check response
     it('Update Status and Update One Field', (done) => {
         function MODEL() {
             console.log("user model");
@@ -378,7 +378,7 @@ describe("Unit test for: BL - user", () => {
                 let error = new Error("User: Update One Field - mongo error.");
                 return cb(error, null);
             } else {
-                return cb(null, 1);
+                return cb(null, true);
             }
         };
         BL.model = MODEL;
@@ -447,7 +447,7 @@ describe("Unit test for: BL - user", () => {
                 let error = new Error("User: Edit User - mongo error.");
                 return cb(error, null);
             } else {
-                return cb(null, 1);
+                return cb(null, true);
             }
         };
         BL.model = MODEL;
@@ -471,12 +471,12 @@ describe("Unit test for: BL - user", () => {
             };
             BL.edit(soajs, data, null, (error, result) => {
                 assert.ok(result);
-                assert.deepEqual(result, 1);
+                assert.deepEqual(result, true);
 
                 data._id = 'userIDExt';
                 BL.edit(soajs, data, null, (error, result) => {
                     assert.ok(result);
-                    assert.deepEqual(result, 1);
+                    assert.deepEqual(result, true);
 
                     data.id = 'error';
                     BL.edit(soajs, data, null, (err) => {
@@ -502,7 +502,7 @@ describe("Unit test for: BL - user", () => {
                 let error = new Error("User: Reset Password - mongo error.");
                 return cb(error, null);
             } else {
-                return cb(null, 1);
+                return cb(null, true);
             }
         };
         BL.model = MODEL;
@@ -522,12 +522,12 @@ describe("Unit test for: BL - user", () => {
 
             BL.resetPassword(soajs, data, null, (error, result) => {
                 assert.ok(result);
-                assert.deepEqual(result, 1);
+                assert.deepEqual(result, true);
 
                 data._id = "userIDExternal";
                 BL.resetPassword(soajs, data, null, (error, result) => {
                     assert.ok(result);
-                    assert.deepEqual(result, 1);
+                    assert.deepEqual(result, true);
 
                     done();
 
@@ -556,7 +556,7 @@ describe("Unit test for: BL - user", () => {
                 let error = new Error("User: UnInvite User - mongo error.");
                 return cb(error, null);
             } else {
-                return cb(null, 1);
+                return cb(null, true);
             }
         };
         BL.model = MODEL;
@@ -583,14 +583,14 @@ describe("Unit test for: BL - user", () => {
 
             BL.uninvite(soajs, data, null, (error, result) => {
                 assert.ok(result);
-                assert.deepEqual(result, 1);
+                assert.deepEqual(result, true);
 
                 delete data.user.id;
                 data.user.username = "usernametest";
 
                 BL.uninvite(soajs, data, null, (error, result) => {
                     assert.ok(result);
-                    assert.deepEqual(result, 1);
+                    assert.deepEqual(result, true);
 
                     data.user.id = 'error';
                     data.user.username= 'error';
@@ -618,7 +618,7 @@ describe("Unit test for: BL - user", () => {
                 let error = new Error("User: Edit Groups - mongo error.");
                 return cb(error, null);
             } else {
-                return cb(null, 1);
+                return cb(null, true);
             }
         };
         BL.model = MODEL;
@@ -642,7 +642,7 @@ describe("Unit test for: BL - user", () => {
 
             BL.editGroups(soajs, data, null, (err, result) => {
                 assert.ok(result);
-                assert.deepEqual(result, 1);
+                assert.deepEqual(result, true);
 
                 data.user.id = 'error';
 
