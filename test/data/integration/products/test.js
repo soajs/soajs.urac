@@ -12,7 +12,17 @@ let lib = {
                     "3": {
                         "access": true,
                         "get": [
-                        ]
+                        ],
+	                    "put": [
+		                    {
+			                    "group": "User administration",
+			                    "apis": {
+				                    "/admin/user/pin": {
+					                    "access": true
+				                    }
+			                    }
+		                    }
+	                    ]
                     }
                 }
             }
@@ -30,7 +40,10 @@ let lib = {
                             "version": "3",
                             "get": [
                                 "User Administration",
-                            ]
+                            ],
+	                        "put": [
+	                        	"User administration"
+	                        ]
                         }
                     ]
                 }

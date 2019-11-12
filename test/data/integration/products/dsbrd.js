@@ -30,7 +30,10 @@ let prod = {
                                 apis: {
                                     "/admin/user": {
                                         access: true
-                                    }
+                                    },
+	                                "/admin/users": {
+		                                access: true
+	                                }
                                 }
                             }
                         ]
@@ -54,9 +57,12 @@ let prod = {
                             post: [
                                 "My account guest"
                             ],
-                            get: [
-                                "My account guest"
-                            ]
+	                        get: [
+		                        "Group administration",
+		                        "User administration",
+		                        "My account",
+		                        "My account guest"
+	                        ]
                         }
                     ]
                 }
@@ -94,9 +100,11 @@ let prod = {
                     urac: [
                         {
                             version: "3",
-                            get: [
-                                "My account"
-                            ]
+	                        get: [
+		                        "Group administration",
+		                        "User administration",
+		                        "My account"
+	                        ]
                         }
                     ]
                 }

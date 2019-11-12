@@ -725,10 +725,10 @@ User.prototype.deleteUpdatePin = function (data, cb) {
         let s = {"$set": {}};
         if (data.tenant.type === "client" && data.tenant.main) {
             if (data.pin.code) {
-                s.$set["config.allowedTenants.tenant.pin.code"] = data.pin.code;
+                s.$set["config.allowedTenants.$.tenant.pin.code"] = data.pin.code;
             }
             if (data.pin.hasOwnProperty("allowed")) {
-                s.$set["config.allowedTenants.tenant.pin.allowed"] = data.pin.allowed;
+                s.$set["config.allowedTenants.$.tenant.pin.allowed"] = data.pin.allowed;
             }
             condition["config.allowedTenants.tenant.id"] = data.tenant.id;
         }
@@ -742,7 +742,6 @@ User.prototype.deleteUpdatePin = function (data, cb) {
             }
             condition["tenant.id"] = data.tenant.id;
         }
-
         __self.mongoCore.update(colName, condition, s, null, (err, record) => {
             if (!record) {
                 let user = data.user.id || data.user.username || data.user.email;

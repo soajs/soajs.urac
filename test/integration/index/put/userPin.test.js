@@ -8,6 +8,9 @@ let editPinSchema = require("../schemas/userPin.js");
 
 let Mongo = require("soajs.core.modules").mongo;
 
+let tenantKey = '3d90163cf9d6b3076ad26aa5ed58556348069258e5c6c941ee0f18448b570ad1c5c790e2d2a1989680c55f4904e2005ff5f8e71606e4aa641e67882f4210ebbc5460ff305dcb36e6ec2a2299cf0448ef60b9e38f41950ec251c1cf41f05f3ce9';
+let clientKey = 'e267a49b84bfa1e95dffe1efd45e443f36d7dced1dc97e8c46ce1965bac78faaa0b6fe18d50efa5a9782838841cba9659fac52a77f8fa0a69eb0188eef4038c49ee17f191c1d280fde4d34580cc3e6d00a05a7c58b07a504f0302915bbe58c18';
+
 describe("Testing edit user pin API", () => {
 	
 	before(function (done) {
@@ -21,6 +24,7 @@ describe("Testing edit user pin API", () => {
 	
 	let users = [];
 	let selectedUser;
+	let selectedUserClient;
 	
 	it("Success - will return all user records", (done) => {
 		let params = {};
@@ -31,6 +35,28 @@ describe("Testing edit user pin API", () => {
 			users.forEach(user => {
 				if (user.username === 'change') {
 					selectedUser = user;
+				}
+			});
+			let check = validator.validate(body, listUsersSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - will return all user records - client", (done) => {
+		let params = {
+			headers: {
+				key: tenantKey
+			}
+		};
+		requester('/admin/users', 'get', params, (error, body) => {
+			assert.ok(body);
+			assert.ok(body.data.length > 0);
+			users = body.data;
+			users.forEach(user => {
+				if (user.username === 'client') {
+					selectedUserClient = user;
 				}
 			});
 			let check = validator.validate(body, listUsersSchema);
@@ -148,13 +174,203 @@ describe("Testing edit user pin API", () => {
 		});
 	});
 	
-	it("Success - will edit User pin - reset", (done) => {
+	it("Success - will edit User pin - reset and allowed true", (done) => {
 		let params = {
 			body: {
 				user: {id: selectedUser._id},
 				pin: {
 					reset: true,
 					allowed: true
+				}
+			}
+		};
+		requester('/admin/user/pin', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, true);
+			let check = validator.validate(body, editPinSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - will edit User pin - reset and allowed false", (done) => {
+		let params = {
+			body: {
+				user: {id: selectedUser._id},
+				pin: {
+					reset: false,
+					allowed: false
+				}
+			}
+		};
+		requester('/admin/user/pin', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, true);
+			let check = validator.validate(body, editPinSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - will edit User pin - reset true allowed false", (done) => {
+		let params = {
+			body: {
+				user: {id: selectedUser._id},
+				pin: {
+					reset: true,
+					allowed: false
+				}
+			}
+		};
+		requester('/admin/user/pin', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, true);
+			let check = validator.validate(body, editPinSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - will edit User pin - reset false allowed true", (done) => {
+		let params = {
+			body: {
+				user: {id: selectedUser._id},
+				pin: {
+					reset: false,
+					allowed: true
+				}
+			}
+		};
+		requester('/admin/user/pin', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, true);
+			let check = validator.validate(body, editPinSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - will edit User pin - reset and allowed true - client", (done) => {
+		let params = {
+			headers: {
+				key: clientKey
+			},
+			body: {
+				user: {id: selectedUserClient._id},
+				pin: {
+					reset: true,
+					allowed: true
+				}
+			}
+		};
+		requester('/admin/user/pin', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, true);
+			let check = validator.validate(body, editPinSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - will edit User pin - reset false allowed true - client", (done) => {
+		let params = {
+			headers: {
+				key: clientKey
+			},
+			body: {
+				user: {id: selectedUserClient._id},
+				pin: {
+					reset: false,
+					allowed: true
+				}
+			}
+		};
+		requester('/admin/user/pin', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, true);
+			let check = validator.validate(body, editPinSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - will edit User pin - reset true allowed false - client", (done) => {
+		let params = {
+			headers: {
+				key: clientKey
+			},
+			body: {
+				user: {id: selectedUserClient._id},
+				pin: {
+					reset: true,
+					allowed: false
+				}
+			}
+		};
+		requester('/admin/user/pin', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, true);
+			let check = validator.validate(body, editPinSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - will edit User pin - reset and allowed false - client", (done) => {
+		let params = {
+			headers: {
+				key: clientKey
+			},
+			body: {
+				user: {id: selectedUserClient._id},
+				pin: {
+					reset: false,
+					allowed: false
+				}
+			}
+		};
+		requester('/admin/user/pin', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, true);
+			let check = validator.validate(body, editPinSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - will edit User pin - delete - client", (done) => {
+		let params = {
+			headers: {
+				key: clientKey
+			},
+			body: {
+				user: {id: selectedUserClient._id},
+				pin: {
+					delete: true
 				}
 			}
 		};

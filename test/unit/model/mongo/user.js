@@ -924,14 +924,13 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it('Fails - deleteUpdatePin - Update - no code in pin', (done) => {
+    it('Fails - deleteUpdatePin - Update - no code no allowed in pin', (done) => {
         let data = {
             user: {
                 email: 'john@localhost.com'
             },
             status: 'active',
             pin: {
-                allowed: true
             },
             tenant: {
                 id: "5c0e74ba9acc3c5a84a51259",
@@ -944,28 +943,7 @@ describe("Unit test for: model - user", function () {
             done();
         });
     });
-
-    it('Fails - deleteUpdatePin - Update - no allowed in pin', (done) => {
-        let data = {
-            user: {
-                email: 'john@localhost.com'
-            },
-            status: 'active',
-            pin: {
-                code: '1235'
-            },
-            tenant: {
-                id: "5c0e74ba9acc3c5a84a51259",
-                code: "TES0"
-            }
-        };
-        modelObj.deleteUpdatePin(data, (err) => {
-            assert.ok(err);
-            assert.deepEqual(err, new Error("User: pin [code or allowed] is required."));
-            done();
-        });
-    });
-
+    
     it('Success - deleteUpdatePin - Delete - email', (done) => {
         let data = {
             user: {
@@ -1011,16 +989,34 @@ describe("Unit test for: model - user", function () {
             done();
         });
     });
-
-    it.skip('Success - deleteUpdatePin - Update - username', (done) => {
+	
+	it('Success - deleteUpdatePin - Update - username', (done) => {
+		let data = {
+			user: {
+				username: 'tony'
+			},
+			status: 'active',
+			pin: {
+				reset: true,
+				allowed: false
+			},
+			tenant: soajs.tenant,
+		};
+		modelObj.deleteUpdatePin(data, (err, result) => {
+			assert.ok(result);
+			assert.deepEqual(result, 1);
+			done();
+		});
+	});
+	
+    it('Success - deleteUpdatePin - Delete - username - client', (done) => {
         let data = {
             user: {
                 username: 'johnd'
             },
             status: 'active',
             pin: {
-                code: "1235",
-                allowed: true
+                delete: true,
             },
             tenant: soajs_sub.tenant,
         };
@@ -1030,24 +1026,42 @@ describe("Unit test for: model - user", function () {
             done();
         });
     });
-
-    it('Success - deleteUpdatePin - Delete - username', (done) => {
-        let data = {
-            user: {
-                username: 'johnd'
-            },
-            status: 'active',
-            pin: {
-                delete: true,
-            },
-            tenant: soajs.tenant,
-        };
-        modelObj_sub.deleteUpdatePin(data, (err, result) => {
-            assert.ok(result);
-            assert.deepEqual(result, 1);
-            done();
-        });
-    });
+	
+	it('Success - deleteUpdatePin - Update - username - allowed - client', (done) => {
+		let data = {
+			user: {
+				username: 'johnd'
+			},
+			status: 'active',
+			pin: {
+				allowed: false
+			},
+			tenant: soajs_sub.tenant,
+		};
+		modelObj_sub.deleteUpdatePin(data, (err, result) => {
+			assert.ok(result);
+			assert.deepEqual(result, 1);
+			done();
+		});
+	});
+	
+	it('Success - deleteUpdatePin - Update - username - client', (done) => {
+		let data = {
+			user: {
+				username: 'johnd'
+			},
+			status: 'active',
+			pin: {
+				code: '1553'
+			},
+			tenant: soajs_sub.tenant,
+		};
+		modelObj_sub.deleteUpdatePin(data, (err, result) => {
+			assert.ok(result);
+			assert.deepEqual(result, 1);
+			done();
+		});
+	});
 
     it("Constructor - with tenant - close connection", function (done) {
         modelObj.closeConnection();
