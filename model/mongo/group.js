@@ -300,7 +300,7 @@ Group.prototype.updateEnvironments = function (data, cb) {
  *
  * @param data
  *  should have:
- *      required (groups[code, code], packages[{product: "", package: ""}])
+ *      required (groups[code, code], packages[{product: "", packages: ["", ""]}])
  *
  * @param cb
  */

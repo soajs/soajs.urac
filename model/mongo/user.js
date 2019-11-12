@@ -627,7 +627,7 @@ User.prototype.editGroups = function (data, cb) {
         let error = new Error("User: user [id | username | email], status, groups, and tenant information are required.");
         return cb(error, null);
     }
-
+    
     let doEdit = (condition) => {
         let s = null;
         if (data.tenant.type === "client" && data.tenant.main) {

@@ -808,7 +808,7 @@ describe("Unit test for: model - user", function () {
                 code: "TES0",
             }
         }, (err, result) => {
-            assert.ok(result);
+	        assert.ok(result);
             assert.deepEqual(result, 1);
             done();
         });
@@ -832,7 +832,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it('Success - editGroups - id', (done) => {
+    it('Success - editGroups - email', (done) => {
         modelObj.editGroups({
             groups: ['EEEE'],
             user: {
@@ -849,8 +849,38 @@ describe("Unit test for: model - user", function () {
             done();
         });
     });
-
-    it('Fails - deleteUpdatePin - null data', (done) => {
+	
+	it('Success - editGroups - username client', (done) => {
+		modelObj_sub.editGroups({
+			groups: ['BBB'],
+			user: {
+				username: 'johnd'
+			},
+			status: 'active',
+			tenant: soajs_sub.tenant
+		}, (err, result) => {
+			assert.ok(result);
+			assert.deepEqual(result, 1);
+			done();
+		});
+	});
+ 
+	it('Success - editGroups - empty array - username client', (done) => {
+		modelObj_sub.editGroups({
+			groups: [],
+			user: {
+				username: 'johnd'
+			},
+			status: 'active',
+			tenant: soajs_sub.tenant
+		}, (err, result) => {
+			assert.ok(result);
+			assert.deepEqual(result, 1);
+			done();
+		});
+	});
+	
+	it('Fails - deleteUpdatePin - null data', (done) => {
         modelObj.deleteUpdatePin(null, (err) => {
             assert.ok(err);
             assert.deepEqual(err, new Error("User: user [id | username | email], status, pin and tenant information are required."));

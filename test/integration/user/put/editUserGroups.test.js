@@ -63,7 +63,7 @@ describe("Testing edit User Groups API", () => {
         });
     });
 	
-	it("Success - by username will edit User Groups", (done) => {
+	it("Success - by username will edit User Groups - client", (done) => {
 		let params = {
 			headers: {
 				key: clientKey
@@ -86,7 +86,31 @@ describe("Testing edit User Groups API", () => {
 			done();
 		});
 	});
-
+	
+	it("Success - by username will edit User Groups - Empty array - client", (done) => {
+		let params = {
+			headers: {
+				key: clientKey
+			},
+			body: {
+				user: {
+					username: 'client',
+				},
+				groups: []
+			}
+		};
+		requester('/admin/user/groups', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, 1);
+			let check = validator.validate(body, editUserSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
     it("Fails - will not edit User Groups - No data", (done) => {
         let params = {};
         requester('/admin/user/groups', 'put', params, (error, body) => {

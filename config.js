@@ -615,9 +615,9 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "array",
+						"uniqueItems": true,
 						"items": {
-							"type": "string",
-							"minItems": 1
+							"type": "string"
 						}
 					}
 				}
