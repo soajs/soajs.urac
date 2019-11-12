@@ -6,6 +6,8 @@ let validator = new core.validator.Validator();
 let getUsersSchema = require("../schemas/getUsers");
 let editUserSchema = require("../schemas/editUserGroups");
 
+let clientKey = 'e267a49b84bfa1e95dffe1efd45e443f36d7dced1dc97e8c46ce1965bac78faaa0b6fe18d50efa5a9782838841cba9659fac52a77f8fa0a69eb0188eef4038c49ee17f191c1d280fde4d34580cc3e6d00a05a7c58b07a504f0302915bbe58c18';
+
 describe("Testing edit User Groups API", () => {
 
     before(function (done) {
@@ -60,6 +62,30 @@ describe("Testing edit User Groups API", () => {
             done();
         });
     });
+	
+	it("Success - by username will edit User Groups", (done) => {
+		let params = {
+			headers: {
+				key: clientKey
+			},
+			body: {
+				user: {
+					username: 'client',
+				},
+				groups: ['dev2', 'test1', 'devop2']
+			}
+		};
+		requester('/admin/user/groups', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, 1);
+			let check = validator.validate(body, editUserSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
 
     it("Fails - will not edit User Groups - No data", (done) => {
         let params = {};

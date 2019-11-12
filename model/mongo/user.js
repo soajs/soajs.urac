@@ -633,7 +633,7 @@ User.prototype.editGroups = function (data, cb) {
         if (data.tenant.type === "client" && data.tenant.main) {
             s = {
                 "$set": {
-                    "config.allowedTenants.tenant.groups": data.groups
+                    "config.allowedTenants.$.groups": data.groups
                 }
             };
             condition["config.allowedTenants.tenant.id"] = data.tenant.id;
