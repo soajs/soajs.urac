@@ -128,11 +128,7 @@ Group.prototype.add = function (data, cb) {
 	if (data.packages) {
 		for (let i = 0; i < data.packages.length; i++) {
 			let prodPack = data.packages[i];
-			if (record.config.allowedPackages[prodPack.product] && Array.isArray(record.config.allowedPackages[prodPack.product])) {
-				record.config.allowedPackages[prodPack.product].push(prodPack.package);
-			} else {
-				record.config.allowedPackages[prodPack.product] = [prodPack.package];
-			}
+			record.config.allowedPackages[prodPack.product] = prodPack.packages;
 		}
 	}
 	__self.mongoCore.insert(colName, record, (err, record) => {
@@ -181,11 +177,7 @@ Group.prototype.edit = function (data, cb) {
 		if (data.packages) {
 			for (let i = 0; i < data.packages.length; i++) {
 				let prodPack = data.packages[i];
-				if (s.$set['config.allowedPackages.' + prodPack.product] && Array.isArray(s.$set['config.allowedPackages.' + prodPack.product])) {
-					s.$set['config.allowedPackages.' + prodPack.product].push(prodPack.package);
-				} else {
-					s.$set['config.allowedPackages.' + prodPack.product] = [prodPack.package];
-				}
+				s.$set['config.allowedPackages.' + prodPack.product] = prodPack.packages;
 			}
 		}
 		let condition = {'_id': _id};
@@ -324,11 +316,7 @@ Group.prototype.updatePackages = function (data, cb) {
 	if (data.packages) {
 		for (let i = 0; i < data.packages.length; i++) {
 			let prodPack = data.packages[i];
-			if (s.$set['config.allowedPackages.' + prodPack.product] && Array.isArray(s.$set['config.allowedPackages.' + prodPack.product])) {
-				s.$set['config.allowedPackages.' + prodPack.product].push(prodPack.package);
-			} else {
-				s.$set['config.allowedPackages.' + prodPack.product] = [prodPack.package];
-			}
+			s.$set['config.allowedPackages.' + prodPack.product] = prodPack.packages;
 		}
 	}
 	let _ids = [];

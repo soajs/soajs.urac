@@ -48,7 +48,7 @@ describe("Testing edit group API", () => {
                 "name": "integrationu",
                 "description": "integration updated description",
                 "environments": ["dev", "testu"],
-                "packages": [{"product": "client", "package": "pack"}]
+                "packages": [{"product": "client", "packages": ["pack"]}]
             }
         };
         requester('/admin/group', 'put', params, (error, body) => {

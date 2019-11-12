@@ -68,8 +68,10 @@ describe("Unit test for: model - group", function () {
             "name": "Unit test",
             "description": "Added by unit test.",
             "environments": ["dev", "prod"],
-            "packages": [{product: "DSBRD", package: "DSBRD_DEVOP"},
-                {product: "DSBRD", package: "DSBRD_CATAL"}, {product: "RERES", package: "WAITER"}],
+            "packages": [
+            	{product: "DSBRD", packages: ["DSBRD_DEVOP", "DSBRD_CATAL"]},
+	            {product: "RERES", packages: ["WAITER"]}
+                ],
             "tId": "5c0e74ba9acc3c5a84a51259",
             "tCode": "TES0"
         };
@@ -173,8 +175,7 @@ describe("Unit test for: model - group", function () {
             "name": "test case",
             "description": "modified by unit test",
             "environments": ["test", "stg"],
-            "packages": [{product: "hage", package: "spiro"},
-                {product: "hage", package: "farid"}, {product: "soajs", package: "console"}]
+            "packages": [{product: "hage", packages: ["farid", "spiro"]}, {product: "soajs", packages: ["console"]}]
         };
         modelObj.edit(data, (error, record) => {
             assert.ok(record);
@@ -183,14 +184,14 @@ describe("Unit test for: model - group", function () {
         });
     });
 
-    it("Edit group - with invalid id and data", function (done) {
+    it("Fails - Edit group - with invalid id and data", function (done) {
         let data = {
             "id": "121212",
             "name": "test case",
             "description": "modified by unit test",
             "environments": ["test", "stg"],
-            "packages": [{product: "hage", package: "spiro"},
-                {product: "hage", package: "farid"}, {product: "soajs", package: "console"}]
+            "packages": [
+                {product: "hage", packages: ["farid"]}, {product: "soajs", packages: ["console"]}]
         };
         modelObj.edit(data, (error) => {
             assert.ok(error);
@@ -471,8 +472,7 @@ describe("Unit test for: model - group", function () {
 
     it("updatePackages - with data - CODES", function (done) {
         let data = {
-            "packages": [{product: "hage", package: "antoine"},
-                {product: "hage", package: "mathieu"}, {product: "soajs", package: "gateway"}],
+            "packages": [{product: "hage", packages: ["mathieu", "antoine"]}, {product: "soajs", packages: ["gateway"]}],
             "groups": {
             	codes: ["CCCC", "AAAA"]
             }
@@ -486,8 +486,7 @@ describe("Unit test for: model - group", function () {
 	
 	it("updatePackages - with data - IDS", function (done) {
 		let data = {
-			"packages": [{product: "hage", package: "cal"},
-				{product: "hage", package: "something"}, {product: "soajs", package: "gateway"}],
+			"packages": [{product: "hage", packages: ["something", "cal"]}, {product: "soajs", packages: ["gateway"]}],
 			"groups": {
 				ids: [groupA._id, groupC._id]
 			}

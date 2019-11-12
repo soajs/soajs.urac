@@ -46,7 +46,7 @@ describe("Testing Update Packages API", () => {
 				"groups": {
 					codes: [selectedGroup.code]
 				},
-				"packages": [{product: "client", package: "client_DEVOP"}, {product: "client", package: "client_SOME"},],
+				"packages": [{product: "client", packages: ["client_DEVOP", "client_SOME"]}],
 			}
 		};
 		requester('/admin/groups/packages', 'put', params, (error, body) => {
@@ -67,7 +67,7 @@ describe("Testing Update Packages API", () => {
 				"groups": {
 					ids: [selectedGroup._id]
 				},
-				"packages": [{product: "client", package: "client_DEVOP"}, {product: "client", package: "client_SOME"},],
+				"packages": [{product: "client", packages: ["client_DEVOP", "client_SOME"]}],
 			}
 		};
 		requester('/admin/groups/packages', 'put', params, (error, body) => {

@@ -404,8 +404,12 @@ module.exports = {
 								"product": {
 									"type": "string"
 								},
-								"package": {
-									"type": "string"
+								"packages": {
+									"type": "array",
+									"items": {
+										"type": "string",
+										"minItems": 1,
+									}
 								}
 							},
 							"additionalProperties": false
@@ -702,8 +706,12 @@ module.exports = {
 								"product": {
 									"type": "string"
 								},
-								"package": {
-									"type": "string"
+								"packages": {
+									"type": "array",
+									"items": {
+										"type": "string",
+										"minItems": 1,
+									}
 								}
 							},
 							"additionalProperties": false
@@ -781,8 +789,12 @@ module.exports = {
 								"product": {
 									"type": "string"
 								},
-								"package": {
-									"type": "string"
+								"packages": {
+									"type": "array",
+									"items": {
+										"type": "string",
+										"minItems": 1
+									}
 								}
 							},
 							"additionalProperties": false

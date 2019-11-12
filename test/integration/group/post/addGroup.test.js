@@ -23,7 +23,7 @@ describe("Testing get group API", () => {
                 "name": "integration",
                 "description": "integration description",
                 "environments": ["dev", "test"],
-                "packages": [{"product": "client", "package": "pack"}]
+                "packages": [{"product": "client", "packages": ["pack"]}]
             }
         };
         requester('/admin/group', 'post', params, (error, body) => {
