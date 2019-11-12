@@ -25,13 +25,11 @@ let bl = {
 			"msg": bl.localConfig.errors[errCode] + ((err && errCode === 602) ? err.message : "")
 		});
 	},
-	"handleResponse": (response) => {
-		if (typeof response === "number" && response === 0) {
-			return false;
-		} else if (typeof response === "number" && response > 0) {
+	"handleUpdateResponse": (response) => {
+		if (response) {
 			return true;
 		} else {
-			return response;
+			return false;
 		}
 	},
 	"mt": {
@@ -191,7 +189,7 @@ let bl = {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			return cb(null, bl.handleResponse(record));
+			return cb(null, bl.handleUpdateResponse(record));
 		});
 	},
 	
@@ -258,7 +256,7 @@ let bl = {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			return cb(null, bl.handleResponse(record));
+			return cb(null, bl.handleUpdateResponse(record));
 		});
 	},
 	
