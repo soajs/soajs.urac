@@ -57,7 +57,7 @@ describe("Testing edit account API", () => {
             assert.ifError(error);
             assert.ok(body);
             assert.ok(body.data);
-            assert.deepEqual(body.data, 1);
+            assert.deepEqual(body.data, true);
             let check = validator.validate(body, editAccountSchema);
             assert.deepEqual(check.valid, true);
             assert.deepEqual(check.errors, []);

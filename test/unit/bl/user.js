@@ -398,14 +398,14 @@ describe("Unit test for: BL - user", () => {
 
             BL.updateStatus(soajs, data, null, (error, result) => {
                 assert.ok(result);
-                assert.deepEqual(result, 1);
+                assert.deepEqual(result, true);
 
                 data.what = 'firstName';
                 data.firstName = 'fadi';
 
                 BL.updateOneField(soajs, data, null, (error, result) => {
                     assert.ok(result);
-                    assert.deepEqual(result, 1);
+                    assert.deepEqual(result, true);
 
                     let data = {
                         what: 'status',
@@ -415,7 +415,7 @@ describe("Unit test for: BL - user", () => {
 
                     BL.updateOneField(soajs, data, null, (error, result) => {
                         assert.ok(result);
-                        assert.deepEqual(result, 1);
+                        assert.deepEqual(result, true);
 
                         data.what = 'error';
                         BL.updateOneField(soajs, data, null, (err) => {
@@ -424,7 +424,7 @@ describe("Unit test for: BL - user", () => {
 
                             BL.updateStatus(soajs, null, null, (err, result) => {
                                 assert.ok(result);
-                                assert.deepEqual(result, 1);
+                                assert.deepEqual(result, true);
 
                                 done();
                             });
