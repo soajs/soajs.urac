@@ -34,6 +34,7 @@ module.exports = {
 	
 	"errors": {
 		400: "Business logic required data are missing.",
+		402: "User Already exists.",
 		420: "Unable to find group.",
 		
 		520: "Unable to find user.",

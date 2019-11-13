@@ -17,6 +17,13 @@ let indexing = {};
 
 function Group(soajs, localConfig, mongoCore) {
 	let __self = this;
+	if (__self.log) {
+		__self.log = soajs.log;
+	} else {
+		__self.log = (log) => {
+			console.log(log);
+		}
+	}
 	if (mongoCore) {
 		__self.mongoCore = mongoCore;
 		__self.mongoCoreExternal = true;
@@ -466,7 +473,8 @@ Group.prototype.validateId = function (id, cb) {
 		id = __self.mongoCore.ObjectId(id);
 		return cb(null, id);
 	} catch (e) {
-		return cb(e, null);
+		__self.log(e);
+		return cb(new Error("A valid is required"), null);
 	}
 };
 
