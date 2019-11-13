@@ -804,7 +804,7 @@ User.prototype.validateId = function (id, cb) {
         return cb(null, id);
     } catch (e) {
 	    __self.log(e);
-	    return cb(new Error("A valid is required"), null);
+	    return cb(new Error("A valid ID is required"), null);
     }
 };
 
