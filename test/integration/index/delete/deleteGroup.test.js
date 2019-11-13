@@ -86,7 +86,7 @@ describe("Testing edit group API", () => {
 			assert.ok(body.errors);
 			assert.deepEqual(body.errors.details, [ { code: 602,
 				message:
-					'Model error: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters' } ]);
+					'Model error: A valid ID is required' } ]);
 			let check = validator.validate(body, deleteGroupSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);

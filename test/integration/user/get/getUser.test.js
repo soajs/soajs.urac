@@ -80,7 +80,7 @@ describe("Testing get user API", () => {
         requester('/admin/user', 'get', params, (error, body) => {
             assert.ok(body);
             assert.deepEqual(body.errors.details, [ { code: 602,
-                message: 'Model error: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters' } ]);
+                message: 'Model error: A valid ID is required' } ]);
             let check = validator.validate(body, getUserSchema);
             assert.deepEqual(check.valid, true);
             assert.deepEqual(check.errors, []);
