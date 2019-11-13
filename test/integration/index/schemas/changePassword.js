@@ -8,7 +8,7 @@
 
 "use strict";
 
-let accountEmailSchema = {
+let changePasswordSchema = {
 	"type": "object",
 	"required": true,
 	"additionalProperties": false,
@@ -18,18 +18,8 @@ let accountEmailSchema = {
 			"required": true
 		},
 		"data": {
-			"type": "object",
+			"type": "boolean",
 			"required": false,
-			"properties": {
-				"token": {
-					"type": "string",
-					"required": true
-				},
-				"link": {
-					"type": "object",
-					"required": false
-				}
-			}
 		},
 		"errors": {
 			"type": "object",
@@ -48,5 +38,5 @@ let accountEmailSchema = {
 	}
 };
 
-module.exports = accountEmailSchema;
+module.exports = changePasswordSchema;
 

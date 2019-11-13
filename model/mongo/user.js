@@ -201,7 +201,7 @@ User.prototype.getUser = function (data, cb) {
         if (data.keep && data.keep.pwd) {
             delete fields.password;
         }
-
+        
         __self.mongoCore.findOne(colName, condition, fields, null, (err, record) => {
             return cb(err, record);
         });

@@ -84,6 +84,7 @@ let bl = {
 		let data = {};
 		data.id = inputmaskData.id;
 		data.status = inputmaskData.status || "active";
+		data.keep = inputmaskData.keep;
 		modelObj.getUser(data, (err, record) => {
 			bl.mt.closeModel(modelObj);
 			if (err) {

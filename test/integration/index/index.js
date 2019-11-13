@@ -23,6 +23,7 @@ describe("starting index integration tests", () => {
 		
 		//PUT
 		require('./put/editUser.test');
+		require('./put/changePassword.test');
 		require('./put/resetPassword.test');
 		require('./put/accountEmail.test');
 		require('./put/userPin.test');

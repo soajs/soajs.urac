@@ -39,7 +39,7 @@ describe("Testing edit user API", () => {
 		});
 	});
 	
-	it.skip("Success - will change account email", (done) => {
+	it("Success - will change account email", (done) => {
 		let params = {
 			body: {
 				id: selectedUser._id,

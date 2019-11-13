@@ -238,7 +238,10 @@ let bl = {
         let modelObj = bl.user.mt.getModel(soajs);
         options = {};
         options.mongoCore = modelObj.mongoCore;
-        inputmaskData = inputmaskData || {};
+	    inputmaskData = inputmaskData || {};
+	    if (inputmaskData.password !== inputmaskData.confirmation) {
+		    return cb(bl.user.handleError(soajs, 522, null));
+	    }
         inputmaskData.keep = {
             "pwd": true
         };
@@ -248,8 +251,8 @@ let bl = {
                 bl.user.mt.closeModel(modelObj);
                 return cb(error, null);
             }
-            lib.pwd.compare(soajs.servicesConfig, inputmaskData.oldPassword, userRecord.password, bl.user.localConfig, (error, response) => {
-                if (error && !response) {
+	        lib.pwd.compare(soajs.servicesConfig, inputmaskData.oldPassword, userRecord.password, bl.user.localConfig, (error, response) => {
+                if (error || !response) {
                     //close model
                     bl.user.mt.closeModel(modelObj);
                     return cb(bl.user.handleError(soajs, 523, error), null);

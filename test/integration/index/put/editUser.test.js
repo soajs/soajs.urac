@@ -77,6 +77,37 @@ describe("Testing edit user API", () => {
 		});
 	});
 	
+	it("Success - will edit User - no Email", (done) => {
+		let params = {
+			body: {
+				id: selectedUser._id,
+				username: 'updated',
+				firstName: 'nameU',
+				lastName: 'lNameU',
+				profile: {
+					"Update": "Lebanon"
+				},
+				groups: ['AAAA'],
+				status: 'active',
+				password: 'SomePass',
+				pin: {
+					code: true,
+					allowed: true
+				}
+			}
+		};
+		requester('/admin/user', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, true);
+			let check = validator.validate(body, editUserSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
 	it("Fails - will not edit User - found", (done) => {
 		let params = {
 			body: {
