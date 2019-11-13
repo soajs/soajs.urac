@@ -46,14 +46,8 @@ let uninviteUsersSchema = {
 						"type": "object",
 						"additionalProperties": false,
 						"properties": {
-							"reason": {"type": "string", "required": true},
-							"id": {"type": "string"},
-							"email": {"type": "string"},
-							"username": {"type": "string"},
-						},
-						"oneOf": [
-							{"required": ["reason"]}
-						]
+							"reason": {"type": "string", "required": true}
+						}
 					}
 				}
 			}

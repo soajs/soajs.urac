@@ -509,8 +509,6 @@ describe("Unit test for: model - group", function () {
     it("validateId - error invalid id", function (done) {
         modelObj.validateId("121212", (error) => {
             assert.ok(error);
-            let index = error.message.indexOf("12 bytes or a string of 24 hex characters");
-            assert.ok(index > 0);
             done();
         });
     });
