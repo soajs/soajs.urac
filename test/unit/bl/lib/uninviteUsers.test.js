@@ -67,7 +67,35 @@ describe("Unit test for: BL - invite users", () => {
 		
 		BL.uninviteUsers(soajs, data, null, (error, result) => {
 			assert.ok(result);
-			done();
+			
+			let data = {
+				users: [
+					{
+						user: {
+							username: 'username'
+						}
+					}
+				]
+			};
+			
+			BL.uninviteUsers(soajs, data, null, (error, result) => {
+				assert.ok(result);
+				
+				let data = {
+					users: [
+						{
+							user: {
+								email: 'email'
+							}
+						}
+					]
+				};
+				
+				BL.uninviteUsers(soajs, data, null, (error, result) => {
+					assert.ok(result);
+					done();
+				});
+			});
 		});
 	});
 });
