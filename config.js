@@ -242,6 +242,8 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "string",
+                        "minLength": 5,
+                        "maxLength": 50,
 						"pattern": /^[a-zA-Z0-9_-]+$/
 					}
 				},
@@ -277,6 +279,8 @@ module.exports = {
 					"required": true,
 					"validation": {
 						"type": "string",
+                        "minLength": 5,
+                        "maxLength": 50,
 						"pattern": /^[a-zA-Z0-9_-]+$/
 					}
 				},
