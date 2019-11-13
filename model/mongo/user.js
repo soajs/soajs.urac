@@ -122,7 +122,7 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
         //TODO: clean up from sub tenant & index
         let condition = {"config.allowedTenants.tenant.id": data.tenant.id};
         let extraOptions = {multi: true};
-        let s = {"$pull": {"config.allowedTenants.groups": data.groupCode}};
+        let s = {"$pull": {"config.allowedTenants.$.groups": data.groupCode}};
         __self.mongoCore.update(colName, condition, s, extraOptions, (err, response) => {
             return cb(err, response);
         });

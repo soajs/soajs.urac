@@ -594,7 +594,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it.skip("Success - save record - data", (done) => {
+    it("Success - save record - data", (done) => {
         let data = {
             "username": user3.username
         };
@@ -729,18 +729,18 @@ describe("Unit test for: model - user", function () {
             }
         }, (err, result) => {
             assert.ok(result);
-            assert.deepEqual(result, 6);
+            assert.deepEqual(result, 5);
             done();
         });
     });
 
-    it.skip('Success - cleanDeletedGroup - data - client tenant', (done) => {
+    it('Success - cleanDeletedGroup - data - client tenant', (done) => {
         modelObj_sub.cleanDeletedGroup({
             groupCode: 'AAAA',
             tenant: soajs_sub.tenant
         }, (err, result) => {
             assert.ok(result);
-            assert.deepEqual(result, 5);
+            assert.deepEqual(result, 1);
             done();
         });
     });
