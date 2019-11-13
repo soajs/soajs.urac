@@ -17,13 +17,13 @@ let indexing = {};
 
 function User(soajs, localConfig, mongoCore) {
     let __self = this;
-	if (__self.log) {
-		__self.log = soajs.log;
-	} else {
-		__self.log = (log) => {
-			console.log(log);
-		}
-	}
+    if (__self.log) {
+        __self.log = soajs.log;
+    } else {
+        __self.log = (log) => {
+            console.log(log);
+        }
+    }
     if (mongoCore) {
         __self.mongoCore = mongoCore;
         __self.mongoCoreExternal = true;
@@ -381,8 +381,16 @@ User.prototype.checkUsername = function (data, cb) {
         '$or': [
             {'username': data.username},
             {'email': data.username}
-        ],
+        ]
     };
+    if (data.email) {
+        condition = {
+            '$or': [
+                {'username': data.username},
+                {'email': data.email}
+            ]
+        };
+    }
     if (data.exclude_id) {
         condition._id = {"$ne": data.exclude_id};
     }
@@ -553,7 +561,7 @@ User.prototype.save = function (data, cb) {
     let condition = {
         "_id": data._id
     };
-    
+
     __self.mongoCore.update(colName, condition, data, null, (err, record) => {
         if (!record) {
             let error = new Error("User: user [" + data._id.toString() + "] was not saved.");
@@ -634,7 +642,7 @@ User.prototype.editGroups = function (data, cb) {
         let error = new Error("User: user [id | username | email], status, groups, and tenant information are required.");
         return cb(error, null);
     }
-    
+
     let doEdit = (condition) => {
         let s = null;
         if (data.tenant.type === "client" && data.tenant.main) {
@@ -803,8 +811,8 @@ User.prototype.validateId = function (id, cb) {
         id = __self.mongoCore.ObjectId(id);
         return cb(null, id);
     } catch (e) {
-	    __self.log(e);
-	    return cb(new Error("A valid ID is required"), null);
+        __self.log(e);
+        return cb(new Error("A valid ID is required"), null);
     }
 };
 
