@@ -23,11 +23,40 @@ let inviteUsersSchema = {
 			"properties": {
 				"succeeded": {
 					"type": "array",
-					"required": false
+					"required": false,
+					"items": {
+						"type": "object",
+						"additionalProperties": false,
+						"properties": {
+							"id": {"type": "string"},
+							"email": {"type": "string"},
+							"username": {"type": "string"},
+						},
+						"oneOf": [
+							{"required": ["id"]},
+							{"required": ["username"]},
+							{"required": ["email"]}
+						]
+					}
 				},
 				"failed": {
 					"type": "array",
-					"required": false
+					"required": false,
+					"items": {
+						"type": "object",
+						"additionalProperties": false,
+						"properties": {
+							"reason": {"type": "string", "required": true},
+							"id": {"type": "string"},
+							"email": {"type": "string"},
+							"username": {"type": "string"},
+						},
+						"oneOf": [
+							{"required": ["reason", "id"]},
+							{"required": ["reason", "username"]},
+							{"required": ["reason", "email"]}
+						]
+					}
 				}
 			}
 		},

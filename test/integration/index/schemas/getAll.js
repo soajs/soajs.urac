@@ -39,7 +39,13 @@ let listAllSchema = {
 							"ts": {"type": "integer", "required": false},
 							"status": {"type": "string", "required": true},
 							"profile": {"type": "object", "required": false},
-							"groups": {"type": "array", "required": true},
+							"groups": {
+								"type": "array",
+								"required": true,
+								"items": {
+									"type": "string"
+								}
+							},
 							"config": {
 								"type": "object",
 								"required": false,
@@ -107,8 +113,27 @@ let listAllSchema = {
 								"required": true,
 								"additionalProperties": false,
 								"properties": {
-									"allowedPackages": {"type": "object", "required": false},
-									"allowedEnvironments": {"type": "object", "required": false}
+									"allowedPackages": {
+										"type": "object",
+										"required": false,
+										"patternProperties": {
+											"^[a-zA-Z0-9]+$": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												}
+											}
+										}
+									},
+									"allowedEnvironments": {
+										"type": "object",
+										"required": false,
+										"patternProperties": {
+											"^[a-zA-Z0-9]+$": {
+												"type": "object"
+											}
+										}
+									}
 								}
 							},
 							"tenant": {

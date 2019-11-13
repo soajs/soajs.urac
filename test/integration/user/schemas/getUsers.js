@@ -34,7 +34,13 @@ let listUsersSchema = {
                     "ts": {"type": "integer", "required": false},
                     "status": {"type": "string", "required": true},
                     "profile": {"type": "object", "required": false},
-                    "groups": {"type": "array", "required": true},
+	                "groups": {
+		                "type": "array",
+		                "required": true,
+		                "items": {
+			                "type": "string"
+		                }
+	                },
                     "config": {
                         "type": "object",
                         "required": false,

@@ -39,7 +39,7 @@ describe("Testing add user API", () => {
             assert.ifError(error);
             assert.ok(body);
             assert.ok(body.data);
-            assert.ok(body.data.hasOwnProperty('id'));
+	        assert.ok(body.data.hasOwnProperty('id'));
             let check = validator.validate(body, addUserSchema);
             assert.deepEqual(check.valid, true);
             assert.deepEqual(check.errors, []);

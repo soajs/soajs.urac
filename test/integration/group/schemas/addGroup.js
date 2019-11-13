@@ -31,8 +31,27 @@ let addGroupSchema = {
                     "required": true,
                     "additionalProperties": false,
                     "properties": {
-                        "allowedPackages": {"type": "object", "required": false},
-                        "allowedEnvironments": {"type": "object", "required": false}
+	                    "allowedPackages": {
+		                    "type": "object",
+		                    "required": false,
+		                    "patternProperties": {
+			                    "^[a-zA-Z0-9]+$": {
+				                    "type": "array",
+				                    "items": {
+					                    "type": "string"
+				                    }
+			                    }
+		                    }
+	                    },
+	                    "allowedEnvironments": {
+		                    "type": "object",
+		                    "required": false,
+		                    "patternProperties": {
+			                    "^[a-zA-Z0-9]+$": {
+				                    "type": "object"
+			                    }
+		                    }
+	                    }
                     }
                 },
                 "tenant": {

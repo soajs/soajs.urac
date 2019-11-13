@@ -30,7 +30,7 @@ describe("Testing get group API", () => {
             assert.ifError(error);
             assert.ok(body);
             assert.ok(body.data);
-            let check = validator.validate(body, addGroupSchema);
+	        let check = validator.validate(body, addGroupSchema);
             assert.deepEqual(check.valid, true);
             assert.deepEqual(check.errors, []);
             done();

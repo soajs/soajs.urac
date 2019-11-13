@@ -48,7 +48,7 @@ describe("Testing get user API", () => {
         requester('/admin/user', 'get', params, (error, body) => {
             assert.ok(body);
             assert.ok(body.data);
-            assert.deepEqual(body.data.username, 'johnd');
+	        assert.deepEqual(body.data.username, 'johnd');
             assert.deepEqual(body.data.firstName, 'John');
             assert.deepEqual(body.data.lastName, 'Doe');
             assert.deepEqual(body.data.email, 'john@localhost.com');
