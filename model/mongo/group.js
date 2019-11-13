@@ -22,7 +22,7 @@ function Group(soajs, localConfig, mongoCore) {
 	} else {
 		__self.log = (log) => {
 			console.log(log);
-		}
+		};
 	}
 	if (mongoCore) {
 		__self.mongoCore = mongoCore;
