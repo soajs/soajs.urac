@@ -39,7 +39,7 @@ let bl = {
                 if (record && record.tenant) {
                     data.tId = record.tenant.id;
                     data.groupCode = record.code;
-                    bl.user.cleanDeletedGroup(soajs, data, options,(error) => {
+                    bl.user.cleanDeletedGroup(soajs, data, options, (error) => {
                         if (error) {
                             soajs.log.error(error);
                         }
@@ -64,12 +64,18 @@ let bl = {
             }
             let data = {};
             data.id = tokenRecord.userId;
+            data.status = ['active', 'pendingJoin'];
             bl.user.getUser(soajs, data, options, (error, userRecord) => {
                 if (error) {
                     //close model
                     bl.user.mt.closeModel(modelObj);
                     return cb(error, null);
                 }
+                let response = {
+                    "username": userRecord.username,
+                    "email": userRecord.email,
+                    "_id": userRecord._id.toString()
+                };
                 let tokenData = {};
                 tokenData.token = tokenRecord.token;
                 tokenData.status = 'used';
@@ -78,7 +84,7 @@ let bl = {
                     // no need to do anything here.
                 });
                 if (userRecord.status === "active") {
-                    return cb(null, true);
+                    return cb(null, response);
                 }
                 let userData = {};
                 userData._id = userRecord._id;
@@ -89,7 +95,7 @@ let bl = {
                     if (error) {
                         return cb(error, null);
                     }
-                    return cb(null, true);
+                    return cb(null, response);
                 });
             });
         });
@@ -238,10 +244,10 @@ let bl = {
         let modelObj = bl.user.mt.getModel(soajs);
         options = {};
         options.mongoCore = modelObj.mongoCore;
-	    inputmaskData = inputmaskData || {};
-	    if (inputmaskData.password !== inputmaskData.confirmation) {
-		    return cb(bl.user.handleError(soajs, 522, null));
-	    }
+        inputmaskData = inputmaskData || {};
+        if (inputmaskData.password !== inputmaskData.confirmation) {
+            return cb(bl.user.handleError(soajs, 522, null));
+        }
         inputmaskData.keep = {
             "pwd": true
         };
@@ -251,7 +257,7 @@ let bl = {
                 bl.user.mt.closeModel(modelObj);
                 return cb(error, null);
             }
-	        lib.pwd.compare(soajs.servicesConfig, inputmaskData.oldPassword, userRecord.password, bl.user.localConfig, (error, response) => {
+            lib.pwd.compare(soajs.servicesConfig, inputmaskData.oldPassword, userRecord.password, bl.user.localConfig, (error, response) => {
                 if (error || !response) {
                     //close model
                     bl.user.mt.closeModel(modelObj);
