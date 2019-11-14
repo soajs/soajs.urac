@@ -195,13 +195,18 @@ User.prototype.getUser = function (data, cb) {
         }
         let condition = {'_id': _id};
         if (data.status) {
-            condition.status = data.status;
+            if (Array.isArray(data.status)) {
+                condition.status = {"$in": data.status};
+            }
+            else {
+                condition.status = data.status;
+            }
         }
         let fields = {socialId: 0, password: 0};
         if (data.keep && data.keep.pwd) {
             delete fields.password;
         }
-        
+
         __self.mongoCore.findOne(colName, condition, fields, null, (err, record) => {
             return cb(err, record);
         });
