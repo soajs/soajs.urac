@@ -196,10 +196,54 @@ describe("Testing edit user pin API", () => {
 		});
 	});
 	
+	it("Success - will edit User pin - reset and allowed true - username", (done) => {
+		let params = {
+			body: {
+				user: {username: selectedUser.username},
+				pin: {
+					reset: true,
+					allowed: true
+				}
+			}
+		};
+		requester('/admin/user/pin', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, true);
+			let check = validator.validate(body, editPinSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
 	it("Success - will edit User pin - reset and allowed false", (done) => {
 		let params = {
 			body: {
 				user: {id: selectedUser._id},
+				pin: {
+					reset: false,
+					allowed: false
+				}
+			}
+		};
+		requester('/admin/user/pin', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.data);
+			assert.deepEqual(body.data, true);
+			let check = validator.validate(body, editPinSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+	
+	it("Success - will edit User pin - reset and allowed false - email", (done) => {
+		let params = {
+			body: {
+				user: {email: selectedUser.email},
 				pin: {
 					reset: false,
 					allowed: false

@@ -18,8 +18,13 @@ let validateJoinSchema = {
 			"required": true
 		},
 		"data": {
-			"type": "boolean",
+			"type": "object",
 			"required": false,
+			"properties": {
+				"username": {"type": "string", "required": true},
+				"email": {"type": "string", "required": true},
+				"_id": {"type": "string", "required": true},
+			}
 		},
 		"errors": {
 			"type": "object",

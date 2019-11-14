@@ -74,7 +74,7 @@ let bl = {
                 let response = {
                     "username": userRecord.username,
                     "email": userRecord.email,
-                    "_id": userRecord._id.toString()
+                    "_id": userRecord._id
                 };
                 let tokenData = {};
                 tokenData.token = tokenRecord.token;

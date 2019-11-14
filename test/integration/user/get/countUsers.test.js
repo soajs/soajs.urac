@@ -59,7 +59,7 @@ describe("Testing count users API", () => {
         requester('/admin/users/count', 'get', params, (error, body) => {
             assert.ifError(error);
             assert.ok(body);
-            assert.deepEqual(body.data, 3);
+            assert.deepEqual(body.data, 4);
             let check = validator.validate(body, countUsersSchema);
             assert.deepEqual(check.valid, true);
             assert.deepEqual(check.errors, []);

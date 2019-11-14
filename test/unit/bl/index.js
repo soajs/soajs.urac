@@ -252,7 +252,9 @@ describe("Unit test for: BL - index", () => {
 			
 			BL.validateJoin(soajs, data, null, (error, result) => {
 				assert.ok(result);
-				assert.deepEqual(result, true);
+				assert.ok(result.hasOwnProperty("_id"));
+				assert.ok(result.hasOwnProperty("username"));
+				assert.ok(result.hasOwnProperty("email"));
 				
 				status = 'inactive';
 				
@@ -262,7 +264,9 @@ describe("Unit test for: BL - index", () => {
 				
 				BL.validateJoin(soajs, data, null, (error, result) => {
 					assert.ok(result);
-					assert.deepEqual(result, true);
+					assert.ok(result.hasOwnProperty("_id"));
+					assert.ok(result.hasOwnProperty("username"));
+					assert.ok(result.hasOwnProperty("email"));
 					done();
 				});
 			});
