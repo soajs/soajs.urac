@@ -94,7 +94,7 @@ module.exports = function (grunt) {
                 }
             },
             files: {
-                src: ['config.js', 'index.js', 'Gruntfile.js', 'bl/*.js', 'bl/lib/*.js', 'lib/*.js', 'model/mongo/*.js', 'test/helper.js', 'test/unit/**/*.js', 'test/integration/**/*.js']
+                src: ['config.js', 'index.js', 'Gruntfile.js', 'bl/*.js', 'bl/lib/*.js', 'lib/*.js', 'model/mongo/*.js', 'test/helper.js', 'test/unit/**/*.js', 'test/integration/**/*.js', 'test/stress/**/*.js']
             },
             gruntfile: {
                 src: 'Gruntfile.js'
@@ -172,7 +172,14 @@ module.exports = function (grunt) {
                     timeout: 90000
                 },
                 src: ['test/integration/index.js']
-            }
+            },
+	        stress: {
+		        options: {
+			        reporter: 'spec',
+			        timeout: 90000
+		        },
+		        src: ['test/stress/index.js']
+	        }
         },
 
         coveralls: {
@@ -195,6 +202,7 @@ module.exports = function (grunt) {
     process.env.SHOW_LOGS = grunt.option('showLogs');
     grunt.registerTask("default", ['jshint']);
     grunt.registerTask("integration", ['env:mochaTest', 'mochaTest:integration']);
+    grunt.registerTask("stress", ['env:mochaTest', 'mochaTest:stress']);
     grunt.registerTask("integration-coverage", ['clean', 'copy', 'env:coverage', 'instrument', 'mochaTest:integration', 'storeCoverage', 'makeReport']);
     grunt.registerTask("unit", ['env:mochaTest', 'mochaTest:unit']);
     grunt.registerTask("unit-coverage", ['clean', 'copy', 'env:coverage', 'instrument', 'mochaTest:unit', 'storeCoverage', 'makeReport']);

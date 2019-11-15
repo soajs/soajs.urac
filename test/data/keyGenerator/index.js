@@ -5,11 +5,11 @@ const soajs = require('soajs');
 const core = soajs.core;
 
 let tenant = {
-	id: '5da6d6280067e20d5fe67667'
+	id: '5c0e74ba9acc3c5a84a51259'
 };
 
 let application = {
-	package: "TPROD_BASIC",
+	package: "DSBRD_GUEST",
 };
 
 let config = {
