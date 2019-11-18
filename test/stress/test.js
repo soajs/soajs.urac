@@ -10,6 +10,7 @@
 
 const requester = require('./requester');
 const assert = require('assert');
+const async = require('async');
 
 let extKey = '3d90163cf9d6b3076ad26aa5ed585563e3a2fbc6913140b8b3d225b64f448a6f4d9fd2efc726ab731ae8df37a1ed2bde9a48830f3d0c9dcff3047486401696ccd132a8077ae1759f0f78a1f74707951484a8eea174cdb865dc04120b218a7741'
 let access_token = '7425a8ae4048d194f6390b64f45eb9525523a014';
@@ -26,20 +27,27 @@ describe("starting integration tests", () => {
 	});
 	
 	it("Success - will add Users", (done) => {
+		let users = [];
 		for (let i = 0; i < interval; i++) {
-			let params = {
-				body: {
-					username: `username${i}`,
-					firstName: `first${i}`,
-					lastName: `last${i}`,
-					profile: {},
-					email: `email${i}@soajs.org`,
-					groups: ['AAAA'],
-					status: 'active',
-					password: 'password'
-				}
-			};
-			requester('/admin/user', 'post', params, (error, body) => {
+			users.push({
+				username: `username${i}`,
+				firstName: `first${i}`,
+				lastName: `last${i}`,
+				profile: {},
+				email: `email${i}@soajs.org`,
+				groups: ['AAAA'],
+				status: 'active',
+				password: 'password'
+			});
+		}
+		async.eachLimit(users, 10, insertUser, ()=>{
+			setTimeout(function(){ done(); }, 2000);
+		});
+		
+		function insertUser(user, callback) {
+			requester('/admin/user', 'post', {
+				body : user
+			}, (error, body) => {
 				if (error) {
 					console.log(error);
 				}
@@ -47,7 +55,7 @@ describe("starting integration tests", () => {
 				assert.ok(body);
 				assert.ok(body.data);
 				assert.ok(body.data.hasOwnProperty('id'));
-				let temp1 = {
+				inviteusers.push({
 					user: {
 						id: body.data.id
 					},
@@ -56,19 +64,13 @@ describe("starting integration tests", () => {
 						allowed: true
 					},
 					groups: ['bbb']
-				};
-				
-				let temp2 = {
+				});
+				uninviteusers.push({
 					user: {
 						id: body.data.id
 					}
-				};
-				
-				inviteusers.push(temp1);
-				uninviteusers.push(temp2);
-				if (i >= interval-1) {
-					done();
-				}
+				});
+				callback();
 			});
 		}
 	});
@@ -92,11 +94,12 @@ describe("starting integration tests", () => {
 			assert.ok(body.data);
 			assert.ok(body.data.hasOwnProperty('succeeded'));
 			assert.ok(body.data.hasOwnProperty('failed'));
-			done();
+			assert.deepEqual(body.data.failed.length, 0);
+			setTimeout(function(){ done(); }, 2000);
 		});
 	});
 	
-	it.skip("Success - will uninvite Users", (done) => {
+	it("Success - will uninvite Users", (done) => {
 		let params = {
 			headers: {
 				key: extKey,
@@ -115,6 +118,7 @@ describe("starting integration tests", () => {
 			assert.ok(body.data);
 			assert.ok(body.data.hasOwnProperty('succeeded'));
 			assert.ok(body.data.hasOwnProperty('failed'));
+			assert.deepEqual(body.data.failed.length, 0);
 			done();
 		});
 	});

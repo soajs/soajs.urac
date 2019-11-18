@@ -907,6 +907,7 @@ module.exports = {
 					"validation": {
 						"type": "array",
 						"minItems": 1,
+						"maxItems": 100,
 						"items": {
 							"type": "object",
 							"additionalProperties": false,
@@ -973,6 +974,7 @@ module.exports = {
 					"validation": {
 						"type": "array",
 						"minItems": 1,
+						"maxItems": 100,
 						"items": {
 							"type": "object",
 							"additionalProperties": false,

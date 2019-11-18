@@ -176,7 +176,7 @@ module.exports = function (grunt) {
 	        stress: {
 		        options: {
 			        reporter: 'spec',
-			        timeout: 90000
+			        timeout: 0
 		        },
 		        src: ['test/stress/index.js']
 	        }

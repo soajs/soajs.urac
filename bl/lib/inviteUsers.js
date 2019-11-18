@@ -30,7 +30,7 @@ let local = (soajs, inputmaskData, options, cb) => {
     };
 
     let records = {"succeeded": [], "failed": []};
-    async.each(inputmaskData.users, function (oneUser, callback) {
+    async.eachLimit(inputmaskData.users, 20, function (oneUser, callback) {
 
         let goInvite = (error, userRecord, responseObj) => {
             if (error) {
