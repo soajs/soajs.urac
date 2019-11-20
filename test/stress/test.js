@@ -12,7 +12,7 @@ const requester = require('./requester');
 const assert = require('assert');
 const async = require('async');
 
-let extKey = '3d90163cf9d6b3076ad26aa5ed585563e3a2fbc6913140b8b3d225b64f448a6f4d9fd2efc726ab731ae8df37a1ed2bde9a48830f3d0c9dcff3047486401696ccd132a8077ae1759f0f78a1f74707951484a8eea174cdb865dc04120b218a7741'
+let extKey = '3d90163cf9d6b3076ad26aa5ed585563e3a2fbc6913140b8b3d225b64f448a6f4d9fd2efc726ab731ae8df37a1ed2bde9a48830f3d0c9dcff3047486401696ccd132a8077ae1759f0f78a1f74707951484a8eea174cdb865dc04120b218a7741';
 let access_token = '7425a8ae4048d194f6390b64f45eb9525523a014';
 
 describe("starting integration tests", () => {
