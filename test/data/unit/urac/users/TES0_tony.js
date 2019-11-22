@@ -11,7 +11,7 @@ let user = {
     status: "active",
     profile: {},
     groups: [
-        "owner"
+        "owner", "BBBB"
     ],
     config: {
         allowedTenants: [

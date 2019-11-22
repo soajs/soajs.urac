@@ -443,7 +443,7 @@ describe("Unit test for: model - group", function () {
         };
         modelObj.updateEnvironments(data, (error, record) => {
             assert.ok(record);
-            assert.equal(record, 2);
+            assert.equal(record, 1);
             done();
         });
     });

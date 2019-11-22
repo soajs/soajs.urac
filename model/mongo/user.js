@@ -717,7 +717,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
         if (data.tenant.type === "client" && data.tenant.main) {
             s = {
                 "$unset": {
-                    "config.allowedTenants.tenant.pin": 1
+                    "config.allowedTenants.$.tenant.pin": 1
                 }
             };
             condition["config.allowedTenants.tenant.id"] = data.tenant.id;
