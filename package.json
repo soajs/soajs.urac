@@ -1,7 +1,7 @@
 {
   "name": "soajs.urac",
   "description": "soajs URAC service",
-  "version": "2.5.28",
+  "version": "3.0.11",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -19,34 +19,21 @@
   },
   "devDependencies": {
     "grunt": "1.0.4",
-    "grunt-contrib-jshint": "2.1.0",
-    "grunt-jsdoc": "2.3.1",
     "grunt-contrib-clean": "2.0.0",
-    "grunt-contrib-copy": "*",
-    "grunt-mocha-test": "0.13.3",
-    "grunt-env": "0.4.4",
-    "grunt-istanbul": "0.8.0",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-contrib-jshint": "2.1.0",
     "grunt-coveralls": "2.0.0",
-    "jshint": "2.9.4",
-    "lodash": "4.17.11",
-    "mocha": "6.1.3",
-    "nock": "^9.0.2",
-    "shelljs": "0.8.3",
-    "sinon": "7.3.1",
-    "soajs.mongodb.data": "2.1.*",
+    "grunt-env": "1.0.1",
+    "grunt-istanbul": "0.8.0",
+    "grunt-jsdoc": "2.4.0",
+    "grunt-mocha-test": "0.13.3",
+    "mocha": "6.2.2",
+    "request": "2.88.0",
     "soajs.controller": "2.5.*"
   },
   "dependencies": {
     "async": "3.1.0",
-    "passport": "0.4.0",
-    "passport-facebook": "3.0.0",
-    "passport-github": "1.1.0",
-    "passport-google-oauth": "2.0.0",
-    "passport-local": "1.0.0",
-    "passport-twitter": "1.0.4",
-    "request": "2.88.0",
-    "soajs": "2.5.23",
-    "soajs.urac.driver": "2.0.12",
+    "soajs": "2.6.0",
     "uuid": "3.3.3"
   }
 }

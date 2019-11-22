@@ -1,6 +1,10 @@
 <p>Dear <b>{{firstName}} {{lastName}}</b>, <br />
 SOAJS administrator has created an account for you on {{ts}}<br />
+{{#if link.addUser}}
 Please click the following link to set a password to your account: <a href='{{link.addUser}}'>{{link.addUser}}</a>.<br /><br />
+{{^}}
+The administrator set as password the following: {{password}}<br /><br />
+{{/if}}
 Please note you can change your username and/or password in the 'My Account' section after you login.<br /><br />
 Regards,<br/>
 SOAJS Team.

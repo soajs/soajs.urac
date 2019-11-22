@@ -1,10 +1,17 @@
 'use strict';
 
+/**
+ * @license
+ * Copyright SOAJS All Rights Reserved.
+ *
+ * Use of this source code is governed by an Apache license that can be
+ * found in the LICENSE file at the root of this repository
+ */
 
-var fs = require('fs');
-var path = require('path');
+const fs = require('fs');
+const path = require('path');
 
-var lib = {
+let lib = {
     /**
      * Function that find the root path where grunt plugins are installed.
      *
@@ -12,9 +19,9 @@ var lib = {
      * @return String rootPath
      */
     findRoot: function () {
-        var cwd = process.cwd();
-        var rootPath = cwd;
-        var newRootPath = null;
+        let cwd = process.cwd();
+        let rootPath = cwd;
+        let newRootPath = null;
         while (!fs.existsSync(path.join(process.cwd(), "node_modules/grunt"))) {
             process.chdir("..");
             newRootPath = process.cwd();
@@ -35,8 +42,10 @@ var lib = {
      */
     loadTasks: function (grunt, rootPath, tasks) {
         tasks.forEach(function (name) {
-            if (name === 'grunt-cli') return;
-            var cwd = process.cwd();
+            if (name === 'grunt-cli') {
+                return;
+            }
+            let cwd = process.cwd();
             process.chdir(rootPath); // load files from proper root, I don't want to install everything locally per module!
             grunt.loadNpmTasks(name);
             process.chdir(cwd);
@@ -46,30 +55,35 @@ var lib = {
 
 module.exports = function (grunt) {
     //Loading the needed plugins to run the grunt tasks
-    var pluginsRootPath = lib.findRoot();
-    lib.loadTasks(grunt, pluginsRootPath, ['grunt-contrib-jshint', 'grunt-jsdoc', 'grunt-contrib-clean', 'grunt-contrib-copy', 'grunt-mocha-test', 'grunt-env'
-        , 'grunt-istanbul', 'grunt-coveralls']);
+    let pluginsRootPath = lib.findRoot();
+    lib.loadTasks(grunt, pluginsRootPath, ['grunt-contrib-jshint', 'grunt-jsdoc', 'grunt-contrib-clean', 'grunt-contrib-copy', 'grunt-mocha-test', 'grunt-env', 'grunt-istanbul', 'grunt-coveralls']);
     grunt.initConfig({
         //Defining jshint tasks
         jshint: {
             options: {
-                "esversion": 6,
                 "bitwise": true,
+                "curly": true,
                 "eqeqeq": true,
-                "forin": true,
-                "newcap": true,
-                "noarg": true,
-                "undef": true,
-                "unused": false,
                 "eqnull": true,
-                "laxcomma": true,
-                "loopfunc": true,
-                "sub": true,
-                "supernew": true,
-                "validthis": true,
-                "node": true,
+                "esversion": 6,
+                "forin": true,
+                "latedef": "nofunc",
+                "leanswitch": true,
                 "maxerr": 100,
-                "indent": 2,
+                "noarg": true,
+                "nonbsp": true,
+                "strict": "global",
+                "undef": true,
+                "unused": true,
+                "varstmt": true,
+
+                //"validthis": true,
+                //"loopfunc": true,
+                //"sub": true,
+                //"supernew": true,
+
+                "node": true,
+
                 "globals": {
                     "describe": false,
                     "it": false,
@@ -77,43 +91,29 @@ module.exports = function (grunt) {
                     "beforeEach": false,
                     "after": false,
                     "afterEach": false
-                },
-                ignores: ['test/coverage/**/*.js']
+                }
             },
             files: {
-                src: ['index.js', 'config.js', 'lib/*.js', 'model/*.js', 'schemas/*.js']
+                src: ['config.js', 'index.js', 'Gruntfile.js', 'bl/*.js', 'bl/lib/*.js', 'lib/*.js', 'model/mongo/*.js', 'test/helper.js', 'test/unit/**/*.js', 'test/integration/**/*.js', 'test/stress/**/*.js']
             },
             gruntfile: {
                 src: 'Gruntfile.js'
             }
         },
-        // jsdoc: {
-        //   doc : {
-        //     src: ['soajs/**/*.js'],
-        //     jsdoc: pluginsRootPath+'/node_modules/grunt-jsdoc/node_modules/jsdoc/jsdoc',
-        //     options: {
-        //       dest: 'doc',
-        //     }
-        //   }
-        // },
 
         env: {
             mochaTest: {
-                // NODE_ENV: 'test',
-                // APP_DIR: process.cwd(),
                 APP_DIR_FOR_CODE_COVERAGE: '../',
-                SOAJS_ENV: 'dev',
-                SOAJS_SRVIP: '127.0.0.1',
-                SOAJS_PROFILE: ''
-            },
-            coverage: {
-                // NODE_ENV: 'test',
-                // APP_DIR: process.cwd(),
-                APP_DIR_FOR_CODE_COVERAGE: '../test/coverage/instrument/',
-                SOAJS_ENV: 'dev',
+                SOAJS_ENV: 'dashboard',
                 SOAJS_SRVIP: '127.0.0.1',
                 SOAJS_TEST: true,
-                SOAJS_PROFILE: '',
+                SOAJS_SRVPORT: 4001
+            },
+            coverage: {
+                APP_DIR_FOR_CODE_COVERAGE: '../test/coverage/instrument/',
+                SOAJS_ENV: 'dashboard',
+                SOAJS_SRVIP: '127.0.0.1',
+                SOAJS_TEST: true,
                 SOAJS_SRVPORT: 4001
             }
         },
@@ -136,8 +136,7 @@ module.exports = function (grunt) {
         },
 
         instrument: {
-            files: ['index.js', 'config.js', 'lib/*.js', 'model/*.js', 'schemas/*.js'],
-            //files: ['**/*.js'],
+            files: ['config.js', 'index.js', 'bl/*.js', 'bl/lib/*.js', 'lib/*.js', 'model/mongo/*.js'],
             options: {
                 lazy: false,
                 basePath: 'test/coverage/instrument/'
@@ -165,15 +164,22 @@ module.exports = function (grunt) {
                     reporter: 'spec',
                     timeout: 90000
                 },
-                src: ['test/unit/_servers.test.js']
+                src: ['test/unit/index.js']
             },
             integration: {
                 options: {
                     reporter: 'spec',
                     timeout: 90000
                 },
-                src: ['test/integration/_server.test.js']
-            }
+                src: ['test/integration/index.js']
+            },
+	        stress: {
+		        options: {
+			        reporter: 'spec',
+			        timeout: 0
+		        },
+		        src: ['test/stress/index.js']
+	        }
         },
 
         coveralls: {
@@ -196,10 +202,12 @@ module.exports = function (grunt) {
     process.env.SHOW_LOGS = grunt.option('showLogs');
     grunt.registerTask("default", ['jshint']);
     grunt.registerTask("integration", ['env:mochaTest', 'mochaTest:integration']);
+    grunt.registerTask("stress", ['env:mochaTest', 'mochaTest:stress']);
+    grunt.registerTask("integration-coverage", ['clean', 'copy', 'env:coverage', 'instrument', 'mochaTest:integration', 'storeCoverage', 'makeReport']);
     grunt.registerTask("unit", ['env:mochaTest', 'mochaTest:unit']);
+    grunt.registerTask("unit-coverage", ['clean', 'copy', 'env:coverage', 'instrument', 'mochaTest:unit', 'storeCoverage', 'makeReport']);
     grunt.registerTask("test", ['clean', 'copy', 'env:coverage', 'instrument', 'mochaTest:unit', 'mochaTest:integration', 'storeCoverage', 'makeReport']);
     grunt.registerTask("coverage", ['clean', 'copy', 'env:coverage', 'instrument', 'mochaTest:unit', 'mochaTest:integration', 'storeCoverage', 'makeReport', 'coveralls']);
-    //grunt.registerTask("coverage", ['clean', 'copy', 'env:coverage', 'instrument', 'mochaTest:unit', 'mochaTest:integration', 'storeCoverage', 'makeReport']);
 
 };
 
