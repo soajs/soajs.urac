@@ -203,13 +203,13 @@ module.exports = {
 			'/admin/groups': {
 				"_apiInfo": {
 					"l": "List all groups",
-					"group": "Group administration"
+					"group": "Group Administration"
 				}
 			},
 			'/admin/group': {
 				"_apiInfo": {
 					"l": "Get group by id or code",
-					"group": "Group administration"
+					"group": "Group Administration"
 				},
 				"id": {
 					"source": ['query.id'],
@@ -376,7 +376,7 @@ module.exports = {
 			'/admin/group': {
 				"_apiInfo": {
 					"l": "Add group",
-					"group": "Group administration"
+					"group": "Group Administration"
 				},
 				"code": {
 					"source": ['body.code'],
@@ -440,7 +440,7 @@ module.exports = {
 			'/admin/group': {
 				"_apiInfo": {
 					"l": "Delete group",
-					"group": "Group administration"
+					"group": "Group Administration"
 				},
 				"id": {
 					"source": ['query.id'],
@@ -682,7 +682,7 @@ module.exports = {
 			'/admin/group': {
 				"_apiInfo": {
 					"l": "Edit group by id",
-					"group": "Group administration"
+					"group": "Group Administration"
 				},
 				"id": {
 					"source": ['body.id'],
@@ -740,7 +740,7 @@ module.exports = {
 			'/admin/groups/environments': {
 				"_apiInfo": {
 					"l": "Update environment(s) of group(s) by code(s) or id(s)",
-					"group": "Group administration"
+					"group": "Group Administration"
 				},
 				"environments": {
 					"source": ['body.environments'],
@@ -780,7 +780,7 @@ module.exports = {
 			'/admin/groups/packages': {
 				"_apiInfo": {
 					"l": "Update package(s) of group(s) by code(s) or id(s)",
-					"group": "Group administration"
+					"group": "Group Administration"
 				},
 				"packages": {
 					"source": ['body.packages'],
@@ -837,7 +837,7 @@ module.exports = {
 			'/admin/user/invite': {
 				"_apiInfo": {
 					"l": "Invite user by id or username as username or email",
-					"group": "User administration"
+					"group": "User Administration"
 				},
 				"id": {
 					"source": ['body.id'],
@@ -881,7 +881,7 @@ module.exports = {
 			"/admin/user/uninvite": {
 				"_apiInfo": {
 					"l": "un-Invite user by id or username as username or email",
-					"group": "User administration"
+					"group": "User Administration"
 				},
 				"id": {
 					"source": ['body.id'],
@@ -899,7 +899,7 @@ module.exports = {
 			'/admin/users/invite': {
 				"_apiInfo": {
 					"l": "Invite users by id, username or email",
-					"group": "User administration"
+					"group": "User Administration"
 				},
 				"users": {
 					"source": ['body.users'],
@@ -966,7 +966,7 @@ module.exports = {
 			'/admin/users/uninvite': {
 				"_apiInfo": {
 					"l": "un-Invite users by id, username or email",
-					"group": "User administration"
+					"group": "User Administration"
 				},
 				"users": {
 					"source": ['body.users'],
