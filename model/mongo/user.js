@@ -522,11 +522,7 @@ User.prototype.edit = function (data, cb) {
             if (data.status) {
                 s.$set.status = data.status;
             }
-            console.log(s)
-            console.log(condition)
             __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
-                console.log(err)
-                console.log(record)
                 if (!record) {
                     let error = new Error("User: user [" + _id.toString() + "] was not update.");
                     return cb(error);
