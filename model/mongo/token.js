@@ -134,7 +134,7 @@ Token.prototype.get = function (data, cb) {
         condition.service = {'$in': data.services};
     }
     
-    __self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
+    __self.mongoCore.findOne(colName, condition, null, (err, record) => {
 	    return cb(err, record);
     });
 };
@@ -142,7 +142,7 @@ Token.prototype.get = function (data, cb) {
 Token.prototype.list = function (data, cb) {
     let __self = this;
 
-    __self.mongoCore.find(colName, null, null, null, (err, record) => {
+    __self.mongoCore.find(colName, null, null, (err, record) => {
         return cb(err, record);
     });
 };

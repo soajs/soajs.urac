@@ -246,7 +246,7 @@ describe("Testing edit user pin API", () => {
 				user: {email: selectedUser.email},
 				pin: {
 					reset: false,
-					allowed: false
+					allowed: true
 				}
 			}
 		};
@@ -340,7 +340,7 @@ describe("Testing edit user pin API", () => {
 				user: {id: selectedUserClient._id},
 				pin: {
 					reset: false,
-					allowed: true
+					allowed: false
 				}
 			}
 		};
@@ -390,7 +390,7 @@ describe("Testing edit user pin API", () => {
 				user: {id: selectedUserClient._id},
 				pin: {
 					reset: false,
-					allowed: false
+					allowed: true
 				}
 			}
 		};

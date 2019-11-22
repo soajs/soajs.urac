@@ -52,7 +52,7 @@ function Group(soajs, localConfig, mongoCore) {
 Group.prototype.getGroups = function (data, cb) {
 	let __self = this;
 	let condition = {};
-	__self.mongoCore.find(colName, condition, null, null, (err, records) => {
+	__self.mongoCore.find(colName, condition, null, (err, records) => {
 		return cb(err, records);
 	});
 };
@@ -80,7 +80,7 @@ Group.prototype.getGroup = function (data, cb) {
 				return cb(err, null);
 			}
 			condition = {'_id': _id};
-			__self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
+			__self.mongoCore.findOne(colName, condition, null, (err, record) => {
 				return cb(err, record);
 			});
 		});
@@ -89,7 +89,7 @@ Group.prototype.getGroup = function (data, cb) {
 			condition = {'code': data.code};
 		}
 		
-		__self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
+		__self.mongoCore.findOne(colName, condition, null, (err, record) => {
 			return cb(err, record);
 		});
 	}
@@ -218,7 +218,7 @@ Group.prototype.delete = function (data, cb) {
 			return cb(err, null);
 		}
 		let condition = {'_id': _id};
-		__self.mongoCore.findOne(colName, condition, null, null, (err, record) => {
+		__self.mongoCore.findOne(colName, condition, null, (err, record) => {
 			if (err) {
 				return cb(err);
 			}

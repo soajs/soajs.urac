@@ -47,7 +47,7 @@ describe("Testing edit User API", () => {
                 id: selectedUser._id,
                 username: selectedUser.username,
                 firstName: 'John',
-                lastName: 'Does',
+                lastName: 'TATA',
                 profile: {
                     "john": "Europe"
                 }

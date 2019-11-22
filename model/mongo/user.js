@@ -168,7 +168,7 @@ User.prototype.getUserByUsername = function (data, cb) {
             condition.status = data.status;
         }
     }
-    __self.mongoCore.findOne(colName, condition, {socialId: 0, password: 0}, null, (err, record) => {
+    __self.mongoCore.findOne(colName, condition, {"fields": {"socialId": 0, "password": 0}}, (err, record) => {
         return cb(err, record);
     });
 };
@@ -202,12 +202,12 @@ User.prototype.getUser = function (data, cb) {
                 condition.status = data.status;
             }
         }
-        let fields = {socialId: 0, password: 0};
+        let options = {"fields": {socialId: 0, password: 0}};
         if (data.keep && data.keep.pwd) {
-            delete fields.password;
+            delete options.fields.password;
         }
 
-        __self.mongoCore.findOne(colName, condition, fields, null, (err, record) => {
+        __self.mongoCore.findOne(colName, condition, options, (err, record) => {
             return cb(err, record);
         });
     });
@@ -280,11 +280,11 @@ User.prototype.updateOneField = function (data, cb) {
 User.prototype.getUsers = function (data, cb) {
     let __self = this;
     let condition = {};
-    let pagination = {};
+    let options = {};
     if (data && data.limit) {
-        pagination.skip = data.start;
-        pagination.limit = data.limit;
-        pagination.sort = {};
+        options.skip = data.start;
+        options.limit = data.limit;
+        options.sort = {};
     }
     if (data && data.keywords) {
         let rePattern = new RegExp(data.keywords, 'i');
@@ -295,7 +295,7 @@ User.prototype.getUsers = function (data, cb) {
             {"lastName": {"$regex": rePattern}},
         ];
     }
-    let fields = {
+    options.fields = {
         'password': 0,
         'config': 0,
         'socialId': 0,
@@ -303,9 +303,9 @@ User.prototype.getUsers = function (data, cb) {
         'config.allowedTenants.tenant.pin.code': 0
     };
     if (data && data.config) {
-        delete fields.config;
+        delete options.fields.config;
     }
-    __self.mongoCore.find(colName, condition, fields, pagination, (err, records) => {
+    __self.mongoCore.find(colName, condition, options, (err, records) => {
         return cb(err, records);
     });
 };
@@ -344,13 +344,13 @@ User.prototype.getUsersByIds = function (data, cb) {
         condition._id = {
             "$in": _ids
         };
-        let pagination = {};
+        let options = {};
         if (data && data.limit) {
-            pagination.skip = data.start;
-            pagination.limit = data.limit;
-            pagination.sort = {};
+            options.skip = data.start;
+            options.limit = data.limit;
+            options.sort = {};
         }
-        let fields = {
+        options.fields = {
             'password': 0,
             'config': 0,
             'socialId': 0,
@@ -358,9 +358,9 @@ User.prototype.getUsersByIds = function (data, cb) {
             'config.allowedTenants.tenant.pin.code': 0
         };
         if (data && data.config) {
-            delete fields.config;
+            delete options.fields.config;
         }
-        __self.mongoCore.find(colName, condition, fields, pagination, (err, records) => {
+        __self.mongoCore.find(colName, condition, options, (err, records) => {
             return cb(err, records);
         });
     });
@@ -522,7 +522,11 @@ User.prototype.edit = function (data, cb) {
             if (data.status) {
                 s.$set.status = data.status;
             }
+            console.log(s)
+            console.log(condition)
             __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
+                console.log(err)
+                console.log(record)
                 if (!record) {
                     let error = new Error("User: user [" + _id.toString() + "] was not update.");
                     return cb(error);

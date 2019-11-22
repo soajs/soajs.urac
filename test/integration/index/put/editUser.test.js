@@ -53,7 +53,7 @@ describe("Testing edit user API", () => {
 				firstName: 'nameU',
 				lastName: 'lNameU',
 				profile: {
-					"Update": "Lebanon"
+					"Update": "Boston"
 				},
 				email: 'someNew@update.com',
 				groups: ['AAAA'],
@@ -82,10 +82,10 @@ describe("Testing edit user API", () => {
 			body: {
 				id: selectedUser._id,
 				username: 'updated',
-				firstName: 'nameU',
+				firstName: 'nameUU',
 				lastName: 'lNameU',
 				profile: {
-					"Update": "Lebanon"
+					"Update": "Boston"
 				},
 				groups: ['AAAA'],
 				status: 'active',
@@ -116,7 +116,7 @@ describe("Testing edit user API", () => {
 				firstName: 'Same',
 				lastName: 'John',
 				profile: {
-					"Sam": "Lebanon"
+					"Sam": "Boston"
 				},
 				email: 'john@localhost.com',
 				groups: ['AAAA'],
