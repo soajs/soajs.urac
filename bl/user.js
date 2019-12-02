@@ -15,7 +15,7 @@ const lib = {
 let bl = {
 	"model": null,
 	"localConfig": null,
-	
+
 	"handleError": (soajs, errCode, err) => {
 		if (err) {
 			soajs.log.error(err);
@@ -83,9 +83,11 @@ let bl = {
 		let modelObj = bl.mt.getModel(soajs, options);
 		let data = {};
 		data.id = inputmaskData.id;
-		data.status = inputmaskData.status || "active";
+		if (!inputmaskData.ignoreStatus) {
+            data.status = inputmaskData.status || "active";
+        }
 		data.keep = inputmaskData.keep;
-		
+
 		modelObj.getUser(data, (err, record) => {
 			bl.mt.closeModel(modelObj);
 			if (err) {
@@ -134,7 +136,7 @@ let bl = {
 			return cb(null, records);
 		});
 	},
-	
+
 	"getUsersByIds": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
@@ -153,7 +155,7 @@ let bl = {
 			return cb(null, records);
 		});
 	},
-	
+
 	"cleanDeletedGroup": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
@@ -170,13 +172,13 @@ let bl = {
 			return cb(null, record);
 		});
 	},
-	
+
 	"updateStatus": (soajs, inputmaskData, options, cb) => {
 		inputmaskData = inputmaskData || {};
 		inputmaskData.what = 'status';
 		bl.updateOneField(soajs, inputmaskData, options, cb);
 	},
-	
+
 	"updateOneField": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData || !inputmaskData.what) {
 			return cb(bl.handleError(soajs, 400, null));
@@ -190,40 +192,43 @@ let bl = {
 		modelObj.updateOneField(data, (err, record) => {
 			bl.mt.closeModel(modelObj);
 			if (err) {
+                if (err.message && err.message.match("was not update")){
+                    return cb(bl.handleError(soajs, 533, null));
+                }
 				return cb(bl.handleError(soajs, 602, err));
 			}
 			return cb(null, bl.handleUpdateResponse(record));
 		});
 	},
-	
+
 	"add": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
-		
+
 		inputmaskData.password = inputmaskData.password || Math.random().toString(36).slice(-10);
-		
+
 		lib.pwd.encrypt(soajs.servicesConfig, inputmaskData.password, bl.localConfig, (err, pwdEncrypted) => {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
 			let modelObj = bl.mt.getModel(soajs, options);
-			
+
 			let data = {};
 			data.username = inputmaskData.username;
 			data.firstName = inputmaskData.firstName;
 			data.lastName = inputmaskData.lastName;
 			data.email = inputmaskData.email;
-			
+
 			data.password = pwdEncrypted;
 			data.status = inputmaskData.status;
-			
+
 			data.profile = inputmaskData.profile;
 			data.groups = inputmaskData.groups;
 			data.config = inputmaskData.config;
-			
+
 			data.tenant = inputmaskData.tenant;
-			
+
 			modelObj.add(data, (err, record) => {
 				bl.mt.closeModel(modelObj);
 				if (err) {
@@ -231,17 +236,17 @@ let bl = {
 				}
 				return cb(null, record);
 			});
-			
+
 		});
 	},
-	
+
 	"edit": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
-		
+
 		let modelObj = bl.mt.getModel(soajs, options);
-		
+
 		let data = {};
 		data.id = inputmaskData.id;
 		data._id = inputmaskData._id;
@@ -249,30 +254,33 @@ let bl = {
 		data.firstName = inputmaskData.firstName;
 		data.lastName = inputmaskData.lastName;
 		data.email = inputmaskData.email;
-		
+
 		data.profile = inputmaskData.profile;
 		data.groups = inputmaskData.groups;
 		data.status = inputmaskData.status;
-		
+
 		modelObj.edit(data, (err, record) => {
 			bl.mt.closeModel(modelObj);
 			if (err) {
+				if (err.message && err.message.match("was not update")){
+                    return cb(bl.handleError(soajs, 533, null));
+				}
 				return cb(bl.handleError(soajs, 602, err));
 			}
 			return cb(null, bl.handleUpdateResponse(record));
 		});
 	},
-	
+
 	"resetPassword": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
-		
+
 		lib.pwd.encrypt(soajs.servicesConfig, inputmaskData.password, bl.localConfig, (err, pwdEncrypted) => {
 			if (err) {
 				return cb(bl.handleError(soajs, 602, err));
 			}
-			
+
 			let data = {};
 			data._id = inputmaskData._id;
 			data.what = 'password';
@@ -282,14 +290,14 @@ let bl = {
 			bl.updateOneField(soajs, data, options, cb);
 		});
 	},
-	
+
 	"uninvite": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
-		
+
 		let modelObj = bl.mt.getModel(soajs, options);
-		
+
 		let data = {};
 		data.user = inputmaskData.user;
 		data.tenant = soajs.tenant;
@@ -302,20 +310,20 @@ let bl = {
 			return cb(null, record);
 		});
 	},
-	
+
 	"editGroups": (soajs, inputmaskData, options, cb) => {
 		if (!inputmaskData) {
 			return cb(bl.handleError(soajs, 400, null));
 		}
-		
+
 		let modelObj = bl.mt.getModel(soajs, options);
-		
+
 		let data = {};
 		data.user = inputmaskData.user;
 		data.tenant = soajs.tenant;
 		data.status = 'active';
 		data.groups = inputmaskData.groups;
-		
+
 		modelObj.editGroups(data, (err, record) => {
 			bl.mt.closeModel(modelObj);
 			if (err) {

@@ -348,7 +348,8 @@ let bl = {
         options.mongoCore = modelObj.mongoCore;
 
         inputmaskData = inputmaskData || {};
-
+        //NOTE: we must ignore status in edit user, because we want to get the user no matter what is the status
+        inputmaskData.ignoreStatus = true;
         bl.user.getUser(soajs, inputmaskData, options, (error, userRecord) => {
             if (error) {
                 //close model
