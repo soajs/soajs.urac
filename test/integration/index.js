@@ -25,7 +25,7 @@ describe("starting integration tests", () => {
                 setTimeout(function () {
                     done();
                 }, 5000);
-            }, 1000);
+            }, 5000);
         });
     });
 
