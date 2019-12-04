@@ -83,7 +83,7 @@ let lib = {
         config: {
             awareness: {
                 cacheTTL: 3600000,
-                healthCheckInterval: 5000,
+                healthCheckInterval: 1000,
                 autoRelaodRegistry: 3600000,
                 maxLogCount: 5,
                 autoRegisterService: true
