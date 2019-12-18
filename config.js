@@ -22,6 +22,7 @@ module.exports = {
 	"requestTimeoutRenewal": 5,
 	"extKeyRequired": true,
 	"oauth": true,
+    'awareness': false,
 	
 	"hashIterations": 1024,
 	"seedLength": 32,
