@@ -16,7 +16,7 @@ let lib = {
                                 "apis": {
 
                                 },
-                                "group": "User Administration"
+                                "group": "User administration"
                             }
                         ]
                     }
@@ -35,16 +35,16 @@ let lib = {
                         {
                             "version": "3",
                             "get": [
-                                "User Administration",
+                                "User administration",
                             ],
                             "put": [
-                                "User Administration",
+                                "User administration",
                             ],
                             "delete": [
-                                "User Administration",
+                                "User administration",
                             ],
                             "post": [
-                                "User Administration",
+                                "User administration",
                             ]
                         }
                     ]

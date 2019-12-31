@@ -6,6 +6,7 @@ jobs:
   include:
 
   - stage: install, check code style and coverage
+    if: tag IS blank
     services:
     - mongodb
     env:
@@ -46,6 +47,11 @@ jobs:
     - export MAJOR_VERSION=$(echo ${PACKAGE_VERSION} | awk -F. '{ print $1 }')
     - echo Package version ${PACKAGE_VERSION}
     - echo Major version ${MAJOR_VERSION}
+
+    - git config --local user.name ${GIT_USER}
+    - git config --local user.email ${GIT_EMAIL}
+    - git tag ${PACKAGE_VERSION}
+
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
     - docker build -t soajsorg/urac .
@@ -56,3 +62,9 @@ jobs:
     - docker tag soajsorg/urac:latest soajsorg/urac:${MAJOR_VERSION}.x
 
     - docker push soajsorg/urac
+    deploy:
+      on:
+        all_branches: true
+      provider: releases
+      api_key: ${GIT_TOKEN}
+      skip_cleanup: true

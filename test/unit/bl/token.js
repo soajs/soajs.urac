@@ -94,9 +94,9 @@ describe("Unit test for: BL - token", () => {
                     _id: "tokenID",
                     userId: 'userID',
                     token: 'f65e8358-ce1d-47cb-b478-82e10c93f70e',
-                    expires: '2019-1-1T08:43:19.051Z',
+                    expires: new Date((new Date().getFullYear()) + 2, 0, 1),
                     status: 'active',
-                    ts: 1563784999051,
+                    ts: new Date().getTime(),
                     service: 'addUser',
                     username: 'userName'
                 });
@@ -105,9 +105,9 @@ describe("Unit test for: BL - token", () => {
                     _id: "tokenID",
                     userId: 'userID',
                     token: 'f65e8358-ce1d-47cb-b478-82e10c93f70e',
-                    expires: '2019-12-24T08:43:19.051Z',
+                    expires: new Date((new Date().getFullYear()) + 2, 0, 1),
                     status: 'active',
-                    ts: 1563784999051,
+                    ts: new Date().getTime(),
                     service: 'addUser',
                     username: 'userName'
                 });
@@ -131,7 +131,6 @@ describe("Unit test for: BL - token", () => {
                 assert.ok(record);
                 assert.deepEqual(record.token, 'f65e8358-ce1d-47cb-b478-82e10c93f70e');
                 assert.deepEqual(record.username, 'userName');
-                assert.deepEqual(record.expires, '2019-12-24T08:43:19.051Z');
 
                 data.token = 'error';
 
