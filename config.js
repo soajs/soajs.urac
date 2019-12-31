@@ -237,7 +237,7 @@ module.exports = {
 			'/join': {
 				"_apiInfo": {
 					"l": "Join and create an account",
-					"group": "Guest Join"
+					"group": "Guest join"
 				},
 				"username": {
 					"source": ['body.username'],
