@@ -154,6 +154,7 @@ let bl = {
         options = {};
         options.mongoCore = modelObj.mongoCore;
         inputmaskData.services = ['forgotPassword', 'addUser'];
+	    inputmaskData.ignoreStatus = true;
         bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
             if (error) {
                 //close model
