@@ -332,6 +332,46 @@ describe("Unit test for: model - user", function () {
         });
     });
 
+    it("add - error duplicate with allowedTenants", function (done) {
+        let data = {
+            "username": "test",
+            "firstName": "unit",
+            "lastName": "test",
+            "email": "test@soajs.org",
+
+            "password": "password",
+            "status": "active",
+            "config": {
+                "allowedTenants": [
+                    {
+                        tenant: {
+                            "code": "TES2",
+                            "id": "5c8d0c4f5653de3985aa0ff2",
+                            pin: {
+                                code: "9814",
+                                allowed: true
+                            }
+                        },
+                        groups: [
+                            "AAAA"
+                        ]
+                    }
+                ]
+            },
+
+            "tenant": {
+                "code": "TES0",
+                "id": "5c0e74ba9acc3c5a84a51259"
+            }
+        };
+        modelObj.add(data, (error) => {
+            assert.ok(error);
+            let index = error.message.indexOf("duplicate key");
+            assert.ok(index > 0);
+            done();
+        });
+    });
+
     it("edit - error no id", function (done) {
         modelObj.edit(null, (error) => {
             assert.ok(error);
@@ -372,10 +412,10 @@ describe("Unit test for: model - user", function () {
     it("edit - using addedUser1_id id", function (done) {
         let data = {
             id: addedUser1_id.toString(),
-            "username": "test2_edit",
-            "firstName": "unit2_edit",
-            "lastName": "test2_edit",
-            "email": "test2_edit@soajs.org",
+            "username": "test_edit2",
+            "firstName": "unit_edit2",
+            "lastName": "test_edit2",
+            "email": "test_edit2@soajs.org",
             "status": "active"
         };
         modelObj.edit(data, (error, record) => {
@@ -387,10 +427,10 @@ describe("Unit test for: model - user", function () {
     it("edit - using addedUser1_id - error id", function (done) {
         let data = {
             id: "12121212121",
-            "username": "test2_edit",
-            "firstName": "unit2_edit",
-            "lastName": "test2_edit",
-            "email": "test2_edit@soajs.org",
+            "username": "test_edit2",
+            "firstName": "unit_edit2",
+            "lastName": "test_edit2",
+            "email": "test_edit2@soajs.org",
             "status": "active"
         };
         modelObj.edit(data, (error) => {
@@ -402,10 +442,10 @@ describe("Unit test for: model - user", function () {
     it("edit - using addedUser1_id - error not found", function (done) {
         let data = {
             id: "5cfb05c22ac09278709d0141",
-            "username": "test3_edit",
-            "firstName": "unit3_edit",
-            "lastName": "test3_edit",
-            "email": "test3_edit@soajs.org",
+            "username": "test_edit3",
+            "firstName": "unit_edit3",
+            "lastName": "test_edit3",
+            "email": "test_edit3@soajs.org",
             "status": "active"
         };
         modelObj.edit(data, (error) => {
@@ -423,7 +463,23 @@ describe("Unit test for: model - user", function () {
 
             "password": "password",
             "status": "active",
-
+            "config": {
+                "allowedTenants": [
+                    {
+                        tenant: {
+                            "code": "TES2",
+                            "id": "5c8d0c4f5653de3985aa0ff2",
+                            pin: {
+                                code: "1111",
+                                allowed: true
+                            }
+                        },
+                        groups: [
+                            "AAAA"
+                        ]
+                    }
+                ]
+            },
             "tenant": {
                 "code": "TES0",
                 "id": "5c0e74ba9acc3c5a84a51259"
@@ -436,8 +492,7 @@ describe("Unit test for: model - user", function () {
             done();
         });
     });
-    // we should invite the user first
-    it.skip('Success - uninvite user  - user2', (done) => {
+    it('Success - uninvite user  - user2', (done) => {
         let data = {
             "username": user2.username
         };
@@ -465,7 +520,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it("add - user for uninvite with username", function (done) {
+    it("add - user for uninvite with username - user3", function (done) {
         let data = {
             "username": "user3",
             "firstName": "user",
@@ -474,7 +529,23 @@ describe("Unit test for: model - user", function () {
 
             "password": "password",
             "status": "active",
-
+            "config": {
+                "allowedTenants": [
+                    {
+                        tenant: {
+                            "code": "TES2",
+                            "id": "5c8d0c4f5653de3985aa0ff2",
+                            pin: {
+                                code: "2222",
+                                allowed: false
+                            }
+                        },
+                        groups: [
+                            "BBBB"
+                        ]
+                    }
+                ]
+            },
             "tenant": {
                 "code": "TES0",
                 "id": "5c0e74ba9acc3c5a84a51259"
@@ -488,8 +559,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    // we should invite the user first
-    it.skip('Success - uninvite user - user3', (done) => {
+    it('Success - uninvite user - user3', (done) => {
         let data = {
             "username": user3.username
         };
@@ -597,17 +667,24 @@ describe("Unit test for: model - user", function () {
 
     it("Success - save record - data", (done) => {
         let data = {
-            "username": user3.username
+            "username": user3.username,
+            "firstName": "user_updated"
         };
 
         modelObj.getUserByUsername(data, (error, record) => {
             assert.ok(record);
             assert.equal(record.username, "user3");
+            assert.equal(record.config.allowedTenants.length, 0);
             data._id = record._id;
 
             modelObj.save(data, (error, result) => {
                 assert.ok(result);
-                done();
+                modelObj.getUser({"id": user3._id.toString(), "keep": {"pwd": 1}}, (error, record) => {
+                    assert.ok(record);
+                    assert.equal(record.username, "user3");
+                    assert.equal(record.password, "password");
+                    done();
+                });
             });
         });
     });
@@ -654,7 +731,7 @@ describe("Unit test for: model - user", function () {
         let data = {
             id: '12123',
             what: 'username',
-            username: 'user1Updt2',
+            username: 'user1Updt3',
             status: 'active'
         };
 
@@ -668,7 +745,7 @@ describe("Unit test for: model - user", function () {
         let data = {
             id: "5cdc190fd52c82e0ddb1dcd5", //Doesn't exist
             what: 'username',
-            username: 'user1Updt2',
+            username: 'user1Updt4',
             status: 'active'
         };
 
@@ -807,7 +884,7 @@ describe("Unit test for: model - user", function () {
                 code: "TES0",
             }
         }, (err, result) => {
-	        assert.ok(result);
+            assert.ok(result);
             assert.deepEqual(result, 1);
             done();
         });
@@ -848,38 +925,38 @@ describe("Unit test for: model - user", function () {
             done();
         });
     });
-	
-	it('Success - editGroups - username client', (done) => {
-		modelObj_sub.editGroups({
-			groups: ['BBB'],
-			user: {
-				username: 'johnd'
-			},
-			status: 'active',
-			tenant: soajs_sub.tenant
-		}, (err, result) => {
-			assert.ok(result);
-			assert.deepEqual(result, 1);
-			done();
-		});
-	});
- 
-	it('Success - editGroups - empty array - username client', (done) => {
-		modelObj_sub.editGroups({
-			groups: [],
-			user: {
-				username: 'johnd'
-			},
-			status: 'active',
-			tenant: soajs_sub.tenant
-		}, (err, result) => {
-			assert.ok(result);
-			assert.deepEqual(result, 1);
-			done();
-		});
-	});
-	
-	it('Fails - deleteUpdatePin - null data', (done) => {
+
+    it('Success - editGroups - username client', (done) => {
+        modelObj_sub.editGroups({
+            groups: ['BBB'],
+            user: {
+                username: 'johnd'
+            },
+            status: 'active',
+            tenant: soajs_sub.tenant
+        }, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Success - editGroups - empty array - username client', (done) => {
+        modelObj_sub.editGroups({
+            groups: [],
+            user: {
+                username: 'johnd'
+            },
+            status: 'active',
+            tenant: soajs_sub.tenant
+        }, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Fails - deleteUpdatePin - null data', (done) => {
         modelObj.deleteUpdatePin(null, (err) => {
             assert.ok(err);
             assert.deepEqual(err, new Error("User: user [id | username | email], status, pin and tenant information are required."));
@@ -959,8 +1036,7 @@ describe("Unit test for: model - user", function () {
                 email: 'john@localhost.com'
             },
             status: 'active',
-            pin: {
-            },
+            pin: {},
             tenant: {
                 id: "5c0e74ba9acc3c5a84a51259",
                 code: "TES0"
@@ -972,7 +1048,7 @@ describe("Unit test for: model - user", function () {
             done();
         });
     });
-    
+
     it('Success - deleteUpdatePin - Delete - email', (done) => {
         let data = {
             user: {
@@ -1018,26 +1094,26 @@ describe("Unit test for: model - user", function () {
             done();
         });
     });
-	
-	it('Success - deleteUpdatePin - Update - username', (done) => {
-		let data = {
-			user: {
-				username: 'tony'
-			},
-			status: 'active',
-			pin: {
-				reset: true,
-				allowed: false
-			},
-			tenant: soajs.tenant,
-		};
-		modelObj.deleteUpdatePin(data, (err, result) => {
-			assert.ok(result);
-			assert.deepEqual(result, 1);
-			done();
-		});
-	});
-	
+
+    it('Success - deleteUpdatePin - Update - username', (done) => {
+        let data = {
+            user: {
+                username: 'tony'
+            },
+            status: 'active',
+            pin: {
+                reset: true,
+                allowed: false
+            },
+            tenant: soajs.tenant,
+        };
+        modelObj.deleteUpdatePin(data, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
     it('Success - deleteUpdatePin - Delete - username - client', (done) => {
         let data = {
             user: {
@@ -1055,42 +1131,42 @@ describe("Unit test for: model - user", function () {
             done();
         });
     });
-	
-	it('Success - deleteUpdatePin - Update - username - allowed - client', (done) => {
-		let data = {
-			user: {
-				username: 'johnd'
-			},
-			status: 'active',
-			pin: {
-				allowed: false
-			},
-			tenant: soajs_sub.tenant,
-		};
-		modelObj_sub.deleteUpdatePin(data, (err, result) => {
-			assert.ok(result);
-			assert.deepEqual(result, 1);
-			done();
-		});
-	});
-	
-	it('Success - deleteUpdatePin - Update - username - client', (done) => {
-		let data = {
-			user: {
-				username: 'johnd'
-			},
-			status: 'active',
-			pin: {
-				code: '1553'
-			},
-			tenant: soajs_sub.tenant,
-		};
-		modelObj_sub.deleteUpdatePin(data, (err, result) => {
-			assert.ok(result);
-			assert.deepEqual(result, 1);
-			done();
-		});
-	});
+
+    it('Success - deleteUpdatePin - Update - username - allowed - client', (done) => {
+        let data = {
+            user: {
+                username: 'johnd'
+            },
+            status: 'active',
+            pin: {
+                allowed: false
+            },
+            tenant: soajs_sub.tenant,
+        };
+        modelObj_sub.deleteUpdatePin(data, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
+
+    it('Success - deleteUpdatePin - Update - username - client', (done) => {
+        let data = {
+            user: {
+                username: 'johnd'
+            },
+            status: 'active',
+            pin: {
+                code: '1553'
+            },
+            tenant: soajs_sub.tenant,
+        };
+        modelObj_sub.deleteUpdatePin(data, (err, result) => {
+            assert.ok(result);
+            assert.deepEqual(result, 1);
+            done();
+        });
+    });
 
     it("Constructor - with tenant - close connection", function (done) {
         modelObj.closeConnection();

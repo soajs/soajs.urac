@@ -235,8 +235,7 @@ User.prototype.updateOneField = function (data, cb) {
             '_id': _id
         };
         let extraOptions = {
-            'upsert': false,
-            'safe': true
+            'upsert': false
         };
         let s = {
             '$set': {
@@ -246,13 +245,12 @@ User.prototype.updateOneField = function (data, cb) {
         if (data.status && data.what !== "status") {
             s.$set.status = data.status;
         }
-
-        __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
-            if (!record) {
+        __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
+            if (!record || (record && !record.nModified)) {
                 let error = new Error("User: [" + data.what + "] for user [" + _id.toString() + "] was not update.");
                 return cb(error);
             }
-            return cb(err, record);
+            return cb(err, record.nModified);
         });
     };
     if (data.id) {
@@ -495,8 +493,7 @@ User.prototype.edit = function (data, cb) {
             '_id': _id
         };
         let extraOptions = {
-            'upsert': false,
-            'safe': true
+            'upsert': false
         };
         if (data.username || data.firstName || data.lastName || data.profile || data.groups || data.email || data.status) {
             let s = {'$set': {}};
@@ -522,12 +519,12 @@ User.prototype.edit = function (data, cb) {
             if (data.status) {
                 s.$set.status = data.status;
             }
-            __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
-                if (!record) {
+            __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
+                if (!record || (record && !record.nModified)) {
                     let error = new Error("User: user [" + _id.toString() + "] was not update.");
                     return cb(error);
                 }
-                return cb(err, record);
+                return cb(err, record.nModified);
             });
         }
         else {
@@ -566,13 +563,16 @@ User.prototype.save = function (data, cb) {
     let condition = {
         "_id": data._id
     };
-
-    __self.mongoCore.update(colName, condition, data, null, (err, record) => {
-        if (!record) {
+    let extraOptions = {
+        'upsert': false
+    };
+    let s = {'$set': data};
+    __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
+        if (!record || (record && !record.nModified)) {
             let error = new Error("User: user [" + data._id.toString() + "] was not saved.");
             return cb(error);
         }
-        return cb(err, record);
+        return cb(err, record.nModified);
     });
 };
 
@@ -604,13 +604,13 @@ User.prototype.uninvite = function (data, cb) {
             }
         };
         condition.status = data.status;
-        __self.mongoCore.update(colName, condition, s, null, (err, record) => {
-            if (!record) {
+        __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
+            if (!record || (record && !record.nModified)) {
                 let user = data.user.id || data.user.username || data.user.email;
                 let error = new Error("User: user [" + user + "] was not uninvited.");
                 return cb(error);
             }
-            return cb(err, record);
+            return cb(err, record.nModified);
         });
     };
 
@@ -667,13 +667,13 @@ User.prototype.editGroups = function (data, cb) {
             condition["tenant.id"] = data.tenant.id;
         }
         condition.status = data.status;
-        __self.mongoCore.update(colName, condition, s, null, (err, record) => {
-            if (!record) {
+        __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
+            if (!record || (record && !record.nModified)) {
                 let user = data.user.id || data.user.username || data.user.email;
                 let error = new Error("User: Groups of user [" + user + "] was not updated.");
                 return cb(error);
             }
-            return cb(err, record);
+            return cb(err, record.nModified);
         });
     };
 
@@ -731,13 +731,13 @@ User.prototype.deleteUpdatePin = function (data, cb) {
             condition["tenant.id"] = data.tenant.id;
         }
 
-        __self.mongoCore.update(colName, condition, s, null, (err, record) => {
-            if (!record) {
+        __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
+            if (!record || (record && !record.nModified)) {
                 let user = data.user.id || data.user.username || data.user.email;
                 let error = new Error("User: Pin of user [" + user + "] was not deleted.");
                 return cb(error);
             }
-            return cb(err, record);
+            return cb(err, record.nModified);
         });
     };
 
@@ -762,13 +762,13 @@ User.prototype.deleteUpdatePin = function (data, cb) {
             }
             condition["tenant.id"] = data.tenant.id;
         }
-        __self.mongoCore.update(colName, condition, s, null, (err, record) => {
-            if (!record) {
+        __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
+            if (!record || (record && !record.nModified)) {
                 let user = data.user.id || data.user.username || data.user.email;
                 let error = new Error("User: Pin of user [" + user + "] was not updated.");
                 return cb(error);
             }
-            return cb(err, record);
+            return cb(err, record.nModified);
         });
     };
 
