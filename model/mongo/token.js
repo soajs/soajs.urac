@@ -97,6 +97,11 @@ Token.prototype.add = function (data, cb) {
             'service': data.service,
         }
     };
+
+    if (data.email) {
+        s.$set.email = data.email;
+    }
+
     let condition = {
         'userId': data.userId,
         'service': data.service,
@@ -133,9 +138,9 @@ Token.prototype.get = function (data, cb) {
     else {
         condition.service = {'$in': data.services};
     }
-    
+
     __self.mongoCore.findOne(colName, condition, null, (err, record) => {
-	    return cb(err, record);
+        return cb(err, record);
     });
 };
 

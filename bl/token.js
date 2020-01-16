@@ -46,6 +46,10 @@ let bl = {
         data.service = inputmaskData.service;
         data.status = 'active';
 
+        if (inputmaskData.email) {
+            data.email = inputmaskData.email;
+        }
+
         if (soajs.servicesConfig && soajs.servicesConfig.urac && soajs.servicesConfig.urac.tokenExpiryTTL) {
             data.tokenExpiryTTL = soajs.servicesConfig.urac.tokenExpiryTTL;
         }
