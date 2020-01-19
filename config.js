@@ -23,21 +23,21 @@ module.exports = {
 	"extKeyRequired": true,
 	"oauth": true,
     'awareness': false,
-	
+
 	"hashIterations": 1024,
 	"seedLength": 32,
-	
-	
+
+
 	"pinConfiguration": {
 		"charLength": 4,
 		"characters": "0123456789"
 	},
-	
+
 	"errors": {
 		400: "Business logic required data are missing.",
 		402: "User Already exists.",
 		420: "Unable to find group.",
-		
+
 		520: "Unable to find user.",
 		521: "User account already exists.",
 		522: "The password and its confirmation do not match.",
@@ -52,13 +52,13 @@ module.exports = {
 		531: "Error while trying to invite users.",
 		532: "user [id | username | email] is required",
         533: "No changes to update",
-		
+
 		599: "Token has expired.",
 		600: "unable to find token.",
 		601: "Model not found.",
 		602: "Model error: ",
 	},
-	
+
 	"schema": {
 		"commonFields": {
 			"keywords": {
@@ -112,7 +112,7 @@ module.exports = {
 			}
 		},
 		"get": {
-			
+
 			'/password/forgot': {
 				"_apiInfo": {
 					"l": "Forgot password by username as (username or email) - an email will be sent with a link to reset the password",
@@ -169,7 +169,7 @@ module.exports = {
 					"validation": {"type": "string"}
 				}
 			},
-			
+
 			'/admin/user': {
 				"_apiInfo": {
 					"l": "Get user by id",
@@ -201,7 +201,7 @@ module.exports = {
 				},
 				"commonFields": ["keywords"]
 			},
-			
+
 			'/admin/groups': {
 				"_apiInfo": {
 					"l": "List all groups",
@@ -224,7 +224,7 @@ module.exports = {
 					"validation": {"type": "string"}
 				}
 			},
-			
+
 			'/admin/all': {
 				"_apiInfo": {
 					"l": "Get all users and groups of a main tenant",
@@ -232,8 +232,32 @@ module.exports = {
 				}
 			}
 		},
-		
+
 		"post": {
+            '/email': {
+                "_apiInfo": {
+                    "l": "Send custom email",
+                    "group": "Custom email"
+                },
+                "email": {
+                    "source": ['body.email'],
+                    "required": true,
+                    "validation": {"type": "string", "format": "email"}
+                },
+                "what": {
+                    "source": ['body.what'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "data": {
+                    "source": ['body.data'],
+                    "required": false,
+                    "validation": {
+                        "type": "object"
+                    }
+                }
+            },
+
 			'/join': {
 				"_apiInfo": {
 					"l": "Join and create an account",
@@ -270,7 +294,7 @@ module.exports = {
 					"validation": {"type": "string", "format": "email"}
 				}
 			},
-			
+
 			'/admin/user': {
 				"_apiInfo": {
 					"l": "Add user",
@@ -349,7 +373,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			'/admin/users/ids': {
 				"_apiInfo": {
 					"l": "List users by Id",
@@ -374,7 +398,7 @@ module.exports = {
 					"validation": {"type": "boolean"}
 				}
 			},
-			
+
 			'/admin/group': {
 				"_apiInfo": {
 					"l": "Add group",
@@ -437,7 +461,7 @@ module.exports = {
 				}
 			}
 		},
-		
+
 		"delete": {
 			'/admin/group': {
 				"_apiInfo": {
@@ -451,7 +475,7 @@ module.exports = {
 				}
 			}
 		},
-		
+
 		"put": {
 			'/password/reset': {
 				"_apiInfo": {
@@ -474,7 +498,7 @@ module.exports = {
 					"validation": {"type": "string"}
 				}
 			},
-			
+
 			'/account/password': {
 				"_apiInfo": {
 					"l": "Change account's password by id",
@@ -501,7 +525,7 @@ module.exports = {
 					"validation": {"type": "string"}
 				}
 			},
-			
+
 			'/account/email': {
 				"_apiInfo": {
 					"l": "Change account's email by id",
@@ -518,7 +542,7 @@ module.exports = {
 					"validation": {"type": "string", "format": "email"}
 				}
 			},
-			
+
 			'/account': {
 				"_apiInfo": {
 					"l": "Edit account's information by id",
@@ -553,7 +577,7 @@ module.exports = {
 					"validation": {"type": "object"}
 				}
 			},
-			
+
 			'/admin/user': {
 				"_apiInfo": {
 					"l": "Edit user by id",
@@ -663,7 +687,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			'/admin/user/status': {
 				"_apiInfo": {
 					"l": "Change the status of a user by id",
@@ -680,7 +704,7 @@ module.exports = {
 					"validation": {"type": "string", "enum": ['active', 'inactive']}
 				}
 			},
-			
+
 			'/admin/group': {
 				"_apiInfo": {
 					"l": "Edit group by id",
@@ -738,7 +762,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			'/admin/groups/environments': {
 				"_apiInfo": {
 					"l": "Update environment(s) of group(s) by code(s) or id(s)",
@@ -778,7 +802,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			'/admin/groups/packages': {
 				"_apiInfo": {
 					"l": "Update package(s) of group(s) by code(s) or id(s)",
@@ -830,7 +854,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			/*
 			*
 			* since we have invite and un-invite users, no need for these 2
@@ -897,7 +921,7 @@ module.exports = {
 				}
 			},
 			*/
-			
+
 			'/admin/users/invite': {
 				"_apiInfo": {
 					"l": "Invite users by id, username or email",
@@ -964,7 +988,7 @@ module.exports = {
 					}
 				}
 			},
-			
+
 			'/admin/users/uninvite': {
 				"_apiInfo": {
 					"l": "un-Invite users by id, username or email",
