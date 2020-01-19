@@ -27,6 +27,21 @@ let bl = {
     user: null,
     token: null,
 
+    "sendCustomEmail": (soajs, inputmaskData, options, cb) => {
+        let data = {};
+        if (inputmaskData.data) {
+            data = inputmaskData.data;
+        }
+        data.email = inputmaskData.email;
+        let what = inputmaskData.what;
+        lib.mail.send(soajs, what, data, null, function (error, mailRecord) {
+            if (error) {
+                soajs.log.info(what + ': No Mail was sent: ' + error);
+            }
+            return cb(null, mailRecord);
+        });
+    },
+
     "deleteGroup": (soajs, inputmaskData, options, cb) => {
         bl.group.deleteGroup(soajs, inputmaskData, null, (error, record) => {
             if (error) {
@@ -154,7 +169,7 @@ let bl = {
         options = {};
         options.mongoCore = modelObj.mongoCore;
         inputmaskData.services = ['forgotPassword', 'addUser'];
-	    inputmaskData.ignoreStatus = true;
+        inputmaskData.ignoreStatus = true;
         bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
             if (error) {
                 //close model
