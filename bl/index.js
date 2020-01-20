@@ -169,7 +169,6 @@ let bl = {
         options = {};
         options.mongoCore = modelObj.mongoCore;
         inputmaskData.services = ['forgotPassword', 'addUser'];
-        inputmaskData.ignoreStatus = true;
         bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
             if (error) {
                 //close model
@@ -178,6 +177,7 @@ let bl = {
             }
             let data = {};
             data.id = tokenRecord.userId;
+            data.ignoreStatus = true;
             bl.user.getUser(soajs, data, options, (error, userRecord) => {
                 if (error) {
                     //close model
