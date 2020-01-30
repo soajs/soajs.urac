@@ -49,7 +49,7 @@ describe("Testing edit user API", () => {
 		let params = {
 			body: {
 				id: selectedUser._id,
-				username: 'updated',
+				username: 'nameU',
 				firstName: 'nameU',
 				lastName: 'lNameU',
 				profile: {
@@ -81,7 +81,7 @@ describe("Testing edit user API", () => {
 		let params = {
 			body: {
 				id: selectedUser._id,
-				username: 'updated',
+				username: 'nameUU',
 				firstName: 'nameUU',
 				lastName: 'lNameU',
 				profile: {

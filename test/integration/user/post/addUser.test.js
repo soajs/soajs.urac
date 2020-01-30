@@ -5,7 +5,7 @@ let core = require('soajs').core;
 let validator = new core.validator.Validator();
 let addUserSchema = require("../schemas/addUser.js");
 
-let clientKey = 'e267a49b84bfa1e95dffe1efd45e443f36d7dced1dc97e8c46ce1965bac78faaa0b6fe18d50efa5a9782838841cba9659fac52a77f8fa0a69eb0188eef4038c49ee17f191c1d280fde4d34580cc3e6d00a05a7c58b07a504f0302915bbe58c18';
+//let clientKey = 'e267a49b84bfa1e95dffe1efd45e443f36d7dced1dc97e8c46ce1965bac78faaa0b6fe18d50efa5a9782838841cba9659fac52a77f8fa0a69eb0188eef4038c49ee17f191c1d280fde4d34580cc3e6d00a05a7c58b07a504f0302915bbe58c18';
 
 describe("Testing add user API", () => {
 
@@ -52,7 +52,7 @@ describe("Testing add user API", () => {
 	it("Success - will add User", (done) => {
 		let params = {
 			headers: {
-				key: clientKey
+				//key: clientKey
 			},
 			body: {
 				username: 'subclient',

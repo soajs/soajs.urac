@@ -520,11 +520,14 @@ User.prototype.edit = function (data, cb) {
                 s.$set.status = data.status;
             }
             __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
+                if (err) {
+                    return cb(err);
+                }
                 if (!record || (record && !record.nModified)) {
                     let error = new Error("User: user [" + _id.toString() + "] was not update.");
                     return cb(error);
                 }
-                return cb(err, record.nModified);
+                return cb(null, record.nModified);
             });
         }
         else {

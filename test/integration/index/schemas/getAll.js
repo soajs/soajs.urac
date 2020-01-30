@@ -106,6 +106,7 @@ let listAllSchema = {
 						"properties": {
 							"_id": {"type": "string", "required": true},
 							"code": {"type": "string", "required": true},
+                            "locked": {"type": "boolean", "required": false},
 							"name": {"type": "string", "required": true},
 							"description": {"type": "string", "required": false},
 							"config": {

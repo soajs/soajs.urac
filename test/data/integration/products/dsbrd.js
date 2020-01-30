@@ -11,32 +11,7 @@ let prod = {
             dashboard: {
                 urac: {
                     "3": {
-                        access: true,
-                        apisPermission: "restricted",
-                        get: [
-                            {
-                                group: "Group administration",
-                                apis: {
-                                    "/admin/groups": {
-                                        access: true
-                                    },
-                                    "/admin/group": {
-                                        access: true
-                                    }
-                                }
-                            },
-                            {
-                                group: "User administration",
-                                apis: {
-                                    "/admin/user": {
-                                        access: true
-                                    },
-	                                "/admin/users": {
-		                                access: true
-	                                }
-                                }
-                            }
-                        ]
+                        access: true
                     }
                 }
             }

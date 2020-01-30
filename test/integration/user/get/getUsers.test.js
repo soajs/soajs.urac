@@ -28,7 +28,11 @@ describe("Testing get users API", () => {
         requester('/admin/users', 'get', params, (error, body) => {
             assert.ok(body);
             assert.ok(body.data.length > 0);
-            assert.deepEqual(body.data[0]._id, '5c8d0c505653de3985aa0ffd');
+            let id_array = [];
+            for (let i = 0; i < body.data.length; i++) {
+                id_array.push(body.data[i]._id);
+            }
+            assert.deepEqual(id_array.includes('5e330606c5a59210a8152628'), true);
             let check = validator.validate(body, listUsersSchema);
             assert.deepEqual(check.valid, true);
             assert.deepEqual(check.errors, []);
@@ -38,8 +42,7 @@ describe("Testing get users API", () => {
 
     it("Success - will return all user records - no data", (done) => {
         let params = {
-            qs: {
-            }
+            qs: {}
         };
         requester('/admin/users', 'get', params, (error, body) => {
             assert.ok(body);

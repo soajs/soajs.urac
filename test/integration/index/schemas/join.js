@@ -25,6 +25,10 @@ let joinSchema = {
 					"type": "string",
 					"required": true
 				},
+                "id": {
+                    "type": "string",
+                    "required": true
+                },
 				"link": {
 					"type": "object",
 					"required": false

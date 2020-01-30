@@ -12,7 +12,7 @@ let token = {
         "username": "johnd"
     },
     "tenant": {
-        "code": 'test'
+        "code": 'DBTN'
     }
 };
 

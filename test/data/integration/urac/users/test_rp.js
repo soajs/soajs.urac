@@ -24,10 +24,10 @@ let user = {
 		allowedTenants: []
 	},
 	tenant: {
-		id: "5d9321f8b40e09438afbd0c9",
-		code: "test",
+        id: "5c0e74ba9acc3c5a84a51259",
+        code: "DBTN",
 		pin: {
-			code: "1232",
+			code: "1444",
 			allowed: true
 		}
 	},
