@@ -28,6 +28,7 @@ let listGroupsSchema = {
                     "_id": {"type": "string", "required": true},
                     "code": {"type": "string", "required": true},
                     "name": {"type": "string", "required": true},
+                    "locked": {"type": "boolean", "required": false},
                     "description": {"type": "string", "required": false},
                     "config": {
                         "type": "object",

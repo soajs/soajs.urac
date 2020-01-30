@@ -38,7 +38,7 @@ describe("Testing get All API", () => {
 	it("Success - will all return all group and user records - client", (done) => {
 		let params = {
 			headers: {
-				key: stExtKey
+				//key: stExtKey
 			}
 		};
 		requester('/admin/all', 'get', params, (error, body) => {

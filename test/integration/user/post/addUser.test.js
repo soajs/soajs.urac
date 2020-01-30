@@ -52,7 +52,7 @@ describe("Testing add user API", () => {
 	it("Success - will add User", (done) => {
 		let params = {
 			headers: {
-				key: clientKey
+				//key: clientKey
 			},
 			body: {
 				username: 'subclient',

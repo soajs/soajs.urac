@@ -66,7 +66,7 @@ describe("Testing edit User Groups API", () => {
 	it("Success - by username will edit User Groups - client", (done) => {
 		let params = {
 			headers: {
-				key: clientKey
+				//key: clientKey
 			},
 			body: {
 				user: {
@@ -90,7 +90,7 @@ describe("Testing edit User Groups API", () => {
 	it("Success - by username will edit User Groups - Empty array - client", (done) => {
 		let params = {
 			headers: {
-				key: clientKey
+				//key: clientKey
 			},
 			body: {
 				user: {

@@ -67,7 +67,7 @@ describe("Testing get group API", () => {
 
     it("Error - by code will not return group record", (done) => {
         let params = {
-            "qs": {"code": "owner"}
+            "qs": {"code": "CCCC"}
         };
         requester('/admin/group', 'get', params, (error, body) => {
             assert.ifError(error);

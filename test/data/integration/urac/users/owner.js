@@ -39,6 +39,19 @@ let user = {
                 groups: [
                     "manager"
                 ]
+            },
+            {
+                tenant: {
+                    id: "5da6d6280067e20d5fe67667",
+                    code: "SOME",
+                    pin: {
+                        code: "5678",
+                        allowed: true
+                    }
+                },
+                groups: [
+                    "waiter"
+                ]
             }
         ]
     },

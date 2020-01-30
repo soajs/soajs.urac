@@ -13,7 +13,7 @@ let token = {
 		"email": "email@new.com"
 	},
 	"tenant": {
-		"code": 'test'
+		"code": 'DBTN'
 	}
 };
 
