@@ -168,7 +168,16 @@ User.prototype.getUserByUsername = function (data, cb) {
             condition.status = data.status;
         }
     }
-    __self.mongoCore.findOne(colName, condition, {"fields": {"socialId": 0, "password": 0}}, (err, record) => {
+    let options = {
+        "fields": {
+            'password': 0,
+            'config': 0,
+            'socialId': 0,
+            'tenant.pin.code': 0,
+            'config.allowedTenants.tenant.pin.code': 0
+        }
+    };
+    __self.mongoCore.findOne(colName, condition, options, (err, record) => {
         return cb(err, record);
     });
 };
@@ -202,7 +211,15 @@ User.prototype.getUser = function (data, cb) {
                 condition.status = data.status;
             }
         }
-        let options = {"fields": {socialId: 0, password: 0}};
+        let options = {
+            "fields": {
+                'password': 0,
+                'config': 0,
+                'socialId': 0,
+                'tenant.pin.code': 0,
+                'config.allowedTenants.tenant.pin.code': 0
+            }
+        };
         if (data.keep && data.keep.pwd) {
             delete options.fields.password;
         }

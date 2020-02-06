@@ -9,10 +9,10 @@
  */
 
 module.exports = {
-    type: 'service',
-    prerequisites: {
-        cpu: '',
-        memory: ''
+    "type": 'service',
+    "prerequisites": {
+        "cpu": '',
+        "memory": ''
     },
     "serviceVersion": 3,
     "serviceName": "urac",
@@ -22,11 +22,11 @@ module.exports = {
     "requestTimeoutRenewal": 5,
     "extKeyRequired": true,
     "oauth": true,
+
+
+    //-------------------------------------
     'awareness': false,
-
-    "hashIterations": 1024,
-    "seedLength": 32,
-
+    "hashIterations": 12,
 
     "pinConfiguration": {
         "charLength": 4,
