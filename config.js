@@ -52,6 +52,7 @@ module.exports = {
         531: "Error while trying to invite users.",
         532: "user [id | username | email] is required",
         533: "No changes to update",
+        534: "Main tenant cannot invite users",
 
         599: "Token has expired.",
         600: "unable to find token.",
@@ -139,6 +140,17 @@ module.exports = {
                 "_apiInfo": {
                     "l": "Check if a username as (username or email) is available or taken",
                     "group": "Guest join"
+                },
+                "username": {
+                    "source": ['query.username'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
+            '/emailToken': {
+                "_apiInfo": {
+                    "l": "Check if user (username or email) status if pendingJoin or pendingNew and send a new token email",
+                    "group": "My account guest"
                 },
                 "username": {
                     "source": ['query.username'],

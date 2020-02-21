@@ -62,8 +62,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                             id: userRecord._id.toString()
                         });
                     });
-                }
-                else {
+                } else {
                     let data = {};
                     data.userId = userRecord._id.toString();
                     data.username = userRecord.username;
