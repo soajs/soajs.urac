@@ -147,6 +147,17 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
+            '/emailToken': {
+                "_apiInfo": {
+                    "l": "Check if user (username or email) status if pendingJoin or pendingNew and send a new token email",
+                    "group": "My account guest"
+                },
+                "username": {
+                    "source": ['query.username'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
             '/validate/changeEmail': {
                 "_apiInfo": {
                     "l": "To validate change email",

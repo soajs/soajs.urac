@@ -39,6 +39,11 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        service.get("/emailToken", function (req, res) {
+            bl.emailToken(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                return res.json(req.soajs.buildResponse(error, data));
+            });
+        });
         service.get("/validate/changeEmail", function (req, res) {
             bl.validateChangeEmail(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
