@@ -177,6 +177,10 @@ User.prototype.getUserByUsername = function (data, cb) {
             'config.allowedTenants.tenant.pin.code': 0
         }
     };
+    if (data.keepPin){
+        delete options.fields["tenant.pin.code"];
+        delete options.fields["config.allowedTenants.tenant.pin.code"];
+    }
     __self.mongoCore.findOne(colName, condition, options, (err, record) => {
         return cb(err, record);
     });
@@ -220,6 +224,10 @@ User.prototype.getUser = function (data, cb) {
                 'config.allowedTenants.tenant.pin.code': 0
             }
         };
+        if (data.keepPin){
+            delete options.fields["tenant.pin.code"];
+            delete options.fields["config.allowedTenants.tenant.pin.code"];
+        }
         if (data.keep && data.keep.pwd) {
             delete options.fields.password;
         }
