@@ -595,6 +595,7 @@ User.prototype.save = function (data, cb) {
         'upsert': false
     };
     let s = {'$set': data};
+    console.log(JSON.stringify(s));
     __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
         if (!record || (record && !record.nModified)) {
             let error = new Error("User: user [" + data._id.toString() + "] was not saved.");
