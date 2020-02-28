@@ -234,7 +234,6 @@ User.prototype.getUser = function (data, cb) {
             delete options.fields.password;
         }
         __self.mongoCore.findOne(colName, condition, options, (err, record) => {
-            console.log(JSON.stringify(record));
             return cb(err, record);
         });
     });
@@ -597,7 +596,6 @@ User.prototype.save = function (data, cb) {
         'upsert': false
     };
     let s = {'$set': data};
-    console.log(JSON.stringify(s));
     __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
         if (!record || (record && !record.nModified)) {
             let error = new Error("User: user [" + data._id.toString() + "] was not saved.");
