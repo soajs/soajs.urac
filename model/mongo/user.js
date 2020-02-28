@@ -233,9 +233,6 @@ User.prototype.getUser = function (data, cb) {
         if (data.keep && data.keep.pwd) {
             delete options.fields.password;
         }
-        console.log("getUser");
-        console.log(data);
-        console.log(options.fields);
         __self.mongoCore.findOne(colName, condition, options, (err, record) => {
             console.log(JSON.stringify(record));
             return cb(err, record);
