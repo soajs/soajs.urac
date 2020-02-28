@@ -172,16 +172,15 @@ User.prototype.getUserByUsername = function (data, cb) {
         "fields": {
             "password": 0,
             "config": 0,
-            "socialId": 0
+            "socialId": 0,
+            "tenant.pin.code": 0,
+            "config.allowedTenants.tenant.pin.code": 0
         }
     };
-    if (!data.keep || !data.keep.pin) {
-        options.fields["tenant.pin.code"] = 0;
-        options.fields["config.allowedTenants.tenant.pin.code"] = 0;
+    if (data.keep && data.keep.pin) {
+        delete options.fields["tenant.pin.code"];
+        delete options.fields["config.allowedTenants.tenant.pin.code"];
     }
-    console.log("getUserByUsername");
-    console.log(data);
-    console.log(options.fields);
     __self.mongoCore.findOne(colName, condition, options, (err, record) => {
         return cb(err, record);
     });
@@ -220,12 +219,14 @@ User.prototype.getUser = function (data, cb) {
             "fields": {
                 "password": 0,
                 "config": 0,
-                "socialId": 0
+                "socialId": 0,
+                "tenant.pin.code": 0,
+                "config.allowedTenants.tenant.pin.code": 0
             }
         };
-        if (!data.keep || !data.keep.pin) {
-            options.fields["tenant.pin.code"] = 0;
-            options.fields["config.allowedTenants.tenant.pin.code"] = 0;
+        if (data.keep && data.keep.pin) {
+            delete options.fields["tenant.pin.code"];
+            delete options.fields["config.allowedTenants.tenant.pin.code"];
         }
         if (data.keep && data.keep.pwd) {
             delete options.fields.password;
@@ -234,6 +235,7 @@ User.prototype.getUser = function (data, cb) {
         console.log(data);
         console.log(options.fields);
         __self.mongoCore.findOne(colName, condition, options, (err, record) => {
+            console.log(JSON.stringify(record))
             return cb(err, record);
         });
     });
