@@ -106,6 +106,7 @@ let local = (soajs, inputmaskData, options, cb) => {
         if (oneUser.user.id) {
             let responseObj = {"id": oneUser.user.id};
             data.id = oneUser.user.id;
+            data.keep = {"pin": true};
             bl.user.getUser(soajs, data, options, (error, userRecord) => {
                 return goInvite(error, userRecord, responseObj);
             });
@@ -113,6 +114,7 @@ let local = (soajs, inputmaskData, options, cb) => {
         else if (oneUser.user.username) {
             let responseObj = {"username": oneUser.user.username};
             data.username = oneUser.user.username;
+            data.keep = {"pin": true};
             bl.user.getUserByUsername(soajs, data, options, (error, userRecord) => {
                 return goInvite(error, userRecord, responseObj);
             });
@@ -120,6 +122,7 @@ let local = (soajs, inputmaskData, options, cb) => {
         else if (oneUser.user.email) {
             let responseObj = {"email": oneUser.user.email};
             data.username = oneUser.user.email;
+            data.keep = {"pin": true};
             bl.user.getUserByUsername(soajs, data, options, (error, userRecord) => {
                 return goInvite(error, userRecord, responseObj);
             });
