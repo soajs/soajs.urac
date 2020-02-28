@@ -179,6 +179,8 @@ User.prototype.getUserByUsername = function (data, cb) {
         options.fields["tenant.pin.code"] = 0;
         options.fields["config.allowedTenants.tenant.pin.code"] = 0;
     }
+    console.log("getUserByUsername");
+    console.log(data);
     console.log(options.fields);
     __self.mongoCore.findOne(colName, condition, options, (err, record) => {
         return cb(err, record);
@@ -228,6 +230,8 @@ User.prototype.getUser = function (data, cb) {
         if (data.keep && data.keep.pwd) {
             delete options.fields.password;
         }
+        console.log("getUser");
+        console.log(data);
         console.log(options.fields);
         __self.mongoCore.findOne(colName, condition, options, (err, record) => {
             return cb(err, record);
