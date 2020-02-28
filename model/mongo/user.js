@@ -175,7 +175,7 @@ User.prototype.getUserByUsername = function (data, cb) {
             "socialId": 0
         }
     };
-    if (!data.keepPin) {
+    if (!data.keep || !data.keep.pin) {
         options.fields["tenant.pin.code"] = 0;
         options.fields["config.allowedTenants.tenant.pin.code"] = 0;
     }
@@ -223,7 +223,7 @@ User.prototype.getUser = function (data, cb) {
                 "socialId": 0
             }
         };
-        if (!data.keepPin) {
+        if (!data.keep || !data.keep.pin) {
             options.fields["tenant.pin.code"] = 0;
             options.fields["config.allowedTenants.tenant.pin.code"] = 0;
         }

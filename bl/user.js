@@ -107,6 +107,9 @@ let bl = {
         let data = {};
         data.username = inputmaskData.username;
         data.status = inputmaskData.status || "active";
+
+        data.keep = inputmaskData.keep;
+
         modelObj.getUserByUsername(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
