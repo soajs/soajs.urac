@@ -1,7 +1,7 @@
 {
   "name": "soajs.urac",
   "description": "soajs URAC service",
-  "version": "3.0.32",
+  "version": "3.0.33",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "async": "3.2.0",
-    "soajs": "2.6.13",
+    "soajs": "2.6.15",
     "uuid": "7.0.0"
   }
 }
