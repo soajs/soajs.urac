@@ -17,6 +17,8 @@ const bl = require("./bl/index.js");
 
 const service = new soajs.server.service(config);
 
+let serviceStartCb = null;
+
 service.init(() => {
     bl.init(service, config, (error) => {
         if (error) {
@@ -154,12 +156,13 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-        /*
-        service.put("/admin/user/invite", function (req, res) {
-            bl.inviteUser(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+
+        service.put("/admin/user/self/invite", function (req, res) {
+            bl.selfInvite(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        /*
         service.put("/admin/user/uninvite", function (req, res) {
             bl.user.uninvite(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
@@ -199,6 +202,10 @@ service.init(() => {
             });
         });
 
-        service.start();
+        service.start(serviceStartCb);
     });
 });
+
+module.exports = function (cb) {
+    serviceStartCb = cb;
+};

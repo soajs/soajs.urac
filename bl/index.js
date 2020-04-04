@@ -431,6 +431,7 @@ function init(service, localConfig, cb) {
 
         bl.addUser = require("./lib/addUser.js")(bl);
         bl.join = require("./lib/join.js")(bl);
+        bl.selfInvite = require("./lib/selfInvite.js")(bl);
         bl.inviteUsers = require("./lib/inviteUsers.js")(bl);
         bl.uninviteUsers = require("./lib/uninviteUsers.js")(bl);
         bl.editPin = require("./lib/editPin.js")(bl);
