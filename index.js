@@ -154,12 +154,13 @@ service.init(() => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
-        /*
-        service.put("/admin/user/invite", function (req, res) {
-            bl.inviteUser(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+
+        service.put("/admin/user/self/invite", function (req, res) {
+            bl.selfInvite(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));
             });
         });
+        /*
         service.put("/admin/user/uninvite", function (req, res) {
             bl.user.uninvite(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                 return res.json(req.soajs.buildResponse(error, data));

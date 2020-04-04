@@ -22,6 +22,7 @@ module.exports = {
     "requestTimeoutRenewal": 5,
     "extKeyRequired": true,
     "oauth": true,
+    "urac": true,
 
 
     //-------------------------------------
@@ -53,6 +54,7 @@ module.exports = {
         532: "user [id | username | email] is required",
         533: "No changes to update",
         534: "Main tenant cannot invite users",
+        535: "Sub tenant cannot self invite a user.",
 
         599: "Token has expired.",
         600: "unable to find token.",
@@ -872,41 +874,44 @@ module.exports = {
                 }
             },
 
-            /*
-            *
-            * since we have invite and un-invite users, no need for these 2
-            *
 
-            '/admin/user/invite': {
+            '/admin/user/self/invite': {
                 "_apiInfo": {
-                    "l": "Invite user by id or username as username or email",
+                    "l": "Self Invite user by id or username as username or email",
                     "group": "User administration"
                 },
-                "id": {
-                    "source": ['body.id'],
-                    "required": false,
-                    "validation": {"type": "string"}
-                },
-                "username": {
-                    "source": ['body.username'],
-                    "required": false,
-                    "validation": {"type": "string"}
-                },
-                "groups": {
-                    "source": ['body.groups'],
+                "user": {
+                    "source": ['body.user'],
                     "required": false,
                     "validation": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
+                        "type": "object",
+                        "properties": {
+                            "oneOf": [
+                                {
+                                    "id": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "username": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        'format': 'email',
+                                        "required": true
+                                    }
+                                }
+                            ]
                         }
                     }
                 },
                 "pin": {
-                    "source": ['body.pin'],
                     "required": false,
+                    "source": ['body.pin'],
                     "validation": {
                         "type": "object",
+                        "additionalProperties": false,
                         "properties": {
                             "code": {
                                 "type": "boolean",
@@ -918,9 +923,40 @@ module.exports = {
                             }
                         }
                     }
+                },
+                "groups": {
+                    "required": false,
+                    "source": ['body.groups'],
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "tenant": {
+                    "required": true,
+                    "source": ['body.tenant'],
+                    "validation": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "code": {
+                                "required": true,
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string",
+                                "required": true
+                            }
+                        }
+                    }
                 }
             },
-
+            /*
+            *
+            * since we have invite and un-invite users, no need for these 2
+            *
             "/admin/user/uninvite": {
                 "_apiInfo": {
                     "l": "un-Invite user by id or username as username or email",

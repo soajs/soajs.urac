@@ -28,11 +28,12 @@ describe("starting index integration tests", () => {
 		require('./put/accountEmail.test');
 		require('./put/userPin.test');
 		require('./put/inviteUsers.test');
+        require('./put/selfInvite.test');
 		require('./put/uninviteUsers.test');
 		
 		//DELETE
 		require('./delete/deleteGroup.test');
-		
+
 		done();
 	});
 	
