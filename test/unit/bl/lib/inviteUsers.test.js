@@ -280,6 +280,7 @@ describe("Unit test for: BL - invite users", () => {
 					
 					BL.inviteUsers(soajs, data, null, (error, result) => {
 						assert.ok(result);
+						console.log(result)
 						assert.ok(result.failed.length === 0);
 						assert.deepEqual(result, {
 							succeeded: [{id: '5d7fee0876186d9ab9b36492'}],

@@ -67,6 +67,10 @@ let local = (soajs, inputmaskData, options, cb) => {
                 generatedPin = lib.pin.generate(pinConfig);
                 obj.tenant.pin.code = generatedPin;
                 obj.tenant.pin.allowed = !!inputmaskData.pin.allowed;
+                if (!userRecord.tenant.pin) {
+                    userRecord.tenant.pin = {};
+                }
+                userRecord.tenant.pin.allowed = !!inputmaskData.pin.allowed;
             } catch (e) {
                 return cb(bl.user.handleError(soajs, 525, null));
             }
@@ -92,36 +96,14 @@ let local = (soajs, inputmaskData, options, cb) => {
         });
     };
 
-    if (inputmaskData.user && inputmaskData.user.id) {
-        data.id = inputmaskData.user.id;
-        data.keep = {"pin": true};
-        bl.user.getUser(soajs, data, options, (error, userRecord) => {
-            return goInvite(error, userRecord);
-        });
-    }
-    else if (inputmaskData.user && inputmaskData.user.username) {
-        data.username = inputmaskData.user.username;
-        data.keep = {"pin": true};
-        bl.user.getUserByUsername(soajs, data, options, (error, userRecord) => {
-            return goInvite(error, userRecord);
-        });
-    }
-    else if (inputmaskData.user &&inputmaskData.user.email) {
-        data.username = inputmaskData.user.email;
+    if (soajs && soajs.urac && soajs.urac.username) {
+        data.username = soajs.urac.username;
         data.keep = {"pin": true};
         bl.user.getUserByUsername(soajs, data, options, (error, userRecord) => {
             return goInvite(error, userRecord);
         });
     } else {
-        if (soajs.urac && soajs.urac.username) {
-            data.username = soajs.urac.username;
-            data.keep = {"pin": true};
-            bl.user.getUserByUsername(soajs, data, options, (error, userRecord) => {
-                return goInvite(error, userRecord);
-            });
-        } else {
-            return cb(bl.user.handleError(soajs, 527, null));
-        }
+        return cb(bl.user.handleError(soajs, 527, null));
     }
 };
 

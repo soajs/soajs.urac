@@ -880,32 +880,6 @@ module.exports = {
                     "l": "Self Invite user by id or username as username or email",
                     "group": "User administration"
                 },
-                "user": {
-                    "source": ['body.user'],
-                    "required": false,
-                    "validation": {
-                        "type": "object",
-                        "properties": {
-                            "oneOf": [
-                                {
-                                    "id": {
-                                        "type": "string",
-                                        "required": true
-                                    },
-                                    "username": {
-                                        "type": "string",
-                                        "required": true
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        'format': 'email',
-                                        "required": true
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
                 "pin": {
                     "required": false,
                     "source": ['body.pin'],

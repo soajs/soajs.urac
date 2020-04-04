@@ -76,6 +76,10 @@ let local = (soajs, inputmaskData, options, cb) => {
                     generatedPin = lib.pin.generate(pinConfig);
                     obj.tenant.pin.code = generatedPin;
                     obj.tenant.pin.allowed = !!oneUser.pin.allowed;
+                    if (!userRecord.tenant.pin) {
+                        userRecord.tenant.pin = {};
+                    }
+                    userRecord.tenant.pin.allowed = !!oneUser.pin.allowed;
                 } catch (e) {
                     responseObj.reason = "Failed to generate pin at this.";
                     records.failed.push(responseObj);
