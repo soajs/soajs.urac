@@ -17,6 +17,8 @@ const bl = require("./bl/index.js");
 
 const service = new soajs.server.service(config);
 
+let serviceStartCb = null;
+
 service.init(() => {
     bl.init(service, config, (error) => {
         if (error) {
@@ -200,6 +202,10 @@ service.init(() => {
             });
         });
 
-        service.start();
+        service.start(serviceStartCb);
     });
 });
+
+module.exports = function (cb) {
+    serviceStartCb = cb;
+};
