@@ -761,12 +761,21 @@ User.prototype.deleteUpdatePin = function (data, cb) {
         }
 
         __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
+            let nModified = 0;
+            if (!record) {
+                nModified = 0;
+            } else {
+                nModified = record.nModified || 0;
+            }
+            return cb(err, nModified);
+            /*
             if (!record || (record && !record.nModified)) {
                 let user = data.user.id || data.user.username || data.user.email;
                 let error = new Error("User: Pin of user [" + user + "] was not deleted.");
                 return cb(error);
             }
             return cb(err, record.nModified);
+            */
         });
     };
 
@@ -792,12 +801,21 @@ User.prototype.deleteUpdatePin = function (data, cb) {
             condition["tenant.id"] = data.tenant.id;
         }
         __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
+            let nModified = 0;
+            if (!record) {
+                nModified = 0;
+            } else {
+                nModified = record.nModified || 0;
+            }
+            return cb(err, nModified);
+            /*
             if (!record || (record && !record.nModified)) {
                 let user = data.user.id || data.user.username || data.user.email;
                 let error = new Error("User: Pin of user [" + user + "] was not updated.");
                 return cb(error);
             }
             return cb(err, record.nModified);
+            */
         });
     };
 

@@ -1088,9 +1088,10 @@ describe("Unit test for: model - user", function () {
                 code: "anyy",
             }
         };
-        modelObj.deleteUpdatePin(data, (err) => {
-            assert.ok(err);
-            assert.deepEqual(err, new Error("User: Pin of user [tony] was not deleted."));
+        modelObj.deleteUpdatePin(data, (err, result) => {
+            assert.deepEqual(result, 0);
+            //assert.ok(err);
+            //assert.deepEqual(err, new Error("User: Pin of user [tony] was not deleted."));
             done();
         });
     });
