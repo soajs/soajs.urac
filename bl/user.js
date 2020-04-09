@@ -266,10 +266,10 @@ let bl = {
         modelObj.edit(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
-                if (err.message && err.message.match("was not update")) {
-                    return cb(bl.handleError(soajs, 533, null));
-                }
                 return cb(bl.handleError(soajs, 602, err));
+            }
+            if (!record) {
+                return cb(bl.handleError(soajs, 533, null));
             }
             return cb(null, bl.handleUpdateResponse(record));
         });

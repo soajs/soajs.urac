@@ -375,13 +375,13 @@ let bl = {
             inputmaskData._id = userRecord._id;
 
             let doEdit = () => {
-                bl.user.edit(soajs, inputmaskData, options, (error) => {
+                bl.user.edit(soajs, inputmaskData, options, (error, result) => {
                     //close model
                     bl.user.mt.closeModel(modelObj);
                     if (error) {
                         return cb(error, null);
                     }
-                    return cb(null, true);
+                    return cb(null, !!result);
                 });
             };
             if (inputmaskData.email) {

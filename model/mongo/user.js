@@ -546,14 +546,13 @@ User.prototype.edit = function (data, cb) {
                 s.$set.status = data.status;
             }
             __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
-                if (err) {
-                    return cb(err);
+                let nModified = 0;
+                if (!record) {
+                    nModified = 0;
+                } else {
+                    nModified = record.nModified || 0;
                 }
-                if (!record || (record && !record.nModified)) {
-                    let error = new Error("User: user [" + _id.toString() + "] was not update.");
-                    return cb(error);
-                }
-                return cb(null, record.nModified);
+                return cb(err, nModified);
             });
         }
         else {
@@ -597,11 +596,13 @@ User.prototype.save = function (data, cb) {
     };
     let s = {'$set': data};
     __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
-        if (!record || (record && !record.nModified)) {
-            let error = new Error("User: user [" + data._id.toString() + "] was not saved.");
-            return cb(error);
+        let nModified = 0;
+        if (!record) {
+            nModified = 0;
+        } else {
+            nModified = record.nModified || 0;
         }
-        return cb(err, record.nModified);
+        return cb(err, nModified);
     });
 };
 
@@ -697,12 +698,13 @@ User.prototype.editGroups = function (data, cb) {
         }
         condition.status = data.status;
         __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
-            if (!record || (record && !record.nModified)) {
-                let user = data.user.id || data.user.username || data.user.email;
-                let error = new Error("User: Groups of user [" + user + "] was not updated.");
-                return cb(error);
+            let nModified = 0;
+            if (!record) {
+                nModified = 0;
+            } else {
+                nModified = record.nModified || 0;
             }
-            return cb(err, record.nModified);
+            return cb(err, nModified);
         });
     };
 
@@ -768,14 +770,6 @@ User.prototype.deleteUpdatePin = function (data, cb) {
                 nModified = record.nModified || 0;
             }
             return cb(err, nModified);
-            /*
-            if (!record || (record && !record.nModified)) {
-                let user = data.user.id || data.user.username || data.user.email;
-                let error = new Error("User: Pin of user [" + user + "] was not deleted.");
-                return cb(error);
-            }
-            return cb(err, record.nModified);
-            */
         });
     };
 
@@ -808,14 +802,6 @@ User.prototype.deleteUpdatePin = function (data, cb) {
                 nModified = record.nModified || 0;
             }
             return cb(err, nModified);
-            /*
-            if (!record || (record && !record.nModified)) {
-                let user = data.user.id || data.user.username || data.user.email;
-                let error = new Error("User: Pin of user [" + user + "] was not updated.");
-                return cb(error);
-            }
-            return cb(err, record.nModified);
-            */
         });
     };
 
