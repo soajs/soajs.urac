@@ -4,7 +4,7 @@ let helper = require("../helper.js");
 
 describe("starting integration tests", () => {
 
-    let controller;
+    let controller, service;
 
     before((done) => {
         let rootPath = process.cwd();
@@ -20,7 +20,8 @@ describe("starting integration tests", () => {
             controller = require("soajs.controller");
             setTimeout(function () {
 
-                helper.requireModule('./index')(() => {
+                service = helper.requireModule('./_index.js');
+                service.runService(() => {
                     setTimeout(function () {
                         done();
                     }, 5000);
