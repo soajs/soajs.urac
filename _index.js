@@ -206,12 +206,23 @@ function run(serviceStartCb) {
     });
 }
 
+function stop(serviceStopCb) {
+    service.stop(serviceStopCb);
+}
+
 module.exports = {
     "runService": (serviceStartCb) => {
         if (serviceStartCb && typeof serviceStartCb === "function") {
             run(serviceStartCb);
         } else {
             run(null);
+        }
+    },
+    "stopService": (serviceStopCb) => {
+        if (serviceStopCb && typeof serviceStopCb === "function") {
+            stop(serviceStopCb);
+        } else {
+            stop(null);
         }
     }
 };
