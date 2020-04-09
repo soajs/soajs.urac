@@ -448,8 +448,8 @@ describe("Unit test for: model - user", function () {
             "email": "test_edit3@soajs.org",
             "status": "active"
         };
-        modelObj.edit(data, (error) => {
-            assert.ok(error);
+        modelObj.edit(data, (error, result) => {
+            assert.equal(result, 0);
             done();
         });
     });
@@ -865,9 +865,8 @@ describe("Unit test for: model - user", function () {
                 id: "5c0e74ba9acc3c5a84a51251",
                 code: "TES1"
             }
-        }, (err) => {
-            assert.ok(err);
-            assert.deepEqual(err, new Error("User: Groups of user [5c8d0c505653de3985aa0ffd] was not updated."));
+        }, (err, result) => {
+            assert.deepEqual(result, 0);
             done();
         });
     });
