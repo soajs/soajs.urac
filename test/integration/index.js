@@ -15,19 +15,17 @@ describe("starting integration tests", () => {
             if (msg) {
                 console.log(msg);
             }
-
-            console.log("Starting Controller and URAC service");
-            controller = require("soajs.controller");
-            setTimeout(function () {
-
+            console.log("Starting Controller ...");
+            controller = require("soajs.controller/_index.js");
+            controller.runService(() => {
+                console.log("Starting URAC ...");
                 service = helper.requireModule('./_index.js');
                 service.runService(() => {
                     setTimeout(function () {
                         done();
                     }, 5000);
                 });
-
-            }, 5000);
+            });
         });
     });
 

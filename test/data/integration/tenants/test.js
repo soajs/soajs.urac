@@ -54,8 +54,7 @@ let lib = {
                                 }
                             },
                             "urac": {
-                                "hashIterations": 1024, //used by hasher
-                                "seedLength": 32, //used by hasher
+                                "hashIterations": 12, //used by hasher
                                 "link": {
                                     "addUser": "http://dashboard.soajs.org/#/setNewPassword",
                                     "changeEmail": "http://dashboard.soajs.org/#/changeEmail/validate",
@@ -116,8 +115,7 @@ let lib = {
 				                "loginMode": 'urac'
 			                },
 			                "urac": {
-				                "hashIterations": 1024, //used by hasher
-				                "seedLength": 32, //used by hasher
+				                "hashIterations": 12, //used by hasher
 				                "link": {
 					                "addUser": "http://dashboard.soajs.org/#/setNewPassword",
 					                "changeEmail": "http://dashboard.soajs.org/#/changeEmail/validate",

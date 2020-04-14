@@ -43,8 +43,7 @@ let lib = {
                     config: {
 	                    dashboard: {
 		                    commonFields: {
-			                    hashIterations: 12,
-			                    seedLength: 32
+			                    hashIterations: 12
 		                    }
 	                    }
                     }

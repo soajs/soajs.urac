@@ -54,8 +54,7 @@ let lib = {
                                 }
                             },
                             urac: {
-                                hashIterations: 1024,
-                                seedLength: 32,
+                                hashIterations: 12,
                                 link: {
                                     addUser: "http://dashboard.soajs.org:80/#/setNewPassword",
                                     changeEmail: "http://dashboard.soajs.org:80/#/changeEmail/validate",

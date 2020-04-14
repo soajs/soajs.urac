@@ -89,8 +89,7 @@ describe("Unit test for: BL - editPin main tenant", () => {
 				},
 				"urac": {
 					"value": {
-						"hashIterations": 1024,
-						"seedLength": 32,
+						"hashIterations": 12,
 						"link": {
 							"addUser": "https://dev-site.rockspoon.io/#/setNewPassword",
 							"changeEmail": "https://dev-site.rockspoon.io/#/changeEmail/validate",
