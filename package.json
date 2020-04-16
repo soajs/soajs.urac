@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "async": "3.2.0",
-    "soajs": "3.0.5",
+    "soajs": "3.0.6",
     "uuid": "7.0.0"
   }
 }

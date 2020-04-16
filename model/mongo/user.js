@@ -169,7 +169,7 @@ User.prototype.getUserByUsername = function (data, cb) {
         }
     }
     let options = {
-        "fields": {
+        "projection": {
             "password": 0,
             "config": 0,
             "socialId": 0,
@@ -178,9 +178,9 @@ User.prototype.getUserByUsername = function (data, cb) {
         }
     };
     if (data.keep && data.keep.pin) {
-        delete options.fields.config;
-        delete options.fields["tenant.pin.code"];
-        delete options.fields["config.allowedTenants.tenant.pin.code"];
+        delete options.projection.config;
+        delete options.projection["tenant.pin.code"];
+        delete options.projection["config.allowedTenants.tenant.pin.code"];
     }
     __self.mongoCore.findOne(colName, condition, options, (err, record) => {
         return cb(err, record);
@@ -217,7 +217,7 @@ User.prototype.getUser = function (data, cb) {
             }
         }
         let options = {
-            "fields": {
+            "projection": {
                 "password": 0,
                 "config": 0,
                 "socialId": 0,
@@ -226,12 +226,12 @@ User.prototype.getUser = function (data, cb) {
             }
         };
         if (data.keep && data.keep.pin) {
-            delete options.fields.config;
-            delete options.fields["tenant.pin.code"];
-            delete options.fields["config.allowedTenants.tenant.pin.code"];
+            delete options.projection.config;
+            delete options.projection["tenant.pin.code"];
+            delete options.projection["config.allowedTenants.tenant.pin.code"];
         }
         if (data.keep && data.keep.pwd) {
-            delete options.fields.password;
+            delete options.projection.password;
         }
         __self.mongoCore.findOne(colName, condition, options, (err, record) => {
             return cb(err, record);
@@ -319,7 +319,7 @@ User.prototype.getUsers = function (data, cb) {
             {"lastName": {"$regex": rePattern}},
         ];
     }
-    options.fields = {
+    options.projection = {
         'password': 0,
         'config': 0,
         'socialId': 0,
@@ -327,7 +327,7 @@ User.prototype.getUsers = function (data, cb) {
         'config.allowedTenants.tenant.pin.code': 0
     };
     if (data && data.config) {
-        delete options.fields.config;
+        delete options.projection.config;
     }
     __self.mongoCore.find(colName, condition, options, (err, records) => {
         return cb(err, records);
@@ -374,7 +374,7 @@ User.prototype.getUsersByIds = function (data, cb) {
             options.limit = data.limit;
             options.sort = {};
         }
-        options.fields = {
+        options.projection = {
             'password': 0,
             'config': 0,
             'socialId': 0,
@@ -382,7 +382,7 @@ User.prototype.getUsersByIds = function (data, cb) {
             'config.allowedTenants.tenant.pin.code': 0
         };
         if (data && data.config) {
-            delete options.fields.config;
+            delete options.projection.config;
         }
         __self.mongoCore.find(colName, condition, options, (err, records) => {
             return cb(err, records);
