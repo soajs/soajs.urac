@@ -473,7 +473,7 @@ Group.prototype.validateId = function (id, cb) {
 		id = __self.mongoCore.ObjectId(id);
 		return cb(null, id);
 	} catch (e) {
-		__self.log(e);
+		__self.log(e.message);
 		return cb(new Error("A valid ID is required"), null);
 	}
 };

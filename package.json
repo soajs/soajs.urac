@@ -1,7 +1,7 @@
 {
   "name": "soajs.urac",
   "description": "soajs URAC service",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -29,11 +29,11 @@
     "grunt-mocha-test": "0.13.3",
     "mocha": "6.2.2",
     "request": "2.88.2",
-    "soajs.controller": "3.1.*"
+    "soajs.controller": "3.1.10"
   },
   "dependencies": {
     "async": "3.2.0",
-    "soajs": "3.0.6",
+    "soajs": "3.0.7",
     "uuid": "7.0.0"
   }
 }
