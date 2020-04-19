@@ -47,9 +47,7 @@ let lib = {
                                     from: "me@localhost.com",
                                     transport: {
                                         type: "sendmail",
-                                        options: {
-
-                                        }
+                                        options: {}
                                     }
                                 }
                             },
@@ -63,6 +61,11 @@ let lib = {
                                 },
                                 tokenExpiryTTL: 172800000,
                                 validateJoin: true,
+                                "membership": {
+                                    "basic": {
+                                        "groups": ["owner"]
+                                    }
+                                },
                                 mail: {
                                     join: {
                                         subject: "Welcome to SOAJS",

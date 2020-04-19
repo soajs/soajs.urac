@@ -52,10 +52,12 @@ let bl = {
 
         if (soajs.servicesConfig && soajs.servicesConfig.urac && soajs.servicesConfig.urac.tokenExpiryTTL) {
             data.tokenExpiryTTL = soajs.servicesConfig.urac.tokenExpiryTTL;
-        }
-        else {
+        } else if (soajs.registry && soajs.registry.custom && soajs.registry.custom.urac && soajs.registry.custom.urac.value && soajs.registry.custom.urac.value.tokenExpiryTTL) {
+            data.tokenExpiryTTL = soajs.registry.custom.urac.value.tokenExpiryTTL;
+        } else {
             data.tokenExpiryTTL = 2 * 24 * 3600000;
         }
+
         modelObj.add(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
