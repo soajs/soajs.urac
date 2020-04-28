@@ -245,6 +245,7 @@ describe("Unit test for: model - token", function () {
             tokenExpiryTTL: '12'
         };
         modelObj.add(data, (err, record) => {
+            console.log(record)
             assert.ok(record);
             assert.deepEqual(record.ttl, '12' );
             done();

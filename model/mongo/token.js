@@ -70,12 +70,22 @@ Token.prototype.updateStatus = function (data, cb) {
         'safe': true
     };
 
-    __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
+    __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
+        if (!record || (record && !record.nModified)) {
+            let error = new Error("Token: status for token [" + data.token + "] was not update.");
+            return cb(error);
+        }
+        return cb(err, record.nModified);
+        /*
+        { n: 0, nModified: 0, ok: 1 }
+         */
+        /*
         if (!record) {
             let error = new Error("Token: status for token [" + data.token + "] was not update.");
             return cb(error);
         }
         return cb(err, record);
+        */
     });
 };
 
@@ -111,12 +121,25 @@ Token.prototype.add = function (data, cb) {
         'upsert': true,
         'safe': true
     };
-    __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
+    __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
+        if (!record || (record && !(record.nModified || record.upserted))) {
+            let error = new Error("Token: token for [" + data.service + "] was not created.");
+            return cb(error);
+        }
+        return cb(err, {'token': token, 'ttl': data.tokenExpiryTTL});
+        /*
+        { n: 1,
+          nModified: 0,
+          upserted: [ { index: 0, _id: 5ea87612833ccbfae71675f3 } ],
+          ok: 1 }
+         */
+        /*
         if (!record) {
             let error = new Error("Token: token for [" + data.service + "] was not created.");
             return cb(error);
         }
         return cb(err, {'token': token, 'ttl': data.tokenExpiryTTL});
+        */
     });
 };
 

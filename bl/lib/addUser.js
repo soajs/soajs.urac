@@ -95,12 +95,12 @@ let local = (soajs, inputmaskData, options, cb) => {
                     generatedPin = lib.pin.generate(pinConfig);
                     if (mainTenant) {
                         inputmaskData.tenant.pin.code = generatedPin;
-                        inputmaskData.tenant.pin.allowed = !!inputmaskData.pin.allowed;
                     }
                     else {
                         inputmaskData.config.allowedTenants[0].tenant.pin.code = generatedPin;
                         inputmaskData.config.allowedTenants[0].tenant.pin.allowed = !!inputmaskData.pin.allowed;
                     }
+                    inputmaskData.tenant.pin.allowed = !!inputmaskData.pin.allowed;
                     doAdd(true, generatedPin);
                 } catch (e) {
                     //close model
