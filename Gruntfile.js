@@ -108,6 +108,7 @@ module.exports = function (grunt) {
                 SOAJS_SRVIP: '127.0.0.1',
                 SOAJS_TEST: true,
                 SOAJS_SRVPORT: 4001,
+                SOAJS_DEPLOY_MANUAL: true,
                 SOAJS_REGISTRY_API: '127.0.0.1:5000'
             },
             coverage: {
@@ -116,6 +117,7 @@ module.exports = function (grunt) {
                 SOAJS_SRVIP: '127.0.0.1',
                 SOAJS_TEST: true,
                 SOAJS_SRVPORT: 4001,
+                SOAJS_DEPLOY_MANUAL: true,
                 SOAJS_REGISTRY_API: '127.0.0.1:5000'
             }
         },
