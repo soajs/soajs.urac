@@ -24,7 +24,7 @@ SOAJS_SERVICE_MODEL | The model | mongo | other models can be implemented aka or
 
 
 ### Complete Documentation
-More information is available on SOAJS website under the section for [URAC](https://soajsorg.atlassian.net/wiki/spaces/URAC).
+More information is available on SOAJS website under the section for [URAC](https://soajsorg.atlassian.net/wiki/spaces/MIC/overview).
 
 
 ### License
