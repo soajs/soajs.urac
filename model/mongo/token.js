@@ -24,30 +24,44 @@ function Token(soajs, localConfig, mongoCore) {
     if (!__self.mongoCore) {
         __self.mongoCoreExternal = false;
         let tCode = soajs.tenant.code;
-        if (soajs.tenant.type === "client" && soajs.tenant.main) {
+        let dbCodeFound = false;
+        let dbCodes = get(["registry", "custom", "urac", "value", "dbCodes"], soajs);
+        if (dbCodes) {
+            for (let c in dbCodes) {
+                if (dbCodes.hasOwnProperty(c)) {
+                    if (dbCodes[c].includes(soajs.tenant.code)) {
+                        tCode = c;
+                        dbCodeFound = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!dbCodeFound && soajs.tenant.main && soajs.tenant.main.code) {
             tCode = soajs.tenant.main.code;
         }
         __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, localConfig.serviceName, tCode));
-    }
-    if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
-        indexing[soajs.tenant.id] = true;
 
-        __self.mongoCore.createIndex(colName, {
-            'userId': 1,
-            'service': 1,
-            'status': 1
-        }, {unique: true}, (err, index) => {
-            soajs.log.debug("Index: " + index + " created with error: " + err);
-        });
-        __self.mongoCore.createIndex(colName, {
-            'token': 1,
-            'service': 1,
-            'status': 1
-        }, {unique: true}, (err, index) => {
-            soajs.log.debug("Index: " + index + " created with error: " + err);
-        });
+        if (indexing && tCode && !indexing[tCode]) {
+            indexing[tCode] = true;
 
-        soajs.log.debug("Token: Indexes for " + soajs.tenant.id + " Updated!");
+            __self.mongoCore.createIndex(colName, {
+                'userId': 1,
+                'service': 1,
+                'status': 1
+            }, {unique: true}, (err, index) => {
+                soajs.log.debug("Index: " + index + " created with error: " + err);
+            });
+            __self.mongoCore.createIndex(colName, {
+                'token': 1,
+                'service': 1,
+                'status': 1
+            }, {unique: true}, (err, index) => {
+                soajs.log.debug("Index: " + index + " created with error: " + err);
+            });
+
+            soajs.log.debug("Token: Indexes for " + tCode + " Updated!");
+        }
     }
 }
 
