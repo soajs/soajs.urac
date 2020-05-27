@@ -31,75 +31,89 @@ function User(soajs, localConfig, mongoCore) {
     if (!__self.mongoCore) {
         __self.mongoCoreExternal = false;
         let tCode = soajs.tenant.code;
-        if (soajs.tenant.type === "client" && soajs.tenant.main) {
+        let dbCodeFound = false;
+        let dbCodes = get(["registry", "custom", "urac", "value", "dbCodes"], soajs);
+        if (dbCodes) {
+            for (let c in dbCodes) {
+                if (dbCodes.hasOwnProperty(c)) {
+                    if (dbCodes[c].includes(soajs.tenant.code)) {
+                        tCode = c;
+                        dbCodeFound = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!dbCodeFound && soajs.tenant.main && soajs.tenant.main.code) {
             tCode = soajs.tenant.main.code;
         }
         __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, localConfig.serviceName, tCode));
-    }
-    if (indexing && soajs && soajs.tenant && soajs.tenant.id && !indexing[soajs.tenant.id]) {
-        indexing[soajs.tenant.id] = true;
 
-        __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, (err, index) => {
-            soajs.log.debug("Index: " + index + " created with error: " + err);
-        });
-        __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1, 'status': 1}, {}, (err, index) => {
-            soajs.log.debug("Index: " + index + " created with error: " + err);
-        });
-        __self.mongoCore.createIndex(colName, {'_id': 1, 'status': 1}, {}, (err, index) => {
-            soajs.log.debug("Index: " + index + " created with error: " + err);
-        });
-        __self.mongoCore.createIndex(colName, {
-            'username': 1,
-            'email': 1,
-            'firstName': 1,
-            'lastName': 1
-        }, {}, (err, index) => {
-            soajs.log.debug("Index: " + index + " created with error: " + err);
-        });
+        if (indexing && tCode && !indexing[tCode]) {
+            indexing[tCode] = true;
 
-        //the following are set @ urac.driver
-        __self.mongoCore.createIndex(colName, {"username": 1}, {unique: true}, (err, index) => {
-            soajs.log.debug("Index: " + index + " created with error: " + err);
-        });
-        __self.mongoCore.createIndex(colName, {"email": 1}, {unique: true}, (err, index) => {
-            soajs.log.debug("Index: " + index + " created with error: " + err);
-        });
-
-        __self.mongoCore.createIndex(colName, {'config.allowedTenants.tenant.id': 1}, (err, index) => {
-            soajs.log.debug("Index: " + index + " created with error: " + err);
-        });
-        __self.mongoCore.createIndex(colName,
-            {
-                "config.allowedTenants.tenant.pin.code": 1,
-                "config.allowedTenants.tenant.id": 1
-            },
-            {
-                unique: true,
-                partialFilterExpression: {
-                    "config.allowedTenants.tenant.pin.code": {
-                        "$exists": true
-                    }
-                }
-            }, (err, index) => {
+            __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, (err, index) => {
                 soajs.log.debug("Index: " + index + " created with error: " + err);
             });
-        __self.mongoCore.createIndex(colName,
-            {
-                "tenant.pin.code": 1,
-                "tenant.id": 1
-            },
-            {
-                unique: true,
-                partialFilterExpression: {
-                    "tenant.pin.code": {
-                        "$exists": true
-                    }
-                }
-            }, (err, index) => {
+            __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1, 'status': 1}, {}, (err, index) => {
+                soajs.log.debug("Index: " + index + " created with error: " + err);
+            });
+            __self.mongoCore.createIndex(colName, {'_id': 1, 'status': 1}, {}, (err, index) => {
+                soajs.log.debug("Index: " + index + " created with error: " + err);
+            });
+            __self.mongoCore.createIndex(colName, {
+                'username': 1,
+                'email': 1,
+                'firstName': 1,
+                'lastName': 1
+            }, {}, (err, index) => {
                 soajs.log.debug("Index: " + index + " created with error: " + err);
             });
 
-        soajs.log.debug("User: Indexes for " + soajs.tenant.id + " Updated!");
+            //the following are set @ urac.driver
+            __self.mongoCore.createIndex(colName, {"username": 1}, {unique: true}, (err, index) => {
+                soajs.log.debug("Index: " + index + " created with error: " + err);
+            });
+            __self.mongoCore.createIndex(colName, {"email": 1}, {unique: true}, (err, index) => {
+                soajs.log.debug("Index: " + index + " created with error: " + err);
+            });
+
+            __self.mongoCore.createIndex(colName, {'config.allowedTenants.tenant.id': 1}, (err, index) => {
+                soajs.log.debug("Index: " + index + " created with error: " + err);
+            });
+            __self.mongoCore.createIndex(colName,
+                {
+                    "config.allowedTenants.tenant.pin.code": 1,
+                    "config.allowedTenants.tenant.id": 1
+                },
+                {
+                    unique: true,
+                    partialFilterExpression: {
+                        "config.allowedTenants.tenant.pin.code": {
+                            "$exists": true
+                        }
+                    }
+                }, (err, index) => {
+                    soajs.log.debug("Index: " + index + " created with error: " + err);
+                });
+            __self.mongoCore.createIndex(colName,
+                {
+                    "tenant.pin.code": 1,
+                    "tenant.id": 1
+                },
+                {
+                    unique: true,
+                    partialFilterExpression: {
+                        "tenant.pin.code": {
+                            "$exists": true
+                        }
+                    }
+                }, (err, index) => {
+                    soajs.log.debug("Index: " + index + " created with error: " + err);
+                });
+
+            soajs.log.debug("User: Indexes for " + tCode + " Updated!");
+        }
     }
 }
 
