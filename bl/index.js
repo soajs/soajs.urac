@@ -276,7 +276,7 @@ let bl = {
                 return cb(error, null);
             }
             let encryptionConfig = {};
-            if (soajs.servicesConfig.hashIterations) {
+            if (soajs.servicesConfig && soajs.servicesConfig.hashIterations) {
                 encryptionConfig.hashIterations = soajs.servicesConfig.hashIterations;
             } else {
                 let hashIterations = get(["registry", "custom", "urac", "value", "hashIterations"], soajs);
@@ -284,7 +284,7 @@ let bl = {
                     encryptionConfig.hashIterations = hashIterations;
                 }
             }
-            if (soajs.servicesConfig.optionalAlgorithm) {
+            if (soajs.servicesConfig && soajs.servicesConfig.optionalAlgorithm) {
                 encryptionConfig.optionalAlgorithm = soajs.servicesConfig.optionalAlgorithm;
             } else {
                 let optionalAlgorithm = get(["registry", "custom", "urac", "value", "optionalAlgorithm"], soajs);

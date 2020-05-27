@@ -213,7 +213,7 @@ let bl = {
 
         inputmaskData.password = inputmaskData.password || Math.random().toString(36).slice(-10);
         let encryptionConfig = {};
-        if (soajs.servicesConfig.hashIterations) {
+        if (soajs.servicesConfig && soajs.servicesConfig.hashIterations) {
             encryptionConfig.hashIterations = soajs.servicesConfig.hashIterations;
         } else {
             let hashIterations = get(["registry", "custom", "urac", "value", "hashIterations"], soajs);
@@ -221,7 +221,7 @@ let bl = {
                 encryptionConfig.hashIterations = hashIterations;
             }
         }
-        if (soajs.servicesConfig.optionalAlgorithm) {
+        if (soajs.servicesConfig && soajs.servicesConfig.optionalAlgorithm) {
             encryptionConfig.optionalAlgorithm = soajs.servicesConfig.optionalAlgorithm;
         } else {
             let optionalAlgorithm = get(["registry", "custom", "urac", "value", "optionalAlgorithm"], soajs);
@@ -298,7 +298,7 @@ let bl = {
             return cb(bl.handleError(soajs, 400, null));
         }
         let encryptionConfig = {};
-        if (soajs.servicesConfig.hashIterations) {
+        if (soajs.servicesConfig && soajs.servicesConfig.hashIterations) {
             encryptionConfig.hashIterations = soajs.servicesConfig.hashIterations;
         } else {
             let hashIterations = get(["registry", "custom", "urac", "value", "hashIterations"], soajs);
@@ -306,7 +306,7 @@ let bl = {
                 encryptionConfig.hashIterations = hashIterations;
             }
         }
-        if (soajs.servicesConfig.optionalAlgorithm) {
+        if (soajs.servicesConfig && soajs.servicesConfig.optionalAlgorithm) {
             encryptionConfig.optionalAlgorithm = soajs.servicesConfig.optionalAlgorithm;
         } else {
             let optionalAlgorithm = get(["registry", "custom", "urac", "value", "optionalAlgorithm"], soajs);
