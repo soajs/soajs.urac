@@ -11,6 +11,8 @@
 const async = require("async");
 const fs = require("fs");
 
+const get = (p, o) => p.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, o);
+
 const lib = {
     "mail": require("../lib/mail.js"),
     "pwd": require("../lib/pwd.js")
@@ -273,7 +275,24 @@ let bl = {
                 bl.user.mt.closeModel(modelObj);
                 return cb(error, null);
             }
-            lib.pwd.compare(soajs.servicesConfig, inputmaskData.oldPassword, userRecord.password, bl.user.localConfig, (error, response) => {
+            let encryptionConfig = {};
+            if (soajs.servicesConfig.hashIterations) {
+                encryptionConfig.hashIterations = soajs.servicesConfig.hashIterations;
+            } else {
+                let hashIterations = get(["registry", "custom", "urac", "value", "hashIterations"], soajs);
+                if (hashIterations) {
+                    encryptionConfig.hashIterations = hashIterations;
+                }
+            }
+            if (soajs.servicesConfig.optionalAlgorithm) {
+                encryptionConfig.optionalAlgorithm = soajs.servicesConfig.optionalAlgorithm;
+            } else {
+                let optionalAlgorithm = get(["registry", "custom", "urac", "value", "optionalAlgorithm"], soajs);
+                if (optionalAlgorithm) {
+                    encryptionConfig.optionalAlgorithm = optionalAlgorithm;
+                }
+            }
+            lib.pwd.compare(encryptionConfig, inputmaskData.oldPassword, userRecord.password, bl.user.localConfig, (error, response) => {
                 if (error || !response) {
                     //close model
                     bl.user.mt.closeModel(modelObj);
