@@ -210,8 +210,24 @@ let bl = {
         }
 
         inputmaskData.password = inputmaskData.password || Math.random().toString(36).slice(-10);
-
-        lib.pwd.encrypt(soajs.servicesConfig, inputmaskData.password, bl.localConfig, (err, pwdEncrypted) => {
+        let encryptionConfig = {};
+        if (soajs.servicesConfig.hashIterations) {
+            encryptionConfig.hashIterations = soajs.servicesConfig.hashIterations;
+        } else {
+            let hashIterations = get(["registry", "custom", "urac", "value", "hashIterations"], soajs);
+            if (hashIterations) {
+                encryptionConfig.hashIterations = hashIterations;
+            }
+        }
+        if (soajs.servicesConfig.optionalAlgorithm) {
+            encryptionConfig.optionalAlgorithm = soajs.servicesConfig.optionalAlgorithm;
+        } else {
+            let optionalAlgorithm = get(["registry", "custom", "urac", "value", "optionalAlgorithm"], soajs);
+            if (optionalAlgorithm) {
+                encryptionConfig.optionalAlgorithm = optionalAlgorithm;
+            }
+        }
+        lib.pwd.encrypt(encryptionConfig, inputmaskData.password, bl.localConfig, (err, pwdEncrypted) => {
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
             }
@@ -279,8 +295,24 @@ let bl = {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
-
-        lib.pwd.encrypt(soajs.servicesConfig, inputmaskData.password, bl.localConfig, (err, pwdEncrypted) => {
+        let encryptionConfig = {};
+        if (soajs.servicesConfig.hashIterations) {
+            encryptionConfig.hashIterations = soajs.servicesConfig.hashIterations;
+        } else {
+            let hashIterations = get(["registry", "custom", "urac", "value", "hashIterations"], soajs);
+            if (hashIterations) {
+                encryptionConfig.hashIterations = hashIterations;
+            }
+        }
+        if (soajs.servicesConfig.optionalAlgorithm) {
+            encryptionConfig.optionalAlgorithm = soajs.servicesConfig.optionalAlgorithm;
+        } else {
+            let optionalAlgorithm = get(["registry", "custom", "urac", "value", "optionalAlgorithm"], soajs);
+            if (optionalAlgorithm) {
+                encryptionConfig.optionalAlgorithm = optionalAlgorithm;
+            }
+        }
+        lib.pwd.encrypt(encryptionConfig, inputmaskData.password, bl.localConfig, (err, pwdEncrypted) => {
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));
             }
