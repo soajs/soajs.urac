@@ -92,7 +92,6 @@ describe("Testing invite users API", () => {
             }
         };
         requester('/admin/users/invite', 'put', params, (error, body) => {
-        	console.log(body.data)
 
             assert.ok(body);
             assert.ok(body.data);
