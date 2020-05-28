@@ -70,6 +70,8 @@ let bl = {
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.keywords = inputmaskData.keywords;
+        data.tenant = soajs.tenant;
+        data.scope = inputmaskData.scope || null;
         modelObj.countUsers(data, (err, count) => {
             bl.mt.closeModel(modelObj);
             if (err) {
@@ -133,6 +135,8 @@ let bl = {
         data.limit = inputmaskData.limit;
         data.keywords = inputmaskData.keywords;
         data.config = inputmaskData.config;
+        data.tenant = soajs.tenant;
+        data.scope = inputmaskData.scope || null;
         modelObj.getUsers(data, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {

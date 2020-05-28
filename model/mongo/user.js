@@ -67,7 +67,17 @@ function User(soajs, localConfig, mongoCore) {
                 'username': 1,
                 'email': 1,
                 'firstName': 1,
-                'lastName': 1
+                'lastName': 1,
+                'tenant.id': 1
+            }, {}, (err, index) => {
+                soajs.log.debug("Index: " + index + " created with error: " + err);
+            });
+            __self.mongoCore.createIndex(colName, {
+                'username': 1,
+                'email': 1,
+                'firstName': 1,
+                'lastName': 1,
+                'config.allowedTenants.tenant.id': 1
             }, {}, (err, index) => {
                 soajs.log.debug("Index: " + index + " created with error: " + err);
             });
@@ -345,6 +355,16 @@ User.prototype.getUsers = function (data, cb) {
     if (data && data.config) {
         delete options.projection.config;
     }
+    if (data && data.tenant && data.tenant.main && data.tenant.main.id) {
+        condition["config.allowedTenants.tenant.id"] = data.tenant.id;
+    } else if (data && data.scope) {
+        let tId = data.tenant.id;
+        if (data.scope === "myTenancy") {
+            condition["tenant.id"] = tId;
+        } else if (data.scope === "otherTenancy") {
+            condition["tenant.id"] = {"$ne": tId};
+        }
+    }
     __self.mongoCore.find(colName, condition, options, (err, records) => {
         return cb(err, records);
     });
@@ -464,6 +484,16 @@ User.prototype.countUsers = function (data, cb) {
             {"firstName": {"$regex": rePattern}},
             {"lastName": {"$regex": rePattern}}
         ];
+    }
+    if (data && data.tenant && data.tenant.main && data.tenant.main.id) {
+        condition["config.allowedTenants.tenant.id"] = data.tenant.id;
+    } else if (data && data.scope) {
+        let tId = data.tenant.id;
+        if (data.scope === "myTenancy") {
+            condition["tenant.id"] = tId;
+        } else if (data.scope === "otherTenancy") {
+            condition["tenant.id"] = {"$ne": tId};
+        }
     }
     __self.mongoCore.count(colName, condition, (err, count) => {
         return cb(err, count);
@@ -638,10 +668,10 @@ User.prototype.uninvite = function (data, cb) {
         return cb(error, null);
     }
 
-    if (data.tenant.type !== "client" && !data.tenant.main) {
-        let error = new Error("User: un-invite only works for sub tenant.");
-        return cb(error, null);
-    }
+    //if (data.tenant.type !== "client" && !data.tenant.main) {
+    //    let error = new Error("User: un-invite only works for sub tenant.");
+    //    return cb(error, null);
+    //}
 
     let doUninvite = (condition) => {
         let s = {

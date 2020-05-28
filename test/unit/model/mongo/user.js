@@ -603,7 +603,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it('Success - uninvite user - user4 no client', (done) => {
+    it.skip('Success - uninvite user - user4 no client', (done) => {
         let data = {
             "username": user4.username
         };
