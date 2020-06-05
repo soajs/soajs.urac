@@ -10,6 +10,8 @@
 
 module.exports = {
     "type": 'service',
+    'subType': 'soajs',
+    "description": "User Registration and Access Control ( URAC ), is a SOAJS multi-tenant service to manage users accounts, groups and access levels for all tenants.",
     "prerequisites": {
         "cpu": '',
         "memory": ''
