@@ -10,13 +10,15 @@
 
 module.exports = {
     "type": 'service',
+    'subType': 'soajs',
+    "description": "User Registration and Access Control ( URAC ), is a SOAJS multi-tenant service to manage users accounts, groups and access levels for all tenants.",
     "prerequisites": {
         "cpu": '',
         "memory": ''
     },
     "serviceVersion": 3,
     "serviceName": "urac",
-    "serviceGroup": "SOAJS Core Services",
+    "serviceGroup": "Gateway",
     "servicePort": 4001,
     "requestTimeout": 30,
     "requestTimeoutRenewal": 5,
@@ -212,6 +214,11 @@ module.exports = {
                     "source": ['query.config'],
                     "required": false,
                     "validation": {"type": "boolean"}
+                },
+                "scope": {
+                    "source": ['query.scope'],
+                    "required": false,
+                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy"]}
                 }
             },
             '/admin/users/count': {
@@ -219,7 +226,12 @@ module.exports = {
                     "l": "Get users count matching certain keywords",
                     "group": "User administration"
                 },
-                "commonFields": ["keywords"]
+                "commonFields": ["keywords"],
+                "scope": {
+                    "source": ['query.scope'],
+                    "required": false,
+                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy"]}
+                }
             },
 
             '/admin/groups': {
@@ -249,6 +261,11 @@ module.exports = {
                 "_apiInfo": {
                     "l": "Get all users and groups of a main tenant",
                     "group": "Administration"
+                },
+                "scope": {
+                    "source": ['query.scope'],
+                    "required": false,
+                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy"]}
                 }
             }
         },

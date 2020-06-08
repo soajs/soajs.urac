@@ -20,9 +20,9 @@ let local = (soajs, inputmaskData, options, cb) => {
     if (!inputmaskData.users) {
         return cb(bl.user.handleError(soajs, 530, null));
     }
-    if (soajs.tenant.type === "product" || !soajs.tenant.main) {
-        return cb(bl.user.handleError(soajs, 534, null));
-    }
+    //if (soajs.tenant.type === "product" || !soajs.tenant.main) {
+    //    return cb(bl.user.handleError(soajs, 534, null));
+    //}
     let modelObj = bl.user.mt.getModel(soajs);
     options = {};
     options.mongoCore = modelObj.mongoCore;
@@ -36,6 +36,11 @@ let local = (soajs, inputmaskData, options, cb) => {
 
         let goInvite = (error, userRecord, responseObj) => {
             if (error) {
+                records.failed.push(responseObj);
+                return callback();
+            }
+            if (userRecord.tenant.id === soajs.tenant.id) {
+                responseObj.reason = "User is already in the tenant tenancy.";
                 records.failed.push(responseObj);
                 return callback();
             }
