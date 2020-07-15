@@ -198,6 +198,9 @@ let bl = {
         data._id = inputmaskData._id || null;
         data.what = inputmaskData.what;
         data[inputmaskData.what] = inputmaskData[inputmaskData.what];
+        if (inputmaskData.status && inputmaskData.what !== "status") {
+            data.status = inputmaskData.status;
+        }
         modelObj.updateOneField(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
