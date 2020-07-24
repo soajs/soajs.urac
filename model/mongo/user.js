@@ -361,6 +361,9 @@ User.prototype.getUsers = function (data, cb) {
             condition["tenant.id"] = tId;
         } else if (data.scope === "otherTenancy") {
             condition["tenant.id"] = {"$ne": tId};
+        } else if (data.scope === "otherTenancyInvited") {
+            condition["tenant.id"] = {"$ne": tId};
+            condition["config.allowedTenants.tenant.id"] = tId;
         }
     }
     __self.mongoCore.find(colName, condition, options, (err, records) => {
@@ -491,6 +494,9 @@ User.prototype.countUsers = function (data, cb) {
             condition["tenant.id"] = tId;
         } else if (data.scope === "otherTenancy") {
             condition["tenant.id"] = {"$ne": tId};
+        } else if (data.scope === "otherTenancyInvited") {
+            condition["tenant.id"] = {"$ne": tId};
+            condition["config.allowedTenants.tenant.id"] = tId;
         }
     }
     __self.mongoCore.count(colName, condition, (err, count) => {

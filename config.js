@@ -218,7 +218,7 @@ module.exports = {
                 "scope": {
                     "source": ['query.scope'],
                     "required": false,
-                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy"]}
+                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
                 }
             },
             '/admin/users/count': {
@@ -230,7 +230,7 @@ module.exports = {
                 "scope": {
                     "source": ['query.scope'],
                     "required": false,
-                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy"]}
+                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
                 }
             },
 
@@ -265,7 +265,7 @@ module.exports = {
                 "scope": {
                     "source": ['query.scope'],
                     "required": false,
-                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy"]}
+                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
                 }
             }
         },
