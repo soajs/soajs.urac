@@ -232,7 +232,7 @@ Group.prototype.delete = function (data, cb) {
                 let error = new Error("Group: cannot delete a locked record.");
                 return cb(error, null);
             }
-            __self.mongoCore.remove(colName, condition, (err) => {
+            __self.mongoCore.deleteOne(colName, condition, null, (err) => {
                 return cb(err, record);
             });
         });

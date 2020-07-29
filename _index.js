@@ -97,6 +97,11 @@ function run(serviceStartCb) {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });
+            service.delete("/admin/user", function (req, res) {
+                bl.user.delete(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
 
             //PUT methods
             service.put("/password/reset", function (req, res) {

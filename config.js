@@ -530,6 +530,17 @@ module.exports = {
                     "required": true,
                     "validation": {"type": "string"}
                 }
+            },
+            '/admin/user': {
+                "_apiInfo": {
+                    "l": "Delete user",
+                    "group": "User administration"
+                },
+                "id": {
+                    "source": ['query.id'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
             }
         },
 

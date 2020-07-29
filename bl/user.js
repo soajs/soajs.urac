@@ -378,7 +378,23 @@ let bl = {
             }
             return cb(null, bl.handleUpdateResponse(record));
         });
-    }
+    },
+
+    "delete": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs, options);
+        let data = {};
+        data.id = inputmaskData.id;
+        modelObj.delete(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
 };
 
 module.exports = bl;
