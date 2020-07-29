@@ -51,13 +51,13 @@ let local = (soajs, inputmaskData, options, cb) => {
                 let doMail = (error, userRecord) => {
                     bl.user.mt.closeModel(modelObj);
                     if (error) {
-                        soajs.log.info('resetPin: No Mail was sent: ' + error);
+                        soajs.log.info('resetPin: No Mail was sent: ' + error.message);
                     }
                     else {
                         userRecord.pin = generatedPin;
                         lib.mail.send(soajs, 'resetPin', userRecord, null, function (error) {
                             if (error) {
-                                soajs.log.info('resetPin: No Mail was sent: ' + error);
+                                soajs.log.info('resetPin: No Mail was sent: ' + error.message);
                             }
                         });
                     }

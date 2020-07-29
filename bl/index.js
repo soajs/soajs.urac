@@ -38,7 +38,7 @@ let bl = {
         let what = inputmaskData.what;
         lib.mail.send(soajs, what, data, null, function (error, mailRecord) {
             if (error) {
-                soajs.log.info(what + ': No Mail was sent: ' + error);
+                soajs.log.info(what + ': No Mail was sent: ' + error.message);
             }
             return cb(null, mailRecord);
         });
@@ -246,7 +246,7 @@ let bl = {
                     userRecord.email = inputmaskData.email;
                     lib.mail.send(soajs, "changeEmail", userRecord, tokenRecord, function (error, mailRecord) {
                         if (error) {
-                            soajs.log.info('changeEmail: No Mail was sent: ' + error);
+                            soajs.log.info('changeEmail: No Mail was sent: ' + error.message);
                         }
                         return cb(null, {
                             token: tokenRecord.token,
@@ -337,7 +337,7 @@ let bl = {
                 }
                 lib.mail.send(soajs, "forgotPassword", userRecord, tokenRecord, function (error, mailRecord) {
                     if (error) {
-                        soajs.log.info('forgotPassword: No Mail was sent: ' + error);
+                        soajs.log.info('forgotPassword: No Mail was sent: ' + error.message);
                     }
                     return cb(null, {
                         token: tokenRecord.token,

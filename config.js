@@ -339,6 +339,11 @@ module.exports = {
                     "source": ['body.membership'],
                     "required": false,
                     "validation": {"type": "string"}
+                },
+                "ln": {
+                    "source": ['body.ln'],
+                    "required": false,
+                    "validation": {"type": "string"}
                 }
             },
 
@@ -418,6 +423,11 @@ module.exports = {
                         },
                         "additionalProperties": false
                     }
+                },
+                "ln": {
+                    "source": ['body.ln'],
+                    "required": false,
+                    "validation": {"type": "string"}
                 }
             },
 
@@ -622,6 +632,11 @@ module.exports = {
                     "source": ['body.profile'],
                     "required": false,
                     "validation": {"type": "object"}
+                },
+                "ln": {
+                    "source": ['body.ln'],
+                    "required": false,
+                    "validation": {"type": "string"}
                 }
             },
 
@@ -680,6 +695,11 @@ module.exports = {
                     "source": ['body.profile'],
                     "required": false,
                     "validation": {"type": "object"}
+                },
+                "ln": {
+                    "source": ['body.ln'],
+                    "required": false,
+                    "validation": {"type": "string"}
                 }
             },
             '/admin/user/groups': {

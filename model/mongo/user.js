@@ -532,6 +532,9 @@ User.prototype.add = function (data, cb) {
 
         "tenant": data.tenant
     };
+    if (data.ln) {
+        record.ln = data.ln;
+    }
 
     record.ts = new Date().getTime();
 
@@ -594,6 +597,9 @@ User.prototype.edit = function (data, cb) {
             }
             if (data.status) {
                 s.$set.status = data.status;
+            }
+            if (data.ln) {
+                s.$set.ln = data.ln;
             }
             __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
                 let nModified = 0;

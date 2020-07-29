@@ -46,7 +46,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                     userRecord.pin = pinCode;
                     lib.mail.send(soajs, 'invitePin', userRecord, null, function (error) {
                         if (error) {
-                            soajs.log.info('invitePin: No Mail was sent: ' + error);
+                            soajs.log.info('invitePin: No Mail was sent: ' + error.message);
                         }
                     });
                 }
@@ -56,7 +56,7 @@ let local = (soajs, inputmaskData, options, cb) => {
 
                     lib.mail.send(soajs, "addUser", userRecord, null, function (error) {
                         if (error) {
-                            soajs.log.info('addUserNotPending: No Mail was sent: ' + error);
+                            soajs.log.info('addUserNotPending: No Mail was sent: ' + error.message);
                         }
                         return cb(null, {
                             id: userRecord._id.toString()
@@ -74,7 +74,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                         }
                         lib.mail.send(soajs, "addUser", userRecord, tokenRecord, function (error, mailRecord) {
                             if (error) {
-                                soajs.log.info('addUser: No Mail was sent: ' + error);
+                                soajs.log.info('addUser: No Mail was sent: ' + error.message);
                             }
                             return cb(null, {
                                 id: userRecord._id.toString(),

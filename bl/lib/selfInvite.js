@@ -85,7 +85,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                 userRecord.pin = generatedPin;
                 lib.mail.send(soajs, 'invitePin', userRecord, null, function (error) {
                     if (error) {
-                        soajs.log.info('invitePin: No Mail was sent: ' + error);
+                        soajs.log.info('invitePin: No Mail was sent: ' + error.message);
                     }
                 });
             }

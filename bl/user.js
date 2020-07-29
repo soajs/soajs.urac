@@ -256,6 +256,7 @@ let bl = {
             data.config = inputmaskData.config;
 
             data.tenant = inputmaskData.tenant;
+            data.ln = inputmaskData.ln || null;
 
             modelObj.add(data, (err, record) => {
                 bl.mt.closeModel(modelObj);
@@ -287,6 +288,7 @@ let bl = {
         data.profile = inputmaskData.profile;
         data.groups = inputmaskData.groups;
         data.status = inputmaskData.status;
+        data.ln = inputmaskData.ln || null;
 
         modelObj.edit(data, (err, record) => {
             bl.mt.closeModel(modelObj);

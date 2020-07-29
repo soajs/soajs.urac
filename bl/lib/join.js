@@ -92,7 +92,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                 }
                 lib.mail.send(soajs, "join", userRecord, tokenRecord, function (error, mailRecord) {
                     if (error) {
-                        soajs.log.info('join: No Mail was sent: ' + error);
+                        soajs.log.info('join: No Mail was sent: ' + error.message);
                     }
                     return cb(null, {
                         id: userRecord._id.toString(),
