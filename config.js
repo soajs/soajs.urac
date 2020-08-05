@@ -33,7 +33,16 @@ module.exports = {
             {"label": "Resource Info", "path": "/resourceInfo", "icon": "fas fa-info"}
         ]
     },
-
+    "tags": ["users", "registration", "groups", "membership", "join"],
+    "attributes": {
+        "authentication": ["multitenant", "roaming", "invitation"],
+        "role": ["management", "acl"]
+    },
+    "program": ["soajs"],
+    "documentation": {
+        "readme": "/README.md",
+        "release": "/RELEASE.md"
+    },
     //-------------------------------------
     "hashIterations": 12,
 

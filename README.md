@@ -15,16 +15,8 @@ The service is Multitenant and provides the:
 * ability to update profile and preferences for logged in members.
 * ability to register and login for anonymous users.
 
-
-### Environment variables
-
-ENV Variable | Description | Default | Example
---- | ----- | :---: | ---
-SOAJS_SERVICE_MODEL | The model | mongo | other models can be implemented aka oracle, postgresql
-
-
 ### Complete Documentation
-More information is available on SOAJS website under the section for [URAC](https://soajsorg.atlassian.net/wiki/spaces/MIC/overview).
+More information is available on SOAJS website under the section for [URAC](https://soajsorg.atlassian.net/wiki/x/AQArVQ).
 
 
 ### License
