@@ -28,11 +28,7 @@ let bl = {
         });
     },
     "handleUpdateResponse": (response) => {
-        if (response) {
-            return true;
-        } else {
-            return false;
-        }
+        return !!response;
     },
     "mt": {
         "getModel": (soajs, options) => {
@@ -80,6 +76,36 @@ let bl = {
             return cb(null, count);
         });
     },
+
+    "getUserTenants": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let data = {};
+        if (soajs && soajs.urac && soajs.urac._id) {
+            data.id = soajs.urac._id;
+        } else {
+            return cb(bl.handleError(soajs, 520, null));
+        }
+        data.keep = {"allowedTenants": true};
+
+        let modelObj = bl.mt.getModel(soajs, options);
+        modelObj.getUser(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            if (!record) {
+                return cb(bl.handleError(soajs, 520, err));
+            }
+            return cb(null, {
+                "tenant": record.tenant || null,
+                "groups": record.groups || null,
+                "allowedTenants": (record.config ? record.config.allowedTenants || null : null)
+            });
+        });
+    },
+
     "getUser": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));

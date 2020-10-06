@@ -200,7 +200,12 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
-
+            '/user/tenants': {
+                "_apiInfo": {
+                    "l": "Get logged in user tenants",
+                    "group": "User administration"
+                }
+            },
             '/admin/user': {
                 "_apiInfo": {
                     "l": "Get user by id",

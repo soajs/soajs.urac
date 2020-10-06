@@ -60,6 +60,11 @@ function run(serviceStartCb) {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });
+            service.get("/user/tenants", function (req, res) {
+                bl.user.getUserTenants(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
             service.post("/admin/users/ids", function (req, res) {
                 bl.user.getUsersByIds(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));

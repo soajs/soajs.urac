@@ -254,6 +254,11 @@ User.prototype.getUser = function (data, cb) {
             delete options.projection["tenant.pin.code"];
             delete options.projection["config.allowedTenants.tenant.pin.code"];
         }
+        if (data.keep && data.keep.allowedTenants) {
+            delete options.projection.config;
+            delete options.projection["config.allowedTenants.tenant.pin.code"];
+            options.projection["config.allowedTenants.tenant.pin"] = 0;
+        }
         if (data.keep && data.keep.pwd) {
             delete options.projection.password;
         }
