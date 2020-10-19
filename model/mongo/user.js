@@ -198,13 +198,13 @@ User.prototype.getUserByUsername = function (data, cb) {
             "config": 0,
             "socialId": 0,
             "tenant.pin.code": 0,
-            "config.allowedTenants.tenant.pin.code": 0
+            //"config.allowedTenants.tenant.pin.code": 0
         }
     };
     if (data.keep && data.keep.pin) {
         delete options.projection.config;
         delete options.projection["tenant.pin.code"];
-        delete options.projection["config.allowedTenants.tenant.pin.code"];
+        //delete options.projection["config.allowedTenants.tenant.pin.code"];
     }
     __self.mongoCore.findOne(colName, condition, options, (err, record) => {
         return cb(err, record);
@@ -246,13 +246,13 @@ User.prototype.getUser = function (data, cb) {
                 "config": 0,
                 "socialId": 0,
                 "tenant.pin.code": 0,
-                "config.allowedTenants.tenant.pin.code": 0
+                //"config.allowedTenants.tenant.pin.code": 0
             }
         };
         if (data.keep && data.keep.pin) {
             delete options.projection.config;
             delete options.projection["tenant.pin.code"];
-            delete options.projection["config.allowedTenants.tenant.pin.code"];
+            //delete options.projection["config.allowedTenants.tenant.pin.code"];
         }
         if (data.keep && data.keep.allowedTenants) {
             delete options.projection.config;
@@ -353,10 +353,11 @@ User.prototype.getUsers = function (data, cb) {
         'config': 0,
         'socialId': 0,
         'tenant.pin.code': 0,
-        'config.allowedTenants.tenant.pin.code': 0
+        //'config.allowedTenants.tenant.pin.code': 0
     };
     if (data && data.config) {
         delete options.projection.config;
+        options.projection['config.allowedTenants.tenant.pin.code'] = 0;
     }
     if (data && data.tenant && data.tenant.main && data.tenant.main.id) {
         condition["config.allowedTenants.tenant.id"] = data.tenant.id;
@@ -421,10 +422,11 @@ User.prototype.getUsersByIds = function (data, cb) {
             'config': 0,
             'socialId': 0,
             'tenant.pin.code': 0,
-            'config.allowedTenants.tenant.pin.code': 0
+            //'config.allowedTenants.tenant.pin.code': 0
         };
         if (data && data.config) {
             delete options.projection.config;
+            options.projection['config.allowedTenants.tenant.pin.code'] = 0;
         }
         __self.mongoCore.find(colName, condition, options, (err, records) => {
             return cb(err, records);
