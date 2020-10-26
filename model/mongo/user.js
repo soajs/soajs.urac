@@ -467,7 +467,7 @@ User.prototype.checkUsername = function (data, cb) {
     if (data.exclude_id) {
         condition._id = {"$ne": data.exclude_id};
     }
-    __self.mongoCore.count(colName, condition, (err, count) => {
+    __self.mongoCore.countDocuments(colName, condition, {}, (err, count) => {
         return cb(err, count);
     });
 };
@@ -506,7 +506,7 @@ User.prototype.countUsers = function (data, cb) {
             condition["config.allowedTenants.tenant.id"] = tId;
         }
     }
-    __self.mongoCore.count(colName, condition, (err, count) => {
+    __self.mongoCore.countDocuments(colName, condition, {}, (err, count) => {
         return cb(err, count);
     });
 };
@@ -767,7 +767,28 @@ User.prototype.editGroups = function (data, cb) {
             } else {
                 nModified = record.nModified || 0;
             }
-            return cb(err, nModified);
+            if (!nModified && data.tenant.type === "product") {
+                //try to update the groups in case of roaming
+                s = {
+                    "$set": {
+                        "config.allowedTenants.$.groups": data.groups
+                    }
+                };
+                condition["config.allowedTenants.tenant.id"] = data.tenant.id;
+                condition["tenant.id"] = {"$ne": data.tenant.id};
+                condition.status = data.status;
+                __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
+                    let nModified = 0;
+                    if (!record) {
+                        nModified = 0;
+                    } else {
+                        nModified = record.nModified || 0;
+                    }
+                    return cb(err, nModified);
+                });
+            } else {
+                return cb(err, nModified);
+            }
         });
     };
 
