@@ -853,7 +853,27 @@ User.prototype.deleteUpdatePin = function (data, cb) {
             } else {
                 nModified = record.nModified || 0;
             }
-            return cb(err, nModified);
+            if (!nModified && data.tenant.type === "product") {
+                //try to delete the pin in case of roaming
+                s = {
+                    "$unset": {
+                        "config.allowedTenants.$.tenant.pin": 1
+                    }
+                };
+                condition["config.allowedTenants.tenant.id"] = data.tenant.id;
+                condition["tenant.id"] = {"$ne": data.tenant.id};
+                __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
+                    let nModified = 0;
+                    if (!record) {
+                        nModified = 0;
+                    } else {
+                        nModified = record.nModified || 0;
+                    }
+                    return cb(err, nModified);
+                });
+            } else {
+                return cb(err, nModified);
+            }
         });
     };
 
@@ -885,7 +905,29 @@ User.prototype.deleteUpdatePin = function (data, cb) {
             } else {
                 nModified = record.nModified || 0;
             }
-            return cb(err, nModified);
+            if (!nModified && data.tenant.type === "product") {
+                //try to update the pin in case of roaming
+                let s = {"$set": {}};
+                if (data.pin.code) {
+                    s.$set["config.allowedTenants.$.tenant.pin.code"] = data.pin.code;
+                }
+                if (data.pin.hasOwnProperty("allowed")) {
+                    s.$set["config.allowedTenants.$.tenant.pin.allowed"] = data.pin.allowed;
+                }
+                condition["config.allowedTenants.tenant.id"] = data.tenant.id;
+                condition["tenant.id"] = {"$ne": data.tenant.id};
+                __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
+                    let nModified = 0;
+                    if (!record) {
+                        nModified = 0;
+                    } else {
+                        nModified = record.nModified || 0;
+                    }
+                    return cb(err, nModified);
+                });
+            } else {
+                return cb(err, nModified);
+            }
         });
     };
 
