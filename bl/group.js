@@ -21,13 +21,13 @@ let bl = {
             "msg": bl.localConfig.errors[errCode] + ((err && errCode === 602) ? err.message : "")
         });
     },
-	"handleUpdateResponse": (response) => {
-		if (response) {
-			return true;
-		} else {
-			return false;
-		}
-	},
+    "handleUpdateResponse": (response) => {
+        if (response) {
+            return true;
+        } else {
+            return false;
+        }
+    },
     "mt": {
         "getModel": (soajs, options) => {
             let mongoCore = null;
@@ -86,6 +86,52 @@ let bl = {
         data.tId = soajs.tenant.id;
         data.tCode = soajs.tenant.code;
         modelObj.add(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
+
+    "add_multiple": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let data = [];
+        for (let i = 0; i < inputmaskData.groups.length; i++) {
+            let record = {
+                "code": inputmaskData.groups[i].code,
+                "name": inputmaskData.groups[i].name,
+                "description": inputmaskData.groups[i].description
+            };
+            if (inputmaskData.tenant) {
+                record.tenant = {
+                    "id": inputmaskData.tenant.id,
+                    "code": inputmaskData.tenant.code
+                };
+            } else if (soajs.tenant) {
+                record.tenant = {
+                    "id": soajs.tenant.id,
+                    "code": soajs.tenant.code
+                };
+            }
+            record.config = {
+                "allowedPackages": {}
+            };
+            if (inputmaskData.groups[i].packages) {
+                for (let j = 0; j < inputmaskData.groups[i].packages.length; j++) {
+                    let prodPack = inputmaskData.groups[i].packages[j];
+                    record.config.allowedPackages[prodPack.product] = prodPack.packages;
+                }
+            }
+            data.push(record);
+        }
+        if (inputmaskData.tenant) {
+            soajs.tenant = inputmaskData.tenant;
+        }
+        let modelObj = bl.mt.getModel(soajs, options);
+        modelObj.add_multiple(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 return cb(bl.handleError(soajs, 602, err));

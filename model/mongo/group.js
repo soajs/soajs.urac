@@ -139,10 +139,22 @@ Group.prototype.add = function (data, cb) {
             record.config.allowedPackages[prodPack.product] = prodPack.packages;
         }
     }
-    __self.mongoCore.insert(colName, record, (err, record) => {
+    __self.mongoCore.insertOne(colName, record, {}, (err, record) => {
         if (record && Array.isArray(record)) {
             record = record [0];
         }
+        return cb(err, record);
+    });
+};
+
+Group.prototype.add_multiple = function (data, cb) {
+    let __self = this;
+    if (!data || !Array.isArray(data) || data.length === 0) {
+        let error = new Error("Group: Array of groups is required.");
+        return cb(error, null);
+    }
+
+    __self.mongoCore.insertMany(colName, data, {}, (err, record) => {
         return cb(err, record);
     });
 };

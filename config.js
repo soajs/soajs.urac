@@ -425,17 +425,16 @@ module.exports = {
                     "required": false,
                     "validation": {
                         "type": "object",
+                        "additionalProperties": false,
                         "properties": {
                             "code": {
-                                "required": true,
                                 "type": 'boolean'
                             },
                             "allowed": {
-                                "required": true,
                                 "type": 'boolean'
                             }
                         },
-                        "additionalProperties": false
+                        "required": ["code", "allowed"]
                     }
                 },
                 "ln": {
@@ -502,7 +501,8 @@ module.exports = {
                         "items": {
                             "type": "object",
                             "minItems": 1,
-                            "patternProperties": {
+                            "additionalProperties": false,
+                            "properties": {
                                 "product": {
                                     "type": "string"
                                 },
@@ -514,7 +514,7 @@ module.exports = {
                                     }
                                 }
                             },
-                            "additionalProperties": false
+                            "required": ["product", "packages"]
                         }
                     }
                 },
@@ -527,6 +527,73 @@ module.exports = {
                             "type": "string",
                             "minItems": 1,
                             "pattern": "^([A-Za-z]+)$"
+                        }
+                    }
+                }
+            },
+            '/admin/groups': {
+                "_apiInfo": {
+                    "l": "Add groups",
+                    "group": "Group administration"
+                },
+                "tenant": {
+                    "source": ['body.tenant'],
+                    "required": false,
+                    "validation": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "id": {
+                                "type": 'string'
+                            },
+                            "code": {
+                                "type": 'string'
+                            }
+                        },
+                        "required": ["id", "code"]
+                    }
+                },
+                "groups": {
+                    "source": ['body.groups'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "minItems": 1,
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "format": "alphanumeric",
+                                    "maxLength": 20
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "description"
+                                },
+                                "packages": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "minItems": 1,
+                                        "properties": {
+                                            "product": {
+                                                "type": "string"
+                                            },
+                                            "packages": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "minItems": 1,
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "requires": ["code", "name", "description", "packages"]
                         }
                     }
                 }
@@ -825,7 +892,7 @@ module.exports = {
                         "items": {
                             "type": "object",
                             "minItems": 1,
-                            "patternProperties": {
+                            "properties": {
                                 "product": {
                                     "type": "string"
                                 },
@@ -908,7 +975,7 @@ module.exports = {
                         "items": {
                             "type": "object",
                             "minItems": 1,
-                            "patternProperties": {
+                            "properties": {
                                 "product": {
                                     "type": "string"
                                 },
@@ -1000,27 +1067,6 @@ module.exports = {
                     }
                 }
             },
-            /*
-            *
-            * since we have invite and un-invite users, no need for these 2
-            *
-            "/admin/user/uninvite": {
-                "_apiInfo": {
-                    "l": "un-Invite user by id or username as username or email",
-                    "group": "User administration"
-                },
-                "id": {
-                    "source": ['body.id'],
-                    "required": false,
-                    "validation": {"type": "string"}
-                },
-                "username": {
-                    "source": ['body.username'],
-                    "required": false,
-                    "validation": {"type": "string"}
-                }
-            },
-            */
 
             '/admin/users/invite': {
                 "_apiInfo": {
