@@ -25,11 +25,9 @@ describe("Unit test for: model - token", function () {
                         }
                     ],
                     "credentials": null,
-                    "streaming": {
-                        "batchSize": 1000
-                    },
+                    "streaming": {},
                     "URLParam": {
-                        "bufferMaxEntries": 0
+                        "useUnifiedTopology": true
                     },
                     "timeConnected": 1552747598093
                 }
@@ -136,9 +134,9 @@ describe("Unit test for: model - token", function () {
 
     it('Fails - updateStatus - Null Data', (done) => {
         modelObj.updateStatus(null, (err) => {
-           assert.ok(err);
-           assert.deepEqual(err, new Error("Token: status and token are required."));
-           done();
+            assert.ok(err);
+            assert.deepEqual(err, new Error("Token: status and token are required."));
+            done();
         });
     });
 
@@ -246,7 +244,7 @@ describe("Unit test for: model - token", function () {
         };
         modelObj.add(data, (err, record) => {
             assert.ok(record);
-            assert.deepEqual(record.ttl, '12' );
+            assert.deepEqual(record.ttl, '12');
             done();
         });
     });

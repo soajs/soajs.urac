@@ -25,11 +25,9 @@ describe("Unit test for: model - group", function () {
                         }
                     ],
                     "credentials": null,
-                    "streaming": {
-                        "batchSize": 1000
-                    },
+                    "streaming": {},
                     "URLParam": {
-                        "bufferMaxEntries": 0
+                        "useUnifiedTopology": true
                     },
                     "timeConnected": 1552747598093
                 }
@@ -69,9 +67,9 @@ describe("Unit test for: model - group", function () {
             "description": "Added by unit test.",
             "environments": ["dev", "prod"],
             "packages": [
-            	{product: "DSBRD", packages: ["DSBRD_DEVOP", "DSBRD_CATAL"]},
-	            {product: "RERES", packages: ["WAITER"]}
-                ],
+                {product: "DSBRD", packages: ["DSBRD_DEVOP", "DSBRD_CATAL"]},
+                {product: "RERES", packages: ["WAITER"]}
+            ],
             "tId": "5c0e74ba9acc3c5a84a51259",
             "tCode": "TES0"
         };
@@ -408,23 +406,23 @@ describe("Unit test for: model - group", function () {
             done();
         });
     });
-	
-	let groupC, groupA;
-	
-	it("Get groups", function (done) {
-		modelObj.getGroups(null, (error, records) => {
-			assert.ok(records);
-			assert.ok(Array.isArray(records));
-			records.forEach(record => {
-				if (record.code === 'CCCC') {
-					groupC = record;
-				} else if (record.code === 'AAAA') {
-					groupA = record;
-				}
-			});
-			done();
-		});
-	});
+
+    let groupC, groupA;
+
+    it("Get groups", function (done) {
+        modelObj.getGroups(null, (error, records) => {
+            assert.ok(records);
+            assert.ok(Array.isArray(records));
+            records.forEach(record => {
+                if (record.code === 'CCCC') {
+                    groupC = record;
+                } else if (record.code === 'AAAA') {
+                    groupA = record;
+                }
+            });
+            done();
+        });
+    });
 
     it("updateEnvironments - error", function (done) {
         modelObj.updateEnvironments(null, (error) => {
@@ -438,7 +436,7 @@ describe("Unit test for: model - group", function () {
         let data = {
             "environments": ["test", "stg"],
             "groups": {
-            	"codes": ["CCCC", "AAAA"]
+                "codes": ["CCCC", "AAAA"]
             }
         };
         modelObj.updateEnvironments(data, (error, record) => {
@@ -447,20 +445,20 @@ describe("Unit test for: model - group", function () {
             done();
         });
     });
-	
-	it("updateEnvironments - with data - CODES", function (done) {
-		let data = {
-			"environments": ["testid", "devoping"],
-			"groups": {
-				"ids": [groupC._id, groupA._id]
-			}
-		};
-		modelObj.updateEnvironments(data, (error, record) => {
-			assert.ok(record);
-			assert.equal(record, 2);
-			done();
-		});
-	});
+
+    it("updateEnvironments - with data - CODES", function (done) {
+        let data = {
+            "environments": ["testid", "devoping"],
+            "groups": {
+                "ids": [groupC._id, groupA._id]
+            }
+        };
+        modelObj.updateEnvironments(data, (error, record) => {
+            assert.ok(record);
+            assert.equal(record, 2);
+            done();
+        });
+    });
 
     it("updatePackages - error", function (done) {
         modelObj.updatePackages(null, (error) => {
@@ -472,9 +470,12 @@ describe("Unit test for: model - group", function () {
 
     it("updatePackages - with data - CODES", function (done) {
         let data = {
-            "packages": [{product: "hage", packages: ["mathieu", "antoine"]}, {product: "soajs", packages: ["gateway"]}],
+            "packages": [{product: "hage", packages: ["mathieu", "antoine"]}, {
+                product: "soajs",
+                packages: ["gateway"]
+            }],
             "groups": {
-            	codes: ["CCCC", "AAAA"]
+                codes: ["CCCC", "AAAA"]
             }
         };
         modelObj.updatePackages(data, (error, record) => {
@@ -483,20 +484,20 @@ describe("Unit test for: model - group", function () {
             done();
         });
     });
-	
-	it("updatePackages - with data - IDS", function (done) {
-		let data = {
-			"packages": [{product: "hage", packages: ["something", "cal"]}, {product: "soajs", packages: ["gateway"]}],
-			"groups": {
-				ids: [groupA._id, groupC._id]
-			}
-		};
-		modelObj.updatePackages(data, (error, record) => {
-			assert.ok(record);
-			assert.equal(record, 2);
-			done();
-		});
-	});
+
+    it("updatePackages - with data - IDS", function (done) {
+        let data = {
+            "packages": [{product: "hage", packages: ["something", "cal"]}, {product: "soajs", packages: ["gateway"]}],
+            "groups": {
+                ids: [groupA._id, groupC._id]
+            }
+        };
+        modelObj.updatePackages(data, (error, record) => {
+            assert.ok(record);
+            assert.equal(record, 2);
+            done();
+        });
+    });
 
     it("validateId - error", function (done) {
         modelObj.validateId(null, (error) => {

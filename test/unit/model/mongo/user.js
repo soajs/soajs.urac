@@ -29,11 +29,9 @@ describe("Unit test for: model - user", function () {
                         }
                     ],
                     "credentials": null,
-                    "streaming": {
-                        "batchSize": 1000
-                    },
+                    "streaming": {},
                     "URLParam": {
-                        "bufferMaxEntries": 0
+                        "useUnifiedTopology": true
                     },
                     "timeConnected": 1552747598093
                 }

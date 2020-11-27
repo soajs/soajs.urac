@@ -202,11 +202,23 @@ Group.prototype.edit = function (data, cb) {
         }
         let condition = {'_id': _id};
         let extraOptions = {
-            'upsert': false,
-            'safe': true
+            'upsert': false
         };
-        __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
-            return cb(err, record);
+        __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, result) => {
+            if (err) {
+                return cb(err);
+            } else {
+                if (result && result.nModified) {
+                    result = result.nModified;
+                } else {
+                    if (result && result.ok && result.upserted && Array.isArray(result.upserted)) {
+                        result = result.upserted.length;
+                    } else {
+                        result = 0;
+                    }
+                }
+                return cb(err, result);
+            }
         });
     });
 };
@@ -281,12 +293,19 @@ Group.prototype.updateEnvironments = function (data, cb) {
     if (data.groups.codes) {
         let condition = {'code': {'$in': data.groups.codes}};
         let extraOptions = {
-            'upsert': false,
-            'safe': true,
-            'multi': true
+            'upsert': false
         };
-        __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
-            return cb(err, record);
+        __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, result) => {
+            if (err) {
+                return cb(err);
+            } else {
+                if (result && result.nModified) {
+                    result = result.nModified;
+                } else {
+                    result = 0;
+                }
+                return cb(err, result);
+            }
         });
     } else if (data.groups.ids) {
         async.each(data.groups.ids, function (id, callback) {
@@ -304,12 +323,19 @@ Group.prototype.updateEnvironments = function (data, cb) {
             }
             let condition = {'_id': {'$in': _ids}};
             let extraOptions = {
-                'upsert': false,
-                'safe': true,
-                'multi': true
+                'upsert': false
             };
-            __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
-                return cb(err, record);
+            __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, result) => {
+                if (err) {
+                    return cb(err);
+                } else {
+                    if (result && result.nModified) {
+                        result = result.nModified;
+                    } else {
+                        result = 0;
+                    }
+                    return cb(err, result);
+                }
             });
         });
     }
@@ -344,12 +370,19 @@ Group.prototype.updatePackages = function (data, cb) {
     if (data.groups.codes) {
         let condition = {'code': {'$in': data.groups.codes}};
         let extraOptions = {
-            'upsert': false,
-            'safe': true,
-            'multi': true
+            'upsert': false
         };
-        __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
-            return cb(err, record);
+        __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, result) => {
+            if (err) {
+                return cb(err);
+            } else {
+                if (result && result.nModified) {
+                    result = result.nModified;
+                } else {
+                    result = 0;
+                }
+                return cb(err, result);
+            }
         });
     } else if (data.groups.ids) {
         async.each(data.groups.ids, function (id, callback) {
@@ -367,12 +400,19 @@ Group.prototype.updatePackages = function (data, cb) {
             }
             let condition = {'_id': {'$in': _ids}};
             let extraOptions = {
-                'upsert': false,
-                'safe': true,
-                'multi': true
+                'upsert': false
             };
-            __self.mongoCore.update(colName, condition, s, extraOptions, (err, record) => {
-                return cb(err, record);
+            __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, result) => {
+                if (err) {
+                    return cb(err);
+                } else {
+                    if (result && result.nModified) {
+                        result = result.nModified;
+                    } else {
+                        result = 0;
+                    }
+                    return cb(err, result);
+                }
             });
         });
     }
@@ -403,12 +443,19 @@ Group.prototype.deleteEnvironments = function (data, cb) {
             us.$unset['config.allowedEnvironments.' + env] = 1;
         }
         let extraOptions = {
-            'upsert': false,
-            'safe': true,
-            'multi': true
+            'upsert': false
         };
-        __self.mongoCore.update(colName, condition, us, extraOptions, (err, record) => {
-            return cb(err, record);
+        __self.mongoCore.updateMany(colName, condition, us, extraOptions, (err, result) => {
+            if (err) {
+                return cb(err);
+            } else {
+                if (result && result.nModified) {
+                    result = result.nModified;
+                } else {
+                    result = 0;
+                }
+                return cb(err, result);
+            }
         });
     };
     if (data.id) {
@@ -450,12 +497,19 @@ Group.prototype.deleteProducts = function (data, cb) {
             us.$unset['config.allowedPackages.' + prod] = 1;
         }
         let extraOptions = {
-            'upsert': false,
-            'safe': true,
-            'multi': true
+            'upsert': false
         };
-        __self.mongoCore.update(colName, condition, us, extraOptions, (err, record) => {
-            return cb(err, record);
+        __self.mongoCore.updateMany(colName, condition, us, extraOptions, (err, result) => {
+            if (err) {
+                return cb(err);
+            } else {
+                if (result && result.nModified) {
+                    result = result.nModified;
+                } else {
+                    result = 0;
+                }
+                return cb(err, result);
+            }
         });
     };
     if (data.id) {

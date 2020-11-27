@@ -89,7 +89,7 @@ describe("Testing edit user pin API", () => {
 			}
 		};
 		
-		mongoConnection.update("custom_registry", condition, e, {'upsert': true}, () => {
+		mongoConnection.updateOne("custom_registry", condition, e, {'upsert': true}, () => {
 			mongoConnection.closeDb();
 			
 			let params = {
@@ -143,7 +143,7 @@ describe("Testing edit user pin API", () => {
 			}
 		};
 		
-		mongoConnection.update("tenants", condition, e, {'upsert': false}, () => {
+		mongoConnection.updateOne("tenants", condition, e, {'upsert': false}, () => {
 			mongoConnection.closeDb();
 			
 			let params = {

@@ -19,11 +19,9 @@ let res = {
             }
         ],
         credentials: null,
-        streaming: {
-            batchSize: 1000
-        },
+        streaming: {},
         URLParam: {
-            bufferMaxEntries: 0
+            "useUnifiedTopology": true
         },
         timeConnected: 1552747598093
     }

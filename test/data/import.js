@@ -22,7 +22,8 @@ let lib = {
                     (e, cb) => {
                         let condition = {[condAnchor]: e[condAnchor]};
                         e[objId] = mongoConnection.ObjectId(e[objId]);
-                        mongoConnection.update(colName, condition, e, {'upsert': true}, (error, result) => {
+                        e = {$set: e};
+                        mongoConnection.updateOne(colName, condition, e, {'upsert': true}, (error, result) => {
                             console.log(colName, error);
                             return cb();
                         });
@@ -51,7 +52,8 @@ let lib = {
                         e._id = mongoConnection.ObjectId(e._id);
                         if (e && e.user && e.user._id)
                             e.user._id = mongoConnection.ObjectId(e.user._id);
-                        mongoConnection.update("oauth_token", condition, e, {'upsert': true}, (error, result) => {
+                        e = {$set: e};
+                        mongoConnection.updateOne("oauth_token", condition, e, {'upsert': true}, (error, result) => {
                             console.log("oauth_token", error);
                             return cb();
                         });
@@ -79,7 +81,8 @@ let lib = {
                         e._id = mongoConnection.ObjectId(e._id);
                         if (e && e._id)
                             e._id = mongoConnection.ObjectId(e._id);
-                        mongoConnection.update("oauth_urac", condition, e, {'upsert': true}, (error, result) => {
+                        e = {$set: e};
+                        mongoConnection.updateOne("oauth_urac", condition, e, {'upsert': true}, (error, result) => {
                             console.log("oauth_urac", error);
                             return cb();
                         });
@@ -109,7 +112,8 @@ let lib = {
                     if (tenants.includes(profile.name)) {
                         let condition = {email: e.email};
                         e._id = mongoConnection.ObjectId(e._id);
-                        mongoConnection.update("users", condition, e, {'upsert': true}, (error, result) => {
+                        e = {$set: e};
+                        mongoConnection.updateOne("users", condition, e, {'upsert': true}, (error, result) => {
                             mongoConnection.closeDb();
                             return cb();
                         });
@@ -118,7 +122,8 @@ let lib = {
                         mongoConnection.dropCollection("users", () => {
                             let condition = {email: e.email};
                             e._id = mongoConnection.ObjectId(e._id);
-                            mongoConnection.update("users", condition, e, {'upsert': true}, (error, result) => {
+                            e = {$set: e};
+                            mongoConnection.updateOne("users", condition, e, {'upsert': true}, (error, result) => {
                                 mongoConnection.closeDb();
                                 return cb();
                             });
@@ -148,7 +153,8 @@ let lib = {
                     if (tenants.includes(profile.name)) {
                         let condition = {code: e.code};
                         e._id = mongoConnection.ObjectId(e._id);
-                        mongoConnection.update("groups", condition, e, {'upsert': true}, (error, result) => {
+                        e = {$set: e};
+                        mongoConnection.updateOne("groups", condition, e, {'upsert': true}, (error, result) => {
                             console.log("groups", error);
                             mongoConnection.closeDb();
                             return cb();
@@ -158,7 +164,8 @@ let lib = {
                         mongoConnection.dropCollection("groups", () => {
                             let condition = {code: e.code};
                             e._id = mongoConnection.ObjectId(e._id);
-                            mongoConnection.update("groups", condition, e, {'upsert': true}, (error, result) => {
+                            e = {$set: e};
+                            mongoConnection.updateOne("groups", condition, e, {'upsert': true}, (error, result) => {
                                 console.log("groups", error);
                                 mongoConnection.closeDb();
                                 return cb();
@@ -190,7 +197,8 @@ let lib = {
                         if (e.record) {
                             let condition = {token: e.record.token};
                             e.record._id = mongoConnection.ObjectId(e.record._id);
-                            mongoConnection.update("tokens", condition, e.record, {'upsert': true}, (error, result) => {
+                            e.record = {$set: e.record};
+                            mongoConnection.updateOne("tokens", condition, e.record, {'upsert': true}, (error, result) => {
                                 console.log("tokens", error);
                                 mongoConnection.closeDb();
                                 return cb();
@@ -204,7 +212,8 @@ let lib = {
                             if (e.record) {
                                 let condition = {token: e.record.token};
                                 e.record._id = mongoConnection.ObjectId(e.record._id);
-                                mongoConnection.update("tokens", condition, e.record, {'upsert': true}, (error, result) => {
+                                e.record = {$set: e.record};
+                                mongoConnection.updateOne("tokens", condition, e.record, {'upsert': true}, (error, result) => {
                                     console.log("tokens", error);
                                     mongoConnection.closeDb();
                                     return cb();
@@ -238,7 +247,8 @@ let lib = {
                         e.applications.forEach(app => {
                             app.appId = mongoConnection.ObjectId(app.appId);
                         });
-                        mongoConnection.update('tenants', condition, e, {'upsert': true}, (error, result) => {
+                        e = {$set: e};
+                        mongoConnection.updateOne('tenants', condition, e, {'upsert': true}, (error, result) => {
                             console.log('tenants', error);
                             return cb();
                         });

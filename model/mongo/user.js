@@ -145,18 +145,36 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
     if (data.tenant.type === "client" && data.tenant.main) {
         //TODO: clean up from sub tenant & index
         let condition = {"config.allowedTenants.tenant.id": data.tenant.id};
-        let extraOptions = {multi: true};
+        let extraOptions = {};
         let s = {"$pull": {"config.allowedTenants.$.groups": data.groupCode}};
-        __self.mongoCore.update(colName, condition, s, extraOptions, (err, response) => {
-            return cb(err, response);
+        __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, result) => {
+            if (err) {
+                return cb(err);
+            } else {
+                if (result && result.nModified) {
+                    result = result.nModified;
+                } else {
+                    result = 0;
+                }
+                return cb(err, result);
+            }
         });
     }
     else {
         let condition = {"tenant.id": data.tenant.id};
-        let extraOptions = {multi: true};
+        let extraOptions = {};
         let s = {"$pull": {groups: data.groupCode}};
-        __self.mongoCore.update(colName, condition, s, extraOptions, (err, response) => {
-            return cb(err, response);
+        __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, result) => {
+            if (err) {
+                return cb(err);
+            } else {
+                if (result && result.nModified) {
+                    result = result.nModified;
+                } else {
+                    result = 0;
+                }
+                return cb(err, result);
+            }
         });
     }
 };
@@ -197,14 +215,12 @@ User.prototype.getUserByUsername = function (data, cb) {
             "password": 0,
             "config": 0,
             "socialId": 0,
-            "tenant.pin.code": 0,
-            //"config.allowedTenants.tenant.pin.code": 0
+            "tenant.pin.code": 0
         }
     };
     if (data.keep && data.keep.pin) {
         delete options.projection.config;
         delete options.projection["tenant.pin.code"];
-        //delete options.projection["config.allowedTenants.tenant.pin.code"];
     }
     __self.mongoCore.findOne(colName, condition, options, (err, record) => {
         return cb(err, record);
@@ -245,14 +261,12 @@ User.prototype.getUser = function (data, cb) {
                 "password": 0,
                 "config": 0,
                 "socialId": 0,
-                "tenant.pin.code": 0,
-                //"config.allowedTenants.tenant.pin.code": 0
+                "tenant.pin.code": 0
             }
         };
         if (data.keep && data.keep.pin) {
             delete options.projection.config;
             delete options.projection["tenant.pin.code"];
-            //delete options.projection["config.allowedTenants.tenant.pin.code"];
         }
         if (data.keep && data.keep.allowedTenants) {
             delete options.projection.config;
@@ -352,8 +366,7 @@ User.prototype.getUsers = function (data, cb) {
         'password': 0,
         'config': 0,
         'socialId': 0,
-        'tenant.pin.code': 0,
-        //'config.allowedTenants.tenant.pin.code': 0
+        'tenant.pin.code': 0
     };
     if (data && data.config) {
         delete options.projection.config;
@@ -421,8 +434,7 @@ User.prototype.getUsersByIds = function (data, cb) {
             'password': 0,
             'config': 0,
             'socialId': 0,
-            'tenant.pin.code': 0,
-            //'config.allowedTenants.tenant.pin.code': 0
+            'tenant.pin.code': 0
         };
         if (data && data.config) {
             delete options.projection.config;
@@ -549,7 +561,7 @@ User.prototype.add = function (data, cb) {
     record.groups = data.groups || [];
     record.config = data.config || {};
 
-    __self.mongoCore.insert(colName, record, (err, record) => {
+    __self.mongoCore.insertOne(colName, record, {}, (err, record) => {
         if (record && Array.isArray(record)) {
             record = record [0];
         }
@@ -684,11 +696,6 @@ User.prototype.uninvite = function (data, cb) {
         let error = new Error("User: user [id | username | email], status, and tenant information are required.");
         return cb(error, null);
     }
-
-    //if (data.tenant.type !== "client" && !data.tenant.main) {
-    //    let error = new Error("User: un-invite only works for sub tenant.");
-    //    return cb(error, null);
-    //}
 
     let doUninvite = (condition) => {
         let s = {
