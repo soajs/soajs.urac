@@ -49,78 +49,71 @@ function User(soajs, localConfig, mongoCore) {
         }
         __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, localConfig.serviceName, tCode));
 
+        __self.indexCount = 0;
+        __self.counter = 0;
         if (indexing && tCode && !indexing[tCode]) {
             indexing[tCode] = true;
 
-            __self.mongoCore.createIndex(colName, {'tenant.id': 1}, {}, (err, index) => {
-                soajs.log.debug("Index: " + index + " created with error: " + err);
-            });
-            __self.mongoCore.createIndex(colName, {'username': 1, 'email': 1, 'status': 1}, {}, (err, index) => {
-                soajs.log.debug("Index: " + index + " created with error: " + err);
-            });
-            __self.mongoCore.createIndex(colName, {'_id': 1, 'status': 1}, {}, (err, index) => {
-                soajs.log.debug("Index: " + index + " created with error: " + err);
-            });
-            __self.mongoCore.createIndex(colName, {
-                'username': 1,
-                'email': 1,
-                'firstName': 1,
-                'lastName': 1,
-                'tenant.id': 1
-            }, {}, (err, index) => {
-                soajs.log.debug("Index: " + index + " created with error: " + err);
-            });
-            __self.mongoCore.createIndex(colName, {
-                'username': 1,
-                'email': 1,
-                'firstName': 1,
-                'lastName': 1,
-                'config.allowedTenants.tenant.id': 1
-            }, {}, (err, index) => {
-                soajs.log.debug("Index: " + index + " created with error: " + err);
-            });
-
-            //the following are set @ urac.driver
-            __self.mongoCore.createIndex(colName, {"username": 1}, {unique: true}, (err, index) => {
-                soajs.log.debug("Index: " + index + " created with error: " + err);
-            });
-            __self.mongoCore.createIndex(colName, {"email": 1}, {unique: true}, (err, index) => {
-                soajs.log.debug("Index: " + index + " created with error: " + err);
-            });
-
-            __self.mongoCore.createIndex(colName, {'config.allowedTenants.tenant.id': 1}, (err, index) => {
-                soajs.log.debug("Index: " + index + " created with error: " + err);
-            });
-            __self.mongoCore.createIndex(colName,
+            let indexes = [
+                {"col": colName, "i": {'tenant.id': 1}, "o": {}},
+                {"col": colName, "i": {'username': 1, 'email': 1, 'status': 1}, "o": {}},
+                {"col": colName, "i": {'_id': 1, 'status': 1}, "o": {}},
                 {
-                    "config.allowedTenants.tenant.pin.code": 1,
-                    "config.allowedTenants.tenant.id": 1
+                    "col": colName, "i": {
+                        'username': 1,
+                        'email': 1,
+                        'firstName': 1,
+                        'lastName': 1,
+                        'tenant.id': 1
+                    }, "o": {}
                 },
                 {
-                    unique: true,
-                    partialFilterExpression: {
-                        "config.allowedTenants.tenant.pin.code": {
-                            "$exists": true
+                    "col": colName, "i": {
+                        'username': 1,
+                        'email': 1,
+                        'firstName': 1,
+                        'lastName': 1,
+                        'config.allowedTenants.tenant.id': 1
+                    }, "o": {}
+                },
+                {"col": colName, "i": {"username": 1}, "o": {unique: true}},
+                {"col": colName, "i": {"email": 1}, "o": {unique: true}},
+                {"col": colName, "i": {'config.allowedTenants.tenant.id': 1}, "o": {}},
+                {
+                    "col": colName, "i": {
+                        "config.allowedTenants.tenant.pin.code": 1,
+                        "config.allowedTenants.tenant.id": 1
+                    }, "o": {
+                        unique: true,
+                        partialFilterExpression: {
+                            "config.allowedTenants.tenant.pin.code": {
+                                "$exists": true
+                            }
                         }
                     }
-                }, (err, index) => {
-                    soajs.log.debug("Index: " + index + " created with error: " + err);
-                });
-            __self.mongoCore.createIndex(colName,
-                {
-                    "tenant.pin.code": 1,
-                    "tenant.id": 1
                 },
                 {
-                    unique: true,
-                    partialFilterExpression: {
-                        "tenant.pin.code": {
-                            "$exists": true
+                    "col": colName, "i": {
+                        "tenant.pin.code": 1,
+                        "tenant.id": 1
+                    }, "o": {
+                        unique: true,
+                        partialFilterExpression: {
+                            "tenant.pin.code": {
+                                "$exists": true
+                            }
                         }
                     }
-                }, (err, index) => {
+                }
+            ];
+            __self.indexCount = indexes.length;
+
+            for (let i = 0; i < indexes.length; i++) {
+                __self.mongoCore.createIndex(indexes[i].col, indexes[i].i, indexes[i].o, (err, index) => {
                     soajs.log.debug("Index: " + index + " created with error: " + err);
+                    __self.counter++;
                 });
+            }
 
             soajs.log.debug("User: Indexes for " + tCode + " Updated!");
         }
@@ -1022,7 +1015,13 @@ User.prototype.closeConnection = function () {
     let __self = this;
 
     if (!__self.mongoCoreExternal) {
-        __self.mongoCore.closeDb();
+        if (__self.mongoCore) {
+            if (__self.counter >= __self.indexCount) {
+                __self.mongoCore.closeDb();
+            } else {
+                __self.closeConnection();
+            }
+        }
     }
 };
 

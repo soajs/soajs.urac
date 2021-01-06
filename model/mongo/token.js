@@ -42,23 +42,35 @@ function Token(soajs, localConfig, mongoCore) {
         }
         __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, localConfig.serviceName, tCode));
 
+        __self.indexCount = 0;
+        __self.counter = 0;
         if (indexing && tCode && !indexing[tCode]) {
             indexing[tCode] = true;
 
-            __self.mongoCore.createIndex(colName, {
-                'userId': 1,
-                'service': 1,
-                'status': 1
-            }, {unique: true}, (err, index) => {
-                soajs.log.debug("Index: " + index + " created with error: " + err);
-            });
-            __self.mongoCore.createIndex(colName, {
-                'token': 1,
-                'service': 1,
-                'status': 1
-            }, {unique: true}, (err, index) => {
-                soajs.log.debug("Index: " + index + " created with error: " + err);
-            });
+            let indexes = [
+                {
+                    "col": colName, "i": {
+                        'userId': 1,
+                        'service': 1,
+                        'status': 1
+                    }, "o": {unique: true}
+                },
+                {
+                    "col": colName, "i": {
+                        'token': 1,
+                        'service': 1,
+                        'status': 1
+                    }, "o": {unique: true}
+                }
+            ];
+            __self.indexCount = indexes.length;
+
+            for (let i = 0; i < indexes.length; i++) {
+                __self.mongoCore.createIndex(indexes[i].col, indexes[i].i, indexes[i].o, (err, index) => {
+                    soajs.log.debug("Index: " + index + " created with error: " + err);
+                    __self.counter++;
+                });
+            }
 
             soajs.log.debug("Token: Indexes for " + tCode + " Updated!");
         }
@@ -193,7 +205,13 @@ Token.prototype.closeConnection = function () {
     let __self = this;
 
     if (!__self.mongoCoreExternal) {
-        __self.mongoCore.closeDb();
+        if (__self.mongoCore) {
+            if (__self.counter >= __self.indexCount) {
+                __self.mongoCore.closeDb();
+            } else {
+                __self.closeConnection();
+            }
+        }
     }
 };
 

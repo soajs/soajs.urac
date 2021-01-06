@@ -78,7 +78,7 @@ module.exports = function (grunt) {
                 "varstmt": true,
 
                 //"validthis": true,
-                //"loopfunc": true,
+                "loopfunc": true,
                 //"sub": true,
                 //"supernew": true,
 

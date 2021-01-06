@@ -58,10 +58,10 @@ let local = (soajs, inputmaskData, options, cb) => {
             }
             if (membershipConfig) {
                 if (membershipConfig.groups) {
-                    if (Array.isArray(membershipConfig.groups) && membershipConfig.groups.length === 1) {
+                    if (Array.isArray(membershipConfig.groups) && membershipConfig.groups.length > 0) {
                         inputmaskData.groups = membershipConfig.groups;
                     } else {
-                        soajs.log.warn("Skipping [" + inputmaskData.membership + "] membership setting, groups must be an array of one group");
+                        soajs.log.warn("Skipping [" + inputmaskData.membership + "] membership setting, groups must be an array of at least one group");
                     }
                 }
             } else {
