@@ -41,6 +41,7 @@ function Group(soajs, localConfig, mongoCore) {
                 {"col": colName, "i": {'code': 1}, "o": {unique: true}}
             ];
             __self.indexCount = indexes.length;
+            indexing._len = indexes.length;
 
             for (let i = 0; i < indexes.length; i++) {
                 __self.mongoCore.createIndex(indexes[i].col, indexes[i].i, indexes[i].o, (err, index) => {
@@ -556,15 +557,16 @@ Group.prototype.validateId = function (id, cb) {
     }
 };
 
-Group.prototype.closeConnection = function () {
+Group.prototype.closeConnection = function (count) {
     let __self = this;
-
+    count = count || 1;
     if (!__self.mongoCoreExternal) {
         if (__self.mongoCore) {
-            if (__self.counter >= __self.indexCount) {
+            if (__self.counter >= __self.indexCount || count > indexing._len) {
                 __self.mongoCore.closeDb();
             } else {
-                __self.closeConnection();
+                count++;
+                __self.closeConnection(count);
             }
         }
     }
