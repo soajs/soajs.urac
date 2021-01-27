@@ -28,7 +28,7 @@ let local = (soajs, inputmaskData, options, cb) => {
     options.mongoCore = modelObj.mongoCore;
 
     let data = {
-        "status": "active"
+        //"status": "active"
     };
 
     let records = {"succeeded": [], "failed": []};
@@ -119,24 +119,21 @@ let local = (soajs, inputmaskData, options, cb) => {
             bl.user.getUser(soajs, data, options, (error, userRecord) => {
                 return goInvite(error, userRecord, responseObj);
             });
-        }
-        else if (oneUser.user.username) {
+        } else if (oneUser.user.username) {
             let responseObj = {"username": oneUser.user.username};
             data.username = oneUser.user.username;
             data.keep = {"pin": true};
             bl.user.getUserByUsername(soajs, data, options, (error, userRecord) => {
                 return goInvite(error, userRecord, responseObj);
             });
-        }
-        else if (oneUser.user.email) {
+        } else if (oneUser.user.email) {
             let responseObj = {"email": oneUser.user.email};
             data.username = oneUser.user.email;
             data.keep = {"pin": true};
             bl.user.getUserByUsername(soajs, data, options, (error, userRecord) => {
                 return goInvite(error, userRecord, responseObj);
             });
-        }
-        else {
+        } else {
             let responseObj = {"reason": "Cannot invite a user without providing its id or username."};
             records.failed.push(responseObj);
             return callback();

@@ -153,8 +153,7 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
                 return cb(err, result);
             }
         });
-    }
-    else {
+    } else {
         let condition = {"tenant.id": data.tenant.id};
         let extraOptions = {};
         let s = {"$pull": {groups: data.groupCode}};
@@ -199,8 +198,7 @@ User.prototype.getUserByUsername = function (data, cb) {
     if (data.status) {
         if (Array.isArray(data.status)) {
             condition.status = {"$in": data.status};
-        }
-        else {
+        } else {
             condition.status = data.status;
         }
     }
@@ -245,8 +243,7 @@ User.prototype.getUser = function (data, cb) {
         if (data.status) {
             if (Array.isArray(data.status)) {
                 condition.status = {"$in": data.status};
-            }
-            else {
+            } else {
                 condition.status = data.status;
             }
         }
@@ -323,8 +320,7 @@ User.prototype.updateOneField = function (data, cb) {
             }
             doUpdate(_id);
         });
-    }
-    else {
+    } else {
         doUpdate(data._id);
     }
 };
@@ -623,8 +619,7 @@ User.prototype.edit = function (data, cb) {
                 }
                 return cb(err, nModified);
             });
-        }
-        else {
+        } else {
             let error = new Error("User: nothing to update.");
             return cb(error);
         }
@@ -636,8 +631,7 @@ User.prototype.edit = function (data, cb) {
             }
             doUpdate(_id);
         });
-    }
-    else {
+    } else {
         doUpdate(data._id);
     }
 };
@@ -686,8 +680,8 @@ User.prototype.save = function (data, cb) {
  */
 User.prototype.uninvite = function (data, cb) {
     let __self = this;
-    if (!data || !data.user || !(data.user.id || data.user.username || data.user.email) || !data.status || !data.tenant) {
-        let error = new Error("User: user [id | username | email], status, and tenant information are required.");
+    if (!data || !data.user || !(data.user.id || data.user.username || data.user.email) || !data.tenant) {
+        let error = new Error("User: user [id | username | email], and tenant information are required.");
         return cb(error, null);
     }
 
@@ -697,7 +691,9 @@ User.prototype.uninvite = function (data, cb) {
                 "config.allowedTenants": {"tenant.id": data.tenant.id}
             }
         };
-        condition.status = data.status;
+        if (data.status) {
+            condition.status = data.status;
+        }
         __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
             if (!record || (record && !record.nModified)) {
                 let user = data.user.id || data.user.username || data.user.email;
@@ -711,8 +707,7 @@ User.prototype.uninvite = function (data, cb) {
     if (data.user.username) {
         let condition = {'username': data.user.username};
         doUninvite(condition);
-    }
-    else if (data.user.email) {
+    } else if (data.user.email) {
         let condition = {'email': data.user.email};
         doUninvite(condition);
     } else {
@@ -737,8 +732,8 @@ User.prototype.uninvite = function (data, cb) {
  */
 User.prototype.editGroups = function (data, cb) {
     let __self = this;
-    if (!data || !data.user || !(data.user.id || data.user.username || data.user.email) || !data.status || !data.tenant || !data.groups) {
-        let error = new Error("User: user [id | username | email], status, groups, and tenant information are required.");
+    if (!data || !data.user || !(data.user.id || data.user.username || data.user.email) || !data.tenant || !data.groups) {
+        let error = new Error("User: user [id | username | email], groups, and tenant information are required.");
         return cb(error, null);
     }
 
@@ -751,8 +746,7 @@ User.prototype.editGroups = function (data, cb) {
                 }
             };
             condition["config.allowedTenants.tenant.id"] = data.tenant.id;
-        }
-        else {
+        } else {
             s = {
                 "$set": {
                     "groups": data.groups
@@ -760,7 +754,9 @@ User.prototype.editGroups = function (data, cb) {
             };
             condition["tenant.id"] = data.tenant.id;
         }
-        condition.status = data.status;
+        if (data.status) {
+            condition.status = data.status;
+        }
         __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
             let nModified = 0;
             if (!record) {
@@ -796,8 +792,7 @@ User.prototype.editGroups = function (data, cb) {
     if (data.user.username) {
         let condition = {'username': data.user.username};
         doEdit(condition);
-    }
-    else if (data.user.email) {
+    } else if (data.user.email) {
         let condition = {'email': data.user.email};
         doEdit(condition);
     } else {
@@ -837,8 +832,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
                 }
             };
             condition["config.allowedTenants.tenant.id"] = data.tenant.id;
-        }
-        else {
+        } else {
             s = {
                 "$unset": {
                     "tenant.pin": 1
@@ -888,8 +882,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
                 s.$set["config.allowedTenants.$.tenant.pin.allowed"] = data.pin.allowed;
             }
             condition["config.allowedTenants.tenant.id"] = data.tenant.id;
-        }
-        else {
+        } else {
 
             if (data.pin.code) {
                 s.$set["tenant.pin.code"] = data.pin.code;
@@ -936,8 +929,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
         condition.status = data.status;
         if (data.pin.delete) {
             doDelete(condition);
-        }
-        else {
+        } else {
             if (!(data.pin.code || data.pin.hasOwnProperty("allowed"))) {
                 let error = new Error("User: pin [code or allowed] is required.");
                 return cb(error, null);
@@ -949,8 +941,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
     if (data.user.username) {
         let condition = {'username': data.user.username};
         doPin(condition);
-    }
-    else if (data.user.email) {
+    } else if (data.user.email) {
         let condition = {'email': data.user.email};
         doPin(condition);
     } else {

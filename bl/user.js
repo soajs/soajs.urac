@@ -136,7 +136,7 @@ let bl = {
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
         data.username = inputmaskData.username;
-        data.status = inputmaskData.status || "active";
+        //data.status = inputmaskData.status || "active";
 
         data.keep = inputmaskData.keep;
 
@@ -374,7 +374,7 @@ let bl = {
         let data = {};
         data.user = inputmaskData.user;
         data.tenant = soajs.tenant;
-        data.status = 'active';
+        //data.status = 'active';
         modelObj.uninvite(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
@@ -394,7 +394,7 @@ let bl = {
         let data = {};
         data.user = inputmaskData.user;
         data.tenant = soajs.tenant;
-        data.status = 'active';
+        //data.status = 'active';
         data.groups = inputmaskData.groups;
 
         modelObj.editGroups(data, (err, record) => {

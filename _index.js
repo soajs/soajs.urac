@@ -51,6 +51,7 @@ function run(serviceStartCb) {
                 });
             });
             service.get("/user", function (req, res) {
+                req.soajs.inputmaskData.status = "active";
                 bl.user.getUserByUsername(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
