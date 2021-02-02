@@ -513,7 +513,7 @@ describe("Unit test for: model - user", function () {
     it('Fails - uninvite user  - null data', (done) => {
         modelObj.uninvite(null, (err) => {
             assert.ok(err);
-            assert.deepEqual(err, new Error("User: user [id | username | email], status, and tenant information are required."));
+            assert.deepEqual(err, new Error("User: user [id | username | email], and tenant information are required."));
             done();
         });
     });
@@ -845,7 +845,7 @@ describe("Unit test for: model - user", function () {
     it('Fails - editGroups - null data', (done) => {
         modelObj.editGroups(null, (err) => {
             assert.ok(err);
-            assert.deepEqual(err, new Error("User: user [id | username | email], status, groups, and tenant information are required."));
+            assert.deepEqual(err, new Error("User: user [id | username | email], groups, and tenant information are required."));
             done();
         });
     });

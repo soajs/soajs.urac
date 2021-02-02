@@ -41,6 +41,7 @@ let local = (soajs, inputmaskData, options, cb) => {
             }
             if (userRecord.tenant.id === soajs.tenant.id) {
                 responseObj.reason = "User is already in the tenant tenancy.";
+                responseObj.id = userRecord._id;
                 records.failed.push(responseObj);
                 return callback();
             }
@@ -60,6 +61,7 @@ let local = (soajs, inputmaskData, options, cb) => {
             }
             if (found) {
                 responseObj.reason = "User has already been invited.";
+                responseObj.id = userRecord._id;
                 records.failed.push(responseObj);
                 return callback();
             }
