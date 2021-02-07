@@ -72,6 +72,7 @@ module.exports = {
         533: "No changes to update",
         534: "Main tenant cannot invite users",
         535: "Sub tenant cannot self invite a user.",
+        536: "User is already in the tenant tenancy.",
 
         599: "Token has expired.",
         600: "unable to find token.",

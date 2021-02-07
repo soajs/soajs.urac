@@ -32,6 +32,9 @@ let local = (soajs, inputmaskData, options, cb) => {
         if (error) {
             return cb(error);
         }
+        if (userRecord.tenant.id === inputmaskData.tenant.id) {
+            return cb(bl.user.handleError(soajs, 536, null));
+        }
         if (!userRecord.config) {
             userRecord.config = {};
         }
