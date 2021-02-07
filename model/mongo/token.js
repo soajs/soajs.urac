@@ -19,6 +19,7 @@ let indexing = {};
 
 function Token(soajs, localConfig, mongoCore) {
     let __self = this;
+    __self.keepConnectionAlive = false;
     if (mongoCore) {
         __self.mongoCore = mongoCore;
         __self.mongoCoreExternal = true;
@@ -29,13 +30,18 @@ function Token(soajs, localConfig, mongoCore) {
         if (soajs.tenant.main && soajs.tenant.main.code) {
             tCode = soajs.tenant.main.code;
         }
-        let dbCodes = get(["registry", "custom", "urac", "value", "dbCodes"], soajs);
-        if (dbCodes) {
-            for (let c in dbCodes) {
-                if (dbCodes.hasOwnProperty(c)) {
-                    if (dbCodes[c].includes(tCode)) {
-                        tCode = c;
-                        break;
+        let masterCode = get(["registry", "custom", "urac", "value", "masterCode"], soajs);
+        if (masterCode) {
+            tCode = masterCode;
+        } else {
+            let dbCodes = get(["registry", "custom", "urac", "value", "dbCodes"], soajs);
+            if (dbCodes) {
+                for (let c in dbCodes) {
+                    if (dbCodes.hasOwnProperty(c)) {
+                        if (dbCodes[c].includes(tCode)) {
+                            tCode = c;
+                            break;
+                        }
                     }
                 }
             }
@@ -208,7 +214,9 @@ Token.prototype.closeConnection = function (count) {
     if (!__self.mongoCoreExternal) {
         if (__self.mongoCore) {
             if (__self.counter >= __self.indexCount || count > indexing._len) {
-                __self.mongoCore.closeDb();
+                if (!__self.keepConnectionAlive) {
+                    __self.mongoCore.closeDb();
+                }
             } else {
                 count++;
                 __self.closeConnection(count);
