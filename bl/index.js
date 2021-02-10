@@ -30,26 +30,46 @@ let bl = {
     token: null,
 
     "sendCustomEmail": (soajs, inputmaskData, options, cb) => {
+
+        let sendEmail = (data, what) => {
+            lib.mail.send(soajs, what, data, null, function (error, mailRecord) {
+                if (error) {
+                    soajs.log.info(what + ': No Mail was sent: ' + error.message);
+                }
+                return cb(null, mailRecord);
+            });
+        };
+
+        let what = inputmaskData.what;
         let data = {};
         if (inputmaskData.data) {
             data = inputmaskData.data;
         }
-        data.email = inputmaskData.email;
-        let what = inputmaskData.what;
-        lib.mail.send(soajs, what, data, null, function (error, mailRecord) {
-            if (error) {
-                soajs.log.info(what + ': No Mail was sent: ' + error.message);
-            }
-            return cb(null, mailRecord);
-        });
+        if (inputmaskData.email) {
+            data.email = inputmaskData.email;
+            sendEmail(data, what);
+        } else if (inputmaskData.id) {
+            let d = {
+                "id": inputmaskData.id,
+                "ignoreStatus": true
+            };
+            bl.user.getUser(soajs, d, null, (error, data) => {
+                if (error) {
+                    soajs.log.info(what + ': No Mail was sent: ' + error.message);
+                }
+                inputmaskData.email = data.email;
+                sendEmail(data, what);
+            });
+        } else {
+            soajs.log.info(what + ': No Mail was sent, unable to find the TO email address.');
+        }
     },
 
     "deleteGroup": (soajs, inputmaskData, options, cb) => {
         bl.group.deleteGroup(soajs, inputmaskData, null, (error, record) => {
             if (error) {
                 return cb(error, null);
-            }
-            else {
+            } else {
                 //close response but continue to clean up deleted group from users
                 cb(null, true);
                 let data = {};
@@ -356,8 +376,7 @@ let bl = {
                 }
                 return cb(null, {'users': [], 'groups': groupRecords});
             });
-        }
-        else {
+        } else {
             //TODO: better to make this async
             //As main tenant both users and groups share the same DB connection
             let modelObj = bl.user.mt.getModel(soajs);
@@ -420,8 +439,7 @@ let bl = {
                     }
                     doEdit();
                 });
-            }
-            else {
+            } else {
                 doEdit();
             }
         });

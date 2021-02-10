@@ -293,8 +293,13 @@ module.exports = {
                 },
                 "email": {
                     "source": ['body.email'],
-                    "required": true,
+                    "required": false,
                     "validation": {"type": "string", "format": "email"}
+                },
+                "id": {
+                    "source": ['body.id'],
+                    "required": false,
+                    "validation": {"type": "string"}
                 },
                 "what": {
                     "source": ['body.what'],
