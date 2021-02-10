@@ -53,11 +53,11 @@ let bl = {
                 "id": inputmaskData.id,
                 "ignoreStatus": true
             };
-            bl.user.getUser(soajs, d, null, (error, data) => {
+            bl.user.getUser(soajs, d, null, (error, record) => {
                 if (error) {
                     soajs.log.info(what + ': No Mail was sent: ' + error.message);
                 }
-                inputmaskData.email = data.email;
+                data.email = record.email;
                 sendEmail(data, what);
             });
         } else {
