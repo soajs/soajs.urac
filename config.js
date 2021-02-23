@@ -786,7 +786,7 @@ module.exports = {
                     "required": false,
                     "validation": {
                         "type": "string",
-                        "enum": ['active', 'inactive', 'pendingNew']
+                        "enum": ['active', 'inactive', 'pendingNew', 'pendingJoin']
                     }
                 },
                 "profile": {
