@@ -84,11 +84,9 @@ module.exports = {
         "commonFields": {
             "keywords": {
                 "source": ['query.keywords', 'body.keywords'],
-                "required": false,
                 "validation": {"type": "string"}
             },
             "start": {
-                "required": false,
                 "source": ["query.start", "body.start"],
                 "default": 0,
                 "validation": {
@@ -97,7 +95,6 @@ module.exports = {
                 }
             },
             "limit": {
-                "required": false,
                 "source": ["query.limit", "body.limit"],
                 "default": 1000,
                 "validation": {
@@ -227,12 +224,10 @@ module.exports = {
                 "commonFields": ["start", "limit", "keywords"],
                 "config": {
                     "source": ['query.config'],
-                    "required": false,
                     "validation": {"type": "boolean"}
                 },
                 "scope": {
                     "source": ['query.scope'],
-                    "required": false,
                     "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
                 }
             },
@@ -244,7 +239,6 @@ module.exports = {
                 "commonFields": ["keywords"],
                 "scope": {
                     "source": ['query.scope'],
-                    "required": false,
                     "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
                 }
             },
@@ -262,12 +256,10 @@ module.exports = {
                 },
                 "id": {
                     "source": ['query.id'],
-                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "code": {
                     "source": ['query.code'],
-                    "required": false,
                     "validation": {"type": "string"}
                 }
             },
@@ -279,7 +271,6 @@ module.exports = {
                 },
                 "scope": {
                     "source": ['query.scope'],
-                    "required": false,
                     "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
                 }
             }
@@ -293,12 +284,10 @@ module.exports = {
                 },
                 "email": {
                     "source": ['body.email'],
-                    "required": false,
                     "validation": {"type": "string", "format": "email"}
                 },
                 "id": {
                     "source": ['body.id'],
-                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "what": {
@@ -308,7 +297,6 @@ module.exports = {
                 },
                 "data": {
                     "source": ['body.data'],
-                    "required": false,
                     "validation": {
                         "type": "object"
                     }
@@ -352,17 +340,14 @@ module.exports = {
                 },
                 "profile": {
                     "source": ['body.profile'],
-                    "required": false,
                     "validation": {"type": "object"}
                 },
                 "membership": {
                     "source": ['body.membership'],
-                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "ln": {
                     "source": ['body.ln'],
-                    "required": false,
                     "validation": {"type": "string"}
                 }
             },
@@ -399,12 +384,10 @@ module.exports = {
                 },
                 "profile": {
                     "source": ['body.profile'],
-                    "required": false,
                     "validation": {"type": "object"}
                 },
                 "groups": {
                     "source": ['body.groups'],
-                    "required": false,
                     "validation": {
                         "type": "array",
                         "items": {
@@ -415,7 +398,6 @@ module.exports = {
                 "status": {
                     "source": ['body.status'],
                     "default": "pendingNew",
-                    "required": false,
                     "validation": {
                         "type": "string",
                         "enum": ['active', 'inactive', 'pendingNew']
@@ -423,12 +405,10 @@ module.exports = {
                 },
                 "password": {
                     "source": ['body.password'],
-                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "pin": {
                     "source": ['body.pin'],
-                    "required": false,
                     "validation": {
                         "type": "object",
                         "additionalProperties": false,
@@ -445,7 +425,6 @@ module.exports = {
                 },
                 "ln": {
                     "source": ['body.ln'],
-                    "required": false,
                     "validation": {"type": "string"}
                 }
             },
@@ -470,7 +449,6 @@ module.exports = {
                 },
                 "config": {
                     "source": ['body.config'],
-                    "required": false,
                     "validation": {"type": "boolean"}
                 }
             },
@@ -526,7 +504,6 @@ module.exports = {
                 },
                 "environments": {
                     "source": ['body.environments'],
-                    "required": false,
                     "validation": {
                         "type": "array",
                         "items": {
@@ -544,7 +521,6 @@ module.exports = {
                 },
                 "tenant": {
                     "source": ['body.tenant'],
-                    "required": false,
                     "validation": {
                         "type": "object",
                         "additionalProperties": false,
@@ -710,7 +686,6 @@ module.exports = {
                 },
                 "username": {
                     "source": ['body.username'],
-                    "required": false,
                     "validation": {
                         "type": "string",
                         "pattern": /^[a-zA-Z0-9_-]+$/
@@ -718,22 +693,18 @@ module.exports = {
                 },
                 "firstName": {
                     "source": ['body.firstName'],
-                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "lastName": {
                     "source": ['body.lastName'],
-                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "profile": {
                     "source": ['body.profile'],
-                    "required": false,
                     "validation": {"type": "object"}
                 },
                 "ln": {
                     "source": ['body.ln'],
-                    "required": false,
                     "validation": {"type": "string"}
                 }
             },
@@ -750,7 +721,6 @@ module.exports = {
                 },
                 "username": {
                     "source": ['body.username'],
-                    "required": false,
                     "validation": {
                         "type": "string",
                         "pattern": /^[a-zA-Z0-9_-]+$/
@@ -758,22 +728,18 @@ module.exports = {
                 },
                 "firstName": {
                     "source": ['body.firstName'],
-                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "lastName": {
                     "source": ['body.lastName'],
-                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "email": {
                     "source": ['body.email'],
-                    "required": false,
                     "validation": {"type": "string", 'format': 'email'}
                 },
                 "groups": {
                     "source": ['body.groups'],
-                    "required": false,
                     "validation": {
                         "type": "array",
                         "items": {
@@ -783,7 +749,6 @@ module.exports = {
                 },
                 "status": {
                     "source": ['body.status'],
-                    "required": false,
                     "validation": {
                         "type": "string",
                         "enum": ['active', 'inactive', 'pendingNew', 'pendingJoin']
@@ -791,12 +756,10 @@ module.exports = {
                 },
                 "profile": {
                     "source": ['body.profile'],
-                    "required": false,
                     "validation": {"type": "object"}
                 },
                 "ln": {
                     "source": ['body.ln'],
-                    "required": false,
                     "validation": {"type": "string"}
                 }
             },
@@ -843,8 +806,7 @@ module.exports = {
                                         "required": true
                                     },
                                     "allowed": {
-                                        "type": "boolean",
-                                        "required": false
+                                        "type": "boolean"
                                     }
                                 }
                             ]
@@ -887,12 +849,10 @@ module.exports = {
                 },
                 "description": {
                     "source": ['body.description'],
-                    "required": false,
                     "validation": {"type": "string"}
                 },
                 "packages": {
                     "source": ['body.packages'],
-                    "required": false,
                     "validation": {
                         "type": "array",
                         "items": {
@@ -916,7 +876,6 @@ module.exports = {
                 },
                 "environments": {
                     "source": ['body.environments'],
-                    "required": false,
                     "validation": {
                         "type": "array",
                         "items": {
@@ -1027,25 +986,22 @@ module.exports = {
                     "group": "User administration"
                 },
                 "pin": {
-                    "required": false,
                     "source": ['body.pin'],
                     "validation": {
                         "type": "object",
                         "additionalProperties": false,
                         "properties": {
                             "code": {
-                                "type": "boolean",
-                                "required": true
+                                "type": "boolean"
                             },
                             "allowed": {
-                                "type": "boolean",
-                                "required": true
+                                "type": "boolean"
                             }
-                        }
+                        },
+                        "required": ["code", "allowed"]
                     }
                 },
                 "groups": {
-                    "required": false,
                     "source": ['body.groups'],
                     "validation": {
                         "type": "array",
@@ -1062,14 +1018,13 @@ module.exports = {
                         "additionalProperties": false,
                         "properties": {
                             "code": {
-                                "required": true,
                                 "type": "string"
                             },
                             "id": {
-                                "type": "string",
-                                "required": true
+                                "type": "string"
                             }
-                        }
+                        },
+                        "required": ["code", "id"]
                     }
                 }
             },
@@ -1113,21 +1068,18 @@ module.exports = {
                                     }
                                 },
                                 "pin": {
-                                    "required": false,
                                     "type": "object",
                                     "properties": {
                                         "code": {
-                                            "type": "boolean",
-                                            "required": true
+                                            "type": "boolean"
                                         },
                                         "allowed": {
-                                            "type": "boolean",
-                                            "required": true
+                                            "type": "boolean"
                                         }
-                                    }
+                                    },
+                                    "required": ["code", "allowed"]
                                 },
                                 "groups": {
-                                    "required": false,
                                     "validation": {
                                         "type": "array",
                                         "items": {
