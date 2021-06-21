@@ -155,7 +155,7 @@ Token.prototype.add = function (data, cb) {
         'safe': true
     };
     __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
-        if (!record || (record && !(record.nModified || record.upserted))) {
+        if (!record || (record && !(record.nModified || record.upsertedCount))) {
             let error = new Error("Token: token for [" + data.service + "] was not created.");
             return cb(error);
         }
