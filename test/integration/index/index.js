@@ -17,10 +17,11 @@ describe("starting index integration tests", () => {
 		require('./get/validateJoin.test');
 		require('./get/validateChangeMail.test');
 		require('./get/forgotPassword.test');
+		require('./get/forgotPasswordCode.test');
 		
 		//POST
 		require('./post/join.test');
-		
+		require('./post/invite.test');
 		//PUT
 		require('./put/editUser.test');
 		require('./put/changePassword.test');

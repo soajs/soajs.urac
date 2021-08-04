@@ -34,7 +34,41 @@ let bl = {
             modelObj.closeConnection();
         }
     },
+    "addInvite": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs, options);
+        let data = {};
+        data.phone = inputmaskData.phone;
+        data.email = inputmaskData.email;
+        data.service = inputmaskData.service;
+        data.code = inputmaskData.code || false;
+        data.status = 'active';
 
+        if (inputmaskData.firstName) {
+            data.firstName = inputmaskData.firstName;
+        }
+        if (inputmaskData.lastName) {
+            data.lastName = inputmaskData.lastName;
+        }
+
+        if (soajs.servicesConfig && soajs.servicesConfig.urac && soajs.servicesConfig.urac.tokenExpiryTTL) {
+            data.tokenExpiryTTL = soajs.servicesConfig.urac.tokenExpiryTTL;
+        } else if (soajs.registry && soajs.registry.custom && soajs.registry.custom.urac && soajs.registry.custom.urac.value && soajs.registry.custom.urac.value.tokenExpiryTTL) {
+            data.tokenExpiryTTL = soajs.registry.custom.urac.value.tokenExpiryTTL;
+        } else {
+            data.tokenExpiryTTL = 2 * 24 * 3600000;
+        }
+
+        modelObj.addInvite(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
     "add": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
@@ -44,6 +78,7 @@ let bl = {
         data.userId = inputmaskData.userId;
         data.username = inputmaskData.username;
         data.service = inputmaskData.service;
+        data.code = inputmaskData.code || false;
         data.status = 'active';
 
         if (inputmaskData.email) {

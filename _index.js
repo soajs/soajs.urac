@@ -25,7 +25,15 @@ function run(serviceStartCb) {
             }
 
             //GET methods
+            service.get("/password/forgot/code", function (req, res) {
+                req.soajs.inputmaskData.code = true;
+                req.soajs.inputmaskData.service = "forgotPassword_code";
+                bl.forgotPassword(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
             service.get("/password/forgot", function (req, res) {
+                req.soajs.inputmaskData.service = "forgotPassword";
                 bl.forgotPassword(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
@@ -193,6 +201,16 @@ function run(serviceStartCb) {
             //POST methods
             service.post("/email", function (req, res) {
                 bl.sendCustomEmail(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
+            service.post("/invite", function (req, res) {
+                bl.inviteToJoin(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
+            service.post("/join/invite", function (req, res) {
+                bl.joinInvite(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });

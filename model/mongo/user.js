@@ -550,6 +550,9 @@ User.prototype.add = function (data, cb) {
     if (data.ln) {
         record.ln = data.ln;
     }
+    if (data.phone) {
+        record.phone = data.phone;
+    }
 
     record.ts = new Date().getTime();
 
@@ -615,6 +618,9 @@ User.prototype.edit = function (data, cb) {
             }
             if (data.ln) {
                 s.$set.ln = data.ln;
+            }
+            if (data.phone) {
+                s.$set.phone = data.phone;
             }
             __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
                 let nModified = 0;

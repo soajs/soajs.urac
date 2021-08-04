@@ -315,6 +315,7 @@ let bl = {
         data.groups = inputmaskData.groups;
         data.status = inputmaskData.status;
         data.ln = inputmaskData.ln || null;
+        data.phone = inputmaskData.phone || null;
 
         modelObj.edit(data, (err, record) => {
             bl.mt.closeModel(modelObj);

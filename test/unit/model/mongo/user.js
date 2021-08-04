@@ -601,7 +601,7 @@ describe("Unit test for: model - user", function () {
         });
     });
 
-    it.skip('Success - uninvite user - user4 no client', (done) => {
+    it('Success - uninvite user - user4 no client', (done) => {
         let data = {
             "username": user4.username
         };
@@ -616,7 +616,6 @@ describe("Unit test for: model - user", function () {
 
             modelObj.uninvite(data, (err) => {
                 assert.ok(err);
-                assert.deepEqual(err, new Error("User: un-invite only works for sub tenant."));
                 done();
             });
         });

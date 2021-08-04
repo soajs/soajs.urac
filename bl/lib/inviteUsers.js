@@ -101,15 +101,13 @@ let local = (soajs, inputmaskData, options, cb) => {
                     records.failed.push(responseObj);
                     return callback();
                 }
-                if (response) {
-                    if (generatedPin) {
-                        userRecord.pin = generatedPin;
-                        lib.mail.send(soajs, 'invitePin', userRecord, null, function (error) {
-                            if (error) {
-                                soajs.log.info('invitePin: No Mail was sent: ' + error.message);
-                            }
-                        });
-                    }
+                if (response && generatedPin) {
+                    userRecord.pin = generatedPin;
+                    lib.mail.send(soajs, 'invitePin', userRecord, null, function (error) {
+                        if (error) {
+                            soajs.log.info('invitePin: No Mail was sent: ' + error.message);
+                        }
+                    });
                 }
                 records.succeeded.push(responseObj);
                 return callback();

@@ -57,7 +57,8 @@ let lib = {
                                     addUser: "http://dashboard.soajs.org:80/#/setNewPassword",
                                     changeEmail: "http://dashboard.soajs.org:80/#/changeEmail/validate",
                                     forgotPassword: "http://dashboard.soajs.org:80/#/resetPassword",
-                                    join: "http://dashboard.soajs.org:80/#/join/validate"
+                                    join: "http://dashboard.soajs.org:80/#/join/validate",
+                                    inviteToJoin: "http://dashboard.soajs.org:80/#/join/invite"
                                 },
                                 tokenExpiryTTL: 172800000,
                                 validateJoin: true,
@@ -67,9 +68,17 @@ let lib = {
                                     }
                                 },
                                 mail: {
+                                    inviteToJoin: {
+                                        subject: "Invitation to join",
+                                        path: "undefined/soajs/node_modules/soajs.urac/mail/urac/inviteToJoin.tmpl"
+                                    },
                                     join: {
                                         subject: "Welcome to SOAJS",
                                         path: "undefined/soajs/node_modules/soajs.urac/mail/urac/join.tmpl"
+                                    },
+                                    forgotPassword_code: {
+                                        subject: "Reset Your Password at SOAJS",
+                                        path: "undefined/soajs/node_modules/soajs.urac/mail/urac/forgotPassword_code.tmpl"
                                     },
                                     forgotPassword: {
                                         subject: "Reset Your Password at SOAJS",

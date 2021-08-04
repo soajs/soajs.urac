@@ -21,18 +21,10 @@ let joinSchema = {
 			"type": "object",
 			"required": false,
 			"properties": {
-				"token": {
-					"type": "string",
-					"required": true
-				},
                 "id": {
                     "type": "string",
                     "required": true
-                },
-				"link": {
-					"type": "object",
-					"required": false
-				}
+                }
 			}
 		},
 		"errors": {

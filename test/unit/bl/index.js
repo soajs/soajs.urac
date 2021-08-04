@@ -558,7 +558,6 @@ describe("Unit test for: BL - index", () => {
 			};
 			BL.forgotPassword(soajs, data, null, (error, result) => {
 				assert.ok(result);
-				assert.deepEqual(result.token, 'f65e8358-ce1d-32fb-b478-82e10c93e61f');
 				done();
 			});
 		});

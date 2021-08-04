@@ -1,0 +1,12 @@
+<p>Dear <b>{{firstName}} {{lastName}}</b>, <br />
+This is an invitation to join our App. <br /><br />
+{{#if code}}
+The invitation code is: {{code}}<br /><br />
+{{^}}
+The invitation code has been send to your mobile number: {{phone}}<br /><br />
+{{/if}}
+Please click the following link to join: <a href='{{link.inviteToJoin}}'>{{link.inviteToJoin}}</a>.<br /><br />
+Please note that the above link will expire in {{limit}} hours.<br /><br />
+Regards,<br/>
+SOAJS Team.
+</p>

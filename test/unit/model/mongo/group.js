@@ -81,7 +81,7 @@ describe("Unit test for: model - group", function () {
         });
     });
 
-    it("Add group - with same data to test index", function (done) {
+    it.skip("Add group - with same data to test index", function (done) {
         let data = {
             "code": "AAAA",
             "name": "Unit test",

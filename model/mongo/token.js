@@ -13,7 +13,7 @@ const get = (p, o) => p.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, o);
 const colName = "tokens";
 const core = require("soajs");
 const Mongo = core.mongo;
-const uuid = require('uuid');
+const {v4: uuidv4} = require('uuid');
 
 let indexing = {};
 
@@ -109,16 +109,57 @@ Token.prototype.updateStatus = function (data, cb) {
             return cb(error);
         }
         return cb(err, record.nModified);
-        /*
-        { n: 0, nModified: 0, ok: 1 }
-         */
-        /*
-        if (!record) {
-            let error = new Error("Token: status for token [" + data.token + "] was not update.");
+    });
+};
+
+Token.prototype.addInvite = function (data, cb) {
+    let __self = this;
+    if (!data || !data.email || !data.phone || !data.service || !data.tokenExpiryTTL) {
+        let error = new Error("Token: tokenExpiryTTL, email, phone, and what service are required.");
+        return cb(error, null);
+    }
+    let s = {
+        '$set': {
+            'email': data.email,
+            'phone': data.phone,
+            'expires': new Date(new Date().getTime() + data.tokenExpiryTTL),
+            'status': 'active',
+            'ts': new Date().getTime(),
+            'service': data.service,
+        }
+    };
+    if (data.code) {
+        s.$set.token = Math.floor(100000 + Math.random() * 900000);
+    } else {
+        const token = uuidv4();
+        s.$set.token = token;
+    }
+    if (data.firstName) {
+        s.$set.firstName = data.firstName;
+    }
+    if (data.lastName) {
+        s.$set.lastName = data.lastName;
+    }
+
+    let condition = {
+        'email': data.email,
+        'phone': data.phone,
+        'status': data.status
+    };
+    let extraOptions = {
+        'upsert': true,
+        'safe': true
+    };
+    __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
+        if (!record || (record && !(record.nModified || record.upsertedCount))) {
+            let error = new Error("Token: token for [" + data.service + "] was not created.");
             return cb(error);
         }
-        return cb(err, record);
-        */
+        if (data.code) {
+            return cb(err, {'code': s.$set.token, 'ttl': data.tokenExpiryTTL});
+        } else {
+            return cb(err, {'token': s.$set.token, 'ttl': data.tokenExpiryTTL});
+        }
     });
 };
 
@@ -128,19 +169,22 @@ Token.prototype.add = function (data, cb) {
         let error = new Error("Token: tokenExpiryTTL, userId, username, and what service are required.");
         return cb(error, null);
     }
-    let token = uuid.v4();
     let s = {
         '$set': {
             'userId': data.userId,
             'username': data.username,
-            'token': token,
             'expires': new Date(new Date().getTime() + data.tokenExpiryTTL),
             'status': 'active',
             'ts': new Date().getTime(),
             'service': data.service,
         }
     };
-
+    if (data.code) {
+        s.$set.token = Math.floor(100000 + Math.random() * 900000);
+    } else {
+        const token = uuidv4();
+        s.$set.token = token;
+    }
     if (data.email) {
         s.$set.email = data.email;
     }
@@ -159,20 +203,11 @@ Token.prototype.add = function (data, cb) {
             let error = new Error("Token: token for [" + data.service + "] was not created.");
             return cb(error);
         }
-        return cb(err, {'token': token, 'ttl': data.tokenExpiryTTL});
-        /*
-        { n: 1,
-          nModified: 0,
-          upserted: [ { index: 0, _id: 5ea87612833ccbfae71675f3 } ],
-          ok: 1 }
-         */
-        /*
-        if (!record) {
-            let error = new Error("Token: token for [" + data.service + "] was not created.");
-            return cb(error);
+        if (data.code) {
+            return cb(err, {'code': s.$set.token, 'ttl': data.tokenExpiryTTL});
+        } else {
+            return cb(err, {'token': s.$set.token, 'ttl': data.tokenExpiryTTL});
         }
-        return cb(err, {'token': token, 'ttl': data.tokenExpiryTTL});
-        */
     });
 };
 
@@ -190,8 +225,7 @@ Token.prototype.get = function (data, cb) {
     //At this point service or services are available
     if (data.service) {
         condition.service = data.service;
-    }
-    else {
+    } else {
         condition.service = {'$in': data.services};
     }
 

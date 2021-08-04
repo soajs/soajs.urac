@@ -30,11 +30,9 @@ describe("Testing add user API", () => {
             assert.ifError(error);
             assert.ok(body);
             assert.ok(body.data);
-            assert.ok(body.data.hasOwnProperty('token'));
-            assert.ok(body.data.hasOwnProperty('link'));
             let check = validator.validate(body, joinSchema);
-            assert.deepEqual(check.valid, true);
-            assert.deepEqual(check.errors, []);
+            assert.deepStrictEqual(check.valid, true);
+            assert.deepStrictEqual(check.errors, []);
             done();
         });
     });
@@ -55,11 +53,9 @@ describe("Testing add user API", () => {
             assert.ifError(error);
             assert.ok(body);
             assert.ok(body.data);
-            assert.ok(body.data.hasOwnProperty('token'));
-            assert.ok(body.data.hasOwnProperty('link'));
             let check = validator.validate(body, joinSchema);
-            assert.deepEqual(check.valid, true);
-            assert.deepEqual(check.errors, []);
+            assert.deepStrictEqual(check.valid, true);
+            assert.deepStrictEqual(check.errors, []);
             done();
         });
     });
@@ -70,13 +66,13 @@ describe("Testing add user API", () => {
             assert.ifError(error);
             assert.ok(body);
             assert.ok(body.errors);
-            assert.deepEqual(body.errors.details, [{
+            assert.deepStrictEqual(body.errors.details, [{
                 code: 172,
                 message: 'Missing required field: username, password, firstName, lastName, email'
             }]);
             let check = validator.validate(body, joinSchema);
-            assert.deepEqual(check.valid, true);
-            assert.deepEqual(check.errors, []);
+            assert.deepStrictEqual(check.valid, true);
+            assert.deepStrictEqual(check.errors, []);
             done();
         });
     });

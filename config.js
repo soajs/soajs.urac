@@ -130,7 +130,17 @@ module.exports = {
             }
         },
         "get": {
-
+            '/password/forgot/code': {
+                "_apiInfo": {
+                    "l": "Forgot password by username as (username or email) - a code will be emailed",
+                    "group": "My account guest"
+                },
+                "username": {
+                    "source": ['query.username'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
             '/password/forgot': {
                 "_apiInfo": {
                     "l": "Forgot password by username as (username or email) - an email will be sent with a link to reset the password",
@@ -302,7 +312,90 @@ module.exports = {
                     }
                 }
             },
-
+            '/invite': {
+                "_apiInfo": {
+                    "l": "Invite to join - a link to join will be sent by email and a code will be sent by sms or email.",
+                    "group": "User administration"
+                },
+                "firstName": {
+                    "source": ['body.firstName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "lastName": {
+                    "source": ['body.lastName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "email": {
+                    "source": ['body.email'],
+                    "required": true,
+                    "validation": {"type": "string", "format": "email"}
+                },
+                "phone": {
+                    "source": ['body.phone'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
+            '/join/invite': {
+                "_apiInfo": {
+                    "l": "Join and create an account by invitation",
+                    "group": "Guest join"
+                },
+                "username": {
+                    "source": ['body.username'],
+                    "required": true,
+                    "validation": {
+                        "type": "string",
+                        "minLength": 5,
+                        "maxLength": 50,
+                        "pattern": /^[a-zA-Z0-9_-]+$/
+                    }
+                },
+                "password": {
+                    "source": ['body.password'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "firstName": {
+                    "source": ['body.firstName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "lastName": {
+                    "source": ['body.lastName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "email": {
+                    "source": ['body.email'],
+                    "required": true,
+                    "validation": {"type": "string", "format": "email"}
+                },
+                "profile": {
+                    "source": ['body.profile'],
+                    "validation": {"type": "object"}
+                },
+                "membership": {
+                    "source": ['body.membership'],
+                    "validation": {"type": "string"}
+                },
+                "ln": {
+                    "source": ['body.ln'],
+                    "validation": {"type": "string"}
+                },
+                "phone": {
+                    "source": ['body.phone'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "code": {
+                    "source": ['body.code'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
             '/join': {
                 "_apiInfo": {
                     "l": "Join and create an account",
@@ -348,6 +441,10 @@ module.exports = {
                 },
                 "ln": {
                     "source": ['body.ln'],
+                    "validation": {"type": "string"}
+                },
+                "phone": {
+                    "source": ['body.phone'],
                     "validation": {"type": "string"}
                 }
             },
@@ -425,6 +522,10 @@ module.exports = {
                 },
                 "ln": {
                     "source": ['body.ln'],
+                    "validation": {"type": "string"}
+                },
+                "phone": {
+                    "source": ['body.phone'],
                     "validation": {"type": "string"}
                 }
             },
@@ -706,6 +807,10 @@ module.exports = {
                 "ln": {
                     "source": ['body.ln'],
                     "validation": {"type": "string"}
+                },
+                "phone": {
+                    "source": ['body.phone'],
+                    "validation": {"type": "string"}
                 }
             },
 
@@ -760,6 +865,10 @@ module.exports = {
                 },
                 "ln": {
                     "source": ['body.ln'],
+                    "validation": {"type": "string"}
+                },
+                "phone": {
+                    "source": ['body.phone'],
                     "validation": {"type": "string"}
                 }
             },

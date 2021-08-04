@@ -348,21 +348,19 @@ let bl = {
             let data = {};
             data.userId = userRecord._id.toString();
             data.username = userRecord.username;
-            data.service = "forgotPassword";
+            data.code = inputmaskData.code || false;
+            data.service = inputmaskData.service || "forgotPassword";
             bl.token.add(soajs, data, options, (error, tokenRecord) => {
                 //close model
                 bl.user.mt.closeModel(modelObj);
                 if (error) {
                     return cb(error, null);
                 }
-                lib.mail.send(soajs, "forgotPassword", userRecord, tokenRecord, function (error, mailRecord) {
+                lib.mail.send(soajs, data.service, userRecord, tokenRecord, function (error) {
                     if (error) {
-                        soajs.log.info('forgotPassword: No Mail was sent: ' + error.message);
+                        soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
                     }
-                    return cb(null, {
-                        token: tokenRecord.token,
-                        link: mailRecord.link || null
-                    });
+                    return cb(null, true);
                 });
             });
         });
@@ -473,6 +471,7 @@ function init(service, localConfig, cb) {
         bl.uninviteUsers = require("./lib/uninviteUsers.js")(bl);
         bl.editPin = require("./lib/editPin.js")(bl);
         bl.emailToken = require("./lib/emailToken.js")(bl);
+        bl.inviteToJoin = require("./lib/inviteToJoin.js")(bl);
 
         if (err) {
             service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);

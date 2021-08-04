@@ -2,7 +2,7 @@
 const assert = require('assert');
 const requester = require('../../requester');
 
-describe("Testing forgot password API", () => {
+describe("Testing forgot password code API", () => {
 	
 	before(function (done) {
 		done();
@@ -13,13 +13,13 @@ describe("Testing forgot password API", () => {
 		done();
 	});
 	
-	it("Success - will forgot password send link and email", (done) => {
+	it("Success - forgot password with code", (done) => {
 		let params = {
 			qs: {
 				username: "johnd"
 			}
 		};
-		requester('/password/forgot', 'get', params, (error, body) => {
+		requester('/password/forgot/code', 'get', params, (error, body) => {
 			assert.ifError(error);
 			assert.ok(body);
 			assert.ok(body.data);
@@ -27,13 +27,14 @@ describe("Testing forgot password API", () => {
 		});
 	});
 	
-	it("Fails - will forgot password send link and email no data", (done) => {
+	it("Fails - forgot password with code", (done) => {
 		let params = {
 		};
-		requester('/password/forgot', 'get', params, (error, body) => {
+		requester('/password/forgot/code', 'get', params, (error, body) => {
 			assert.ifError(error);
 			assert.ok(body);
 			assert.ok(body.errors);
+			assert.deepStrictEqual(body.errors.details, [ { code: 172, message: 'Missing required field: username' } ]);
 			done();
 		});
 	});

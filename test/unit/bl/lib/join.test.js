@@ -156,10 +156,8 @@ describe("Unit test for: BL - join", () => {
 				
 				BL.join(soajs, data, null, (error, result) => {
 					assert.ok(result);
-					assert.deepEqual(result, {
-						id: '5cfb05c22ac09278709d0141',
-						token: 'f65e8358-ce1d-47ff-b478-82e10c93f70e',
-						link: {join: 'https://dev-site.rockspoon.io/#/join/validate?token=f65e8358-ce1d-47ff-b478-82e10c93f70e'}
+					assert.deepStrictEqual(result, {
+						id: '5cfb05c22ac09278709d0141'
 					});
 					done();
 				});
