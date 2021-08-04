@@ -21,7 +21,9 @@ describe("starting index integration tests", () => {
 		
 		//POST
 		require('./post/join.test');
+		require('./post/join.invite.test');
 		require('./post/invite.test');
+
 		//PUT
 		require('./put/editUser.test');
 		require('./put/changePassword.test');

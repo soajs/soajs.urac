@@ -129,7 +129,7 @@ Token.prototype.addInvite = function (data, cb) {
         }
     };
     if (data.code) {
-        s.$set.token = Math.floor(100000 + Math.random() * 900000);
+        s.$set.token = "" + Math.floor(100000 + Math.random() * 900000);
     } else {
         const token = uuidv4();
         s.$set.token = token;

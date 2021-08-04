@@ -472,6 +472,7 @@ function init(service, localConfig, cb) {
         bl.editPin = require("./lib/editPin.js")(bl);
         bl.emailToken = require("./lib/emailToken.js")(bl);
         bl.inviteToJoin = require("./lib/inviteToJoin.js")(bl);
+        bl.joinInvite = require("./lib/joinInvite.js")(bl);
 
         if (err) {
             service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);

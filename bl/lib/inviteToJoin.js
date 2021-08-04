@@ -23,6 +23,8 @@ let local = (soajs, inputmaskData, options, cb) => {
     data.code = true;
 
     let modelObj = bl.user.mt.getModel(soajs);
+    options = {};
+    options.mongoCore = modelObj.mongoCore;
     bl.token.addInvite(soajs, data, options, (error, tokenRecord) => {
         bl.user.mt.closeModel(modelObj);
         if (error) {

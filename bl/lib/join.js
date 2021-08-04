@@ -17,11 +17,13 @@ let local = (soajs, inputmaskData, options, cb) => {
     if (soajs.tenant.type === "client" && soajs.tenant.main) {
         return cb(bl.user.handleError(soajs, 524, null));
     }
-
-    let modelObj = bl.user.mt.getModel(soajs);
-    options = {};
-    options.mongoCore = modelObj.mongoCore;
-
+    let modelObj = bl.user.mt.getModel(soajs, options);
+    if (!options || !options.mongoCore) {
+        if (!options) {
+            options = {};
+        }
+        options.mongoCore = modelObj.mongoCore;
+    }
     inputmaskData = inputmaskData || {};
 
     bl.user.countUser(soajs, inputmaskData, options, (error, found) => {
@@ -39,8 +41,7 @@ let local = (soajs, inputmaskData, options, cb) => {
         let requireValidation = true;
         if (soajs.servicesConfig.urac && Object.hasOwnProperty.call(soajs.servicesConfig.urac, 'validateJoin')) {
             requireValidation = soajs.servicesConfig.urac.validateJoin;
-        }
-        else if (soajs.registry && soajs.registry.custom && soajs.registry.custom.urac && soajs.registry.custom.urac.value && soajs.registry.custom.urac.value.hasOwnProperty('validateJoin')) {
+        } else if (soajs.registry && soajs.registry.custom && soajs.registry.custom.urac && soajs.registry.custom.urac.value && soajs.registry.custom.urac.value.hasOwnProperty('validateJoin')) {
             requireValidation = soajs.registry.custom.urac.value.validateJoin;
         }
 
