@@ -86,11 +86,39 @@ let bl = {
         });
     },
 
+    "validateJoinCode": (soajs, inputmaskData, options, cb) => {
+        let modelObj = bl.user.mt.getModel(soajs, options);
+        options = {};
+        options.mongoCore = modelObj.mongoCore;
+        inputmaskData = inputmaskData || {};
+        inputmaskData.service = 'joinInvite';
+        bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
+            if (error) {
+                bl.user.mt.closeModel(modelObj);
+                return cb(error, null);
+            }
+            if (tokenRecord.inviteToken !== inputmaskData.token) {
+                bl.user.mt.closeModel(modelObj);
+                return cb(bl.user.handleError(soajs, 598, null));
+            }
+            bl.validateJoin(soajs, inputmaskData, options, (error, response) => {
+                bl.user.mt.closeModel(modelObj);
+                if (error) {
+                    return cb(error, null);
+                }
+                return cb(null, response);
+            });
+        });
+    },
     "validateJoin": (soajs, inputmaskData, options, cb) => {
         //get model since token and user are in the same db always, aka main tenant db
         let modelObj = bl.user.mt.getModel(soajs);
-        options = {};
-        options.mongoCore = modelObj.mongoCore;
+        if (!options || !options.mongoCore) {
+            if (!options) {
+                options = {};
+            }
+            options.mongoCore = modelObj.mongoCore;
+        }
         inputmaskData = inputmaskData || {};
         inputmaskData.service = 'join';
         bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {

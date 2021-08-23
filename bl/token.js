@@ -44,6 +44,7 @@ let bl = {
         data.email = inputmaskData.email;
         data.service = inputmaskData.service;
         data.code = inputmaskData.code || false;
+        data.inviteToken = inputmaskData.inviteToken || null;
         data.status = 'active';
 
         if (inputmaskData.firstName) {
@@ -120,7 +121,7 @@ let bl = {
                 return cb(bl.handleError(soajs, 600, err));
             }
             //check if token expired
-            if (new Date(record.expires).getTime() < new Date().getTime()) { //TODO: Check new Date(record.expires).getTime() return
+            if (new Date(record.expires).getTime() < new Date().getTime()) {
                 return cb(bl.handleError(soajs, 599, err));
             }
             return cb(null, record);

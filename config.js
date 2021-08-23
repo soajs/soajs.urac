@@ -75,6 +75,7 @@ module.exports = {
         536: "User is already in the tenant tenancy.",
         537: "Make sure to use the Email or Phone number related to this invite code.",
 
+        598: "Problem with the used token and code.",
         599: "Token has expired.",
         600: "unable to find token.",
         601: "Model not found.",
@@ -149,6 +150,22 @@ module.exports = {
                 },
                 "username": {
                     "source": ['query.username'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
+            '/validate/join/code': {
+                "_apiInfo": {
+                    "l": "To validate user account after joining",
+                    "group": "Guest join"
+                },
+                "token": {
+                    "source": ['query.token'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "code": {
+                    "source": ['query.code'],
                     "required": true,
                     "validation": {"type": "string"}
                 }
@@ -395,6 +412,11 @@ module.exports = {
                     "source": ['body.code'],
                     "required": true,
                     "validation": {"type": "string"}
+                },
+                "confirmation": {
+                    "source": ['body.confirmation'],
+                    "default": "email",
+                    "validation": {"type": "string", "enum": ["email", "emailAndPhone"]}
                 }
             },
             '/join': {

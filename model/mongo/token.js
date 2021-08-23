@@ -140,6 +140,9 @@ Token.prototype.addInvite = function (data, cb) {
     if (data.lastName) {
         s.$set.lastName = data.lastName;
     }
+    if (data.inviteToken) {
+        s.$set.inviteToken = data.inviteToken;
+    }
 
     let condition = {
         'email': data.email,

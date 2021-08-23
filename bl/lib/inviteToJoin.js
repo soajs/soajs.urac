@@ -9,7 +9,8 @@
  */
 
 const lib = {
-    "mail": require("../../lib/mail.js")
+    "mail": require("../../lib/mail.js"),
+    "message": require("../../lib/message.js")
 };
 
 let bl = null;
@@ -30,15 +31,18 @@ let local = (soajs, inputmaskData, options, cb) => {
         if (error) {
             return cb(error, null);
         }
-
-        //TODO: check twilio configuration at registry and send code by sms to phone
-        //  if sms config is there then call send sms to send the code and remove it from the token record
-
-        lib.mail.send(soajs, data.service, data, tokenRecord, function (error) {
+        lib.message.send(soajs, data.service, data, tokenRecord, function (error) {
             if (error) {
-                soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
+                soajs.log.info(data.service + ': No SMS was sent: ' + error.message);
+            } else {
+                delete tokenRecord.code;
             }
-            return cb(null, true);
+            lib.mail.send(soajs, data.service, data, tokenRecord, function (error) {
+                if (error) {
+                    soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
+                }
+                return cb(null, true);
+            });
         });
     });
 };
