@@ -2,7 +2,7 @@
 const assert = require('assert');
 const requester = require('../../requester');
 
-describe("Testing join/invite API", () => {
+describe("Testing /invite API", () => {
 
     before(function (done) {
         done();

@@ -5,7 +5,7 @@ let core = require('soajs').core;
 let validator = new core.validator.Validator();
 let joinSchema = require("../schemas/join.js");
 
-describe("Testing add user API", () => {
+describe("Testing /join API", () => {
 
     before(function (done) {
         done();

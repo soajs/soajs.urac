@@ -49,6 +49,13 @@ let lib = {
                                         type: "sendmail",
                                         options: {}
                                     }
+                                },
+                                sms: {
+                                    from: "16170000000",
+                                    twilio: {
+                                        accountSid: "WWWW",
+                                        authToken: "WWWW"
+                                    }
                                 }
                             },
                             urac: {
@@ -65,6 +72,12 @@ let lib = {
                                 "membership": {
                                     "basic": {
                                         "groups": ["owner"]
+                                    }
+                                },
+                                sms: {
+                                    inviteToJoin: {
+                                        mediaUrl: ["URL/media"],
+                                        content: "Hi {{firstName}} {{lastName}}, you have been invite to join our App"
                                     }
                                 },
                                 mail: {
