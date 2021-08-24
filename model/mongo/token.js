@@ -122,6 +122,7 @@ Token.prototype.addInvite = function (data, cb) {
         '$set': {
             'email': data.email,
             'phone': data.phone,
+            'confirmation': data.confirmation,
             'expires': new Date(new Date().getTime() + data.tokenExpiryTTL),
             'status': 'active',
             'ts': new Date().getTime(),

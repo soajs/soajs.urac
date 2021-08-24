@@ -161,7 +161,6 @@ module.exports = {
                 },
                 "token": {
                     "source": ['query.token'],
-                    "required": true,
                     "validation": {"type": "string"}
                 },
                 "code": {
@@ -416,7 +415,7 @@ module.exports = {
                 "confirmation": {
                     "source": ['body.confirmation'],
                     "default": "email",
-                    "validation": {"type": "string", "enum": ["email", "emailAndPhone"]}
+                    "validation": {"type": "string", "enum": ["email", "emailAndPhone", "phone"]}
                 }
             },
             '/join': {

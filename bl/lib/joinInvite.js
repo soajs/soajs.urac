@@ -32,17 +32,19 @@ let local = (soajs, inputmaskData, options, cb) => {
             return cb(bl.user.handleError(soajs, 537, null));
         }
         inputmaskData.keepToken = true;
+        inputmaskData.doNotSendEmail = (inputmaskData.confirmation === "phone");
         bl.join(soajs, inputmaskData, options, (error, response) => {
             if (error) {
                 bl.user.mt.closeModel(modelObj);
                 return cb(error, null);
             }
-            if (inputmaskData.confirmation === "emailAndPhone") {
+            if (inputmaskData.confirmation === "emailAndPhone" || inputmaskData.confirmation === "phone") {
                 let data = {};
                 data.firstName = inputmaskData.firstName;
                 data.lastName = inputmaskData.lastName;
                 data.email = inputmaskData.email;
                 data.phone = inputmaskData.phone;
+                data.confirmation = inputmaskData.confirmation;
                 data.inviteToken = response.token;
                 data.service = "joinInvite";
                 data.code = true;

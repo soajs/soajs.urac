@@ -97,9 +97,13 @@ let bl = {
                 bl.user.mt.closeModel(modelObj);
                 return cb(error, null);
             }
-            if (tokenRecord.inviteToken !== inputmaskData.token) {
-                bl.user.mt.closeModel(modelObj);
-                return cb(bl.user.handleError(soajs, 598, null));
+            if (tokenRecord.confirmation !== "phone") {
+                if (tokenRecord.inviteToken !== inputmaskData.token) {
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(bl.user.handleError(soajs, 598, null));
+                }
+            } else {
+                inputmaskData.token = tokenRecord.inviteToken;
             }
             bl.validateJoin(soajs, inputmaskData, options, (error, response) => {
                 bl.user.mt.closeModel(modelObj);

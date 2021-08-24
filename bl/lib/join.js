@@ -91,6 +91,11 @@ let local = (soajs, inputmaskData, options, cb) => {
                 if (error) {
                     return cb(error, null);
                 }
+                if (inputmaskData.doNotSendEmail){
+                    return cb(null, {
+                        id: userRecord._id.toString()
+                    });
+                }
                 lib.mail.send(soajs, data.service, userRecord, tokenRecord, function (error) {
                     if (error) {
                         soajs.log.info(data.service + ': No Mail was sent: ' + error.message);

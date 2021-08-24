@@ -42,6 +42,7 @@ let bl = {
         let data = {};
         data.phone = inputmaskData.phone;
         data.email = inputmaskData.email;
+        data.confirmation = inputmaskData.confirmation;
         data.service = inputmaskData.service;
         data.code = inputmaskData.code || false;
         data.inviteToken = inputmaskData.inviteToken || null;
