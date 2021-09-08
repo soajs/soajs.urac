@@ -3,6 +3,7 @@
 let token = {
     "record": {
         "_id": "610a9b773aabc5d43b1f6c0c",
+        "userId": "tony@hage.com",
         "email": "tony@hage.com",
         "phone": "9999999999",
         "firstName": "tony",

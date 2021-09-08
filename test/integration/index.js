@@ -33,6 +33,7 @@ describe("starting integration tests", () => {
         require("./group/index.js");
         require("./user/index.js");
         require("./index/index.js");
+        require("./token/getTokens.js");
         done();
     });
 

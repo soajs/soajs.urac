@@ -17,6 +17,21 @@ const {v4: uuidv4} = require('uuid');
 
 let indexing = {};
 
+let build_options = (data) => {
+    let options = {
+        "skip": 0,
+        "limit": 100
+    };
+    options.sort = {"ts": 1};
+    if (data.limit) {
+        options.limit = data.limit;
+    }
+    if (data.start) {
+        options.skip = data.start;
+    }
+    return options;
+};
+
 function Token(soajs, localConfig, mongoCore) {
     let __self = this;
     __self.keepConnectionAlive = false;
@@ -120,6 +135,7 @@ Token.prototype.addInvite = function (data, cb) {
     }
     let s = {
         '$set': {
+            'userId': data.email,
             'email': data.email,
             'phone': data.phone,
             'confirmation': data.confirmation,
@@ -146,6 +162,7 @@ Token.prototype.addInvite = function (data, cb) {
     }
 
     let condition = {
+        'userId': data.email,
         'email': data.email,
         'phone': data.phone,
         'status': data.status
@@ -244,6 +261,44 @@ Token.prototype.list = function (data, cb) {
     __self.mongoCore.find(colName, null, null, (err, record) => {
         return cb(err, record);
     });
+};
+
+Token.prototype.search = function (data, cb) {
+    let __self = this;
+    if (!data || !data.service) {
+        let error = new Error("Token: service is required.");
+        return cb(error, null);
+    }
+    let options = build_options(data);
+    let condition = {
+        "service": data.service
+    };
+    __self.mongoCore.find(colName, condition, options, (error, response) => {
+        if (error) {
+            return cb(error);
+        } else {
+            __self.count(data, condition, colName, (error, count) => {
+                if (error) {
+                    return cb(error);
+                } else {
+                    return cb(null, {
+                        "count": count,
+                        "limit": options.limit,
+                        "start": options.skip,
+                        "items": response
+                    });
+                }
+            });
+        }
+    });
+};
+
+Token.prototype.count = function (data, condition, col, cb) {
+    let __self = this;
+
+    let options = {};
+    __self.mongoCore.countDocuments(col, condition, options, cb);
+
 };
 
 Token.prototype.closeConnection = function (count) {

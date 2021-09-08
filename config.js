@@ -300,6 +300,17 @@ module.exports = {
                     "source": ['query.scope'],
                     "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
                 }
+            },
+            '/admin/tokens': {
+                "_apiInfo": {
+                    "l": "Get tokens for a specific service",
+                    "group": "Administration"
+                },
+                "commonFields": ["start", "limit"],
+                "service": {
+                    "source": ['query.service'],
+                    "validation": {"type": "string", "enum": ["inviteToJoin", "joinInvite"]}
+                }
             }
         },
 
