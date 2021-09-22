@@ -19,7 +19,6 @@ let joinSchema = {
 		},
 		"data": {
 			"type": "object",
-			"required": false,
 			"properties": {
                 "id": {
                     "type": "string",
@@ -29,7 +28,6 @@ let joinSchema = {
 		},
 		"errors": {
 			"type": "object",
-			"required": false,
 			"properties": {
 				"codes": {
 					"type": "array",

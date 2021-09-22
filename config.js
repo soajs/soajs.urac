@@ -202,6 +202,22 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
+            '/resend/code': {
+                "_apiInfo": {
+                    "l": "Check if user (username or email) status if pendingJoin and send a new token and new code",
+                    "group": "My account guest"
+                },
+                "username": {
+                    "source": ['query.username'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "confirmation": {
+                    "source": ['query.confirmation'],
+                    "default": "email",
+                    "validation": {"type": "string", "enum": ["email", "emailAndPhone", "phone"]}
+                }
+            },
             '/validate/changeEmail': {
                 "_apiInfo": {
                     "l": "To validate change email",
@@ -794,6 +810,23 @@ module.exports = {
             '/account/email': {
                 "_apiInfo": {
                     "l": "Change account's email by id",
+                    "group": "My account"
+                },
+                "id": {
+                    "source": ['body.id'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "email": {
+                    "source": ['body.email'],
+                    "required": true,
+                    "validation": {"type": "string", "format": "email"}
+                }
+            },
+
+            '/account/email/code': {
+                "_apiInfo": {
+                    "l": "Change account's email by id - a code will be emailed",
                     "group": "My account"
                 },
                 "id": {

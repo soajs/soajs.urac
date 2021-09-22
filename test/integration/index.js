@@ -34,6 +34,7 @@ describe("starting integration tests", () => {
         require("./user/index.js");
         require("./index/index.js");
         require("./token/getTokens.js");
+        require("./resendCode/index.js");
         done();
     });
 

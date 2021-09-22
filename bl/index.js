@@ -287,7 +287,8 @@ let bl = {
                 let data = {};
                 data.userId = userRecord._id.toString();
                 data.username = userRecord.username;
-                data.service = "changeEmail";
+                data.code = inputmaskData.code || false;
+                data.service = inputmaskData.service || "changeEmail";
                 data.email = inputmaskData.email;
                 bl.token.add(soajs, data, options, (error, tokenRecord) => {
                     //close model
@@ -503,6 +504,7 @@ function init(service, localConfig, cb) {
         bl.uninviteUsers = require("./lib/uninviteUsers.js")(bl);
         bl.editPin = require("./lib/editPin.js")(bl);
         bl.emailToken = require("./lib/emailToken.js")(bl);
+        bl.resendCode = require("./lib/resendCode.js")(bl);
         bl.inviteToJoin = require("./lib/inviteToJoin.js")(bl);
         bl.joinInvite = require("./lib/joinInvite.js")(bl);
 

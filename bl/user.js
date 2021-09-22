@@ -283,6 +283,7 @@ let bl = {
 
             data.tenant = inputmaskData.tenant;
             data.ln = inputmaskData.ln || null;
+            data.phone = inputmaskData.phone || null;
 
             modelObj.add(data, (err, record) => {
                 bl.mt.closeModel(modelObj);

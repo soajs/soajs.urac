@@ -19,7 +19,6 @@ let listAllSchema = {
 		},
 		"data": {
 			"type": "object",
-			"required": false,
 			"additionalProperties": false,
 			"properties": {
 				"users": {
@@ -31,14 +30,15 @@ let listAllSchema = {
 						"additionalProperties": false,
 						"properties": {
 							"_id": {"type": "string", "required": true},
-							"locked": {"type": "boolean", "required": false},
+							"locked": {"type": "boolean"},
 							"username": {"type": "string", "required": true},
 							"firstName": {"type": "string", "required": true},
 							"lastName": {"type": "string", "required": true},
 							"email": {"type": "string", "required": true},
-							"ts": {"type": "integer", "required": false},
+							"phone": {"type": "string"},
+							"ts": {"type": "integer"},
 							"status": {"type": "string", "required": true},
-							"profile": {"type": "object", "required": false},
+							"profile": {"type": "object"},
 							"groups": {
 								"type": "array",
 								"required": true,
@@ -48,17 +48,14 @@ let listAllSchema = {
 							},
 							"config": {
 								"type": "object",
-								"required": false,
 								"additionalProperties": false,
 								"properties": {
-									"packages": {"type": "object", "required": false},
-									"keys": {"type": "object", "required": false},
+									"packages": {"type": "object"},
+									"keys": {"type": "object"},
 									"allowedTenants": {
 										"type": "array",
-										"required": false,
 										"items": {
 											"type": "object",
-											"required": false,
 											"additionalProperties": false,
 											"properties": {
 												"tenant": {
@@ -66,11 +63,11 @@ let listAllSchema = {
 													"required": true,
 													"additionalProperties": false,
 													"properties": {
-														"id": {"type": "string", "required": false},
-														"code": {"type": "string", "required": false},
+														"id": {"type": "string"},
+														"code": {"type": "string"},
 														"pin": {
-															"allowed": {"type": "boolean", "required": false},
-															"code": {"type": "string", "required": false}
+															"allowed": {"type": "boolean"},
+															"code": {"type": "string"}
 														}
 													}
 												},
@@ -82,14 +79,13 @@ let listAllSchema = {
 							},
 							"tenant": {
 								"type": "object",
-								"required": false,
 								"additionalProperties": false,
 								"properties": {
-									"id": {"type": "string", "required": false},
-									"code": {"type": "string", "required": false},
+									"id": {"type": "string"},
+									"code": {"type": "string"},
 									"pin": {
-										"allowed": {"type": "boolean", "required": false},
-										"code": {"type": "string", "required": false}
+										"allowed": {"type": "boolean"},
+										"code": {"type": "string"}
 									}
 								}
 							}
@@ -98,17 +94,15 @@ let listAllSchema = {
 				},
 				"groups": {
 					"type": "array",
-					"required": false,
 					"items": {
 						"type": "object",
-						"required": false,
 						"additionalProperties": false,
 						"properties": {
 							"_id": {"type": "string", "required": true},
 							"code": {"type": "string", "required": true},
-                            "locked": {"type": "boolean", "required": false},
+                            "locked": {"type": "boolean"},
 							"name": {"type": "string", "required": true},
-							"description": {"type": "string", "required": false},
+							"description": {"type": "string"},
 							"config": {
 								"type": "object",
 								"required": true,
@@ -116,7 +110,6 @@ let listAllSchema = {
 								"properties": {
 									"allowedPackages": {
 										"type": "object",
-										"required": false,
 										"patternProperties": {
 											"^[a-zA-Z0-9]+$": {
 												"type": "array",
@@ -128,7 +121,6 @@ let listAllSchema = {
 									},
 									"allowedEnvironments": {
 										"type": "object",
-										"required": false,
 										"patternProperties": {
 											"^[a-zA-Z0-9]+$": {
 												"type": "object"
@@ -139,17 +131,15 @@ let listAllSchema = {
 							},
 							"tenant": {
 								"type": "object",
-								"required": false,
 								"additionalProperties": true,
 								"properties": {
 									"id": {"type": "string", "required": true},
 									"code": {"type": "string", "required": true},
 									"pin": {
 										"type": "object",
-										"required": false,
 										"additionalProperties": false,
 										"properties": {
-											"code": {"type": "string", "required": false},
+											"code": {"type": "string"},
 											"allowed": {"type": "boolean", "required": true}
 										}
 									}
@@ -162,7 +152,6 @@ let listAllSchema = {
 		},
 		"errors": {
 			"type": "object",
-			"required": false,
 			"properties": {
 				"codes": {
 					"type": "array",

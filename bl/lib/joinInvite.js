@@ -56,6 +56,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                     lib.message.send(soajs, data.service, data, tokenRecord, function (error) {
                         if (error) {
                             soajs.log.info(data.service + ': No SMS was sent: ' + error.message);
+                            //TODO: add send code by email
                         }
                         return cb(null, {"id": response.id});
                     });

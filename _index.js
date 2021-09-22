@@ -58,6 +58,11 @@ function run(serviceStartCb) {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });
+            service.get("/resend/code", function (req, res) {
+                bl.resendCode(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
             service.get("/validate/changeEmail", function (req, res) {
                 bl.validateChangeEmail(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
@@ -135,6 +140,13 @@ function run(serviceStartCb) {
             });
             service.put("/account/password", function (req, res) {
                 bl.changePassword(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
+            service.put("/account/email/code", function (req, res) {
+                req.soajs.inputmaskData.code = true;
+                req.soajs.inputmaskData.service = "changeEmail_code";
+                bl.changeEmail(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });

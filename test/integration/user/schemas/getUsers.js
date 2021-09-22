@@ -19,41 +19,38 @@ let listUsersSchema = {
         },
         "data": {
             "type": "array",
-            "required": false,
             "items": {
                 "type": "object",
                 "required": true,
                 "additionalProperties": false,
                 "properties": {
                     "_id": {"type": "string", "required": true},
-                    "locked": {"type": "boolean", "required": false},
+                    "locked": {"type": "boolean"},
                     "username": {"type": "string", "required": true},
                     "firstName": {"type": "string", "required": true},
                     "lastName": {"type": "string", "required": true},
                     "email": {"type": "string", "required": true},
-                    "ts": {"type": "integer", "required": false},
+                    "phone": {"type": "string"},
+                    "ts": {"type": "integer"},
                     "status": {"type": "string", "required": true},
-                    "profile": {"type": "object", "required": false},
-	                "groups": {
-		                "type": "array",
-		                "required": true,
-		                "items": {
-			                "type": "string"
-		                }
-	                },
+                    "profile": {"type": "object"},
+                    "groups": {
+                        "type": "array",
+                        "required": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
                     "config": {
                         "type": "object",
-                        "required": false,
                         "additionalProperties": false,
                         "properties": {
-                            "packages": {"type": "object", "required": false},
-                            "keys": {"type": "object", "required": false},
+                            "packages": {"type": "object"},
+                            "keys": {"type": "object"},
                             "allowedTenants": {
                                 "type": "array",
-                                "required": false,
                                 "items": {
                                     "type": "object",
-                                    "required": false,
                                     "additionalProperties": false,
                                     "properties": {
                                         "tenant": {
@@ -61,11 +58,11 @@ let listUsersSchema = {
                                             "required": true,
                                             "additionalProperties": false,
                                             "properties": {
-                                                "id": {"type": "string", "required": false},
-                                                "code": {"type": "string", "required": false},
+                                                "id": {"type": "string"},
+                                                "code": {"type": "string"},
                                                 "pin": {
-                                                    "allowed": {"type": "boolean", "required": false},
-                                                    "code": {"type": "string", "required": false}
+                                                    "allowed": {"type": "boolean"},
+                                                    "code": {"type": "string"}
                                                 }
                                             }
                                         },
@@ -77,14 +74,13 @@ let listUsersSchema = {
                     },
                     "tenant": {
                         "type": "object",
-                        "required": false,
                         "additionalProperties": false,
                         "properties": {
-                            "id": {"type": "string", "required": false},
-                            "code": {"type": "string", "required": false},
+                            "id": {"type": "string"},
+                            "code": {"type": "string"},
                             "pin": {
-                                "allowed": {"type": "boolean", "required": false},
-                                "code": {"type": "string", "required": false}
+                                "allowed": {"type": "boolean"},
+                                "code": {"type": "string"}
                             }
                         }
                     }
@@ -93,7 +89,6 @@ let listUsersSchema = {
         },
         "errors": {
             "type": "object",
-            "required": false,
             "properties": {
                 "codes": {
                     "type": "array",
