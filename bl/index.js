@@ -176,7 +176,8 @@ let bl = {
         options = {};
         options.mongoCore = modelObj.mongoCore;
         inputmaskData = inputmaskData || {};
-        inputmaskData.service = 'changeEmail';
+        // inputmaskData.service = 'changeEmail';
+        inputmaskData.services = ['changeEmail', 'changeEmail_code'];
         bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
             if (error) {
                 //close model
