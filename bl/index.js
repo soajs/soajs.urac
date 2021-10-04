@@ -297,9 +297,9 @@ let bl = {
                         return cb(error, null);
                     }
                     userRecord.email = inputmaskData.email;
-                    lib.mail.send(soajs, "changeEmail", userRecord, tokenRecord, function (error, mailRecord) {
+                    lib.mail.send(soajs, data.service, userRecord, tokenRecord, function (error, mailRecord) {
                         if (error) {
-                            soajs.log.info('changeEmail: No Mail was sent: ' + error.message);
+                            soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
                         }
                         return cb(null, {
                             token: tokenRecord.token,
