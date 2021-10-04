@@ -163,8 +163,7 @@ Token.prototype.addInvite = function (data, cb) {
 
     let condition = {
         'userId': data.email,
-        'email': data.email,
-        'phone': data.phone,
+        'service': data.service,
         'status': data.status
     };
     let extraOptions = {
