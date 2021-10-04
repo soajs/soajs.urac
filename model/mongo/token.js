@@ -201,6 +201,7 @@ Token.prototype.add = function (data, cb) {
     };
     if (data.code) {
         s.$set.token = Math.floor(100000 + Math.random() * 900000);
+        s.$set.token = "" + s.$set.token;
     } else {
         const token = uuidv4();
         s.$set.token = token;
@@ -248,7 +249,7 @@ Token.prototype.get = function (data, cb) {
     } else {
         condition.service = {'$in': data.services};
     }
-console.log(condition)
+
     __self.mongoCore.findOne(colName, condition, null, (err, record) => {
         return cb(err, record);
     });
