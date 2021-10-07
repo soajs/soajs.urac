@@ -124,7 +124,7 @@ let bl = {
             options.mongoCore = modelObj.mongoCore;
         }
         inputmaskData = inputmaskData || {};
-        inputmaskData.service = 'join';
+        inputmaskData.services = ['join', 'join_code'];
         bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
             if (error) {
                 //close model
