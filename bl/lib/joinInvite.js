@@ -9,7 +9,8 @@
  */
 
 const lib = {
-    "message": require("../../lib/message.js")
+    "message": require("../../lib/message.js"),
+    "mail": require("../../lib/mail.js")
 };
 
 let bl = null;
