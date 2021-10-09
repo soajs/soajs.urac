@@ -74,14 +74,14 @@ function Token(soajs, localConfig, mongoCore) {
                         'userId': 1,
                         'service': 1,
                         'status': 1
-                    }, "o": {unique: true}
+                    }, "o": {}
                 },
                 {
                     "col": colName, "i": {
                         'token': 1,
                         'service': 1,
                         'status': 1
-                    }, "o": {unique: true}
+                    }, "o": {}
                 }
             ];
             __self.indexCount = indexes.length;
