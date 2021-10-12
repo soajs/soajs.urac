@@ -39,7 +39,7 @@ describe("Testing /join/invite API", () => {
         });
     });
 
-    it("Fails - wrong email or phone", (done) => {
+    it.skip("Fails - wrong email or phone", (done) => {
         let params = {
             body: {
                 "username": 'joininvitecode',

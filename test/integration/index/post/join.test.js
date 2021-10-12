@@ -68,7 +68,7 @@ describe("Testing /join API", () => {
             assert.ok(body.errors);
             assert.deepStrictEqual(body.errors.details, [{
                 code: 172,
-                message: 'Missing required field: username, password, firstName, lastName, email'
+                message: 'Missing required field: password, firstName, lastName, email'
             }]);
             let check = validator.validate(body, joinSchema);
             assert.deepStrictEqual(check.valid, true);
