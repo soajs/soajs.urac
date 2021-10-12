@@ -1,6 +1,8 @@
 <p>Dear <b>{{firstName}} {{lastName}}</b>, <br /><br />
 This is an automated email to confirm your registration.<br />
+{{#if link.join}}
 Please click the following link to confirm your account <a href='{{link.join}}'>{{link.join}}</a>.<br />
+{{/if}}
 Please note that this link will expire in {{limit}} hours.<br /><br />
 Regards,<br/>
 The Team.

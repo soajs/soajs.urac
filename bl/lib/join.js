@@ -9,7 +9,8 @@
  */
 
 const lib = {
-    "mail": require("../../lib/mail.js")
+    "mail": require("../../lib/mail.js"),
+    "generateUsername": require("../../lib/generateUsername.js")
 };
 
 let bl = null;
@@ -26,6 +27,9 @@ let local = (soajs, inputmaskData, options, cb) => {
     }
     inputmaskData = inputmaskData || {};
 
+    if (!inputmaskData.username) {
+        inputmaskData.username = lib.generateUsername();
+    }
     bl.user.countUser(soajs, inputmaskData, options, (error, found) => {
         if (error) {
             //close model
@@ -91,7 +95,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                 if (error) {
                     return cb(error, null);
                 }
-                if (inputmaskData.doNotSendEmail){
+                if (inputmaskData.doNotSendEmail) {
                     return cb(null, {
                         id: userRecord._id.toString()
                     });

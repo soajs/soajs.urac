@@ -10,7 +10,8 @@
 
 const lib = {
     "message": require("../../lib/message.js"),
-    "mail": require("../../lib/mail.js")
+    "mail": require("../../lib/mail.js"),
+    "generateUsername": require("../../lib/generateUsername.js")
 };
 
 let bl = null;
@@ -19,19 +20,22 @@ let local = (soajs, inputmaskData, options, cb) => {
     options = {};
     options.mongoCore = modelObj.mongoCore;
 
-    bl.token.get(soajs, {"token": inputmaskData.code, "service": 'inviteToJoin'}, options, (error, tokenRecord) => {
+    if (!inputmaskData.username) {
+        inputmaskData.username = lib.generateUsername();
+    }
+    bl.token.get(soajs, {"token": inputmaskData.code, "service": 'inviteToJoin'}, options, (error) => {
         if (error) {
             //close model
             bl.user.mt.closeModel(modelObj);
             return cb(error, null);
         }
         // NOTE: at this point tokenRecord is assured
-        if (tokenRecord.email !== inputmaskData.email) {
-            return cb(bl.user.handleError(soajs, 537, null));
-        }
-        if (tokenRecord.phone !== inputmaskData.phone) {
-            return cb(bl.user.handleError(soajs, 537, null));
-        }
+        // if (tokenRecord.email !== inputmaskData.email) {
+        //     return cb(bl.user.handleError(soajs, 537, null));
+        // }
+        // if (tokenRecord.phone !== inputmaskData.phone) {
+        //     return cb(bl.user.handleError(soajs, 537, null));
+        // }
         let emailCode = true;
         if (inputmaskData.confirmation === "email") {
             if (soajs.servicesConfig.urac && Object.hasOwnProperty.call(soajs.servicesConfig.urac, 'joinInviteEmailCode')) {

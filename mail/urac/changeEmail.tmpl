@@ -1,6 +1,8 @@
 <p>Dear <b>{{firstName}} {{lastName}}</b>, <br /><br />
 You have requested to change your email.<br />
+{{#if link.changeEmail}}
 Please click the following link to proceed: <a href='{{link.changeEmail}}'>{{link.changeEmail}}</a>.<br />
+{{/if}}
 Please note that the above link will expire in {{limit}} hours.<br /><br />
 Regards,<br/>
 The Team.

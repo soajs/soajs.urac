@@ -389,7 +389,6 @@ module.exports = {
                 },
                 "username": {
                     "source": ['body.username'],
-                    "required": true,
                     "validation": {
                         "type": "string",
                         "minLength": 5,
@@ -452,7 +451,6 @@ module.exports = {
                 },
                 "username": {
                     "source": ['body.username'],
-                    "required": true,
                     "validation": {
                         "type": "string",
                         "minLength": 5,

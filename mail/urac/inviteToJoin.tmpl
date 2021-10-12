@@ -5,7 +5,9 @@ The invitation code is: {{code}}<br /><br />
 {{^}}
 The invitation code has been send to your mobile number: {{phone}}<br /><br />
 {{/if}}
+{{#if link.inviteToJoin}}
 Please click the following link to join: <a href='{{link.inviteToJoin}}'>{{link.inviteToJoin}}</a>.<br /><br />
+{{/if}}
 Please note that the above link will expire in {{limit}} hours.<br /><br />
 Regards,<br/>
 The Team.
