@@ -37,6 +37,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                 bl.user.mt.closeModel(modelObj);
                 return cb(error, null);
             }
+            let emailCode = true;
             let _continue = () => {
                 if (inputmaskData.confirmation === "emailAndPhone" || inputmaskData.confirmation === "phone") {
                     let data = {};
@@ -62,11 +63,41 @@ let local = (soajs, inputmaskData, options, cb) => {
                         });
                     });
                 } else {
-                    bl.user.mt.closeModel(modelObj);
-                    return cb(null, {"id": userRecord._id.toString()});
+                    if (emailCode) {
+                        let data = {};
+                        data.userId = userRecord._id.toString();
+                        data.username = inputmaskData.username;
+                        data.service = "join_code";
+                        data.code = true;
+                        bl.token.add(soajs, data, options, (error, tokenRecord) => {
+                            bl.user.mt.closeModel(modelObj);
+                            if (error) {
+                                return cb(error, null);
+                            }
+                            lib.mail.send(soajs, data.service, inputmaskData, tokenRecord, function (error) {
+                                if (error) {
+                                    soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
+                                }
+                                return cb(null, {"id": userRecord._id.toString()});
+                            });
+                        });
+                    } else {
+                        bl.user.mt.closeModel(modelObj);
+                        return cb(null, {"id": userRecord._id.toString()});
+                    }
                 }
             };
-            if (inputmaskData.confirmation === "phone") {
+            if (inputmaskData.confirmation === "email") {
+                if (soajs.servicesConfig.urac && Object.hasOwnProperty.call(soajs.servicesConfig.urac, 'joinInviteEmailCode')) {
+                    emailCode = soajs.servicesConfig.urac.joinInviteEmailCode;
+                } else if (soajs.registry && soajs.registry.custom && soajs.registry.custom.urac && soajs.registry.custom.urac.value && soajs.registry.custom.urac.value.hasOwnProperty('joinInviteEmailCode')) {
+                    emailCode = soajs.registry.custom.urac.value.joinInviteEmailCode;
+                }
+            } else {
+                emailCode = false;
+            }
+            inputmaskData.doNotSendEmail = (inputmaskData.confirmation === "phone") || emailCode;
+            if (inputmaskData.doNotSendEmail) {
                 _continue();
             } else {
                 lib.mail.send(soajs, data.service, userRecord, tokenRecord, function (error) {

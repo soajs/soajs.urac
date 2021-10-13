@@ -96,9 +96,16 @@ let local = (soajs, inputmaskData, options, cb) => {
                     return cb(error, null);
                 }
                 if (inputmaskData.doNotSendEmail) {
-                    return cb(null, {
-                        id: userRecord._id.toString()
-                    });
+                    if (inputmaskData.keepToken) {
+                        return cb(null, {
+                            id: userRecord._id.toString(),
+                            token: tokenRecord.token
+                        });
+                    } else {
+                        return cb(null, {
+                            id: userRecord._id.toString()
+                        });
+                    }
                 }
                 lib.mail.send(soajs, data.service, userRecord, tokenRecord, function (error) {
                     if (error) {
