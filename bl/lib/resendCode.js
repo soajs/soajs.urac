@@ -74,7 +74,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                             if (error) {
                                 return cb(error, null);
                             }
-                            lib.mail.send(soajs, data.service, inputmaskData, tokenRecord, function (error) {
+                            lib.mail.send(soajs, data.service, userRecord, tokenRecord, function (error) {
                                 if (error) {
                                     soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
                                 }
