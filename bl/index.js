@@ -222,7 +222,7 @@ let bl = {
         let modelObj = bl.user.mt.getModel(soajs);
         options = {};
         options.mongoCore = modelObj.mongoCore;
-        inputmaskData.services = ['forgotPassword', 'addUser'];
+        inputmaskData.services = ['forgotPassword', 'addUser', 'forgotPassword_code'];
         bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
             if (error) {
                 //close model
