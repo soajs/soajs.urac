@@ -358,6 +358,9 @@ User.prototype.getUsers = function (data, cb) {
             {"lastName": {"$regex": rePattern}},
         ];
     }
+    if (data && data.status) {
+        condition.status = data.status;
+    }
     options.projection = {
         'password': 0,
         'config': 0,

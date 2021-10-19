@@ -272,6 +272,13 @@ module.exports = {
                 "scope": {
                     "source": ['query.scope'],
                     "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
+                },
+                "status": {
+                    "source": ['query.status'],
+                    "validation": {
+                        "type": "string",
+                        "enum": ['active']
+                    }
                 }
             },
             '/admin/users/count': {

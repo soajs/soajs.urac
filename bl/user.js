@@ -163,6 +163,9 @@ let bl = {
         data.config = inputmaskData.config;
         data.tenant = soajs.tenant;
         data.scope = inputmaskData.scope || null;
+        if (inputmaskData.status) {
+            data.status = inputmaskData.status;
+        }
         modelObj.getUsers(data, (err, records) => {
             bl.mt.closeModel(modelObj);
             if (err) {
