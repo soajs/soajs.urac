@@ -387,7 +387,7 @@ module.exports = (profilePath, dataPath, callback) => {
 
             ],
             (error) => {
-                mongoConnection.closeDb();
+               // mongoConnection.closeDb();
                 return callback(null, "MongoDb Soajs Data custom done!");
             });
     });
