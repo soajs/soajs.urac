@@ -347,7 +347,7 @@ User.prototype.getUsers = function (data, cb) {
     if (data && data.limit) {
         options.skip = data.start;
         options.limit = data.limit;
-        options.sort = {};
+        options.sort = {"firstName": 1};
     }
     if (data && data.keywords) {
         let rePattern = new RegExp(data.keywords, 'i');
