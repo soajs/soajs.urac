@@ -63,7 +63,21 @@ function User(soajs, localConfig, mongoCore) {
             let indexes = [
                 {"col": colName, "i": {'tenant.id': 1}, "o": {}},
                 {"col": colName, "i": {'username': 1, 'email': 1, 'status': 1}, "o": {}},
-                {"col": colName, "i": {'_id': 1, 'status': 1}, "o": {}},
+                {"col": colName, "i": {'_id': 1, 'status': 1}, "o": {}}, {
+                    "col": colName, "i": {
+                        'firstName': 1,
+                        'lastName': 1,
+                        'tenant.id': 1,
+                        'config.allowedTenants.tenant.id': 1
+                    }, "o": {}
+                },
+                {
+                    "col": colName, "i": {
+                        'firstName': 1,
+                        'lastName': 1,
+                        'tenant.id': 1
+                    }, "o": {}
+                },
                 {
                     "col": colName, "i": {
                         'username': 1,
@@ -496,8 +510,6 @@ User.prototype.countUsers = function (data, cb) {
     if (data && data.keywords) {
         let rePattern = new RegExp(data.keywords, 'i');
         condition.$or = [
-            {"username": {"$regex": rePattern}},
-            {"email": {"$regex": rePattern}},
             {"firstName": {"$regex": rePattern}},
             {"lastName": {"$regex": rePattern}}
         ];
