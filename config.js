@@ -96,6 +96,14 @@ module.exports = {
                     "min": 0
                 }
             },
+            "skip": {
+                "source": ["query.skip", "body.skip"],
+                "default": 0,
+                "validation": {
+                    "type": "integer",
+                    "min": 0
+                }
+            },
             "limit": {
                 "source": ["query.limit", "body.limit"],
                 "default": 1000,
@@ -245,6 +253,20 @@ module.exports = {
                 "_apiInfo": {
                     "l": "Get logged in user tenants",
                     "group": "User administration"
+                }
+            },
+            '/users': {
+                "_apiInfo": {
+                    "l": "List users matching certain keywords",
+                    "group": "User",
+                },
+                "commonFields": ["skip", "limit", "keywords"],
+                "status": {
+                    "source": ['query.status'],
+                    "validation": {
+                        "type": "string",
+                        "enum": ['active']
+                    }
                 }
             },
             '/admin/user': {

@@ -401,6 +401,55 @@ User.prototype.getUsers = function (data, cb) {
     });
 };
 
+User.prototype.getUsersBasicInfo = function (data, cb) {
+    let __self = this;
+    let condition = {
+        "tenant.id": data.tenant.id
+    };
+    let options = {};
+    if (data && data.limit) {
+        options.skip = data.skip;
+        options.limit = data.limit;
+        options.sort = {"firstName": 1};
+    }
+    if (data && data.keywords) {
+        let rePattern = new RegExp(data.keywords, 'i');
+        condition.$or = [
+            {"firstName": {"$regex": rePattern}},
+            {"lastName": {"$regex": rePattern}}
+        ];
+    }
+    if (data && data.status) {
+        condition.status = data.status;
+    }
+    options.projection = {
+        '_id': 1,
+        'firstName': 1,
+        'lastName': 1,
+        'profile': 1,
+        'lastLogin': 1
+    };
+
+    __self.mongoCore.find(colName, condition, options, (error, response) => {
+        if (error) {
+            return cb(error);
+        } else {
+            __self.count(data, condition, colName, (error, count) => {
+                if (error) {
+                    return cb(error);
+                } else {
+                    return cb(null, {
+                        "count": count,
+                        "limit": options.limit,
+                        "skip": options.skip,
+                        "items": response
+                    });
+                }
+            });
+        }
+    });
+};
+
 /**
  * To get users by ids
  *
@@ -1009,6 +1058,14 @@ User.prototype.delete = function (data, cb) {
             });
         });
     });
+};
+
+User.prototype.count = function (data, condition, col, cb) {
+    let __self = this;
+
+    let options = {};
+    __self.mongoCore.countDocuments(col, condition, options, cb);
+
 };
 
 User.prototype.validateId = function (id, cb) {
