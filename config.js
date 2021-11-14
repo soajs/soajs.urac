@@ -240,8 +240,7 @@ module.exports = {
             '/user': {
                 "_apiInfo": {
                     "l": "Get user account information by username as (username or email)",
-                    "group": "My account",
-                    "groupMain": true
+                    "group": "My account"
                 },
                 "username": {
                     "source": ['query.username'],
@@ -253,6 +252,12 @@ module.exports = {
                 "_apiInfo": {
                     "l": "Get logged in user tenants",
                     "group": "User administration"
+                }
+            },
+            '/user/me': {
+                "_apiInfo": {
+                    "l": "Get logged in user account information ",
+                    "group": "My account"
                 }
             },
             '/users': {
