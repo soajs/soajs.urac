@@ -288,8 +288,7 @@ module.exports = {
             '/admin/users': {
                 "_apiInfo": {
                     "l": "List users matching certain keywords",
-                    "group": "User administration",
-                    "groupMain": true
+                    "group": "User administration"
                 },
                 "commonFields": ["start", "limit", "keywords"],
                 "config": {
@@ -614,8 +613,7 @@ module.exports = {
             '/admin/users/ids': {
                 "_apiInfo": {
                     "l": "List users by Id",
-                    "group": "User administration",
-                    "groupMain": true
+                    "group": "User administration"
                 },
                 "commonFields": ["start", "limit"],
                 "ids": {

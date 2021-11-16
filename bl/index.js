@@ -507,6 +507,7 @@ function init(service, localConfig, cb) {
         bl.resendCode = require("./lib/resendCode.js")(bl);
         bl.inviteToJoin = require("./lib/inviteToJoin.js")(bl);
         bl.joinInvite = require("./lib/joinInvite.js")(bl);
+        bl.joinCode = require("./lib/joinCode.js")(bl);
 
         if (err) {
             service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);
