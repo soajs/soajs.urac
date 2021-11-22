@@ -577,6 +577,11 @@ module.exports = {
                 "phone": {
                     "source": ['body.phone'],
                     "validation": {"type": "string"}
+                },
+                "confirmation": {
+                    "source": ['body.confirmation'],
+                    "default": "email",
+                    "validation": {"type": "string", "enum": ["email", "emailAndPhone", "phone"]}
                 }
             },
 
