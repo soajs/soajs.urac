@@ -61,10 +61,10 @@ let local = (soajs, inputmaskData, options, cb) => {
                             soajs.log.info(data.service + ': No SMS was sent: ' + error.message);
                             //TODO: add send code by email
                         }
-                        return cb(null, {"id": response.id, "verify": true});
+                        return cb(null, {"id": response.id, "status": response.status});
                     });
                 } else {
-                    return cb(null, {"id": response.id, "verify": true});
+                    return cb(null, {"id": response.id, "status": response.status});
                 }
             });
         } else {
@@ -83,12 +83,12 @@ let local = (soajs, inputmaskData, options, cb) => {
                         if (error) {
                             soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
                         }
-                        return cb(null, {"id": response.id, "verify": true});
+                        return cb(null, {"id": response.id, "status": response.status});
                     });
                 });
             } else {
                 bl.user.mt.closeModel(modelObj);
-                return cb(null, {"id": response.id, "verify": false});
+                return cb(null, {"id": response.id, "status": response.status});
             }
         }
     });
