@@ -21,7 +21,7 @@ let local = (soajs, inputmaskData, options, cb) => {
     if (!inputmaskData.username) {
         inputmaskData.username = lib.generateUsername();
     }
-    bl.token.get(soajs, {"token": inputmaskData.code, "service": 'inviteToJoin'}, options, (error) => {
+    bl.token.get(soajs, {"token": inputmaskData.code, "service": 'inviteToJoin'}, options, (error, tokenRecord) => {
         if (error) {
             //close model
             bl.user.mt.closeModel(modelObj);
@@ -34,6 +34,14 @@ let local = (soajs, inputmaskData, options, cb) => {
         // if (tokenRecord.phone !== inputmaskData.phone) {
         //     return cb(bl.user.handleError(soajs, 537, null));
         // }
+        if (!inputmaskData.firstName) {
+            inputmaskData.firstName = tokenRecord.firstName;
+        }
+        if (!inputmaskData.lastName) {
+            inputmaskData.lastName = tokenRecord.lastName;
+        }
+        inputmaskData.emailConfirmed = tokenRecord.email === inputmaskData.email;
+
         bl.joinCode(soajs, inputmaskData, options, cb);
     });
 };

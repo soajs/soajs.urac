@@ -45,7 +45,7 @@ let local = (soajs, inputmaskData, options, cb) => {
             data.firstName = inputmaskData.firstName;
             data.lastName = inputmaskData.lastName;
             data.email = inputmaskData.email;
-            data.phone = inputmaskData.phone;
+            data.phone = inputmaskData.phone || null;
             data.confirmation = inputmaskData.confirmation;
             data.inviteToken = response.token;
             data.service = "joinInvite";
@@ -55,16 +55,20 @@ let local = (soajs, inputmaskData, options, cb) => {
                 if (error) {
                     return cb(error, null);
                 }
-                lib.message.send(soajs, data.service, data, tokenRecord, function (error) {
-                    if (error) {
-                        soajs.log.info(data.service + ': No SMS was sent: ' + error.message);
-                        //TODO: add send code by email
-                    }
+                if (data.phone) {
+                    lib.message.send(soajs, data.service, data, tokenRecord, function (error) {
+                        if (error) {
+                            soajs.log.info(data.service + ': No SMS was sent: ' + error.message);
+                            //TODO: add send code by email
+                        }
+                        return cb(null, {"id": response.id});
+                    });
+                } else {
                     return cb(null, {"id": response.id});
-                });
+                }
             });
         } else {
-            if (emailCode) {
+            if (emailCode && !inputmaskData.emailConfirmed) {
                 let data = {};
                 data.userId = response.id;
                 data.username = inputmaskData.username;
@@ -79,12 +83,12 @@ let local = (soajs, inputmaskData, options, cb) => {
                         if (error) {
                             soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
                         }
-                        return cb(null, {"id": response.id});
+                        return cb(null, {"id": response.id, "verify": true});
                     });
                 });
             } else {
                 bl.user.mt.closeModel(modelObj);
-                return cb(null, {"id": response.id});
+                return cb(null, {"id": response.id, "verify": false});
             }
         }
     });

@@ -253,6 +253,7 @@ function run(serviceStartCb) {
                 });
             });
             service.post("/join/code", function (req, res) {
+                req.soajs.inputmaskData.emailConfirmed = false;
                 bl.joinCode(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });

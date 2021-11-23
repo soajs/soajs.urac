@@ -436,12 +436,10 @@ module.exports = {
                 },
                 "firstName": {
                     "source": ['body.firstName'],
-                    "required": true,
                     "validation": {"type": "string"}
                 },
                 "lastName": {
                     "source": ['body.lastName'],
-                    "required": true,
                     "validation": {"type": "string"}
                 },
                 "email": {
@@ -463,7 +461,6 @@ module.exports = {
                 },
                 "phone": {
                     "source": ['body.phone'],
-                    "required": true,
                     "validation": {"type": "string"}
                 },
                 "code": {
