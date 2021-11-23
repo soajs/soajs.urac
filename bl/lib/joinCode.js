@@ -61,10 +61,10 @@ let local = (soajs, inputmaskData, options, cb) => {
                             soajs.log.info(data.service + ': No SMS was sent: ' + error.message);
                             //TODO: add send code by email
                         }
-                        return cb(null, {"id": response.id});
+                        return cb(null, {"id": response.id, "verify": true});
                     });
                 } else {
-                    return cb(null, {"id": response.id});
+                    return cb(null, {"id": response.id, "verify": true});
                 }
             });
         } else {

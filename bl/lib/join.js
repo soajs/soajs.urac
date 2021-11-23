@@ -75,6 +75,9 @@ let local = (soajs, inputmaskData, options, cb) => {
         }
 
         inputmaskData.status = (requireValidation) ? 'pendingJoin' : 'active';
+        if (inputmaskData.emailConfirmed) {
+            inputmaskData.status = 'active';
+        }
         inputmaskData.tenant = {
             id: soajs.tenant.id,
             code: soajs.tenant.code
@@ -85,6 +88,11 @@ let local = (soajs, inputmaskData, options, cb) => {
                 //close model
                 bl.user.mt.closeModel(modelObj);
                 return cb(error, null);
+            }
+            if (inputmaskData.status === 'active') {
+                return cb(null, {
+                    id: userRecord._id.toString()
+                });
             }
             let data = {};
             data.userId = userRecord._id.toString();
