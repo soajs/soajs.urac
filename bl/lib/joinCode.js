@@ -35,10 +35,7 @@ let local = (soajs, inputmaskData, options, cb) => {
     }
     inputmaskData.keepToken = true;
     inputmaskData.doNotSendEmail = (inputmaskData.confirmation === "phone") || emailCode;
-    console.log(inputmaskData);
-    console.log(emailCode);
     bl.join(soajs, inputmaskData, options, (error, response) => {
-        console.log(response);
         if (error) {
             bl.user.mt.closeModel(modelObj);
             return cb(error, null);

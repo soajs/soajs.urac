@@ -91,6 +91,7 @@ let local = (soajs, inputmaskData, options, cb) => {
             }
             if (inputmaskData.status === 'active') {
                 return cb(null, {
+                    status: userRecord.status,
                     id: userRecord._id.toString()
                 });
             }
@@ -106,11 +107,13 @@ let local = (soajs, inputmaskData, options, cb) => {
                 if (inputmaskData.doNotSendEmail) {
                     if (inputmaskData.keepToken) {
                         return cb(null, {
+                            status: userRecord.status,
                             id: userRecord._id.toString(),
                             token: tokenRecord.token
                         });
                     } else {
                         return cb(null, {
+                            status: userRecord.status,
                             id: userRecord._id.toString()
                         });
                     }
@@ -122,10 +125,12 @@ let local = (soajs, inputmaskData, options, cb) => {
                     if (inputmaskData.keepToken) {
                         return cb(null, {
                             id: userRecord._id.toString(),
+                            status: userRecord.status,
                             token: tokenRecord.token
                         });
                     }
                     return cb(null, {
+                        status: userRecord.status,
                         id: userRecord._id.toString()
                     });
                 });
