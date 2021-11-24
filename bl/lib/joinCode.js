@@ -38,6 +38,7 @@ let local = (soajs, inputmaskData, options, cb) => {
     console.log(inputmaskData);
     console.log(emailCode);
     bl.join(soajs, inputmaskData, options, (error, response) => {
+        console.log(response);
         if (error) {
             bl.user.mt.closeModel(modelObj);
             return cb(error, null);
