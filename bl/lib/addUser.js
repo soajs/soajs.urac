@@ -10,7 +10,8 @@
 
 const lib = {
     "mail": require("../../lib/mail.js"),
-    "pin": require("../../lib/pin.js")
+    "pin": require("../../lib/pin.js"),
+    "generateUsername": require("../../lib/generateUsername.js")
 };
 
 let bl = null;
@@ -20,7 +21,9 @@ let local = (soajs, inputmaskData, options, cb) => {
     options.mongoCore = modelObj.mongoCore;
 
     inputmaskData = inputmaskData || {};
-
+    if (!inputmaskData.username) {
+        inputmaskData.username = lib.generateUsername();
+    }
     bl.user.countUser(soajs, inputmaskData, options, (error, found) => {
         if (error) {
             //close model
@@ -138,12 +141,13 @@ let local = (soajs, inputmaskData, options, cb) => {
 
             doPin(false);
         } else {
-            inputmaskData.tenant = {
-                "id": soajs.tenant.id,
-                "code": soajs.tenant.code,
-                "pin": {}
-            };
-
+            if (!inputmaskData.tenant) {
+                inputmaskData.tenant = {
+                    "id": soajs.tenant.id,
+                    "code": soajs.tenant.code,
+                    "pin": {}
+                };
+            }
             doPin(true);
         }
     });

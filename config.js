@@ -662,7 +662,59 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
-
+            '/admin/user/tenant': {
+                "_apiInfo": {
+                    "l": "Add user",
+                    "group": "User administration"
+                },
+                "firstName": {
+                    "source": ['body.firstName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "lastName": {
+                    "source": ['body.lastName'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "email": {
+                    "source": ['body.email'],
+                    "required": true,
+                    "validation": {"type": "string", "format": "email"}
+                },
+                "groups": {
+                    "source": ['body.groups'],
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "tenant": {
+                    "required": true,
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": 'string'
+                            },
+                            "code": {
+                                "type": 'string'
+                            }
+                        },
+                        "required": ["id", "code"]
+                    }
+                },
+                "status": {
+                    "source": ['body.status'],
+                    "default": "active",
+                    "validation": {
+                        "type": "string",
+                        "enum": ['active', 'inactive', 'pendingNew']
+                    }
+                }
+            },
             '/admin/users/ids': {
                 "_apiInfo": {
                     "l": "List users by Id",
