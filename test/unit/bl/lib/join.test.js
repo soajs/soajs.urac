@@ -90,19 +90,19 @@ describe("Unit test for: BL - join", () => {
 			}
 		}
 	};
-	
+
 	before((done) => {
 		let localConfig = helper.requireModule("config.js");
 		BL.init(soajs, localConfig, () => {
 			done();
 		});
 	});
-	
+
 	it("testing join", function (done) {
 		function UserModel() {
 			console.log("user model");
 		}
-		
+
 		UserModel.prototype.closeConnection = () => {
 		};
 		UserModel.prototype.checkUsername = (data, cb) => {
@@ -115,18 +115,18 @@ describe("Unit test for: BL - join", () => {
 				return cb(null, null);
 			}
 		};
-		
+
 		UserModel.prototype.add = (data, cb) => {
 			data._id = "5cfb05c22ac09278709d0141";
 			return cb(null, data);
 		};
-		
+
 		BL.user.model = UserModel;
-		
+
 		function TokenModel() {
 			console.log("user model");
 		}
-		
+
 		TokenModel.prototype.closeConnection = () => {
 		};
 		TokenModel.prototype.add = (data, cb) => {
@@ -136,33 +136,34 @@ describe("Unit test for: BL - join", () => {
 			return cb(null, token);
 		};
 		BL.token.model = TokenModel;
-		
+
 		let data = {
 			"username": "found"
 		};
 		BL.join(soajs, data, null, (error) => {
 			assert.ok(error);
-			
+
 			let data = {
 				"username": "error"
 			};
-			
+
 			BL.join(soajs, data, null, (error) => {
 				assert.ok(error);
-				
+
 				let data = {
 					"token": "f65e8358-ce1d-47ff-b478-82e10c93f70e"
 				};
-				
+
 				BL.join(soajs, data, null, (error, result) => {
 					assert.ok(result);
 					assert.deepStrictEqual(result, {
-						id: '5cfb05c22ac09278709d0141'
+						id: '5cfb05c22ac09278709d0141',
+						status: 'pendingJoin'
 					});
 					done();
 				});
 			});
 		});
-		
+
 	});
 });
