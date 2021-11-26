@@ -318,6 +318,28 @@ module.exports = {
                     "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
                 }
             },
+            '/v2/admin/users': {
+                "_apiInfo": {
+                    "l": "List users matching certain keywords",
+                    "group": "User administration"
+                },
+                "commonFields": ["start", "limit", "keywords"],
+                "config": {
+                    "source": ['query.config'],
+                    "validation": {"type": "boolean"}
+                },
+                "scope": {
+                    "source": ['query.scope'],
+                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
+                },
+                "status": {
+                    "source": ['query.status'],
+                    "validation": {
+                        "type": "string",
+                        "enum": ['active']
+                    }
+                }
+            },
 
             '/admin/groups': {
                 "_apiInfo": {
