@@ -87,6 +87,9 @@ function Group(soajs, localConfig, mongoCore) {
  */
 Group.prototype.getGroups = function (data, cb) {
     let __self = this;
+    if (!data) {
+        data = {};
+    }
     let condition = {
         "tenant.id": data.tenantId || __self.tenantId
     };
