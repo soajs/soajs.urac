@@ -338,6 +338,21 @@ module.exports = {
                         "type": "string",
                         "enum": ['active']
                     }
+                },
+                "tenant": {
+                    "source": ['query.tenant'],
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": 'string'
+                            },
+                            "code": {
+                                "type": 'string'
+                            }
+                        },
+                        "required": ["id", "code"]
+                    }
                 }
             },
 
