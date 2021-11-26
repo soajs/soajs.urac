@@ -325,6 +325,17 @@ module.exports = {
                     "group": "Group administration"
                 }
             },
+            '/admin/groups/tenant': {
+                "_apiInfo": {
+                    "l": "List all groups",
+                    "group": "Group administration"
+                },
+                "tenantId": {
+                    "source": ['query.tenantId'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
             '/admin/group': {
                 "_apiInfo": {
                     "l": "Get group by id or code",
@@ -1390,11 +1401,9 @@ module.exports = {
                                     "required": ["code", "allowed"]
                                 },
                                 "groups": {
-                                    "validation": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
-                                        }
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
                                     }
                                 }
                             }
@@ -1402,10 +1411,9 @@ module.exports = {
                     }
                 }
             },
-
-            '/admin/users/uninvite': {
+            '/admin/users/invite/tenant': {
                 "_apiInfo": {
-                    "l": "un-Invite users by id, username or email",
+                    "l": "Invite users by id, username or email",
                     "group": "User administration"
                 },
                 "users": {
@@ -1418,6 +1426,7 @@ module.exports = {
                         "items": {
                             "type": "object",
                             "additionalProperties": false,
+                            "required": ["user", "tenant"],
                             "properties": {
                                 "user": {
                                     "type": "object",
@@ -1440,6 +1449,137 @@ module.exports = {
                                             }
                                         ]
                                     }
+                                },
+                                "pin": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "boolean"
+                                        },
+                                        "allowed": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": ["code", "allowed"]
+                                },
+                                "groups": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "tenant": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": 'string'
+                                        },
+                                        "code": {
+                                            "type": 'string'
+                                        }
+                                    },
+                                    "required": ["id", "code"]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+
+            '/admin/users/uninvite': {
+                "_apiInfo": {
+                    "l": "un-Invite users by id, username or email",
+                    "group": "User administration"
+                },
+                "users": {
+                    "source": ['body.users'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 100,
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": ["user"],
+                            "properties": {
+                                "user": {
+                                    "type": "object",
+                                    "properties": {
+                                        "oneOf": [
+                                            {
+                                                "id": {
+                                                    "type": "string",
+                                                    "required": true
+                                                },
+                                                "username": {
+                                                    "type": "string",
+                                                    "required": true
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    'format': 'email',
+                                                    "required": true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            '/admin/users/uninvite/tenant': {
+                "_apiInfo": {
+                    "l": "un-Invite users by id, username or email",
+                    "group": "User administration"
+                },
+                "users": {
+                    "source": ['body.users'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 100,
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": ["user", "tenant"],
+                            "properties": {
+                                "user": {
+                                    "type": "object",
+                                    "properties": {
+                                        "oneOf": [
+                                            {
+                                                "id": {
+                                                    "type": "string",
+                                                    "required": true
+                                                },
+                                                "username": {
+                                                    "type": "string",
+                                                    "required": true
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    'format': 'email',
+                                                    "required": true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "tenant": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": 'string'
+                                        },
+                                        "code": {
+                                            "type": 'string'
+                                        }
+                                    },
+                                    "required": ["id", "code"]
                                 }
                             }
                         }

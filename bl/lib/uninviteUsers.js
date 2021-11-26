@@ -25,7 +25,8 @@ let local = (soajs, inputmaskData, options, cb) => {
     async.eachLimit(inputmaskData.users, 20, function (oneUser, callback) {
 
         let data = {
-            "user": oneUser.user || null
+            "user": oneUser.user || null,
+            "tenant": oneUser.tenant || null
         };
         bl.user.uninvite(soajs, data, options, (error, response) => {
             if (error) {

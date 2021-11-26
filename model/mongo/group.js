@@ -88,7 +88,7 @@ function Group(soajs, localConfig, mongoCore) {
 Group.prototype.getGroups = function (data, cb) {
     let __self = this;
     let condition = {
-        "tenant.id": __self.tenantId
+        "tenant.id": data.tenantId || __self.tenantId
     };
     __self.mongoCore.find(colName, condition, null, (err, records) => {
         return cb(err, records);

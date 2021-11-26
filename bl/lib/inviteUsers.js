@@ -20,9 +20,11 @@ let local = (soajs, inputmaskData, options, cb) => {
     if (!inputmaskData.users) {
         return cb(bl.user.handleError(soajs, 530, null));
     }
-    //if (soajs.tenant.type === "product" || !soajs.tenant.main) {
-    //    return cb(bl.user.handleError(soajs, 534, null));
-    //}
+
+    if (!inputmaskData.tenant) {
+        inputmaskData.tenant = soajs.tenant;
+    }
+
     let modelObj = bl.user.mt.getModel(soajs);
     options = {};
     options.mongoCore = modelObj.mongoCore;
@@ -39,7 +41,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                 records.failed.push(responseObj);
                 return callback();
             }
-            if (userRecord.tenant.id === soajs.tenant.id) {
+            if (userRecord.tenant.id === inputmaskData.tenant.id) {
                 responseObj.reason = bl.user.localConfig.errors[536];//"User is already in the tenant tenancy.";
                 responseObj.id = userRecord._id;
                 records.failed.push(responseObj);
@@ -54,7 +56,7 @@ let local = (soajs, inputmaskData, options, cb) => {
             let found = false;
             if (userRecord.config.allowedTenants.length > 0) {
                 userRecord.config.allowedTenants.forEach((oneTenant) => {
-                    if (oneTenant.tenant && oneTenant.tenant.id && oneTenant.tenant.id === soajs.tenant.id) {
+                    if (oneTenant.tenant && oneTenant.tenant.id && oneTenant.tenant.id === inputmaskData.tenant.id) {
                         found = true;
                     }
                 });
@@ -67,8 +69,8 @@ let local = (soajs, inputmaskData, options, cb) => {
             }
             let obj = {
                 "tenant": {
-                    "id": soajs.tenant.id,
-                    "code": soajs.tenant.code
+                    "id": inputmaskData.tenant.id,
+                    "code": inputmaskData.tenant.code
                 }
             };
             obj.tenant.pin = {};
