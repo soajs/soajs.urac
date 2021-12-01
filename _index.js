@@ -240,7 +240,17 @@ function run(serviceStartCb) {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });
+            service.put("/admin/users/invite/tenant", function (req, res) {
+                bl.inviteUsers(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
             service.put("/admin/users/uninvite", function (req, res) {
+                bl.uninviteUsers(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
+            service.put("/admin/users/uninvite/tenant", function (req, res) {
                 bl.uninviteUsers(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
