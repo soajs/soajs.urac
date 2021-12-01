@@ -740,6 +740,7 @@ module.exports = {
                     }
                 },
                 "tenant": {
+                    "source": ['body.tenant'],
                     "required": true,
                     "validation": {
                         "type": "object",
