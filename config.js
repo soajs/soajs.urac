@@ -1464,7 +1464,7 @@ module.exports = {
                         "items": {
                             "type": "object",
                             "additionalProperties": false,
-                            "required": ["user", "tenant"],
+                            "required": ["user"],
                             "properties": {
                                 "user": {
                                     "type": "object",
@@ -1505,21 +1505,25 @@ module.exports = {
                                     "items": {
                                         "type": "string"
                                     }
-                                },
-                                "tenant": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": 'string'
-                                        },
-                                        "code": {
-                                            "type": 'string'
-                                        }
-                                    },
-                                    "required": ["id", "code"]
                                 }
                             }
                         }
+                    }
+                },
+                "tenant": {
+                    "source": ['body.tenant'],
+                    "required": true,
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": 'string'
+                            },
+                            "code": {
+                                "type": 'string'
+                            }
+                        },
+                        "required": ["id", "code"]
                     }
                 }
             },
@@ -1583,7 +1587,7 @@ module.exports = {
                         "items": {
                             "type": "object",
                             "additionalProperties": false,
-                            "required": ["user", "tenant"],
+                            "required": ["user"],
                             "properties": {
                                 "user": {
                                     "type": "object",
@@ -1606,21 +1610,25 @@ module.exports = {
                                             }
                                         ]
                                     }
-                                },
-                                "tenant": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": 'string'
-                                        },
-                                        "code": {
-                                            "type": 'string'
-                                        }
-                                    },
-                                    "required": ["id", "code"]
                                 }
                             }
                         }
+                    }
+                },
+                "tenant": {
+                    "source": ['body.tenant'],
+                    "required": true,
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": 'string'
+                            },
+                            "code": {
+                                "type": 'string'
+                            }
+                        },
+                        "required": ["id", "code"]
                     }
                 }
             }

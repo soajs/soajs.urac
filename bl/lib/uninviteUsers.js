@@ -26,7 +26,7 @@ let local = (soajs, inputmaskData, options, cb) => {
 
         let data = {
             "user": oneUser.user || null,
-            "tenant": oneUser.tenant || null
+            "tenant": inputmaskData.tenant || null
         };
         bl.user.uninvite(soajs, data, options, (error, response) => {
             if (error) {
