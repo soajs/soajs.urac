@@ -55,6 +55,8 @@ jobs:
     - docker tag soajsorg/urac:latest soajsorg/urac:${PACKAGE_VERSION}
     - docker tag soajsorg/urac:latest soajsorg/urac:${MAJOR_VERSION}.x
 
+    - docker push soajsorg/urac:${PACKAGE_VERSION}
+    - docker push soajsorg/urac:${MAJOR_VERSION}.x
     - docker push soajsorg/urac
     deploy:
       on:
