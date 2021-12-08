@@ -75,7 +75,7 @@ let local = (soajs, inputmaskData, options, cb) => {
         }
 
         inputmaskData.status = (requireValidation) ? 'pendingJoin' : 'active';
-        if (inputmaskData.emailConfirmed) {
+        if (inputmaskData.emailConfirmed || inputmaskData.phoneConfirmed) {
             inputmaskData.status = 'active';
         }
         inputmaskData.tenant = {

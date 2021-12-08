@@ -34,39 +34,52 @@ let local = (soajs, inputmaskData, options, cb) => {
         emailCode = false;
     }
     inputmaskData.keepToken = true;
-    inputmaskData.doNotSendEmail = (inputmaskData.confirmation === "phone") || emailCode;
+    inputmaskData.doNotSendEmail = (inputmaskData.confirmation === "phone" || emailCode);
     bl.join(soajs, inputmaskData, options, (error, response) => {
         if (error) {
             bl.user.mt.closeModel(modelObj);
             return cb(error, null);
         }
         if (inputmaskData.confirmation === "emailAndPhone" || inputmaskData.confirmation === "phone") {
-            let data = {};
-            data.firstName = inputmaskData.firstName;
-            data.lastName = inputmaskData.lastName;
-            data.email = inputmaskData.email;
-            data.phone = inputmaskData.phone || null;
-            data.confirmation = inputmaskData.confirmation;
-            data.inviteToken = response.token;
-            data.service = "joinInvite";
-            data.code = true;
-            bl.token.addInvite(soajs, data, options, (error, tokenRecord) => {
+            if (!inputmaskData.phoneConfirmed && !inputmaskData.emailConfirmed) {
+                let data = {};
+                data.firstName = inputmaskData.firstName;
+                data.lastName = inputmaskData.lastName;
+                data.email = inputmaskData.email || null;
+                data.phone = inputmaskData.phone || null;
+                data.confirmation = inputmaskData.confirmation;
+                data.inviteToken = response.token;
+                data.service = "joinInvite";
+                data.code = true;
+                bl.token.addInvite(soajs, data, options, (error, tokenRecord) => {
+                    if (error) {
+                        bl.user.mt.closeModel(modelObj);
+                        return cb(error, null);
+                    }
+                    if (data.phone) {
+                        bl.user.mt.closeModel(modelObj);
+                        lib.message.send(soajs, data.service, data, tokenRecord, function (error) {
+                            if (error) {
+                                soajs.log.info(data.service + ': No SMS was sent: ' + error.message);
+                                //TODO: add send code by email
+                            }
+                            return cb(null, {"id": response.id, "status": response.status});
+                        });
+                    } else {
+                        data.service = "join_code";
+                        bl.user.mt.closeModel(modelObj);
+                        lib.mail.send(soajs, data.service, data, tokenRecord, function (error) {
+                            if (error) {
+                                soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
+                            }
+                            return cb(null, {"id": response.id, "status": response.status});
+                        });
+                    }
+                });
+            } else {
                 bl.user.mt.closeModel(modelObj);
-                if (error) {
-                    return cb(error, null);
-                }
-                if (data.phone) {
-                    lib.message.send(soajs, data.service, data, tokenRecord, function (error) {
-                        if (error) {
-                            soajs.log.info(data.service + ': No SMS was sent: ' + error.message);
-                            //TODO: add send code by email
-                        }
-                        return cb(null, {"id": response.id, "status": response.status});
-                    });
-                } else {
-                    return cb(null, {"id": response.id, "status": response.status});
-                }
-            });
+                return cb(null, {"id": response.id, "status": response.status});
+            }
         } else {
             if (emailCode && !inputmaskData.emailConfirmed) {
                 let data = {};

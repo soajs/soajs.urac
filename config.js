@@ -463,6 +463,60 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
+            '/join/invite/phone': {
+                "_apiInfo": {
+                    "l": "Join and create an account by invitation",
+                    "group": "Guest join"
+                },
+                "username": {
+                    "source": ['body.username'],
+                    "validation": {
+                        "type": "string",
+                        "minLength": 5,
+                        "maxLength": 50,
+                        "pattern": /^[a-zA-Z0-9_-]+$/
+                    }
+                },
+                "firstName": {
+                    "source": ['body.firstName'],
+                    "validation": {"type": "string"}
+                },
+                "lastName": {
+                    "source": ['body.lastName'],
+                    "validation": {"type": "string"}
+                },
+                "email": {
+                    "source": ['body.email'],
+                    "validation": {"type": "string", "format": "email"}
+                },
+                "profile": {
+                    "source": ['body.profile'],
+                    "validation": {"type": "object"}
+                },
+                "membership": {
+                    "source": ['body.membership'],
+                    "validation": {"type": "string"}
+                },
+                "ln": {
+                    "source": ['body.ln'],
+                    "validation": {"type": "string"}
+                },
+                "phone": {
+                    "source": ['body.phone'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "code": {
+                    "source": ['body.code'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "confirmation": {
+                    "source": ['body.confirmation'],
+                    "default": "phone",
+                    "validation": {"type": "string", "enum": ["email", "emailAndPhone", "phone"]}
+                }
+            },
             '/join/invite': {
                 "_apiInfo": {
                     "l": "Join and create an account by invitation",

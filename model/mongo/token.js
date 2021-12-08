@@ -129,8 +129,8 @@ Token.prototype.updateStatus = function (data, cb) {
 
 Token.prototype.addInvite = function (data, cb) {
     let __self = this;
-    if (!data || !data.email  || !data.service || !data.tokenExpiryTTL) {
-        let error = new Error("Token: tokenExpiryTTL, email, and what service are required.");
+    if (!data || !(data.email || data.phone) || !data.service || !data.tokenExpiryTTL) {
+        let error = new Error("Token: tokenExpiryTTL, (email or phone), and what service are required.");
         return cb(error, null);
     }
     let s = {

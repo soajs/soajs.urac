@@ -267,6 +267,11 @@ function run(serviceStartCb) {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });
+            service.post("/join/invite/phone", function (req, res) {
+                bl.joinInvitePhone(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
             service.post("/join/invite", function (req, res) {
                 bl.joinInvite(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));

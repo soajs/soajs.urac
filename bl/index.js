@@ -124,7 +124,7 @@ let bl = {
             options.mongoCore = modelObj.mongoCore;
         }
         inputmaskData = inputmaskData || {};
-        inputmaskData.services = ['join', 'join_code'];
+        inputmaskData.services = ['join', 'join_code', 'joinInvite'];
         bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
             if (error) {
                 //close model
@@ -507,6 +507,7 @@ function init(service, localConfig, cb) {
         bl.resendCode = require("./lib/resendCode.js")(bl);
         bl.inviteToJoin = require("./lib/inviteToJoin.js")(bl);
         bl.joinInvite = require("./lib/joinInvite.js")(bl);
+        bl.joinInvitePhone = require("./lib/joinInvitePhone.js")(bl);
         bl.joinCode = require("./lib/joinCode.js")(bl);
 
         if (err) {

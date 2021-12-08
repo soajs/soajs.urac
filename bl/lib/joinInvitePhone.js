@@ -8,10 +8,6 @@
  * found in the LICENSE file at the root of this repository
  */
 
-const lib = {
-    "generateUsername": require("../../lib/generateUsername.js")
-};
-
 let bl = null;
 let local = (soajs, inputmaskData, options, cb) => {
     let modelObj = bl.user.mt.getModel(soajs, options);
@@ -19,7 +15,7 @@ let local = (soajs, inputmaskData, options, cb) => {
     options.mongoCore = modelObj.mongoCore;
 
     if (!inputmaskData.username) {
-        inputmaskData.username = lib.generateUsername();
+        inputmaskData.username = inputmaskData.phone;
     }
     bl.token.get(soajs, {"token": inputmaskData.code, "service": 'inviteToJoin'}, options, (error, tokenRecord) => {
         if (error) {
@@ -40,10 +36,10 @@ let local = (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData.lastName) {
             inputmaskData.lastName = tokenRecord.lastName;
         }
-        if (!inputmaskData.phone) {
-            inputmaskData.phone = tokenRecord.phone;
+        if (!inputmaskData.email) {
+            inputmaskData.email = tokenRecord.email;
         }
-        inputmaskData.emailConfirmed = tokenRecord.email === inputmaskData.email;
+        inputmaskData.phoneConfirmed = tokenRecord.phone === inputmaskData.phone;
 
         bl.joinCode(soajs, inputmaskData, options, cb);
     });
