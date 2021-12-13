@@ -27,13 +27,21 @@ let local = (soajs, inputmaskData, options, cb) => {
             bl.user.mt.closeModel(modelObj);
             return cb(error, null);
         }
-        // NOTE: at this point tokenRecord is assured
-        // if (tokenRecord.email !== inputmaskData.email) {
-        //     return cb(bl.user.handleError(soajs, 537, null));
-        // }
-        // if (tokenRecord.phone !== inputmaskData.phone) {
-        //     return cb(bl.user.handleError(soajs, 537, null));
-        // }
+        let joinInviteStrict = false;
+        if (soajs.servicesConfig.urac && Object.hasOwnProperty.call(soajs.servicesConfig.urac, 'joinInviteStrict')) {
+            joinInviteStrict = soajs.servicesConfig.urac.joinInviteStrict;
+        } else if (soajs.registry && soajs.registry.custom && soajs.registry.custom.urac && soajs.registry.custom.urac.value && soajs.registry.custom.urac.value.hasOwnProperty('joinInviteFlex')) {
+            joinInviteStrict = soajs.registry.custom.urac.value.joinInviteStrict;
+        }
+        if (joinInviteStrict) {
+            //NOTE: at this point tokenRecord is assured
+            if (tokenRecord.email !== inputmaskData.email) {
+                return cb(bl.user.handleError(soajs, 537, null));
+            }
+            if (tokenRecord.phone !== inputmaskData.phone) {
+                return cb(bl.user.handleError(soajs, 537, null));
+            }
+        }
         if (!inputmaskData.firstName) {
             inputmaskData.firstName = tokenRecord.firstName;
         }
@@ -42,6 +50,9 @@ let local = (soajs, inputmaskData, options, cb) => {
         }
         if (!inputmaskData.phone) {
             inputmaskData.phone = tokenRecord.phone;
+        }
+        if (!inputmaskData.membership) {
+            inputmaskData.membership = tokenRecord.membership;
         }
         inputmaskData.emailConfirmed = tokenRecord.email === inputmaskData.email;
 

@@ -461,6 +461,10 @@ module.exports = {
                     "source": ['body.phone'],
                     "required": true,
                     "validation": {"type": "string"}
+                },
+                "membership": {
+                    "source": ['body.membership'],
+                    "validation": {"type": "string"}
                 }
             },
             '/join/invite/phone': {

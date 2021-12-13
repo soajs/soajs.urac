@@ -20,6 +20,7 @@ let local = (soajs, inputmaskData, options, cb) => {
     data.lastName = inputmaskData.lastName;
     data.email = inputmaskData.email;
     data.phone = inputmaskData.phone;
+    data.membership = inputmaskData.membership;
     data.service = "inviteToJoin";
     data.code = true;
 
