@@ -1180,6 +1180,29 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
+            '/admin/user/invited/groups': {
+                "_apiInfo": {
+                    "l": "Edit user's groups by id, username, or email for an invited tenant",
+                    "group": "User administration"
+                },
+                "commonFields": ["user"],
+                "groups": {
+                    "source": ['body.groups'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "tenantId": {
+                    "source": ['body.tenantId'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
             '/admin/user/groups': {
                 "_apiInfo": {
                     "l": "Edit user's groups by id, username, or email",

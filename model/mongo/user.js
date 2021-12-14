@@ -832,7 +832,7 @@ User.prototype.editGroups = function (data, cb) {
             condition.status = data.status;
         }
         __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
-            let nModified = 0;
+            let nModified;
             if (!record) {
                 nModified = 0;
             } else {

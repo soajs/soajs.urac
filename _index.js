@@ -192,6 +192,16 @@ function run(serviceStartCb) {
                 });
             });
 
+            service.put("/admin/user/invited/groups", function (req, res) {
+                req.soajs.inputmaskData.tenant = {
+                    "type": "client",
+                    "main": {},
+                    "id": req.soajs.inputmaskData.tenantId
+                };
+                bl.user.editGroups(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
             service.put("/admin/user/groups", function (req, res) {
                 bl.user.editGroups(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));

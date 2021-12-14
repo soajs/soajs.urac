@@ -419,7 +419,7 @@ let bl = {
 
         let data = {};
         data.user = inputmaskData.user;
-        data.tenant = soajs.tenant;
+        data.tenant = inputmaskData.tenant || soajs.tenant;
         //data.status = 'active';
         data.groups = inputmaskData.groups;
 
