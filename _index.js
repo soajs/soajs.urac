@@ -105,7 +105,7 @@ function run(serviceStartCb) {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });
-            service.get("/v2/admin/users", function (req, res) {
+            service.get("/api-v2/admin/users", function (req, res) {
                 bl.user.getUsers(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     bl.user.countUsers(req.soajs, req.soajs.inputmaskData, null, (error, countData) => {
                         return res.json(req.soajs.buildResponse(error, {

@@ -318,7 +318,7 @@ module.exports = {
                     "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
                 }
             },
-            '/v2/admin/users': {
+            '/api-v2/admin/users': {
                 "_apiInfo": {
                     "l": "List users matching certain keywords",
                     "group": "User administration"
