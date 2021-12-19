@@ -40,6 +40,15 @@ let local = (soajs, inputmaskData, options, cb) => {
             bl.user.mt.closeModel(modelObj);
             return cb(error, null);
         }
+
+        let tokenData = {};
+        tokenData.token = inputmaskData.code;
+        tokenData.status = 'used';
+        //update token status and do not wait for result
+        bl.token.updateStatus(soajs, tokenData, options, () => {
+            // no need to do anything here.
+        });
+
         if (inputmaskData.confirmation === "emailAndPhone" || inputmaskData.confirmation === "phone") {
             if (!inputmaskData.phoneConfirmed && !inputmaskData.emailConfirmed) {
                 let data = {};

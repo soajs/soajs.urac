@@ -114,8 +114,7 @@ Token.prototype.updateStatus = function (data, cb) {
         'token': data.token
     };
     let extraOptions = {
-        'upsert': false,
-        'safe': true
+        'upsert': false
     };
 
     __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
@@ -163,12 +162,10 @@ Token.prototype.addInvite = function (data, cb) {
 
     let condition = {
         'userId': data.email,
-        'service': data.service,
-        'status': data.status
+        'service': data.service
     };
     let extraOptions = {
-        'upsert': true,
-        'safe': true
+        'upsert': true
     };
     __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
         if (!record || (record && !(record.nModified || record.upsertedCount))) {
@@ -212,12 +209,10 @@ Token.prototype.add = function (data, cb) {
 
     let condition = {
         'userId': data.userId,
-        'service': data.service,
-        'status': data.status
+        'service': data.service
     };
     let extraOptions = {
-        'upsert': true,
-        'safe': true
+        'upsert': true
     };
     __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
         if (!record || (record && !(record.nModified || record.upsertedCount))) {
