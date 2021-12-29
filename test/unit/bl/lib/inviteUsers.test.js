@@ -194,26 +194,26 @@ describe("Unit test for: BL - invite users", () => {
 			}
 		}
 	};
-	
+
 	before((done) => {
 		let localConfig = helper.requireModule("config.js");
 		BL.init(soajs, localConfig, () => {
 			done();
 		});
 	});
-	
+
 	it("testing invite users", function (done) {
 		function UserModel() {
 			console.log("user model");
 		}
-		
+
 		UserModel.prototype.closeConnection = () => {
 		};
-		
+
 		UserModel.prototype.save = (data, cb) => {
 			return cb(null, 1);
 		};
-		
+
 		UserModel.prototype.getUser = (data, cb) => {
 			if (data && data.id && data.id === "error") {
 				let error = new Error("User: getUser - mongo error.");
@@ -226,7 +226,7 @@ describe("Unit test for: BL - invite users", () => {
 				return cb(null, user3);
 			}
 		};
-		
+
 		UserModel.prototype.getUserByUsername = (data, cb) => {
 			if (data && data.username && data.username === "error") {
 				let error = new Error("User: getUserByUsername - mongo error.");
@@ -239,29 +239,29 @@ describe("Unit test for: BL - invite users", () => {
 				return cb(null, user3);
 			}
 		};
-		
+
 		BL.user.model = UserModel;
-		
+
 		let data = {
 			"username": "error"
 		};
 		BL.inviteUsers(soajs, data, null, (error) => {
 			assert.ok(error);
-			
+
 			let data = {
 				"id": "error"
 			};
-			
+
 			BL.inviteUsers(soajs, data, null, (error) => {
 				assert.ok(error);
-				
+
 				let data = {
 					"_id": "error"
 				};
-				
+
 				BL.inviteUsers(soajs, data, null, (error) => {
 					assert.ok(error);
-					
+
 					let data = {
 						users: [
 							{
@@ -276,7 +276,7 @@ describe("Unit test for: BL - invite users", () => {
 							}
 						]
 					};
-					
+
 					BL.inviteUsers(soajs, data, null, (error, result) => {
 						assert.ok(result);
 						assert.ok(result.failed.length === 0);
@@ -284,7 +284,7 @@ describe("Unit test for: BL - invite users", () => {
 							succeeded: [{id: '5d7fee0876186d9ab9b36492'}],
 							failed: []
 						});
-						
+
 						let data = {
 							users: [
 								{
@@ -299,13 +299,13 @@ describe("Unit test for: BL - invite users", () => {
 								}
 							]
 						};
-						
+
 						BL.inviteUsers(soajs, data, null, (error, result) => {
 							assert.ok(result);
 							assert.ok(result.failed);
 							assert.deepEqual(result.failed, [ { id: '5d7fee0876186d9ab9b36492',
 								reason: 'User has already been invited.' } ]);
-							
+
 							let data = {
 								users: [
 									{
@@ -315,7 +315,7 @@ describe("Unit test for: BL - invite users", () => {
 									}
 								]
 							};
-							
+
 							BL.inviteUsers(soajs, data, null, (error, result) => {
 								assert.ok(result);
 								assert.ok(result.failed.length === 0);
@@ -323,7 +323,7 @@ describe("Unit test for: BL - invite users", () => {
 									succeeded: [{username: 'fadi'}],
 									failed: []
 								});
-								
+
 								let data = {
 									users: [
 										{
@@ -338,7 +338,7 @@ describe("Unit test for: BL - invite users", () => {
 										}
 									]
 								};
-								
+
 								BL.inviteUsers(soajs, data, null, (error, result) => {
 									assert.ok(result);
 									assert.ok(result.failed.length === 0);

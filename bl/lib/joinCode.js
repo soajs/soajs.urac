@@ -10,7 +10,7 @@
 
 const lib = {
     "message": require("../../lib/message.js"),
-    "mail": require("../../lib/mail.js"),
+    "mail": null,
     "generateUsername": require("../../lib/generateUsername.js")
 };
 
@@ -118,5 +118,6 @@ let local = (soajs, inputmaskData, options, cb) => {
 
 module.exports = function (_bl) {
     bl = _bl;
+    lib.mail = require("../../lib/mail.js")(bl);
     return local;
 };

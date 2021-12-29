@@ -9,18 +9,18 @@
  */
 
 const lib = {
-    "mail": require("../../lib/mail.js"),
+    "mail": null,
     "pin": require("../../lib/pin.js")
 };
 
 let bl = null;
 
-function handleUpdateResponse (response) {
-	if (response) {
-		return true;
-	} else {
-		return false;
-	}
+function handleUpdateResponse(response) {
+    if (response) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 let local = (soajs, inputmaskData, options, cb) => {
@@ -41,9 +41,9 @@ let local = (soajs, inputmaskData, options, cb) => {
                 bl.user.mt.closeModel(modelObj);
                 return cb(bl.user.handleError(soajs, 602, err));
             }
-	
-	        cb(null, handleUpdateResponse(record));
-            
+
+            cb(null, handleUpdateResponse(record));
+
             if (generatedPin) {
                 let data = {
                     "status": "active"
@@ -52,8 +52,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                     bl.user.mt.closeModel(modelObj);
                     if (error) {
                         soajs.log.info('resetPin: No Mail was sent: ' + error.message);
-                    }
-                    else {
+                    } else {
                         userRecord.pin = generatedPin;
                         lib.mail.send(soajs, 'resetPin', userRecord, null, function (error) {
                             if (error) {
@@ -67,21 +66,18 @@ let local = (soajs, inputmaskData, options, cb) => {
                     bl.user.getUser(soajs, data, options, (error, userRecord) => {
                         return doMail(error, userRecord);
                     });
-                }
-                else {
+                } else {
                     if (inputmaskData.user) {
                         data.username = inputmaskData.user.username || inputmaskData.user.email;
                         bl.user.getUserByUsername(soajs, data, options, (error, userRecord) => {
                             return doMail(error, userRecord);
                         });
-                    }
-                    else {
+                    } else {
                         bl.user.mt.closeModel(modelObj);
                         soajs.log.info('resetPin: No Mail was sent: unable to find user');
                     }
                 }
-            }
-            else {
+            } else {
                 bl.user.mt.closeModel(modelObj);
             }
         });
@@ -90,8 +86,7 @@ let local = (soajs, inputmaskData, options, cb) => {
     if (inputmaskData && inputmaskData.pin && inputmaskData.pin.delete) {
         data.pin = {"delete": true};
         doEdit(null);
-    }
-    else {
+    } else {
         data.pin = {};
         if (inputmaskData && inputmaskData.pin && inputmaskData.pin.hasOwnProperty("allowed")) {
             data.pin.allowed = !!inputmaskData.pin.allowed;
@@ -115,5 +110,6 @@ let local = (soajs, inputmaskData, options, cb) => {
 
 module.exports = function (_bl) {
     bl = _bl;
+    lib.mail = require("../../lib/mail.js")(bl);
     return local;
 };

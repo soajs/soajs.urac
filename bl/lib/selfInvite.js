@@ -9,7 +9,7 @@
  */
 
 const lib = {
-    "mail": require("../../lib/mail.js"),
+    "mail": null,
     "pin": require("../../lib/pin.js")
 };
 
@@ -113,5 +113,6 @@ let local = (soajs, inputmaskData, options, cb) => {
 
 module.exports = function (_bl) {
     bl = _bl;
+    lib.mail = require("../../lib/mail.js")(bl);
     return local;
 };

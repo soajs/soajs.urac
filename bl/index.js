@@ -14,20 +14,21 @@ const fs = require("fs");
 const get = (p, o) => p.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, o);
 
 const lib = {
-    "mail": require("../lib/mail.js"),
+    "mail": null,
     "pwd": require("../lib/pwd.js")
 };
 
 let SSOT = {};
 let model = process.env.SOAJS_SERVICE_MODEL || "mongo";
 
-const BLs = ["user", "group", "token"];
+const BLs = ["user", "group", "token", "template"];
 
 let bl = {
     init: init,
     group: null,
     user: null,
     token: null,
+    template: null,
 
     "sendCustomEmail": (soajs, inputmaskData, options, cb) => {
 
@@ -509,6 +510,8 @@ function init(service, localConfig, cb) {
         bl.joinInvite = require("./lib/joinInvite.js")(bl);
         bl.joinInvitePhone = require("./lib/joinInvitePhone.js")(bl);
         bl.joinCode = require("./lib/joinCode.js")(bl);
+
+        lib.mail = require("../lib/mail.js")(bl);
 
         if (err) {
             service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);

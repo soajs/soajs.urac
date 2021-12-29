@@ -109,7 +109,7 @@ module.exports = function (grunt) {
                 SOAJS_TEST: true,
                 SOAJS_SRVPORT: 4001,
                 SOAJS_DEPLOY_MANUAL: true,
-                SOAJS_REGISTRY_API: '127.0.0.1:5000'
+                SOAJS_REGISTRY_API: '127.0.0.1:5001'
             },
             coverage: {
                 APP_DIR_FOR_CODE_COVERAGE: '../test/coverage/instrument/',
@@ -118,7 +118,7 @@ module.exports = function (grunt) {
                 SOAJS_TEST: true,
                 SOAJS_SRVPORT: 4001,
                 SOAJS_DEPLOY_MANUAL: true,
-                SOAJS_REGISTRY_API: '127.0.0.1:5000'
+                SOAJS_REGISTRY_API: '127.0.0.1:5001'
             }
         },
 

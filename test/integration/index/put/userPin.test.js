@@ -12,20 +12,20 @@ let tenantKey = '3d90163cf9d6b3076ad26aa5ed58556348069258e5c6c941ee0f18448b570ad
 let clientKey = 'e267a49b84bfa1e95dffe1efd45e443f36d7dced1dc97e8c46ce1965bac78faaa0b6fe18d50efa5a9782838841cba9659fac52a77f8fa0a69eb0188eef4038c49ee17f191c1d280fde4d34580cc3e6d00a05a7c58b07a504f0302915bbe58c18';
 
 describe("Testing edit user pin API", () => {
-	
+
 	before(function (done) {
 		done();
 	});
-	
+
 	afterEach((done) => {
 		console.log("=======================================");
 		done();
 	});
-	
+
 	let users = [];
 	let selectedUser;
 	let selectedUserClient;
-	
+
 	it("Success - will return all user records", (done) => {
 		let params = {};
 		requester('/admin/users', 'get', params, (error, body) => {
@@ -43,7 +43,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will return all user records - client", (done) => {
 		let params = {
 			headers: {
@@ -65,12 +65,12 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it('adds registry configuration ', (done) => {
 		let profile = require('../../../data/soajs_profile');
-		
+
 		let mongoConnection = new Mongo(profile);
-		
+
 		let condition = {
 			name: 'pinConfiguration'
 		};
@@ -88,14 +88,14 @@ describe("Testing edit user pin API", () => {
 				author: "owner"
 			}
 		};
-		
+
 		mongoConnection.updateOne("custom_registry", condition, e, {'upsert': true}, () => {
 			mongoConnection.closeDb();
-			
+
 			let params = {
-				uri: 'http://127.0.0.1:5000'
+				uri: 'http://127.0.0.1:5001'
 			};
-			
+
 			requester('/reloadRegistry', 'get', params, () => {
 				let params = {
 					body: {
@@ -119,13 +119,13 @@ describe("Testing edit user pin API", () => {
 			});
 		});
 	});
-	
+
 	it('adds tenant service config', (done) => {
 		let profile = require('../../../data/soajs_profile');
 		let mongoConnection = new Mongo(profile);
-		
+
 		let appId = mongoConnection.ObjectId("30d2cb5fc04ce51e06000002");
-		
+
 		let condition = {
 			'$and': [
 				{"code": 'test'},
@@ -133,7 +133,7 @@ describe("Testing edit user pin API", () => {
 				{"applications.keys.key": "695d3456de70fddc9e1e60a6d85b97d3"}
 			]
 		};
-		
+
 		let e = {
 			$set: {
 				"applications.$[].keys.$[].config.dashboard.urac.pinConfiguration": {
@@ -142,14 +142,14 @@ describe("Testing edit user pin API", () => {
 				}
 			}
 		};
-		
+
 		mongoConnection.updateOne("tenants", condition, e, {'upsert': false}, () => {
 			mongoConnection.closeDb();
-			
+
 			let params = {
-				uri: 'http://127.0.0.1:5000'
+				uri: 'http://127.0.0.1:5001'
 			};
-			
+
 			requester('/loadProvision', 'get', params, () => {
 				let params = {
 					body: {
@@ -173,7 +173,7 @@ describe("Testing edit user pin API", () => {
 			});
 		});
 	});
-	
+
 	it("Success - will edit User pin - reset and allowed true", (done) => {
 		let params = {
 			body: {
@@ -195,7 +195,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will edit User pin - reset and allowed true - username", (done) => {
 		let params = {
 			body: {
@@ -217,7 +217,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will edit User pin - reset and allowed false", (done) => {
 		let params = {
 			body: {
@@ -239,7 +239,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will edit User pin - reset and allowed false - email", (done) => {
 		let params = {
 			body: {
@@ -261,7 +261,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will edit User pin - reset true allowed false", (done) => {
 		let params = {
 			body: {
@@ -283,7 +283,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will edit User pin - reset false allowed true", (done) => {
 		let params = {
 			body: {
@@ -305,7 +305,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will edit User pin - reset and allowed true - client", (done) => {
 		let params = {
 			headers: {
@@ -330,7 +330,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will edit User pin - reset false allowed true - client", (done) => {
 		let params = {
 			headers: {
@@ -355,7 +355,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will edit User pin - reset true allowed false - client", (done) => {
 		let params = {
 			headers: {
@@ -380,7 +380,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will edit User pin - reset and allowed false - client", (done) => {
 		let params = {
 			headers: {
@@ -405,7 +405,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will edit User pin - delete - client", (done) => {
 		let params = {
 			headers: {
@@ -429,7 +429,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will edit User pin - delete", (done) => {
 		let params = {
 			body: {
@@ -450,7 +450,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Fails - will not edit User pin - not found", (done) => {
 		let params = {
 			body: {
@@ -471,7 +471,7 @@ describe("Testing edit user pin API", () => {
 			done();
 		});
 	});
-	
+
 	it("Fails - edit user pin - No data", (done) => {
 		let params = {};
 		requester('/admin/user/pin', 'put', params, (error, body) => {
