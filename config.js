@@ -695,7 +695,6 @@ module.exports = {
                 },
                 "username": {
                     "source": ['body.username'],
-                    "required": true,
                     "validation": {
                         "type": "string",
                         "minLength": 5,
@@ -730,6 +729,10 @@ module.exports = {
                             "type": "string"
                         }
                     }
+                },
+                "membership": {
+                    "source": ['body.membership'],
+                    "validation": {"type": "string"}
                 },
                 "status": {
                     "source": ['body.status'],
@@ -796,6 +799,10 @@ module.exports = {
                             "type": "string"
                         }
                     }
+                },
+                "membership": {
+                    "source": ['body.membership'],
+                    "validation": {"type": "string"}
                 },
                 "tenant": {
                     "source": ['body.tenant'],

@@ -98,8 +98,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                     generatedPin = lib.pin.generate(pinConfig);
                     if (mainTenant) {
                         inputmaskData.tenant.pin.code = generatedPin;
-                    }
-                    else {
+                    } else {
                         inputmaskData.config.allowedTenants[0].tenant.pin.code = generatedPin;
                         inputmaskData.config.allowedTenants[0].tenant.pin.allowed = !!inputmaskData.pin.allowed;
                     }
@@ -110,11 +109,35 @@ let local = (soajs, inputmaskData, options, cb) => {
                     bl.user.mt.closeModel(modelObj);
                     return cb(bl.user.handleError(soajs, 525, e));
                 }
-            }
-            else {
+            } else {
                 doAdd(false, null);
             }
         };
+
+        if (inputmaskData.membership) {
+            let membershipConfig = null;
+            if (soajs.servicesConfig && soajs.servicesConfig.urac && soajs.servicesConfig.urac.membership) {
+                if (soajs.servicesConfig.urac.membership[inputmaskData.membership]) {
+                    membershipConfig = soajs.servicesConfig.urac.membership[inputmaskData.membership];
+                }
+            }
+            if (!membershipConfig && soajs.registry && soajs.registry.custom && soajs.registry.custom.urac && soajs.registry.custom.urac.value && soajs.registry.custom.urac.value.membership) {
+                if (soajs.registry.custom.urac.value.membership[inputmaskData.membership]) {
+                    membershipConfig = soajs.registry.custom.urac.value.membership[inputmaskData.membership];
+                }
+            }
+            if (membershipConfig) {
+                if (membershipConfig.groups) {
+                    if (Array.isArray(membershipConfig.groups) && membershipConfig.groups.length > 0) {
+                        inputmaskData.groups = membershipConfig.groups;
+                    } else {
+                        soajs.log.warn("Skipping [" + inputmaskData.membership + "] membership setting, groups must be an array of at least one group");
+                    }
+                }
+            } else {
+                soajs.log.debug("Skipping [" + inputmaskData.membership + "] membership, unable to find any setting for it");
+            }
+        }
 
         if (soajs.tenant.type === "client" && soajs.tenant.main) {
             inputmaskData.tenant = {
@@ -147,6 +170,8 @@ let local = (soajs, inputmaskData, options, cb) => {
                     "code": soajs.tenant.code,
                     "pin": {}
                 };
+            } else {
+                inputmaskData.tenant.pin = {};
             }
             doPin(true);
         }
