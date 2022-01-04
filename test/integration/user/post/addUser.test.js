@@ -48,7 +48,7 @@ describe("Testing add user API", () => {
             done();
         });
     });
-	
+
 	it("Success - will add User", (done) => {
 		let params = {
 			headers: {
@@ -207,7 +207,7 @@ describe("Testing add user API", () => {
             assert.ok(body.errors);
             assert.deepEqual(body.errors.details, [{
                 code: 172,
-                message: 'Missing required field: username, firstName, lastName, email'
+                message: 'Missing required field: firstName, lastName, email'
             }]);
             let check = validator.validate(body, addUserSchema);
             assert.deepEqual(check.valid, true);
