@@ -188,9 +188,7 @@ describe("Unit test for: BL - addUser main tenant", () => {
                         assert.ifError(error);
                         assert.ok(record);
                         assert.deepEqual(record, {
-                                id: '5cfb05c22ac09278709d0141',
-                                token: '12673218763782168721',
-                                link: {addUser: 'https://dev-site.rockspoon.io/#/setNewPassword?token=12673218763782168721'}
+                                id: '5cfb05c22ac09278709d0141'
                             }
                         );
                         done();
