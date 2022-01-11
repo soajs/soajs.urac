@@ -80,9 +80,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                                 soajs.log.info('addUser: No Mail was sent: ' + error.message);
                             }
                             return cb(null, {
-                                id: userRecord._id.toString(),
-                                token: tokenRecord.token,
-                                link: mailRecord.link || null
+                                id: userRecord._id.toString()
                             });
                         });
                     });
