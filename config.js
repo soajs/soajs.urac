@@ -776,6 +776,12 @@ module.exports = {
                     "l": "Add user",
                     "group": "User administration"
                 },
+                "username": {
+                    "source": ['body.username'],
+                    "validation": {
+                        "type": "string"
+                    }
+                },
                 "firstName": {
                     "source": ['body.firstName'],
                     "required": true,
