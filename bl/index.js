@@ -167,13 +167,20 @@ let bl = {
                     if (error) {
                         return cb(error, null);
                     }
-                    sdk_oauth.auto_login(soajs, data, (error, autoLogin) => {
-                        if (error) {
-                            soajs.console.log(error);
-                        }
-                        response.autoLogin = autoLogin || null;
+                    if (soajs.registry && soajs.registry.custom && soajs.registry.custom.urac && soajs.registry.custom.urac.value && soajs.registry.custom.urac.value.hasOwnProperty('autoLogin')) {
+                        let data = {
+                            "id": userRecord._id.toString()
+                        };
+                        sdk_oauth.auto_login(soajs, data, (error, autoLogin) => {
+                            if (error) {
+                                soajs.console.log(error);
+                            }
+                            response.autoLogin = autoLogin || null;
+                            return cb(null, response);
+                        });
+                    } else {
                         return cb(null, response);
-                    });
+                    }
                 });
             });
         });
