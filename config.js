@@ -43,6 +43,12 @@ module.exports = {
         "readme": "/README.md",
         "release": "/RELEASE.md"
     },
+    "interConnect": [
+        {
+            "name": "oauth",
+            "version": "1"
+        }
+    ],
     //-------------------------------------
     "hashIterations": 12,
 
@@ -833,6 +839,10 @@ module.exports = {
                         "type": "string",
                         "enum": ['active', 'inactive', 'pendingNew']
                     }
+                },
+                "phone": {
+                    "source": ['body.phone'],
+                    "validation": {"type": "string"}
                 }
             },
             '/admin/users/ids': {

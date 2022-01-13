@@ -13,6 +13,8 @@ const lib = {
     "generateUsername": require("../../lib/generateUsername.js")
 };
 
+const sdk_oauth = require("../../sdk/oauth.js");
+
 let bl = null;
 let local = (soajs, inputmaskData, options, cb) => {
     if (soajs.tenant.type === "client" && soajs.tenant.main) {
@@ -90,10 +92,30 @@ let local = (soajs, inputmaskData, options, cb) => {
                 return cb(error, null);
             }
             if (inputmaskData.status === 'active') {
-                return cb(null, {
-                    status: userRecord.status,
-                    id: userRecord._id.toString()
-                });
+                if (soajs.registry && soajs.registry.custom && soajs.registry.custom.urac && soajs.registry.custom.urac.value && soajs.registry.custom.urac.value.hasOwnProperty('autoLogin')) {
+                    let data = {
+                        "id": userRecord._id.toString()
+                    };
+                    sdk_oauth.auto_login(soajs, data, (error, response) => {
+                        if (error) {
+                            soajs.console.log(error);
+                            return cb(null, {
+                                status: userRecord.status,
+                                id: userRecord._id.toString()
+                            });
+                        }
+                        return cb(null, {
+                            status: userRecord.status,
+                            id: userRecord._id.toString(),
+                            token: response
+                        });
+                    });
+                } else {
+                    return cb(null, {
+                        status: userRecord.status,
+                        id: userRecord._id.toString()
+                    });
+                }
             }
             let data = {};
             data.userId = userRecord._id.toString();
