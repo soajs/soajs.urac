@@ -11,6 +11,8 @@
 const async = require("async");
 const fs = require("fs");
 
+const sdk_oauth = require("../sdk/oauth.js");
+
 const get = (p, o) => p.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, o);
 
 const lib = {
@@ -165,7 +167,13 @@ let bl = {
                     if (error) {
                         return cb(error, null);
                     }
-                    return cb(null, response);
+                    sdk_oauth.auto_login(soajs, data, (error, autoLogin) => {
+                        if (error) {
+                            soajs.console.log(error);
+                        }
+                        response.autoLogin = autoLogin || null;
+                        return cb(null, response);
+                    });
                 });
             });
         });

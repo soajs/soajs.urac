@@ -72,7 +72,11 @@ let local = (soajs, inputmaskData, options, cb) => {
                                 soajs.log.info(data.service + ': No SMS was sent: ' + error.message);
                                 //TODO: add send code by email
                             }
-                            return cb(null, {"id": response.id, "status": response.status});
+                            return cb(null, {
+                                "id": response.id,
+                                "status": response.status,
+                                "autoLogin": response.autoLogin || null
+                            });
                         });
                     } else {
                         data.service = "join_code";
@@ -81,13 +85,21 @@ let local = (soajs, inputmaskData, options, cb) => {
                             if (error) {
                                 soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
                             }
-                            return cb(null, {"id": response.id, "status": response.status});
+                            return cb(null, {
+                                "id": response.id,
+                                "status": response.status,
+                                "autoLogin": response.autoLogin || null
+                            });
                         });
                     }
                 });
             } else {
                 bl.user.mt.closeModel(modelObj);
-                return cb(null, {"id": response.id, "status": response.status});
+                return cb(null, {
+                    "id": response.id,
+                    "status": response.status,
+                    "autoLogin": response.autoLogin || null
+                });
             }
         } else {
             if (emailCode && !inputmaskData.emailConfirmed) {
@@ -105,12 +117,20 @@ let local = (soajs, inputmaskData, options, cb) => {
                         if (error) {
                             soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
                         }
-                        return cb(null, {"id": response.id, "status": response.status});
+                        return cb(null, {
+                            "id": response.id,
+                            "status": response.status,
+                            "autoLogin": response.autoLogin || null
+                        });
                     });
                 });
             } else {
                 bl.user.mt.closeModel(modelObj);
-                return cb(null, {"id": response.id, "status": response.status});
+                return cb(null, {
+                    "id": response.id,
+                    "status": response.status,
+                    "autoLogin": response.autoLogin || null
+                });
             }
         }
     });

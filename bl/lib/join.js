@@ -96,18 +96,14 @@ let local = (soajs, inputmaskData, options, cb) => {
                     let data = {
                         "id": userRecord._id.toString()
                     };
-                    sdk_oauth.auto_login(soajs, data, (error, response) => {
+                    sdk_oauth.auto_login(soajs, data, (error, autoLogin) => {
                         if (error) {
                             soajs.console.log(error);
-                            return cb(null, {
-                                status: userRecord.status,
-                                id: userRecord._id.toString()
-                            });
                         }
                         return cb(null, {
                             status: userRecord.status,
                             id: userRecord._id.toString(),
-                            token: response
+                            autoLogin: autoLogin || null
                         });
                     });
                 } else {
