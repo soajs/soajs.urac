@@ -98,7 +98,7 @@ let local = (soajs, inputmaskData, options, cb) => {
                     };
                     sdk_oauth.auto_login(soajs, data, (error, autoLogin) => {
                         if (error) {
-                            soajs.console.log(error);
+                            soajs.log.error(error);
                         }
                         return cb(null, {
                             status: userRecord.status,
@@ -112,47 +112,48 @@ let local = (soajs, inputmaskData, options, cb) => {
                         id: userRecord._id.toString()
                     });
                 }
-            }
-            let data = {};
-            data.userId = userRecord._id.toString();
-            data.username = userRecord.username;
-            data.service = "join";
-            bl.token.add(soajs, data, options, (error, tokenRecord) => {
-                bl.user.mt.closeModel(modelObj);
-                if (error) {
-                    return cb(error, null);
-                }
-                if (inputmaskData.doNotSendEmail) {
-                    if (inputmaskData.keepToken) {
-                        return cb(null, {
-                            status: userRecord.status,
-                            id: userRecord._id.toString(),
-                            token: tokenRecord.token
-                        });
-                    } else {
+            } else {
+                let data = {};
+                data.userId = userRecord._id.toString();
+                data.username = userRecord.username;
+                data.service = "join";
+                bl.token.add(soajs, data, options, (error, tokenRecord) => {
+                    bl.user.mt.closeModel(modelObj);
+                    if (error) {
+                        return cb(error, null);
+                    }
+                    if (inputmaskData.doNotSendEmail) {
+                        if (inputmaskData.keepToken) {
+                            return cb(null, {
+                                status: userRecord.status,
+                                id: userRecord._id.toString(),
+                                token: tokenRecord.token
+                            });
+                        } else {
+                            return cb(null, {
+                                status: userRecord.status,
+                                id: userRecord._id.toString()
+                            });
+                        }
+                    }
+                    lib.mail.send(soajs, data.service, userRecord, tokenRecord, function (error) {
+                        if (error) {
+                            soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
+                        }
+                        if (inputmaskData.keepToken) {
+                            return cb(null, {
+                                id: userRecord._id.toString(),
+                                status: userRecord.status,
+                                token: tokenRecord.token
+                            });
+                        }
                         return cb(null, {
                             status: userRecord.status,
                             id: userRecord._id.toString()
                         });
-                    }
-                }
-                lib.mail.send(soajs, data.service, userRecord, tokenRecord, function (error) {
-                    if (error) {
-                        soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
-                    }
-                    if (inputmaskData.keepToken) {
-                        return cb(null, {
-                            id: userRecord._id.toString(),
-                            status: userRecord.status,
-                            token: tokenRecord.token
-                        });
-                    }
-                    return cb(null, {
-                        status: userRecord.status,
-                        id: userRecord._id.toString()
                     });
                 });
-            });
+            }
         });
     });
 };
