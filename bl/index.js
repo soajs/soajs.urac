@@ -17,6 +17,7 @@ const get = (p, o) => p.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, o);
 
 const lib = {
     "mail": null,
+    "message": null,
     "pwd": require("../lib/pwd.js")
 };
 
@@ -620,6 +621,7 @@ function init(service, localConfig, cb) {
         bl.joinCode = require("./lib/joinCode.js")(bl);
 
         lib.mail = require("../lib/mail.js")(bl);
+        lib.message = require("../lib/message.js");
 
         if (err) {
             service.log.error(`Requested model not found. make sure you have a model for ${err.name} @ ${err.model}`);
