@@ -410,12 +410,17 @@ let bl = {
                     if (error) {
                         return cb(error, null);
                     }
-                    lib.message.send(soajs, data.service, data, tokenRecord, function (error) {
-                        if (error) {
-                            soajs.log.info(data.service + ': No SMS was sent: ' + error.message);
-                        }
-                        return cb(null, {"id": userRecord._id.toString()});
-                    });
+                    let skipSMS = get(["registry", "custom", "urac", "value", "skipSMS"], soajs);
+                    if (skipSMS) {
+                        return cb(null, {"id": userRecord._id.toString(), "code": tokenRecord.code});
+                    } else {
+                        lib.message.send(soajs, data.service, data, tokenRecord, function (error) {
+                            if (error) {
+                                soajs.log.info(data.service + ': No SMS was sent: ' + error.message);
+                            }
+                            return cb(null, {"id": userRecord._id.toString()});
+                        });
+                    }
                 });
             });
         });
