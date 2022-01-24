@@ -19,17 +19,7 @@ let accountEmailSchema = {
 		},
 		"data": {
 			"type": "object",
-			"required": false,
-			"properties": {
-				"token": {
-					"type": "string",
-					"required": true
-				},
-				"link": {
-					"type": "object",
-					"required": false
-				}
-			}
+			"required": false
 		},
 		"errors": {
 			"type": "object",

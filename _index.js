@@ -68,6 +68,11 @@ function run(serviceStartCb) {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });
+            service.get("/validate/changePhone", function (req, res) {
+                bl.validateChangePhone(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
             service.get("/user", function (req, res) {
                 req.soajs.inputmaskData.status = "active";
                 bl.user.getUserByUsername(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
@@ -178,6 +183,11 @@ function run(serviceStartCb) {
             });
             service.put("/account/email", function (req, res) {
                 bl.changeEmail(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
+            service.put("/account/phone", function (req, res) {
+                bl.changePhone(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });

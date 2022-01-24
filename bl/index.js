@@ -201,6 +201,10 @@ let bl = {
             }
             let data = {};
             data.id = tokenRecord.userId;
+            if (tokenRecord.userId !== soajs.urac._id) {
+                bl.user.mt.closeModel(modelObj);
+                return cb(bl.user.handleError(soajs, 598, null));
+            }
             bl.user.getUser(soajs, data, options, (error, userRecord) => {
                 if (error) {
                     //close model
@@ -228,7 +232,51 @@ let bl = {
             });
         });
     },
-
+    "validateChangePhone": (soajs, inputmaskData, options, cb) => {
+        //get model since token and user are in the same db always, aka main tenant db
+        let modelObj = bl.user.mt.getModel(soajs);
+        options = {};
+        options.mongoCore = modelObj.mongoCore;
+        inputmaskData = inputmaskData || {};
+        inputmaskData.services = ['changePhone'];
+        bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
+            if (error) {
+                //close model
+                bl.user.mt.closeModel(modelObj);
+                return cb(error, null);
+            }
+            let data = {};
+            data.id = tokenRecord.userId;
+            if (tokenRecord.userId !== soajs.urac._id) {
+                bl.user.mt.closeModel(modelObj);
+                return cb(bl.user.handleError(soajs, 598, null));
+            }
+            bl.user.getUser(soajs, data, options, (error, userRecord) => {
+                if (error) {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(error, null);
+                }
+                let tokenData = {};
+                tokenData.token = tokenRecord.token;
+                tokenData.status = 'used';
+                //update token status and do not wait for result
+                bl.token.updateStatus(soajs, tokenData, options, () => {
+                    // no need to do anything here.
+                });
+                let userData = {};
+                userData._id = userRecord._id;
+                userData.phone = tokenRecord.phone;
+                bl.user.updateUsernamePhone(soajs, userData, options, (error) => {
+                    bl.user.mt.closeModel(modelObj);
+                    if (error) {
+                        return cb(error, null);
+                    }
+                    return cb(null, true);
+                });
+            });
+        });
+    },
     "resetPassword": (soajs, inputmaskData, options, cb) => {
         inputmaskData = inputmaskData || {};
         if (inputmaskData.password !== inputmaskData.confirmation) {
@@ -313,14 +361,59 @@ let bl = {
                         return cb(error, null);
                     }
                     userRecord.email = inputmaskData.email;
-                    lib.mail.send(soajs, data.service, userRecord, tokenRecord, function (error, mailRecord) {
+                    lib.mail.send(soajs, data.service, userRecord, tokenRecord, function (error) {
                         if (error) {
                             soajs.log.info(data.service + ': No Mail was sent: ' + error.message);
                         }
-                        return cb(null, {
-                            token: tokenRecord.token,
-                            link: mailRecord.link || null
-                        });
+                        return cb(null, {"id": userRecord._id.toString()});
+                    });
+                });
+            });
+        });
+    },
+
+    "changePhone": (soajs, inputmaskData, options, cb) => {
+        let modelObj = bl.user.mt.getModel(soajs);
+        options = {};
+        options.mongoCore = modelObj.mongoCore;
+
+        bl.user.getUser(soajs, inputmaskData, options, (error, userRecord) => {
+            if (error) {
+                //close model
+                bl.user.mt.closeModel(modelObj);
+                return cb(error, null);
+            }
+            let data = {};
+            data.username = inputmaskData.phone;
+            data.exclude_id = userRecord._id;
+            bl.user.countUserPhone(soajs, data, options, (error, found) => {
+                if (error) {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(error, null);
+                }
+                if (found) {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(bl.user.handleError(soajs, 526, error), null);
+                }
+                let data = {};
+                data.userId = userRecord._id.toString();
+                data.username = userRecord.username;
+                data.code = true;
+                data.service = inputmaskData.service || "changePhone";
+                data.phone = inputmaskData.phone;
+                bl.token.add(soajs, data, options, (error, tokenRecord) => {
+                    //close model
+                    bl.user.mt.closeModel(modelObj);
+                    if (error) {
+                        return cb(error, null);
+                    }
+                    lib.message.send(soajs, data.service, data, tokenRecord, function (error) {
+                        if (error) {
+                            soajs.log.info(data.service + ': No SMS was sent: ' + error.message);
+                        }
+                        return cb(null, {"id": userRecord._id.toString()});
                     });
                 });
             });

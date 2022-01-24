@@ -103,6 +103,9 @@ describe("Unit test for: BL - index", () => {
 			"code": "TES1",
 			"id": "5c0e74ba9acc3c5a84a51251"
 		},
+		"urac": {
+		"_id": "5d7fee0876186d9ab9b36493"
+		},
 		"servicesConfig": {
 			"mail": {
 				"from": "me@localhost.com",
@@ -124,22 +127,22 @@ describe("Unit test for: BL - index", () => {
 			},
 		}
 	};
-	
+
 	before((done) => {
 		let localConfig = helper.requireModule("config.js");
 		BL.init(soajs, localConfig, () => {
 			done();
 		});
 	});
-	
+
 	it('tests deleteGroup', (done) => {
 		function UserModel() {
 			console.log("user model");
 		}
-		
+
 		UserModel.prototype.closeConnection = () => {
 		};
-		
+
 		UserModel.prototype.cleanDeletedGroup = (data, cb) => {
 			if (data && data.groupCode && data.groupCode === "error") {
 				let error = new Error("User: Clean Deleted Group - mongo error.");
@@ -148,16 +151,16 @@ describe("Unit test for: BL - index", () => {
 				return cb(null, 2);
 			}
 		};
-		
+
 		BL.user.model = UserModel;
-		
+
 		function GroupModel() {
 			console.log("group model");
 		}
-		
+
 		GroupModel.prototype.closeConnection = () => {
 		};
-		
+
 		GroupModel.prototype.delete = (data, cb) => {
 			if (data && data.id && data.id === "error") {
 				let error = new Error("Group:  Delete Group - mongo error.");
@@ -166,20 +169,20 @@ describe("Unit test for: BL - index", () => {
 				return cb(null, group);
 			}
 		};
-		
+
 		BL.group.model = GroupModel;
-		
+
 		let data = {
 			id: 'error'
 		};
-		
+
 		BL.deleteGroup(soajs, data, null, (error) => {
 			assert.ok(error);
-			
+
 			let data = {
 				id: group._id
 			};
-			
+
 			BL.deleteGroup(soajs, data, null, (error, result) => {
 				assert.ok(result);
 				assert.deepEqual(result, true);
@@ -191,10 +194,10 @@ describe("Unit test for: BL - index", () => {
 		function UserModel() {
 			console.log("user model");
 		}
-		
+
 		UserModel.prototype.closeConnection = () => {
 		};
-		
+
 		UserModel.prototype.getUser = (data, cb) => {
 			if (data && data.id && data.id === '5d7fee0876186d9ab9b36493') {
 				user.status = 'join';
@@ -203,20 +206,20 @@ describe("Unit test for: BL - index", () => {
 				return cb(null, user);
 			}
 		};
-		
+
 		UserModel.prototype.updateOneField = (data, cb) => {
 			return cb(null, true);
 		};
-		
+
 		BL.user.model = UserModel;
-		
+
 		function TokenModel() {
 			console.log("token model");
 		}
-		
+
 		TokenModel.prototype.closeConnection = () => {
 		};
-		
+
 		TokenModel.prototype.get = (data, cb) => {
 			if (data && data.token && data.token === 'error') {
 				let error = new Error("Token:  Get Token - mongo error.");
@@ -228,40 +231,40 @@ describe("Unit test for: BL - index", () => {
 				return cb(null, token);
 			}
 		};
-		
+
 		TokenModel.prototype.updateStatus = (data, cb) => {
 			return cb(null, true);
 		};
-		
+
 		BL.token.model = TokenModel;
-		
+
 		let data = {
 			token: "error"
 		};
-		
+
 		BL.validateJoin(soajs, data, null, (error) => {
 			assert.ok(error);
 			assert.deepEqual(error, {
 				code: 602,
 				msg: 'Model error: Token:  Get Token - mongo error.'
 			});
-			
+
 			let data = {
 				token: "f65e8358-ce1d-47cb-b478-82e10c93f70e"
 			};
-			
+
 			BL.validateJoin(soajs, data, null, (error, result) => {
 				assert.ok(result);
 				assert.ok(result.hasOwnProperty("_id"));
 				assert.ok(result.hasOwnProperty("username"));
 				assert.ok(result.hasOwnProperty("email"));
-				
+
 				status = 'inactive';
-				
+
 				let data = {
 					token: "f65e8358-ce1d-47cb-b478-82e10c93f70e"
 				};
-				
+
 				BL.validateJoin(soajs, data, null, (error, result) => {
 					assert.ok(result);
 					assert.ok(result.hasOwnProperty("_id"));
@@ -276,27 +279,27 @@ describe("Unit test for: BL - index", () => {
 		function UserModel() {
 			console.log("user model");
 		}
-		
+
 		UserModel.prototype.closeConnection = () => {
 		};
-		
+
 		UserModel.prototype.getUser = (data, cb) => {
 			return cb(null, user);
 		};
-		
+
 		UserModel.prototype.updateOneField = (data, cb) => {
 			return cb(null, true);
 		};
-		
+
 		BL.token.model = UserModel;
-		
+
 		function TokenModel() {
 			console.log("token model");
 		}
-		
+
 		TokenModel.prototype.closeConnection = () => {
 		};
-		
+
 		TokenModel.prototype.get = (data, cb) => {
 			if (data && data.token && data.token === 'error') {
 				let error = new Error("Token:  Get Token - mongo error.");
@@ -305,32 +308,32 @@ describe("Unit test for: BL - index", () => {
 				return cb(null, token);
 			}
 		};
-		
+
 		TokenModel.prototype.updateStatus = (data, cb) => {
 			return cb(null, true);
 		};
-		
+
 		BL.token.model = TokenModel;
-		
+
 		let data = {
 			token: "error"
 		};
-		
+
 		BL.validateChangeEmail(soajs, data, null, (error) => {
 			assert.ok(error);
 			assert.deepEqual(error, {
 				code: 602,
 				msg: 'Model error: Token:  Get Token - mongo error.'
 			});
-			
+
 			let data = {
 				token: "f65e8358-ce1d-47cb-b478-82e10c93f70e"
 			};
-			
+
 			BL.validateChangeEmail(soajs, data, null, (error, result) => {
 				assert.ok(result);
 				assert.deepEqual(result, true);
-				
+
 				done();
 			});
 		});
@@ -339,10 +342,10 @@ describe("Unit test for: BL - index", () => {
 		function TokenModel() {
 			console.log("token model");
 		}
-		
+
 		TokenModel.prototype.closeConnection = () => {
 		};
-		
+
 		TokenModel.prototype.get = (data, cb) => {
 			if (data && data.token && data.token === 'error') {
 				let error = new Error("Token:  Get Token - mongo error.");
@@ -351,55 +354,55 @@ describe("Unit test for: BL - index", () => {
 				return cb(null, token);
 			}
 		};
-		
+
 		TokenModel.prototype.updateStatus = (data, cb) => {
 			return cb(null, true);
 		};
-		
+
 		TokenModel.prototype.updateStatus = (data, cb) => {
 			return cb(null, true);
 		};
-		
+
 		BL.token.model = TokenModel;
-		
+
 		function UserModel() {
 			console.log("user model");
 		}
-		
+
 		UserModel.prototype.closeConnection = () => {
 		};
-		
+
 		UserModel.prototype.getUser = (data, cb) => {
 			return cb(null, user);
 		};
-		
+
 		UserModel.prototype.updateOneField = (data, cb) => {
 			return cb(null, true);
 		};
-		
+
 		BL.user.model = UserModel;
-		
+
 		let data = {
 			token: 'error'
 		};
-		
+
 		BL.resetPassword(soajs, data, null, (error) => {
 			assert.ok(error);
 			assert.deepEqual(error, {
 				code: 602,
 				msg: 'Model error: Token:  Get Token - mongo error.'
 			});
-			
+
 			let data = {
 				token: "f65e8358-ce1d-47cb-b478-82e10c93f70e",
 				password: 'somenew',
 				confirmation: 'somenew'
 			};
-			
+
 			BL.resetPassword(soajs, data, null, (error, result) => {
 				assert.ok(result);
 				assert.deepEqual(result, true);
-				
+
 				done();
 			});
 		});
@@ -408,7 +411,7 @@ describe("Unit test for: BL - index", () => {
 		function TokenModel() {
 			console.log("token model");
 		}
-		
+
 		TokenModel.prototype.closeConnection = () => {
 		};
 		TokenModel.prototype.add = (data, cb) => {
@@ -417,16 +420,16 @@ describe("Unit test for: BL - index", () => {
 			};
 			return cb(null, token);
 		};
-		
+
 		BL.token.model = TokenModel;
-		
+
 		function UserModel() {
 			console.log("user model");
 		}
-		
+
 		UserModel.prototype.closeConnection = () => {
 		};
-		
+
 		UserModel.prototype.getUser = (data, cb) => {
 			if (data && data.id && data.id === 'error') {
 				let error = new Error('Model error: User: Check Username - mongo error.');
@@ -435,7 +438,7 @@ describe("Unit test for: BL - index", () => {
 				return cb(null, user);
 			}
 		};
-		
+
 		UserModel.prototype.checkUsername = (data, cb) => {
 			if (data && data.username && data.username === 'found') {
 				return cb(null, 1);
@@ -446,22 +449,22 @@ describe("Unit test for: BL - index", () => {
 				return cb(null, null);
 			}
 		};
-		
+
 		BL.user.model = UserModel;
-		
+
 		let data = {
 			id: 'error',
 			email: 'error'
 		};
-		
+
 		BL.changeEmail(soajs, data, null, (error) => {
 			assert.ok(error);
-			
+
 			let data = {
 				id: '5d7fee0876186d9ab9b36492',
 				email: 'new@email.com'
 			};
-			
+
 			BL.changeEmail(soajs, data, null, (error, result) => {
 				assert.ok(result);
 				done();
@@ -472,10 +475,10 @@ describe("Unit test for: BL - index", () => {
 		function UserModel() {
 			console.log("user model");
 		}
-		
+
 		UserModel.prototype.closeConnection = () => {
 		};
-		
+
 		UserModel.prototype.getUser = (data, cb) => {
 			if (data && data.id && data.id === 'error') {
 				let error = new Error('Model error: User: Check Username - mongo error.');
@@ -484,20 +487,20 @@ describe("Unit test for: BL - index", () => {
 				return cb(null, user);
 			}
 		};
-		
+
 		UserModel.prototype.updateOneField = (data, cb) => {
 			return cb(null, true);
 		};
-		
+
 		BL.user.model = UserModel;
-		
+
 		let data = {
 			id: 'error'
 		};
-		
+
 		BL.changePassword(soajs, data, null, (error) => {
 			assert.ok(error);
-			
+
 			let data = {
 				id: '',
 				oldPassword: 'password',
@@ -510,13 +513,13 @@ describe("Unit test for: BL - index", () => {
 				done();
 			});
 		});
-		
+
 	});
 	it('tests forgot password', (done) => {
 		function TokenModel() {
 			console.log("token model");
 		}
-		
+
 		TokenModel.prototype.closeConnection = () => {
 		};
 		TokenModel.prototype.add = (data, cb) => {
@@ -525,16 +528,16 @@ describe("Unit test for: BL - index", () => {
 			};
 			return cb(null, token);
 		};
-		
+
 		BL.token.model = TokenModel;
-		
+
 		function UserModel() {
 			console.log("user model");
 		}
-		
+
 		UserModel.prototype.closeConnection = () => {
 		};
-		
+
 		UserModel.prototype.getUserByUsername = (data, cb) => {
 			if (data && data.username && data.username === 'error') {
 				let error = new Error('User: get user by Username - mongo error.');
@@ -543,16 +546,16 @@ describe("Unit test for: BL - index", () => {
 				return cb(null, user);
 			}
 		};
-		
+
 		BL.user.model = UserModel;
-		
+
 		let data = {
 			username: 'error'
 		};
-		
+
 		BL.forgotPassword(soajs, data, null, (error) => {
 			assert.ok(error);
-			
+
 			let data = {
 				username: 'tony'
 			};
@@ -561,38 +564,38 @@ describe("Unit test for: BL - index", () => {
 				done();
 			});
 		});
-		
+
 	});
 	it('tests getUsersAndGroups ', (done) => {
 		function UserModel() {
 			console.log("user model");
 		}
-		
+
 		UserModel.prototype.closeConnection = () => {
 		};
-		
+
 		UserModel.prototype.getUsers = (data, cb) => {
 			return cb(null, [user]);
 		};
-		
+
 		BL.user.model = UserModel;
-		
+
 		function GroupModel() {
 			console.log("group model");
 		}
-		
+
 		GroupModel.prototype.closeConnection = () => {
 		};
-		
+
 		GroupModel.prototype.getGroups = (data, cb) => {
 			return cb(null, [group]);
 		};
-		
+
 		BL.group.model = GroupModel;
-		
+
 		BL.getUsersAndGroups(soajs, {}, null, (error, result) => {
 			assert.ok(result);
-			
+
 			let soajsClient = {
 				"tenant": {
 					"type": "client",
@@ -615,22 +618,22 @@ describe("Unit test for: BL - index", () => {
 					},
 				}
 			};
-			
+
 			BL.getUsersAndGroups(soajsClient, {}, null, (error, result) => {
 				assert.ok(result);
 				done();
 			});
 		});
 	});
-	
+
 	it('tests editUser', (done) => {
 		function UserModel() {
 			console.log("user model");
 		}
-		
+
 		UserModel.prototype.closeConnection = () => {
 		};
-		
+
 		UserModel.prototype.getUser = (data, cb) => {
 			if (data && data.id && data.id === 'error') {
 				let error = new Error('User: edit user - mongo error.');
@@ -639,7 +642,7 @@ describe("Unit test for: BL - index", () => {
 				return cb(null, user);
 			}
 		};
-		
+
 		UserModel.prototype.checkUsername = (data, cb) => {
 			if (data && data.username && data.username === "found") {
 				return cb(null, 1);
@@ -650,20 +653,20 @@ describe("Unit test for: BL - index", () => {
 				return cb(null, null);
 			}
 		};
-		
+
 		UserModel.prototype.edit = (data, cb) => {
 			return cb(null, 1);
 		};
-		
+
 		BL.user.model = UserModel;
-		
+
 		let data = {
 			id: 'error'
 		};
-		
+
 		BL.editUser(soajs, data, null, (error) => {
 			assert.ok(error);
-			
+
 			let data = {
 				id: '5d7fee0876186d9ab9b36492',
 				username: 'fadinasr',
@@ -674,10 +677,10 @@ describe("Unit test for: BL - index", () => {
 				status: 'active',
 				profile: {}
 			};
-			
+
 			BL.editUser(soajs, data, null, (error, result) => {
 				assert.ok(result);
-				
+
 				let data = {
 					id: '5d7fee0876186d9ab9b36492',
 					username: 'fadinasr',

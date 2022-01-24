@@ -42,6 +42,23 @@ let bl = {
             modelObj.closeConnection();
         }
     },
+    "countUserPhone": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs, options);
+        let data = {};
+        data.username = inputmaskData.username;
+        data.phone = inputmaskData.phone || null;
+        data.exclude_id = inputmaskData.exclude_id || null;
+        modelObj.checkUsernamePhone(data, (err, count) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, bl.handleUpdateResponse(count));
+        });
+    },
     "countUser": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
@@ -252,6 +269,27 @@ let bl = {
             data.status = inputmaskData.status;
         }
         modelObj.updateOneField(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                if (err.message && err.message.match("was not update")) {
+                    return cb(bl.handleError(soajs, 533, null));
+                }
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, bl.handleUpdateResponse(record));
+        });
+    },
+
+    "updateUsernamePhone": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData || !inputmaskData.what) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs, options);
+        let data = {};
+        data.id = inputmaskData.id || null;
+        data._id = inputmaskData._id || null;
+        data.phone = inputmaskData.phone;
+        modelObj.updateUsernamePhone(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 if (err.message && err.message.match("was not update")) {

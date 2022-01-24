@@ -345,6 +345,46 @@ User.prototype.updateOneField = function (data, cb) {
     }
 };
 
+User.prototype.updateUsernamePhone = function (data, cb) {
+    let __self = this;
+    if (!data || !(data.id || data._id) || !data.phone) {
+        let error = new Error("User: either id or _id and phone are required.");
+        return cb(error, null);
+    }
+
+    let doUpdate = (_id) => {
+        let condition = {
+            '_id': _id
+        };
+        let extraOptions = {
+            'upsert': false
+        };
+        let s = {
+            '$set': {
+                "phone": data.phone,
+                "username": data.phone
+            }
+        };
+        __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
+            if (!record || (record && !record.nModified)) {
+                let error = new Error("User: Phone for user [" + _id.toString() + "] was not update.");
+                return cb(error);
+            }
+            return cb(err, record.nModified);
+        });
+    };
+    if (data.id) {
+        __self.validateId(data.id, (err, _id) => {
+            if (err) {
+                return cb(err, null);
+            }
+            doUpdate(_id);
+        });
+    } else {
+        doUpdate(data._id);
+    }
+};
+
 /**
  * To get users
  *
@@ -533,6 +573,34 @@ User.prototype.checkUsername = function (data, cb) {
             '$or': [
                 {'username': data.username},
                 {'email': data.email}
+            ]
+        };
+    }
+    if (data.exclude_id) {
+        condition._id = {"$ne": data.exclude_id};
+    }
+    __self.mongoCore.countDocuments(colName, condition, {}, (err, count) => {
+        return cb(err, count);
+    });
+};
+
+User.prototype.checkUsernamePhone = function (data, cb) {
+    let __self = this;
+    if (!data || !data.username) {
+        let error = new Error("User: username is required.");
+        return cb(error, null);
+    }
+    let condition = {
+        '$or': [
+            {'username': data.username},
+            {'phone': data.username}
+        ]
+    };
+    if (data.phone) {
+        condition = {
+            '$or': [
+                {'username': data.username},
+                {'phone': data.phone}
             ]
         };
     }

@@ -76,6 +76,29 @@ let local = (soajs, inputmaskData, options, cb) => {
             obj.tenant.pin = {};
             if (oneUser.groups) {
                 obj.groups = oneUser.groups;
+            } else if (oneUser.membership) {
+                let membershipConfig = null;
+                if (soajs.servicesConfig && soajs.servicesConfig.urac && soajs.servicesConfig.urac.membership) {
+                    if (soajs.servicesConfig.urac.membership[oneUser.membership]) {
+                        membershipConfig = soajs.servicesConfig.urac.membership[oneUser.membership];
+                    }
+                }
+                if (!membershipConfig && soajs.registry && soajs.registry.custom && soajs.registry.custom.urac && soajs.registry.custom.urac.value && soajs.registry.custom.urac.value.membership) {
+                    if (soajs.registry.custom.urac.value.membership[oneUser.membership]) {
+                        membershipConfig = soajs.registry.custom.urac.value.membership[oneUser.membership];
+                    }
+                }
+                if (membershipConfig) {
+                    if (membershipConfig.groups) {
+                        if (Array.isArray(membershipConfig.groups) && membershipConfig.groups.length > 0) {
+                            obj.groups = membershipConfig.groups;
+                        } else {
+                            soajs.log.warn("Skipping [" + oneUser.membership + "] membership setting, groups must be an array of at least one group");
+                        }
+                    }
+                } else {
+                    soajs.log.debug("Skipping [" + oneUser.membership + "] membership, unable to find any setting for it");
+                }
             }
 
             let generatedPin = null;

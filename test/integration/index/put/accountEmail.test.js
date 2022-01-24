@@ -7,19 +7,19 @@ let listUsersSchema = require("../../user/schemas/getUsers.js");
 let accountEmailSchema = require("../schemas/accountEmail.js");
 
 describe("Testing edit user API", () => {
-	
+
 	before(function (done) {
 		done();
 	});
-	
+
 	afterEach((done) => {
 		console.log("=======================================");
 		done();
 	});
-	
+
 	let users = [];
 	let selectedUser;
-	
+
 	it("Success - will return all user records", (done) => {
 		let params = {
 		};
@@ -38,7 +38,7 @@ describe("Testing edit user API", () => {
 			done();
 		});
 	});
-	
+
 	it("Success - will change account email", (done) => {
 		let params = {
 			body: {
@@ -50,15 +50,15 @@ describe("Testing edit user API", () => {
 			assert.ifError(error);
 			assert.ok(body);
 			assert.ok(body.data);
-			assert.ok(body.data.hasOwnProperty('token'));
-			assert.ok(body.data.hasOwnProperty('link'));
+			// assert.ok(body.data.hasOwnProperty('token'));
+			// assert.ok(body.data.hasOwnProperty('link'));
 			let check = validator.validate(body, accountEmailSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
 			done();
 		});
 	});
-	
+
 	it("Fails - will not change account email - not found", (done) => {
 		let params = {
 			body: {
@@ -76,7 +76,7 @@ describe("Testing edit user API", () => {
 			done();
 		});
 	});
-	
+
 	it("Fails - will not change account email - invalid id", (done) => {
 		let params = {
 			body: {
@@ -97,7 +97,7 @@ describe("Testing edit user API", () => {
 			done();
 		});
 	});
-	
+
 	it("Fails - will not change account email - No data", (done) => {
 		let params = {
 		};

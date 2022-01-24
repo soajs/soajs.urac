@@ -243,6 +243,17 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
+            '/validate/changePhone': {
+                "_apiInfo": {
+                    "l": "To validate change phone",
+                    "group": "My account"
+                },
+                "token": {
+                    "source": ['query.token'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
             '/user': {
                 "_apiInfo": {
                     "l": "Get user account information by username as (username or email)",
@@ -1089,6 +1100,23 @@ module.exports = {
                 }
             },
 
+            '/account/phone': {
+                "_apiInfo": {
+                    "l": "Change account's phone by id",
+                    "group": "My account"
+                },
+                "id": {
+                    "source": ['body.id'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "phone": {
+                    "source": ['body.phone'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
+
             '/account/email/code': {
                 "_apiInfo": {
                     "l": "Change account's email by id - a code will be emailed",
@@ -1547,6 +1575,9 @@ module.exports = {
                                     "items": {
                                         "type": "string"
                                     }
+                                },
+                                "membership": {
+                                    "type": "string"
                                 }
                             }
                         }
@@ -1609,6 +1640,9 @@ module.exports = {
                                     "items": {
                                         "type": "string"
                                     }
+                                },
+                                "membership": {
+                                    "type": "string"
                                 }
                             }
                         }
