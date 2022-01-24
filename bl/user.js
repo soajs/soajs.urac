@@ -281,7 +281,7 @@ let bl = {
     },
 
     "updateUsernamePhone": (soajs, inputmaskData, options, cb) => {
-        if (!inputmaskData || !inputmaskData.what) {
+        if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
         let modelObj = bl.mt.getModel(soajs, options);
