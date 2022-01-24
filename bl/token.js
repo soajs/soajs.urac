@@ -87,6 +87,9 @@ let bl = {
         if (inputmaskData.email) {
             data.email = inputmaskData.email;
         }
+        if (inputmaskData.phone) {
+            data.phone = inputmaskData.phone;
+        }
 
         if (soajs.servicesConfig && soajs.servicesConfig.urac && soajs.servicesConfig.urac.tokenExpiryTTL) {
             data.tokenExpiryTTL = soajs.servicesConfig.urac.tokenExpiryTTL;

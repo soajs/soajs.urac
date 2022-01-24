@@ -205,6 +205,9 @@ Token.prototype.add = function (data, cb) {
     if (data.email) {
         s.$set.email = data.email;
     }
+    if (data.phone) {
+        s.$set.phone = data.phone;
+    }
 
     let condition = {
         'userId': data.userId,
