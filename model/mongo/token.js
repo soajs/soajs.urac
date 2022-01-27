@@ -42,17 +42,18 @@ function Token(soajs, localConfig, mongoCore) {
     if (!__self.mongoCore) {
         __self.mongoCoreExternal = false;
         let tCode = soajs.tenant.code;
-        if (soajs.tenant.main && soajs.tenant.main.code) {
-            tCode = soajs.tenant.main.code;
-        }
 
         let masterDB = get(["registry", "custom", "urac", "value", "masterDB"], soajs);
         if (masterDB) {
             if (!soajs.registry.coreDB[masterDB]) {
                 soajs.log.error("Token: Unable to find [" + masterDB + "] db configuration under registry.");
             }
+            tCode = masterDB;
             __self.mongoCore = new Mongo(soajs.registry.coreDB[masterDB]);
         } else {
+            if (soajs.tenant.main && soajs.tenant.main.code) {
+                tCode = soajs.tenant.main.code;
+            }
             let masterCode = get(["registry", "custom", "urac", "value", "masterCode"], soajs);
             if (masterCode) {
                 tCode = masterCode;

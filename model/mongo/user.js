@@ -34,21 +34,22 @@ function User(soajs, localConfig, mongoCore) {
     if (!__self.mongoCore) {
         __self.mongoCoreExternal = false;
         let tCode = soajs.tenant.code;
-        if (soajs.tenant.main && soajs.tenant.main.code) {
-            tCode = soajs.tenant.main.code;
-        }
 
         let masterDB = get(["registry", "custom", "urac", "value", "masterDB"], soajs);
         if (masterDB) {
             if (!soajs.registry.coreDB[masterDB]) {
                 soajs.log.error("User: Unable to find [" + masterDB + "] db configuration under registry.");
             }
+            tCode = masterDB;
             __self.mongoCore = new Mongo(soajs.registry.coreDB[masterDB]);
         } else {
             let masterCode = get(["registry", "custom", "urac", "value", "masterCode"], soajs);
             if (masterCode) {
                 tCode = masterCode;
             } else {
+                if (soajs.tenant.main && soajs.tenant.main.code) {
+                    tCode = soajs.tenant.main.code;
+                }
                 let dbCodes = get(["registry", "custom", "urac", "value", "dbCodes"], soajs);
                 if (dbCodes) {
                     for (let c in dbCodes) {

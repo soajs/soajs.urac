@@ -41,8 +41,9 @@ function Group(soajs, localConfig, mongoCore) {
         let masterDB = get(["registry", "custom", "urac", "value", "masterDB"], soajs);
         if (masterDB) {
             if (!soajs.registry.coreDB[masterDB]) {
-                soajs.log.error("Template: Unable to find [" + masterDB + "] db configuration under registry.");
+                soajs.log.error("Group: Unable to find [" + masterDB + "] db configuration under registry.");
             }
+            tCode = masterDB;
             __self.mongoCore = new Mongo(soajs.registry.coreDB[masterDB]);
         } else {
             let masterCode = get(["registry", "custom", "urac", "value", "masterCode"], soajs);
