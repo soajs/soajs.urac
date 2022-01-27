@@ -45,23 +45,32 @@ function Token(soajs, localConfig, mongoCore) {
         if (soajs.tenant.main && soajs.tenant.main.code) {
             tCode = soajs.tenant.main.code;
         }
-        let masterCode = get(["registry", "custom", "urac", "value", "masterCode"], soajs);
-        if (masterCode) {
-            tCode = masterCode;
+
+        let masterDB = get(["registry", "custom", "urac", "value", "masterDB"], soajs);
+        if (masterDB) {
+            if (!soajs.registry.coreDB[masterDB]) {
+                soajs.log.error("Token: Unable to find [" + masterDB + "] db configuration under registry.");
+            }
+            __self.mongoCore = new Mongo(soajs.registry.coreDB[masterDB]);
         } else {
-            let dbCodes = get(["registry", "custom", "urac", "value", "dbCodes"], soajs);
-            if (dbCodes) {
-                for (let c in dbCodes) {
-                    if (dbCodes.hasOwnProperty(c)) {
-                        if (dbCodes[c].includes(tCode)) {
-                            tCode = c;
-                            break;
+            let masterCode = get(["registry", "custom", "urac", "value", "masterCode"], soajs);
+            if (masterCode) {
+                tCode = masterCode;
+            } else {
+                let dbCodes = get(["registry", "custom", "urac", "value", "dbCodes"], soajs);
+                if (dbCodes) {
+                    for (let c in dbCodes) {
+                        if (dbCodes.hasOwnProperty(c)) {
+                            if (dbCodes[c].includes(tCode)) {
+                                tCode = c;
+                                break;
+                            }
                         }
                     }
                 }
             }
+            __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, localConfig.serviceName, tCode));
         }
-        __self.mongoCore = new Mongo(soajs.meta.tenantDB(soajs.registry.tenantMetaDB, localConfig.serviceName, tCode));
 
         __self.indexCount = 0;
         __self.counter = 0;
