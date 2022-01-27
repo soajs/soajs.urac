@@ -28,7 +28,7 @@
     "grunt-jsdoc": "2.4.0",
     "grunt-mocha-test": "0.13.3",
     "mocha": "6.2.2",
-    "soajs.controller": "4.0.48"
+    "soajs.controller": "4.0.49"
   },
   "dependencies": {
     "async": "3.2.2",
