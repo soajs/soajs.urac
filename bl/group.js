@@ -134,7 +134,9 @@ let bl = {
         modelObj.add_multiple(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
-                return cb(bl.handleError(soajs, 602, err));
+                if (err.message.indexOf("duplicate key") === -1) {
+                    return cb(bl.handleError(soajs, 602, err));
+                }
             }
             return cb(null, record);
         });
