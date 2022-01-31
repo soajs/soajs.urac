@@ -122,7 +122,6 @@ let local = (soajs, inputmaskData, options, cb) => {
 
             modelObj.save(userRecord, (err, response) => {
                 if (err) {
-                    console.log(err.message)
                     responseObj.reason = err.message;
                     records.failed.push(responseObj);
                     return callback();
