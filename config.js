@@ -263,6 +263,17 @@ module.exports = {
                     "source": ['query.username'],
                     "required": true,
                     "validation": {"type": "string"}
+                },
+                "config": {
+                    "source": ['query.config'],
+                    "validation": {"type": "boolean"}
+                },
+                "status": {
+                    "source": ['query.status'],
+                    "validation": {
+                        "type": "string",
+                        "enum": ['active', 'pending']
+                    }
                 }
             },
             '/user/tenants': {
@@ -756,7 +767,7 @@ module.exports = {
                     "default": "pendingNew",
                     "validation": {
                         "type": "string",
-                        "enum": ['active', 'inactive', 'pendingNew']
+                        "enum": ['active', 'inactive', 'pendingNew', 'pending']
                     }
                 },
                 "password": {
@@ -814,6 +825,10 @@ module.exports = {
                     "required": true,
                     "validation": {"type": "string", "format": "email"}
                 },
+                "profile": {
+                    "source": ['body.profile'],
+                    "validation": {"type": "object"}
+                },
                 "groups": {
                     "source": ['body.groups'],
                     "validation": {
@@ -848,7 +863,7 @@ module.exports = {
                     "default": "active",
                     "validation": {
                         "type": "string",
-                        "enum": ['active', 'inactive', 'pendingNew']
+                        "enum": ['active', 'inactive', 'pendingNew', 'pending']
                     }
                 },
                 "phone": {
@@ -1319,7 +1334,7 @@ module.exports = {
                 "status": {
                     "source": ['body.status'],
                     "required": true,
-                    "validation": {"type": "string", "enum": ['active', 'inactive']}
+                    "validation": {"type": "string", "enum": ['active', 'inactive', 'pendingNew', 'pending']}
                 }
             },
 

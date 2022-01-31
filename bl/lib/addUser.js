@@ -53,7 +53,12 @@ let local = (soajs, inputmaskData, options, cb) => {
                         }
                     });
                 }
-                if (userRecord.status !== "pendingNew") {
+                if (userRecord.status === "pending") {
+                    bl.user.mt.closeModel(modelObj);
+                    return cb(null, {
+                        id: userRecord._id.toString()
+                    });
+                } else if (userRecord.status !== "pendingNew") {
                     //close model
                     bl.user.mt.closeModel(modelObj);
 
