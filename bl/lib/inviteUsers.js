@@ -143,6 +143,7 @@ let local = (soajs, inputmaskData, options, cb) => {
             let responseObj = {"id": oneUser.user.id};
             data.id = oneUser.user.id;
             data.keep = {"pin": true};
+            data.ignoreStatus = true;
             bl.user.getUser(soajs, data, options, (error, userRecord) => {
                 return goInvite(error, userRecord, responseObj);
             });
