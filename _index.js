@@ -74,7 +74,7 @@ function run(serviceStartCb) {
                 });
             });
             service.get("/user", function (req, res) {
-                req.soajs.inputmaskData.keep = !!inputmaskData.config;
+                req.soajs.inputmaskData.keep = !!req.soajs.inputmaskData.config;
                 bl.user.getUserByUsername(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
