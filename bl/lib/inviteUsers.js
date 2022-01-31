@@ -38,6 +38,8 @@ let local = (soajs, inputmaskData, options, cb) => {
 
         let goInvite = (error, userRecord, responseObj) => {
             if (error) {
+                console.log(error);
+                console.log(soajs.registry.coreDB['clicktv']);
                 records.failed.push(responseObj);
                 return callback();
             }
