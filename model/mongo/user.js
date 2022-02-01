@@ -239,9 +239,14 @@ User.prototype.getUserByUsername = function (data, cb) {
             "tenant.pin.code": 0
         }
     };
+    if (data.keep && data.keep.allowedTenants) {
+        delete options.projection.config;
+        options.projection["config.allowedTenants.tenant.pin"] = 0;
+    }
     if (data.keep && data.keep.pin) {
         delete options.projection.config;
         delete options.projection["tenant.pin.code"];
+        delete options.projection["config.allowedTenants.tenant.pin"];
     }
     __self.mongoCore.findOne(colName, condition, options, (err, record) => {
         return cb(err, record);

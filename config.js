@@ -264,10 +264,6 @@ module.exports = {
                     "required": true,
                     "validation": {"type": "string"}
                 },
-                "config": {
-                    "source": ['query.config'],
-                    "validation": {"type": "boolean"}
-                },
                 "status": {
                     "source": ['query.status'],
                     "validation": {
