@@ -479,7 +479,33 @@ let bl = {
             });
         });
     },
+    "admin_changePassword": (soajs, inputmaskData, options, cb) => {
+        let modelObj = bl.user.mt.getModel(soajs);
+        options = {};
+        options.mongoCore = modelObj.mongoCore;
+        inputmaskData = inputmaskData || {};
 
+        let userData = {};
+        userData.id = inputmaskData.id;
+        bl.user.getUser(soajs, userData, options, (error, userRecord) => {
+            if (error) {
+                //close model
+                bl.user.mt.closeModel(modelObj);
+                return cb(error, null);
+            }
+
+            let userData = {};
+            userData._id = userRecord._id;
+            userData.password = inputmaskData.password;
+            bl.user.resetPassword(soajs, userData, options, (error) => {
+                bl.user.mt.closeModel(modelObj);
+                if (error) {
+                    return cb(error, null);
+                }
+                return cb(null, true);
+            });
+        });
+    },
     "forgotPassword": (soajs, inputmaskData, options, cb) => {
         //get model since token and user are in the same db always, aka main tenant db
         let modelObj = bl.user.mt.getModel(soajs);

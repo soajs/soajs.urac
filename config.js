@@ -862,6 +862,10 @@ module.exports = {
                         "enum": ['active', 'inactive', 'pendingNew', 'pending']
                     }
                 },
+                "password": {
+                    "source": ['body.password'],
+                    "validation": {"type": "string"}
+                },
                 "phone": {
                     "source": ['body.phone'],
                     "validation": {"type": "string"}
@@ -1183,7 +1187,22 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
-
+            '/admin/account/password': {
+                "_apiInfo": {
+                    "l": "Change account's password by id",
+                    "group": "My account"
+                },
+                "id": {
+                    "source": ['body.id'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                },
+                "password": {
+                    "source": ['body.password'],
+                    "required": true,
+                    "validation": {"type": "string"}
+                }
+            },
             '/admin/user': {
                 "_apiInfo": {
                     "l": "Edit user by id",
