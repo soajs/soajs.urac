@@ -91,6 +91,9 @@ function run(serviceStartCb) {
                 });
             });
             service.get("/admin/user", function (req, res) {
+                req.soajs.inputmaskData.keep = {
+                    "allowedTenants": true
+                };
                 bl.user.getUser(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
