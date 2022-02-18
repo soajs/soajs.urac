@@ -22,7 +22,7 @@ let build_options = (data) => {
         "skip": 0,
         "limit": 100
     };
-    options.sort = {"ts": 1};
+    options.sort = {"ts": -1};
     if (data.limit) {
         options.limit = data.limit;
     }
