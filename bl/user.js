@@ -85,6 +85,9 @@ let bl = {
         data.keywords = inputmaskData.keywords;
         data.tenant = inputmaskData.tenant || soajs.tenant;
         data.scope = inputmaskData.scope || null;
+        if (inputmaskData.status) {
+            data.status = inputmaskData.status;
+        }
         modelObj.countUsers(data, (err, count) => {
             bl.mt.closeModel(modelObj);
             if (err) {

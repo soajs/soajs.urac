@@ -645,6 +645,9 @@ User.prototype.countUsers = function (data, cb) {
             {"lastName": {"$regex": rePattern}}
         ];
     }
+    if (data && data.status) {
+        condition.status = data.status;
+    }
     if (data && data.tenant && data.tenant.main && data.tenant.main.id) {
         condition["config.allowedTenants.tenant.id"] = data.tenant.id;
     } else if (data && data.scope) {
