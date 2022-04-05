@@ -481,6 +481,8 @@ User.prototype.getUsersBasicInfo = function (data, cb) {
         'firstName': 1,
         'lastName': 1,
         'profile': 1,
+        'status': 1,
+        'ts': 1,
         'lastLogin': 1
     };
 
@@ -932,7 +934,9 @@ User.prototype.editGroups = function (data, cb) {
                 };
                 condition["config.allowedTenants.tenant.id"] = data.tenant.id;
                 condition["tenant.id"] = {"$ne": data.tenant.id};
-                condition.status = data.status;
+                if (data.status) {
+                    condition.status = data.status;
+                }
                 __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
                     let nModified = 0;
                     if (!record) {
