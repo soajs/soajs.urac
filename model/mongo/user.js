@@ -925,6 +925,7 @@ User.prototype.editGroups = function (data, cb) {
             } else {
                 nModified = record.nModified || 0;
             }
+            console.log(data.tenant);
             if (!nModified && data.tenant.type === "product") {
                 //try to update the groups in case of roaming
                 s = {
@@ -937,6 +938,7 @@ User.prototype.editGroups = function (data, cb) {
                 if (data.status) {
                     condition.status = data.status;
                 }
+                console.log(condition);
                 __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
                     let nModified = 0;
                     if (!record) {
