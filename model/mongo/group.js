@@ -20,13 +20,9 @@ let indexing = {};
 function Group(soajs, localConfig, mongoCore) {
     let __self = this;
     __self.keepConnectionAlive = false;
-    if (soajs.log && soajs.log.error) {
-        __self.log = soajs.log.error;
-    } else {
-        __self.log = (log) => {
-            console.log(log);
-        };
-    }
+    __self.log = (log) => {
+        console.log(log);
+    };
     if (mongoCore) {
         __self.mongoCore = mongoCore;
         __self.mongoCoreExternal = true;
