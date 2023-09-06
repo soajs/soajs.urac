@@ -265,7 +265,7 @@ Token.prototype.get = function (data, cb) {
 Token.prototype.list = function (data, cb) {
     let __self = this;
 
-    __self.mongoCore.find(colName, null, null, (err, record) => {
+    __self.mongoCore.find(colName, {}, {}, (err, record) => {
         return cb(err, record);
     });
 };
