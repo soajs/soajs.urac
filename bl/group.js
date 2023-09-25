@@ -85,6 +85,7 @@ let bl = {
         data.code = inputmaskData.code;
         data.tId = soajs.tenant.id;
         data.tCode = soajs.tenant.code;
+        data.locked = inputmaskData.locked || null;
         modelObj.add(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
@@ -105,6 +106,9 @@ let bl = {
                 "name": inputmaskData.groups[i].name,
                 "description": inputmaskData.groups[i].description
             };
+            if (inputmaskData.groups[i].locked) {
+                record.locked = inputmaskData.groups[i].locked;
+            }
             if (inputmaskData.tenant) {
                 record.tenant = {
                     "id": inputmaskData.tenant.id,

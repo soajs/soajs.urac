@@ -953,7 +953,11 @@ module.exports = {
                             "pattern": "^([A-Za-z]+)$"
                         }
                     }
-                }
+                },
+                "locked": {
+                    "source": ['body.locked'],
+                    "validation": {"type": "boolean"}
+                },
             },
             '/admin/groups': {
                 "_apiInfo": {
@@ -994,7 +998,7 @@ module.exports = {
                                     "type": "string"
                                 },
                                 "description": {
-                                    "type": "description"
+                                    "type": "string"
                                 },
                                 "packages": {
                                     "type": "array",
@@ -1014,6 +1018,9 @@ module.exports = {
                                             }
                                         }
                                     }
+                                },
+                                "locked": {
+                                    "type": "boolean"
                                 }
                             },
                             "requires": ["code", "name", "description", "packages"]

@@ -67,7 +67,7 @@ function Group(soajs, localConfig, mongoCore) {
             indexing[tCode] = true;
 
             let indexes = [
-                {"col": colName, "i": {'code': 1, 'tenant.id': 1}, "o": {unique: true}}
+                { "col": colName, "i": { 'code': 1, 'tenant.id': 1 }, "o": { unique: true } }
             ];
             __self.indexCount = indexes.length;
             indexing._len = indexes.length;
@@ -165,6 +165,9 @@ Group.prototype.add = function (data, cb) {
         "name": data.name,
         "description": data.description
     };
+    if (data.locked) {
+        record.locked = data.locked;
+    }
     if (data.tId && data.tCode) {
         record.tenant = {
             "id": data.tId,
@@ -189,7 +192,7 @@ Group.prototype.add = function (data, cb) {
     }
     __self.mongoCore.insertOne(colName, record, {}, (err, record) => {
         if (record && Array.isArray(record)) {
-            record = record [0];
+            record = record[0];
         }
         return cb(err, record);
     });
@@ -346,7 +349,7 @@ Group.prototype.updateEnvironments = function (data, cb) {
 
     if (data.groups.codes) {
         let condition = {
-            'code': {'$in': data.groups.codes},
+            'code': { '$in': data.groups.codes },
             "tenant.id": __self.tenantId
         };
         let extraOptions = {
@@ -379,7 +382,7 @@ Group.prototype.updateEnvironments = function (data, cb) {
                 return cb(null, []);
             }
             let condition = {
-                '_id': {'$in': _ids},
+                '_id': { '$in': _ids },
                 "tenant.id": __self.tenantId
             };
             let extraOptions = {
@@ -429,7 +432,7 @@ Group.prototype.updatePackages = function (data, cb) {
 
     if (data.groups.codes) {
         let condition = {
-            'code': {'$in': data.groups.codes},
+            'code': { '$in': data.groups.codes },
             "tenant.id": __self.tenantId
         };
         let extraOptions = {
@@ -462,7 +465,7 @@ Group.prototype.updatePackages = function (data, cb) {
                 return cb(null, []);
             }
             let condition = {
-                '_id': {'$in': _ids},
+                '_id': { '$in': _ids },
                 "tenant.id": __self.tenantId
             };
             let extraOptions = {
