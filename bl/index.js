@@ -268,7 +268,7 @@ let bl = {
                 let userData = {};
                 userData._id = userRecord._id;
                 userData.phone = tokenRecord.phone;
-                bl.user.updateUsernamePhone(soajs, userData, options, (error) => {
+                bl.user.updatePhone(soajs, userData, options, (error) => {
                     bl.user.mt.closeModel(modelObj);
                     if (error) {
                         return cb(error, null);
@@ -385,7 +385,7 @@ let bl = {
                 return cb(error, null);
             }
             let data = {};
-            data.username = inputmaskData.phone;
+            data.phone = inputmaskData.phone;
             data.exclude_id = userRecord._id;
             bl.user.countUserPhone(soajs, data, options, (error, found) => {
                 if (error) {

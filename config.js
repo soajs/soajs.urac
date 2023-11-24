@@ -738,7 +738,6 @@ module.exports = {
                 },
                 "email": {
                     "source": ['body.email'],
-                    "required": true,
                     "validation": {"type": "string", "format": "email"}
                 },
                 "profile": {
@@ -818,7 +817,6 @@ module.exports = {
                 },
                 "email": {
                     "source": ['body.email'],
-                    "required": true,
                     "validation": {"type": "string", "format": "email"}
                 },
                 "profile": {

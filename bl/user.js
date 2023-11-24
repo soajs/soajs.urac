@@ -283,7 +283,7 @@ let bl = {
         });
     },
 
-    "updateUsernamePhone": (soajs, inputmaskData, options, cb) => {
+    "updatePhone": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));
         }
@@ -292,7 +292,7 @@ let bl = {
         data.id = inputmaskData.id || null;
         data._id = inputmaskData._id || null;
         data.phone = inputmaskData.phone;
-        modelObj.updateUsernamePhone(data, (err, record) => {
+        modelObj.updatePhone(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
                 if (err.message && err.message.match("was not update")) {

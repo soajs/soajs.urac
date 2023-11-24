@@ -67,7 +67,18 @@ function Group(soajs, localConfig, mongoCore) {
             indexing[tCode] = true;
 
             let indexes = [
-                { "col": colName, "i": { 'code': 1, 'tenant.id': 1 }, "o": { unique: true } }
+                {
+                    "col": colName,
+                    "i": { 'tenant.id': 1, 'code': 1 },
+                    "o": { unique: true },
+                    "usedBy": ["core.getGroups", "getGroup", "updateEnvironments", "updatePackages"]
+                },
+                {
+                    "col": colName,
+                    "i": { '_id': 1, 'tenant.id': 1 },
+                    "o": {},
+                    "usedBy": ["getGroup", "edit", "delete", "updateEnvironments", "updatePackages"]
+                }
             ];
             __self.indexCount = indexes.length;
             indexing._len = indexes.length;
@@ -120,7 +131,6 @@ Group.prototype.getGroup = function (data, cb) {
         return cb(error, null);
     }
     let condition = {
-        "tenant.id": __self.tenantId
     };
 
     if (data.id) {
@@ -129,15 +139,16 @@ Group.prototype.getGroup = function (data, cb) {
                 return cb(err, null);
             }
             condition._id = _id;
+            condition["tenant.id"] = __self.tenantId;
             __self.mongoCore.findOne(colName, condition, null, (err, record) => {
                 return cb(err, record);
             });
         });
     } else {
+        condition["tenant.id"] = __self.tenantId;
         if (data.code) {
             condition.code = data.code;
         }
-
         __self.mongoCore.findOne(colName, condition, null, (err, record) => {
             return cb(err, record);
         });
@@ -349,8 +360,8 @@ Group.prototype.updateEnvironments = function (data, cb) {
 
     if (data.groups.codes) {
         let condition = {
-            'code': { '$in': data.groups.codes },
-            "tenant.id": __self.tenantId
+            "tenant.id": __self.tenantId,
+            'code': { '$in': data.groups.codes }
         };
         let extraOptions = {
             'upsert': false
@@ -432,8 +443,8 @@ Group.prototype.updatePackages = function (data, cb) {
 
     if (data.groups.codes) {
         let condition = {
-            'code': { '$in': data.groups.codes },
-            "tenant.id": __self.tenantId
+            "tenant.id": __self.tenantId,
+            'code': { '$in': data.groups.codes }
         };
         let extraOptions = {
             'upsert': false
@@ -601,8 +612,8 @@ Group.prototype.deleteProducts = function (data, cb) {
         });
     } else {
         let condition = {
-            'code': data.code,
-            "tenant.id": __self.tenantId
+            "tenant.id": __self.tenantId,
+            'code': data.code
         };
         remove(condition);
     }

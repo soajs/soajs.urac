@@ -66,23 +66,7 @@ function User(soajs, localConfig, mongoCore) {
             indexing[tCode] = true;
 
             let indexes = [
-                {"col": colName, "i": {'tenant.id': 1}, "o": {}},
-                {"col": colName, "i": {'username': 1, 'email': 1, 'status': 1}, "o": {}},
-                {"col": colName, "i": {'_id': 1, 'status': 1}, "o": {}}, {
-                    "col": colName, "i": {
-                        'firstName': 1,
-                        'lastName': 1,
-                        'tenant.id': 1,
-                        'config.allowedTenants.tenant.id': 1
-                    }, "o": {}
-                },
-                {
-                    "col": colName, "i": {
-                        'firstName': 1,
-                        'lastName': 1,
-                        'tenant.id': 1
-                    }, "o": {}
-                },
+                { "col": colName, "i": { 'username': 1, 'email': 1, 'status': 1 }, "o": {} },
                 {
                     "col": colName, "i": {
                         'username': 1,
@@ -101,34 +85,149 @@ function User(soajs, localConfig, mongoCore) {
                         'config.allowedTenants.tenant.id': 1
                     }, "o": {}
                 },
-                {"col": colName, "i": {"username": 1}, "o": {unique: true}},
-                {"col": colName, "i": {"email": 1}, "o": {unique: true}},
-                {"col": colName, "i": {'config.allowedTenants.tenant.id': 1}, "o": {}},
+
+                {
+                    "col": colName,
+                    "i": {
+                        'firstName': 1,
+                        'status': 1,
+                        'config.allowedTenants.tenant.id': 1
+                    },
+                    "o": {},
+                    "usedBy": ["getUsers", "countUsers"]
+                },
+                {
+                    "col": colName,
+                    "i": {
+                        'lastName': 1,
+                        "status": 1,
+                        'tenant.id': 1
+                    },
+                    "o": {},
+                    "usedBy": ["getUsers", "countUsers"]
+                },
+                {
+                    "col": colName,
+                    "i": {
+                        'firstName': 1,
+                        'config.allowedTenants.tenant.id': 1
+                    },
+                    "o": {},
+                    "usedBy": ["getUsers", "countUsers"]
+                },
+                {
+                    "col": colName,
+                    "i": {
+                        'lastName': 1,
+                        'tenant.id': 1
+                    },
+                    "o": {},
+                    "usedBy": ["getUsers", "countUsers"]
+                },
+
+                {
+                    "col": colName,
+                    "i": { "tenant.id": 1, "firstName": 1 },
+                    "o": {},
+                    "usedBy": ["getUsersBasicInfo", "cleanDeletedGroup"]
+                },
+                {
+                    "col": colName,
+                    "i": { "tenant.id": 1, "lastName": 1 },
+                    "o": {},
+                    "usedBy": ["getUsersBasicInfo"]
+                },
+                {
+                    "col": colName,
+                    "i": { "tenant.id": 1, "status": 1 },
+                    "o": {},
+                    "usedBy": ["getUsersBasicInfo"]
+                },
+                {
+                    "col": colName,
+                    "i": { "tenant.id": 1, "firstName": 1, "status": 1 },
+                    "o": {},
+                    "usedBy": ["getUsersBasicInfo"]
+                },
+                {
+                    "col": colName,
+                    "i": { "tenant.id": 1, "lastName": 1, "status": 1 },
+                    "o": {},
+                    "usedBy": ["getUsersBasicInfo"]
+                },
+
+                {
+                    "col": colName,
+                    "i": { "phone": 1 },
+                    "o": {
+                        unique: true,
+                        partialFilterExpression: {
+                            "phone": {
+                                "$exists": true
+                            }
+                        }
+                    },
+                    "usedBy": ["checkUsernamePhone"]
+                },
+
+                {
+                    "col": colName,
+                    "i": { "username": 1 },
+                    "o": { unique: true },
+                    "usedBy": ["core.lastLogin", "core.getUserByUsernameOrId", "getUserByUsername", "checkUsername", "getUser", "uninvite", "deleteUpdatePin (partial)"]
+                },
+
+                {
+                    "col": colName,
+                    "i": { "email": 1 },
+                    "o": {
+                        unique: true,
+                        partialFilterExpression: {
+                            "email": {
+                                "$exists": true
+                            }
+                        }
+                    },
+                    "usedBy": ["core.getUserByEmail", "getUserByUsername", "checkUsername", "getUser", "uninvite", "deleteUpdatePin (partial)"]
+                },
+
                 {
                     "col": colName, "i": {
                         "config.allowedTenants.tenant.pin.code": 1,
                         "config.allowedTenants.tenant.id": 1
-                    }, "o": {
+                    },
+                    "o": {
                         unique: true,
                         partialFilterExpression: {
                             "config.allowedTenants.tenant.pin.code": {
                                 "$exists": true
                             }
                         }
-                    }
+                    },
+                    "usedBy": ["core.getUserByPin"]
                 },
+
                 {
                     "col": colName, "i": {
                         "tenant.pin.code": 1,
                         "tenant.id": 1
-                    }, "o": {
+                    },
+                    "o": {
                         unique: true,
                         partialFilterExpression: {
                             "tenant.pin.code": {
                                 "$exists": true
                             }
                         }
-                    }
+                    },
+                    "usedBy": ["core.getUserByPin"]
+                },
+
+                {
+                    "col": colName,
+                    "i": { 'config.allowedTenants.tenant.id': 1 },
+                    "o": {},
+                    "usedBy": ["cleanDeletedGroup"]
                 }
             ];
             __self.indexCount = indexes.length;
@@ -163,9 +262,9 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
     }
     if (data.tenant.type === "client" && data.tenant.main) {
         //TODO: clean up from sub tenant & index
-        let condition = {"config.allowedTenants.tenant.id": data.tenant.id};
+        let condition = { "config.allowedTenants.tenant.id": data.tenant.id };
         let extraOptions = {};
-        let s = {"$pull": {"config.allowedTenants.$.groups": data.groupCode}};
+        let s = { "$pull": { "config.allowedTenants.$.groups": data.groupCode } };
         __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, result) => {
             if (err) {
                 return cb(err);
@@ -179,9 +278,9 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
             }
         });
     } else {
-        let condition = {"tenant.id": data.tenant.id};
+        let condition = { "tenant.id": data.tenant.id };
         let extraOptions = {};
-        let s = {"$pull": {groups: data.groupCode}};
+        let s = { "$pull": { groups: data.groupCode } };
         __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, result) => {
             if (err) {
                 return cb(err);
@@ -216,13 +315,13 @@ User.prototype.getUserByUsername = function (data, cb) {
     }
     let condition = {
         '$or': [
-            {'username': data.username},
-            {'email': data.username}
+            { 'username': data.username },
+            { 'email': data.username }
         ]
     };
     if (data.status) {
         if (Array.isArray(data.status)) {
-            condition.status = {"$in": data.status};
+            condition.status = { "$in": data.status };
         } else {
             condition.status = data.status;
         }
@@ -269,10 +368,10 @@ User.prototype.getUser = function (data, cb) {
         if (err) {
             return cb(err, null);
         }
-        let condition = {'_id': _id};
+        let condition = { '_id': _id };
         if (data.status) {
             if (Array.isArray(data.status)) {
-                condition.status = {"$in": data.status};
+                condition.status = { "$in": data.status };
             } else {
                 condition.status = data.status;
             }
@@ -355,7 +454,7 @@ User.prototype.updateOneField = function (data, cb) {
     }
 };
 
-User.prototype.updateUsernamePhone = function (data, cb) {
+User.prototype.updatePhone = function (data, cb) {
     let __self = this;
     if (!data || !(data.id || data._id) || !data.phone) {
         let error = new Error("User: either id or _id and phone are required.");
@@ -367,12 +466,10 @@ User.prototype.updateUsernamePhone = function (data, cb) {
             '_id': _id
         };
         let extraOptions = {
-            'upsert': false
         };
         let s = {
             '$set': {
-                "phone": data.phone,
-                "username": data.phone
+                "phone": data.phone
             }
         };
         __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
@@ -411,13 +508,13 @@ User.prototype.getUsers = function (data, cb) {
     if (data && data.limit) {
         options.skip = data.start;
         options.limit = data.limit;
-        options.sort = {"firstName": 1};
+        options.sort = { "firstName": 1 };
     }
     if (data && data.keywords) {
         let rePattern = new RegExp(data.keywords, 'i');
         condition.$or = [
-            {"firstName": {"$regex": rePattern}},
-            {"lastName": {"$regex": rePattern}}
+            { "firstName": { "$regex": rePattern } },
+            { "lastName": { "$regex": rePattern } }
         ];
     }
     if (data && data.status) {
@@ -440,9 +537,9 @@ User.prototype.getUsers = function (data, cb) {
         if (data.scope === "myTenancy") {
             condition["tenant.id"] = tId;
         } else if (data.scope === "otherTenancy") {
-            condition["tenant.id"] = {"$ne": tId};
+            condition["tenant.id"] = { "$ne": tId };
         } else if (data.scope === "otherTenancyInvited") {
-            condition["tenant.id"] = {"$ne": tId};
+            condition["tenant.id"] = { "$ne": tId };
             condition["config.allowedTenants.tenant.id"] = tId;
         }
     }
@@ -460,13 +557,13 @@ User.prototype.getUsersBasicInfo = function (data, cb) {
     if (data && data.limit) {
         options.skip = data.skip;
         options.limit = data.limit;
-        options.sort = {"firstName": 1};
+        options.sort = { "firstName": 1 };
     }
     if (data && data.keywords) {
         let rePattern = new RegExp(data.keywords, 'i');
         condition.$or = [
-            {"firstName": {"$regex": rePattern}},
-            {"lastName": {"$regex": rePattern}}
+            { "firstName": { "$regex": rePattern } },
+            { "lastName": { "$regex": rePattern } }
         ];
     }
     if (data && data.status) {
@@ -576,20 +673,20 @@ User.prototype.checkUsername = function (data, cb) {
     }
     let condition = {
         '$or': [
-            {'username': data.username},
-            {'email': data.username}
+            { 'username': data.username },
+            { 'email': data.username }
         ]
     };
     if (data.email) {
         condition = {
             '$or': [
-                {'username': data.username},
-                {'email': data.email}
+                { 'username': data.username },
+                { 'email': data.email }
             ]
         };
     }
     if (data.exclude_id) {
-        condition._id = {"$ne": data.exclude_id};
+        condition._id = { "$ne": data.exclude_id };
     }
     __self.mongoCore.countDocuments(colName, condition, {}, (err, count) => {
         return cb(err, count);
@@ -604,20 +701,20 @@ User.prototype.checkUsernamePhone = function (data, cb) {
     }
     let condition = {
         '$or': [
-            {'username': data.username},
-            {'phone': data.username}
+            { 'username': data.username },
+            { 'phone': data.username }
         ]
     };
     if (data.phone) {
         condition = {
             '$or': [
-                {'username': data.username},
-                {'phone': data.phone}
+                { 'username': data.username },
+                { 'phone': data.phone }
             ]
         };
     }
     if (data.exclude_id) {
-        condition._id = {"$ne": data.exclude_id};
+        condition._id = { "$ne": data.exclude_id };
     }
     __self.mongoCore.countDocuments(colName, condition, {}, (err, count) => {
         return cb(err, count);
@@ -639,8 +736,8 @@ User.prototype.countUsers = function (data, cb) {
     if (data && data.keywords) {
         let rePattern = new RegExp(data.keywords, 'i');
         condition.$or = [
-            {"firstName": {"$regex": rePattern}},
-            {"lastName": {"$regex": rePattern}}
+            { "firstName": { "$regex": rePattern } },
+            { "lastName": { "$regex": rePattern } }
         ];
     }
     if (data && data.status) {
@@ -653,9 +750,9 @@ User.prototype.countUsers = function (data, cb) {
         if (data.scope === "myTenancy") {
             condition["tenant.id"] = tId;
         } else if (data.scope === "otherTenancy") {
-            condition["tenant.id"] = {"$ne": tId};
+            condition["tenant.id"] = { "$ne": tId };
         } else if (data.scope === "otherTenancyInvited") {
-            condition["tenant.id"] = {"$ne": tId};
+            condition["tenant.id"] = { "$ne": tId };
             condition["config.allowedTenants.tenant.id"] = tId;
         }
     }
@@ -685,7 +782,6 @@ User.prototype.add = function (data, cb) {
         "username": data.username,
         "firstName": data.firstName,
         "lastName": data.lastName,
-        "email": data.email,
 
         "password": data.password,
         "status": data.status,
@@ -694,6 +790,9 @@ User.prototype.add = function (data, cb) {
     };
     if (data.ln) {
         record.ln = data.ln;
+    }
+    if (data.email) {
+        record.email = data.email;
     }
     if (data.phone) {
         record.phone = data.phone;
@@ -707,7 +806,7 @@ User.prototype.add = function (data, cb) {
 
     __self.mongoCore.insertOne(colName, record, {}, (err, record) => {
         if (record && Array.isArray(record)) {
-            record = record [0];
+            record = record[0];
         }
         return cb(err, record);
     });
@@ -738,7 +837,7 @@ User.prototype.edit = function (data, cb) {
             'upsert': false
         };
         if (data.username || data.firstName || data.lastName || data.profile || data.groups || data.email || data.status) {
-            let s = {'$set': {}};
+            let s = { '$set': {} };
 
             if (data.username) {
                 s.$set.username = data.username;
@@ -814,7 +913,7 @@ User.prototype.save = function (data, cb) {
     let extraOptions = {
         'upsert': false
     };
-    let s = {'$set': data};
+    let s = { '$set': data };
     __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
         let nModified = 0;
         if (!record) {
@@ -845,7 +944,7 @@ User.prototype.uninvite = function (data, cb) {
     let doUninvite = (condition) => {
         let s = {
             "$pull": {
-                "config.allowedTenants": {"tenant.id": data.tenant.id}
+                "config.allowedTenants": { "tenant.id": data.tenant.id }
             }
         };
         if (data.status) {
@@ -862,17 +961,17 @@ User.prototype.uninvite = function (data, cb) {
     };
 
     if (data.user.username) {
-        let condition = {'username': data.user.username};
+        let condition = { 'username': data.user.username };
         doUninvite(condition);
     } else if (data.user.email) {
-        let condition = {'email': data.user.email};
+        let condition = { 'email': data.user.email };
         doUninvite(condition);
     } else {
         __self.validateId(data.user.id, (err, _id) => {
             if (err) {
                 return cb(err, null);
             }
-            let condition = {"_id": _id};
+            let condition = { "_id": _id };
             doUninvite(condition);
         });
     }
@@ -929,7 +1028,7 @@ User.prototype.editGroups = function (data, cb) {
                     }
                 };
                 condition["config.allowedTenants.tenant.id"] = data.tenant.id;
-                condition["tenant.id"] = {"$ne": data.tenant.id};
+                condition["tenant.id"] = { "$ne": data.tenant.id };
                 if (data.status) {
                     condition.status = data.status;
                 }
@@ -949,17 +1048,17 @@ User.prototype.editGroups = function (data, cb) {
     };
 
     if (data.user.username) {
-        let condition = {'username': data.user.username};
+        let condition = { 'username': data.user.username };
         doEdit(condition);
     } else if (data.user.email) {
-        let condition = {'email': data.user.email};
+        let condition = { 'email': data.user.email };
         doEdit(condition);
     } else {
         __self.validateId(data.user.id, (err, _id) => {
             if (err) {
                 return cb(err, null);
             }
-            let condition = {"_id": _id};
+            let condition = { "_id": _id };
             doEdit(condition);
         });
     }
@@ -1015,7 +1114,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
                     }
                 };
                 condition["config.allowedTenants.tenant.id"] = data.tenant.id;
-                condition["tenant.id"] = {"$ne": data.tenant.id};
+                condition["tenant.id"] = { "$ne": data.tenant.id };
                 __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
                     let nModified = 0;
                     if (!record) {
@@ -1032,7 +1131,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
     };
 
     let doUpdate = (condition) => {
-        let s = {"$set": {}};
+        let s = { "$set": {} };
         if (data.tenant.type === "client" && data.tenant.main) {
             if (data.pin.code) {
                 s.$set["config.allowedTenants.$.tenant.pin.code"] = data.pin.code;
@@ -1060,7 +1159,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
             }
             if (!nModified && data.tenant.type === "product") {
                 //try to update the pin in case of roaming
-                let s = {"$set": {}};
+                let s = { "$set": {} };
                 if (data.pin.code) {
                     s.$set["config.allowedTenants.$.tenant.pin.code"] = data.pin.code;
                 }
@@ -1068,7 +1167,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
                     s.$set["config.allowedTenants.$.tenant.pin.allowed"] = data.pin.allowed;
                 }
                 condition["config.allowedTenants.tenant.id"] = data.tenant.id;
-                condition["tenant.id"] = {"$ne": data.tenant.id};
+                condition["tenant.id"] = { "$ne": data.tenant.id };
                 __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
                     let nModified = 0;
                     if (!record) {
@@ -1098,17 +1197,17 @@ User.prototype.deleteUpdatePin = function (data, cb) {
     };
 
     if (data.user.username) {
-        let condition = {'username': data.user.username};
+        let condition = { 'username': data.user.username };
         doPin(condition);
     } else if (data.user.email) {
-        let condition = {'email': data.user.email};
+        let condition = { 'email': data.user.email };
         doPin(condition);
     } else {
         __self.validateId(data.user.id, (err, _id) => {
             if (err) {
                 return cb(err, null);
             }
-            let condition = {"_id": _id};
+            let condition = { "_id": _id };
             doPin(condition);
         });
     }
@@ -1124,7 +1223,7 @@ User.prototype.delete = function (data, cb) {
         if (err) {
             return cb(err, null);
         }
-        let condition = {'_id': _id};
+        let condition = { '_id': _id };
         __self.mongoCore.findOne(colName, condition, null, (err, record) => {
             if (err) {
                 return cb(err);
