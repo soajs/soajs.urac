@@ -21,7 +21,7 @@ describe("Testing /join/invite API", () => {
             body: {
                 "username": 'joininvitecode1',
                 "email": "tony1@hage.com",
-                "phone": "9999999999",
+                "phone": "9999999998",
                 "firstName": "tony",
                 "lastName": "hage",
                 "password": 'SomePass',
