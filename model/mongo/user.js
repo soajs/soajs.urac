@@ -773,8 +773,8 @@ User.prototype.countUsers = function (data, cb) {
  */
 User.prototype.add = function (data, cb) {
     let __self = this;
-    if (!data || !data.username || !data.firstName || !data.lastName || !data.email || !data.password || !data.status || !data.tenant) {
-        let error = new Error("User: username, firstName, lastName, email, password, status and tenant information are required.");
+    if (!data || !data.username || !data.firstName || !data.lastName || !data.password || !data.status || !data.tenant) {
+        let error = new Error("User: username, firstName, lastName, password, status and tenant information are required.");
         return cb(error, null);
     }
 
