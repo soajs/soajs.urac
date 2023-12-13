@@ -28,13 +28,13 @@
     "grunt-jsdoc": "2.4.0",
     "grunt-mocha-test": "0.13.3",
     "mocha": "6.2.2",
-    "soajs.controller": "4.2.7"
+    "soajs.controller": "4.2.8"
   },
   "dependencies": {
     "async": "3.2.5",
     "handlebars": "4.7.8",
     "request": "2.88.2",
-    "soajs": "4.1.6",
+    "soajs": "4.1.7",
     "twilio": "4.19.0",
     "uuid": "9.0.1"
   }
