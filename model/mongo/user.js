@@ -700,7 +700,7 @@ User.prototype.checkUsernamePhone = function (data, cb) {
         let error = new Error("User: phone is required.");
         return cb(error, null);
     }
-    let condition = { 'phone': data.username };
+    let condition = { 'phone': data.phone };
 
     if (data.exclude_id) {
         condition._id = { "$ne": data.exclude_id };

@@ -80,6 +80,7 @@ module.exports = {
         535: "Sub tenant cannot self invite a user.",
         536: "User is already in the tenant tenancy.",
         537: "Make sure to use the Email or Phone number related to this invite code.",
+        538: "Phone already exists.",
 
         598: "Problem with the used token and code.",
         599: "Token has expired.",

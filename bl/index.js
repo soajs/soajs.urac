@@ -396,7 +396,7 @@ let bl = {
                 if (found) {
                     //close model
                     bl.user.mt.closeModel(modelObj);
-                    return cb(bl.user.handleError(soajs, 526, error), null);
+                    return cb(bl.user.handleError(soajs, 538, error), null);
                 }
                 let data = {};
                 data.userId = userRecord._id.toString();
