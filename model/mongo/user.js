@@ -514,7 +514,8 @@ User.prototype.getUsers = function (data, cb) {
         let rePattern = new RegExp(data.keywords, 'i');
         condition.$or = [
             { "firstName": { "$regex": rePattern } },
-            { "lastName": { "$regex": rePattern } }
+            { "lastName": { "$regex": rePattern } },
+            { "email": { "$regex": rePattern } }
         ];
     }
     if (data && data.status) {
@@ -695,24 +696,12 @@ User.prototype.checkUsername = function (data, cb) {
 
 User.prototype.checkUsernamePhone = function (data, cb) {
     let __self = this;
-    if (!data || !data.username) {
-        let error = new Error("User: username is required.");
+    if (!data || !data.phone) {
+        let error = new Error("User: phone is required.");
         return cb(error, null);
     }
-    let condition = {
-        '$or': [
-            { 'username': data.username },
-            { 'phone': data.username }
-        ]
-    };
-    if (data.phone) {
-        condition = {
-            '$or': [
-                { 'username': data.username },
-                { 'phone': data.phone }
-            ]
-        };
-    }
+    let condition = { 'phone': data.username };
+
     if (data.exclude_id) {
         condition._id = { "$ne": data.exclude_id };
     }

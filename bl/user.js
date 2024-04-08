@@ -48,8 +48,8 @@ let bl = {
         }
         let modelObj = bl.mt.getModel(soajs, options);
         let data = {};
-        data.username = inputmaskData.username;
-        data.phone = inputmaskData.phone || null;
+        // data.username = inputmaskData.username;
+        data.phone = inputmaskData.phone;
         data.exclude_id = inputmaskData.exclude_id || null;
         modelObj.checkUsernamePhone(data, (err, count) => {
             bl.mt.closeModel(modelObj);
