@@ -355,8 +355,7 @@ let bl = {
                 record.password = inputmaskData.password;
                 return cb(null, record);
             });
-
-        }
+        };
         if (!!inputmaskData.passwordEncrypted) {
             doAdd(inputmaskData.password);
         } else {
