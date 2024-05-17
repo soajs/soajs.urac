@@ -107,7 +107,7 @@ let bl = {
         } else {
             return cb(bl.handleError(soajs, 520, null));
         }
-        data.keep = {"allowedTenants": true};
+        data.keep = { "allowedTenants": true };
 
         let modelObj = bl.mt.getModel(soajs, options);
         modelObj.getUser(data, (err, record) => {
@@ -327,10 +327,7 @@ let bl = {
                 encryptionConfig.optionalAlgorithm = optionalAlgorithm;
             }
         }
-        lib.pwd.encrypt(encryptionConfig, inputmaskData.password, bl.localConfig, (err, pwdEncrypted) => {
-            if (err) {
-                return cb(bl.handleError(soajs, 602, err));
-            }
+        let doAdd = (pwdEncrypted) => {
             let modelObj = bl.mt.getModel(soajs, options);
 
             let data = {};
@@ -359,7 +356,17 @@ let bl = {
                 return cb(null, record);
             });
 
-        });
+        }
+        if (!!inputmaskData.passwordEncrypted) {
+            doAdd(inputmaskData.password);
+        } else {
+            lib.pwd.encrypt(encryptionConfig, inputmaskData.password, bl.localConfig, (err, pwdEncrypted) => {
+                if (err) {
+                    return cb(bl.handleError(soajs, 602, err));
+                }
+                doAdd(pwdEncrypted);
+            });
+        }
     },
 
     "edit": (soajs, inputmaskData, options, cb) => {

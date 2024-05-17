@@ -770,6 +770,10 @@ module.exports = {
                     "source": ['body.password'],
                     "validation": {"type": "string"}
                 },
+                "passwordEncrypted" : {
+                    "source": ['body.passwordEncrypted'],
+                    "validation": {"type": "boolean"}
+                },
                 "pin": {
                     "source": ['body.pin'],
                     "validation": {
@@ -864,6 +868,10 @@ module.exports = {
                 "password": {
                     "source": ['body.password'],
                     "validation": {"type": "string"}
+                },
+                "passwordEncrypted" : {
+                    "source": ['body.passwordEncrypted'],
+                    "validation": {"type": "boolean"}
                 },
                 "phone": {
                     "source": ['body.phone'],
