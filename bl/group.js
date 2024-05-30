@@ -146,6 +146,23 @@ let bl = {
         });
     },
 
+    "deleteGroups": (soajs, inputmaskData, options, cb) => {
+        if (!inputmaskData) {
+            return cb(bl.handleError(soajs, 400, null));
+        }
+        let modelObj = bl.mt.getModel(soajs, options);
+        let data = {};
+        data.ids = inputmaskData.ids;
+        data.tenantId = inputmaskData.tenant.id;
+        modelObj.deleteMany(data, (err, record) => {
+            bl.mt.closeModel(modelObj);
+            if (err) {
+                return cb(bl.handleError(soajs, 602, err));
+            }
+            return cb(null, record);
+        });
+    },
+
     "deleteGroup": (soajs, inputmaskData, options, cb) => {
         if (!inputmaskData) {
             return cb(bl.handleError(soajs, 400, null));

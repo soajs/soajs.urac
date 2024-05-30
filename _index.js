@@ -160,6 +160,11 @@ function run(serviceStartCb) {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });
+            service.delete("/admin/groups", function (req, res) {
+                bl.deleteGroups(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
             service.delete("/admin/user", function (req, res) {
                 bl.user.delete(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));

@@ -1049,6 +1049,35 @@ module.exports = {
                     "validation": {"type": "string"}
                 }
             },
+            '/admin/groups/tenant': {
+                "_apiInfo": {
+                    "l": "Delete groups",
+                    "group": "Group administration"
+                },
+                "tenant": {
+                    "source": ['query.tenant'],
+                    "required": true,
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": 'string'
+                            }
+                        },
+                        "required": ["id"]
+                    }
+                },
+                "ids": {
+                    "source": ['body.ids'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+            },
             '/admin/user': {
                 "_apiInfo": {
                     "l": "Delete user",

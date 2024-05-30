@@ -331,6 +331,39 @@ Group.prototype.delete = function (data, cb) {
     });
 };
 
+Group.prototype.deleteMany = function (data, cb) {
+    let __self = this;
+    if (!data || !data.ids) {
+        let error = new Error("Group: ids is required.");
+        return cb(error, null);
+    }
+    let _ids = [];
+    async.each(data.ids, function (id, callback) {
+        __self.validateId(id, function (err, _id) {
+            if (err) {
+                //ignore
+            } else {
+                _ids.push(_id);
+            }
+            callback();
+        });
+    }, function () {
+        if (_ids.length === 0) {
+            return cb(null, false);
+        }
+        let condition = {
+            "_id": {
+                "$in": _ids
+            },
+            "tenant.id": data.tenantId
+        };
+        __self.mongoCore.deleteMany(colName, condition, null, (err) => {
+            return cb(err, true);
+        });
+    });
+};
+
+
 /**
  * To add allowed environment(s) to groups
  *
