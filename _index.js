@@ -160,7 +160,7 @@ function run(serviceStartCb) {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });
-            service.delete("/admin/groups", function (req, res) {
+            service.delete("/admin/groups/tenant", function (req, res) {
                 bl.deleteGroups(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
