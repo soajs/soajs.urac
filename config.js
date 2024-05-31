@@ -1040,7 +1040,7 @@ module.exports = {
         "delete": {
             '/admin/group': {
                 "_apiInfo": {
-                    "l": "Delete group",
+                    "l": "Delete group with users clean up",
                     "group": "Group administration"
                 },
                 "id": {
@@ -1051,7 +1051,7 @@ module.exports = {
             },
             '/admin/groups/tenant': {
                 "_apiInfo": {
-                    "l": "Delete groups",
+                    "l": "Delete groups without users clean up",
                     "group": "Group administration"
                 },
                 "tenant": {
