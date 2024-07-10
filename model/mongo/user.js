@@ -281,16 +281,25 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
         let condition = { "tenant.id": data.tenant.id };
         let extraOptions = {};
         let s = { "$pull": { groups: data.groupCode } };
-        __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, result) => {
+        __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err) => {
             if (err) {
                 return cb(err);
             } else {
-                if (result && result.nModified) {
-                    result = result.nModified;
-                } else {
-                    result = 0;
-                }
-                return cb(err, result);
+                let condition = { "config.allowedTenants.tenant.id": data.tenant.id };
+                let extraOptions = {};
+                let s = { "$pull": { "config.allowedTenants.$.groups": data.groupCode } };
+                __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, result) => {
+                    if (err) {
+                        return cb(err);
+                    } else {
+                        if (result && result.nModified) {
+                            result = result.nModified;
+                        } else {
+                            result = 0;
+                        }
+                        return cb(err, result);
+                    }
+                });
             }
         });
     }
