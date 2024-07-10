@@ -281,10 +281,15 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
         let condition = { "tenant.id": data.tenant.id };
         let extraOptions = {};
         let s = { "$pull": { groups: data.groupCode } };
-        __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err) => {
+        __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, _result) => {
             if (err) {
                 return cb(err);
             } else {
+                if (_result && _result.nModified) {
+                    _result = _result.nModified;
+                } else {
+                    _result = 0;
+                }
                 let condition = { "config.allowedTenants.tenant.id": data.tenant.id };
                 let extraOptions = {};
                 let s = { "$pull": { "config.allowedTenants.$.groups": data.groupCode } };
@@ -297,7 +302,7 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
                         } else {
                             result = 0;
                         }
-                        return cb(err, result);
+                        return cb(err, result + _result);
                     }
                 });
             }
