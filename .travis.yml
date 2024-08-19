@@ -1,7 +1,6 @@
-language: node_js
-node_js: 18
-cache: false
 dist: focal
+language: node_js
+node_js: 20
 
 jobs:
   include:
