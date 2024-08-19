@@ -18,24 +18,24 @@
     "test": "grunt test"
   },
   "devDependencies": {
-    "grunt": "1.0.4",
-    "grunt-contrib-clean": "2.0.0",
+    "grunt": "1.6.1",
+    "grunt-contrib-clean": "2.0.1",
     "grunt-contrib-copy": "1.0.0",
-    "grunt-contrib-jshint": "2.1.0",
+    "grunt-contrib-jshint": "3.2.0",
     "grunt-coveralls": "2.0.0",
     "grunt-env": "1.0.1",
     "grunt-istanbul": "0.8.0",
-    "grunt-jsdoc": "2.4.0",
+    "grunt-jsdoc": "2.4.1",
     "grunt-mocha-test": "0.13.3",
-    "mocha": "6.2.2",
-    "soajs.controller": "4.2.12"
+    "mocha": "10.7.3",
+    "soajs.controller": "4.2.15"
   },
   "dependencies": {
     "async": "3.2.5",
     "handlebars": "4.7.8",
     "request": "2.88.2",
-    "soajs": "4.1.9",
-    "twilio": "4.19.0",
-    "uuid": "9.0.1"
+    "soajs": "4.1.10",
+    "twilio": "5.2.2",
+    "uuid": "10.0.0"
   }
 }
