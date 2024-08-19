@@ -27,10 +27,10 @@ module.exports = {
     "urac": true,
     "maintenance": {
         "readiness": "/heartbeat",
-        "port": {"type": "maintenance"},
+        "port": { "type": "maintenance" },
         "commands": [
-            {"label": "Reload Registry", "path": "/reloadRegistry", "icon": "fas fa-undo"},
-            {"label": "Resource Info", "path": "/resourceInfo", "icon": "fas fa-info"}
+            { "label": "Reload Registry", "path": "/reloadRegistry", "icon": "fas fa-undo" },
+            { "label": "Resource Info", "path": "/resourceInfo", "icon": "fas fa-info" }
         ]
     },
     "tags": ["users", "registration", "groups", "membership", "join"],
@@ -93,7 +93,7 @@ module.exports = {
         "commonFields": {
             "keywords": {
                 "source": ['query.keywords', 'body.keywords'],
-                "validation": {"type": "string"}
+                "validation": { "type": "string" }
             },
             "start": {
                 "source": ["query.start", "body.start"],
@@ -155,7 +155,7 @@ module.exports = {
                 "username": {
                     "source": ['query.username'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/password/forgot': {
@@ -166,7 +166,7 @@ module.exports = {
                 "username": {
                     "source": ['query.username'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/validate/join/code': {
@@ -176,12 +176,12 @@ module.exports = {
                 },
                 "token": {
                     "source": ['query.token'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "code": {
                     "source": ['query.code'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/validate/join': {
@@ -192,7 +192,7 @@ module.exports = {
                 "token": {
                     "source": ['query.token'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/checkUsername': {
@@ -203,7 +203,7 @@ module.exports = {
                 "username": {
                     "source": ['query.username'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/emailToken': {
@@ -214,7 +214,7 @@ module.exports = {
                 "username": {
                     "source": ['query.username'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/resend/code': {
@@ -225,12 +225,12 @@ module.exports = {
                 "username": {
                     "source": ['query.username'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "confirmation": {
                     "source": ['query.confirmation'],
                     "default": "email",
-                    "validation": {"type": "string", "enum": ["email", "emailAndPhone", "phone"]}
+                    "validation": { "type": "string", "enum": ["email", "emailAndPhone", "phone"] }
                 }
             },
             '/validate/changeEmail': {
@@ -241,7 +241,7 @@ module.exports = {
                 "token": {
                     "source": ['query.token'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/validate/changePhone': {
@@ -252,7 +252,7 @@ module.exports = {
                 "token": {
                     "source": ['query.token'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/user': {
@@ -263,7 +263,7 @@ module.exports = {
                 "username": {
                     "source": ['query.username'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "status": {
                     "source": ['query.status'],
@@ -307,7 +307,7 @@ module.exports = {
                 "id": {
                     "source": ['query.id'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/admin/users': {
@@ -318,11 +318,11 @@ module.exports = {
                 "commonFields": ["start", "limit", "keywords"],
                 "config": {
                     "source": ['query.config'],
-                    "validation": {"type": "boolean"}
+                    "validation": { "type": "boolean" }
                 },
                 "scope": {
                     "source": ['query.scope'],
-                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
+                    "validation": { "type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"] }
                 },
                 "status": {
                     "source": ['query.status'],
@@ -340,7 +340,7 @@ module.exports = {
                 "commonFields": ["keywords"],
                 "scope": {
                     "source": ['query.scope'],
-                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
+                    "validation": { "type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"] }
                 }
             },
             '/api-v2/admin/users': {
@@ -351,11 +351,11 @@ module.exports = {
                 "commonFields": ["start", "limit", "keywords"],
                 "config": {
                     "source": ['query.config'],
-                    "validation": {"type": "boolean"}
+                    "validation": { "type": "boolean" }
                 },
                 "scope": {
                     "source": ['query.scope'],
-                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
+                    "validation": { "type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"] }
                 },
                 "status": {
                     "source": ['query.status'],
@@ -395,7 +395,7 @@ module.exports = {
                 "tenantId": {
                     "source": ['query.tenantId'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/admin/group': {
@@ -405,11 +405,11 @@ module.exports = {
                 },
                 "id": {
                     "source": ['query.id'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "code": {
                     "source": ['query.code'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
 
@@ -420,7 +420,7 @@ module.exports = {
                 },
                 "scope": {
                     "source": ['query.scope'],
-                    "validation": {"type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"]}
+                    "validation": { "type": "string", "enum": ["myTenancy", "otherTenancy", "otherTenancyInvited"] }
                 }
             },
             '/admin/tokens': {
@@ -431,7 +431,7 @@ module.exports = {
                 "commonFields": ["start", "limit"],
                 "service": {
                     "source": ['query.service'],
-                    "validation": {"type": "string", "enum": ["inviteToJoin", "joinInvite"]}
+                    "validation": { "type": "string", "enum": ["inviteToJoin", "joinInvite"] }
                 }
             }
         },
@@ -444,16 +444,16 @@ module.exports = {
                 },
                 "email": {
                     "source": ['body.email'],
-                    "validation": {"type": "string", "format": "email"}
+                    "validation": { "type": "string", "format": "email" }
                 },
                 "id": {
                     "source": ['body.id'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "what": {
                     "source": ['body.what'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "data": {
                     "source": ['body.data'],
@@ -470,26 +470,26 @@ module.exports = {
                 "firstName": {
                     "source": ['body.firstName'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "lastName": {
                     "source": ['body.lastName'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "email": {
                     "source": ['body.email'],
                     "required": true,
-                    "validation": {"type": "string", "format": "email"}
+                    "validation": { "type": "string", "format": "email" }
                 },
                 "phone": {
                     "source": ['body.phone'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "membership": {
                     "source": ['body.membership'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/join/invite/phone': {
@@ -508,42 +508,42 @@ module.exports = {
                 },
                 "firstName": {
                     "source": ['body.firstName'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "lastName": {
                     "source": ['body.lastName'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "email": {
                     "source": ['body.email'],
-                    "validation": {"type": "string", "format": "email"}
+                    "validation": { "type": "string", "format": "email" }
                 },
                 "profile": {
                     "source": ['body.profile'],
-                    "validation": {"type": "object"}
+                    "validation": { "type": "object" }
                 },
                 "membership": {
                     "source": ['body.membership'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "ln": {
                     "source": ['body.ln'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "phone": {
                     "source": ['body.phone'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "code": {
                     "source": ['body.code'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "confirmation": {
                     "source": ['body.confirmation'],
                     "default": "phone",
-                    "validation": {"type": "string", "enum": ["email", "emailAndPhone", "phone"]}
+                    "validation": { "type": "string", "enum": ["email", "emailAndPhone", "phone"] }
                 }
             },
             '/join/invite': {
@@ -563,46 +563,46 @@ module.exports = {
                 "password": {
                     "source": ['body.password'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "firstName": {
                     "source": ['body.firstName'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "lastName": {
                     "source": ['body.lastName'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "email": {
                     "source": ['body.email'],
                     "required": true,
-                    "validation": {"type": "string", "format": "email"}
+                    "validation": { "type": "string", "format": "email" }
                 },
                 "profile": {
                     "source": ['body.profile'],
-                    "validation": {"type": "object"}
+                    "validation": { "type": "object" }
                 },
                 "membership": {
                     "source": ['body.membership'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "ln": {
                     "source": ['body.ln'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "phone": {
                     "source": ['body.phone'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "code": {
                     "source": ['body.code'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "confirmation": {
                     "source": ['body.confirmation'],
                     "default": "email",
-                    "validation": {"type": "string", "enum": ["email", "emailAndPhone", "phone"]}
+                    "validation": { "type": "string", "enum": ["email", "emailAndPhone", "phone"] }
                 }
             },
             '/join': {
@@ -622,38 +622,38 @@ module.exports = {
                 "password": {
                     "source": ['body.password'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "firstName": {
                     "source": ['body.firstName'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "lastName": {
                     "source": ['body.lastName'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "email": {
                     "source": ['body.email'],
                     "required": true,
-                    "validation": {"type": "string", "format": "email"}
+                    "validation": { "type": "string", "format": "email" }
                 },
                 "profile": {
                     "source": ['body.profile'],
-                    "validation": {"type": "object"}
+                    "validation": { "type": "object" }
                 },
                 "membership": {
                     "source": ['body.membership'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "ln": {
                     "source": ['body.ln'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "phone": {
                     "source": ['body.phone'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/join/code': {
@@ -673,43 +673,43 @@ module.exports = {
                 "password": {
                     "source": ['body.password'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "firstName": {
                     "source": ['body.firstName'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "lastName": {
                     "source": ['body.lastName'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "email": {
                     "source": ['body.email'],
                     "required": true,
-                    "validation": {"type": "string", "format": "email"}
+                    "validation": { "type": "string", "format": "email" }
                 },
                 "profile": {
                     "source": ['body.profile'],
-                    "validation": {"type": "object"}
+                    "validation": { "type": "object" }
                 },
                 "membership": {
                     "source": ['body.membership'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "ln": {
                     "source": ['body.ln'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "phone": {
                     "source": ['body.phone'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "confirmation": {
                     "source": ['body.confirmation'],
                     "default": "email",
-                    "validation": {"type": "string", "enum": ["email", "emailAndPhone", "phone"]}
+                    "validation": { "type": "string", "enum": ["email", "emailAndPhone", "phone"] }
                 }
             },
 
@@ -730,20 +730,20 @@ module.exports = {
                 "firstName": {
                     "source": ['body.firstName'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "lastName": {
                     "source": ['body.lastName'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "email": {
                     "source": ['body.email'],
-                    "validation": {"type": "string", "format": "email"}
+                    "validation": { "type": "string", "format": "email" }
                 },
                 "profile": {
                     "source": ['body.profile'],
-                    "validation": {"type": "object"}
+                    "validation": { "type": "object" }
                 },
                 "groups": {
                     "source": ['body.groups'],
@@ -756,7 +756,7 @@ module.exports = {
                 },
                 "membership": {
                     "source": ['body.membership'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "status": {
                     "source": ['body.status'],
@@ -768,11 +768,11 @@ module.exports = {
                 },
                 "password": {
                     "source": ['body.password'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
-                "passwordEncrypted" : {
+                "passwordEncrypted": {
                     "source": ['body.passwordEncrypted'],
-                    "validation": {"type": "boolean"}
+                    "validation": { "type": "boolean" }
                 },
                 "pin": {
                     "source": ['body.pin'],
@@ -792,11 +792,11 @@ module.exports = {
                 },
                 "ln": {
                     "source": ['body.ln'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "phone": {
                     "source": ['body.phone'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/admin/user/tenant': {
@@ -813,20 +813,20 @@ module.exports = {
                 "firstName": {
                     "source": ['body.firstName'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "lastName": {
                     "source": ['body.lastName'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "email": {
                     "source": ['body.email'],
-                    "validation": {"type": "string", "format": "email"}
+                    "validation": { "type": "string", "format": "email" }
                 },
                 "profile": {
                     "source": ['body.profile'],
-                    "validation": {"type": "object"}
+                    "validation": { "type": "object" }
                 },
                 "groups": {
                     "source": ['body.groups'],
@@ -839,7 +839,7 @@ module.exports = {
                 },
                 "membership": {
                     "source": ['body.membership'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "tenant": {
                     "source": ['body.tenant'],
@@ -867,15 +867,15 @@ module.exports = {
                 },
                 "password": {
                     "source": ['body.password'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
-                "passwordEncrypted" : {
+                "passwordEncrypted": {
                     "source": ['body.passwordEncrypted'],
-                    "validation": {"type": "boolean"}
+                    "validation": { "type": "boolean" }
                 },
                 "phone": {
                     "source": ['body.phone'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/admin/users/ids': {
@@ -897,7 +897,7 @@ module.exports = {
                 },
                 "config": {
                     "source": ['body.config'],
-                    "validation": {"type": "boolean"}
+                    "validation": { "type": "boolean" }
                 }
             },
 
@@ -918,12 +918,12 @@ module.exports = {
                 "name": {
                     "source": ['body.name'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "description": {
                     "source": ['body.description'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "packages": {
                     "source": ['body.packages'],
@@ -963,7 +963,88 @@ module.exports = {
                 },
                 "locked": {
                     "source": ['body.locked'],
-                    "validation": {"type": "boolean"}
+                    "validation": { "type": "boolean" }
+                },
+            },
+            '/admin/group/tenant': {
+                "_apiInfo": {
+                    "l": "Add group",
+                    "group": "Group administration"
+                },
+                "code": {
+                    "source": ['body.code'],
+                    "required": true,
+                    "validation": {
+                        "type": "string",
+                        "format": "alphanumeric",
+                        "maxLength": 20
+                    }
+                },
+                "name": {
+                    "source": ['body.name'],
+                    "required": true,
+                    "validation": { "type": "string" }
+                },
+                "description": {
+                    "source": ['body.description'],
+                    "required": true,
+                    "validation": { "type": "string" }
+                },
+                "packages": {
+                    "source": ['body.packages'],
+                    "required": true,
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "minItems": 1,
+                            "additionalProperties": false,
+                            "properties": {
+                                "product": {
+                                    "type": "string"
+                                },
+                                "packages": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "minItems": 1,
+                                    }
+                                }
+                            },
+                            "required": ["product", "packages"]
+                        }
+                    }
+                },
+                "environments": {
+                    "source": ['body.environments'],
+                    "validation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "minItems": 1,
+                            "pattern": "^([A-Za-z]+)$"
+                        }
+                    }
+                },
+                "locked": {
+                    "source": ['body.locked'],
+                    "validation": { "type": "boolean" }
+                },
+                "tenant": {
+                    "source": ['body.tenant'],
+                    "required": true,
+                    "validation": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": 'string'
+                            },
+                            "code": {
+                                "type": 'string'
+                            }
+                        },
+                        "required": ["id", "code"]
+                    }
                 },
             },
             '/admin/groups': {
@@ -1046,7 +1127,7 @@ module.exports = {
                 "id": {
                     "source": ['query.id'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/admin/groups/tenant': {
@@ -1086,7 +1167,7 @@ module.exports = {
                 "id": {
                     "source": ['query.id'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             }
         },
@@ -1100,17 +1181,17 @@ module.exports = {
                 "token": {
                     "source": ['body.token'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "password": {
                     "source": ['body.password'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "confirmation": {
                     "source": ['body.confirmation'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
 
@@ -1122,22 +1203,22 @@ module.exports = {
                 "id": {
                     "source": ['body.id'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "oldPassword": {
                     "source": ['body.oldPassword'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "password": {
                     "source": ['body.password'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "confirmation": {
                     "source": ['body.confirmation'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
 
@@ -1149,12 +1230,12 @@ module.exports = {
                 "id": {
                     "source": ['body.id'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "email": {
                     "source": ['body.email'],
                     "required": true,
-                    "validation": {"type": "string", "format": "email"}
+                    "validation": { "type": "string", "format": "email" }
                 }
             },
 
@@ -1166,12 +1247,12 @@ module.exports = {
                 "id": {
                     "source": ['body.id'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "phone": {
                     "source": ['body.phone'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
 
@@ -1183,12 +1264,12 @@ module.exports = {
                 "id": {
                     "source": ['body.id'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "email": {
                     "source": ['body.email'],
                     "required": true,
-                    "validation": {"type": "string", "format": "email"}
+                    "validation": { "type": "string", "format": "email" }
                 }
             },
 
@@ -1200,7 +1281,7 @@ module.exports = {
                 "id": {
                     "source": ['body.id'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "username": {
                     "source": ['body.username'],
@@ -1211,23 +1292,23 @@ module.exports = {
                 },
                 "firstName": {
                     "source": ['body.firstName'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "lastName": {
                     "source": ['body.lastName'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "profile": {
                     "source": ['body.profile'],
-                    "validation": {"type": "object"}
+                    "validation": { "type": "object" }
                 },
                 "ln": {
                     "source": ['body.ln'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "phone": {
                     "source": ['body.phone'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/admin/account/password': {
@@ -1238,12 +1319,12 @@ module.exports = {
                 "id": {
                     "source": ['body.id'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "password": {
                     "source": ['body.password'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/admin/user': {
@@ -1254,7 +1335,7 @@ module.exports = {
                 "id": {
                     "source": ['body.id'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "username": {
                     "source": ['body.username'],
@@ -1265,15 +1346,15 @@ module.exports = {
                 },
                 "firstName": {
                     "source": ['body.firstName'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "lastName": {
                     "source": ['body.lastName'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "email": {
                     "source": ['body.email'],
-                    "validation": {"type": "string", 'format': 'email'}
+                    "validation": { "type": "string", 'format': 'email' }
                 },
                 "groups": {
                     "source": ['body.groups'],
@@ -1293,15 +1374,15 @@ module.exports = {
                 },
                 "profile": {
                     "source": ['body.profile'],
-                    "validation": {"type": "object"}
+                    "validation": { "type": "object" }
                 },
                 "ln": {
                     "source": ['body.ln'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "phone": {
                     "source": ['body.phone'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/admin/user/invited/groups': {
@@ -1324,7 +1405,7 @@ module.exports = {
                 "tenantId": {
                     "source": ['body.tenantId'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 }
             },
             '/admin/user/groups': {
@@ -1387,12 +1468,12 @@ module.exports = {
                 "id": {
                     "source": ['body.id'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "status": {
                     "source": ['body.status'],
                     "required": true,
-                    "validation": {"type": "string", "enum": ['active', 'inactive', 'pendingNew', 'pending']}
+                    "validation": { "type": "string", "enum": ['active', 'inactive', 'pendingNew', 'pending'] }
                 }
             },
 
@@ -1404,16 +1485,16 @@ module.exports = {
                 "id": {
                     "source": ['body.id'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "name": {
                     "source": ['body.name'],
                     "required": true,
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "description": {
                     "source": ['body.description'],
-                    "validation": {"type": "string"}
+                    "validation": { "type": "string" }
                 },
                 "packages": {
                     "source": ['body.packages'],

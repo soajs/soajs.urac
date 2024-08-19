@@ -83,9 +83,13 @@ let bl = {
         data.environments = inputmaskData.environments;
         data.packages = inputmaskData.packages;
         data.code = inputmaskData.code;
+        data.locked = inputmaskData.locked || null;
         data.tId = soajs.tenant.id;
         data.tCode = soajs.tenant.code;
-        data.locked = inputmaskData.locked || null;
+        if (inputmaskData.tenant) {
+            data.tId = inputmaskData.tenant.id || data.tId;
+            data.tCode = inputmaskData.tenant.code || data.tCode;
+        }
         modelObj.add(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {
