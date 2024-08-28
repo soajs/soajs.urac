@@ -800,6 +800,9 @@ User.prototype.add = function (data, cb) {
     if (data.phone) {
         record.phone = data.phone;
     }
+    if (data.id) {
+        record._id = __self.mongoCore.ObjectId(data.id);
+    }
 
     record.ts = new Date().getTime();
 

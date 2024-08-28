@@ -804,6 +804,13 @@ module.exports = {
                     "l": "Add user",
                     "group": "User administration"
                 },
+                "id": {
+                    "source": ['body.id'],
+                    "validation": {
+                        "type": "string",
+                        "pattern": `^[a-f\\d]{24}$`
+                    }
+                },
                 "username": {
                     "source": ['body.username'],
                     "validation": {
