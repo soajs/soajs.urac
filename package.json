@@ -1,7 +1,7 @@
 {
   "name": "soajs.urac",
   "description": "soajs URAC service",
-  "version": "4.1.13",
+  "version": "4.1.14",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -31,7 +31,7 @@
     "soajs.controller": "4.2.15"
   },
   "dependencies": {
-    "async": "3.2.5",
+    "async": "3.2.6",
     "handlebars": "4.7.8",
     "request": "2.88.2",
     "soajs": "4.1.10",
