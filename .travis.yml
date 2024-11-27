@@ -59,6 +59,12 @@ jobs:
     - docker push soajsorg/urac:${PACKAGE_VERSION}
     - docker push soajsorg/urac:${MAJOR_VERSION}.x
     - docker push soajsorg/urac
+    before_deploy:
+      - yes | gem update --system --force
+      - gem install bundler
+      - gem install faraday-net_http -v '3.3.0'
+      - gem install uri
+      - gem install logger
     deploy:
       on:
         all_branches: true
