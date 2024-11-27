@@ -32,6 +32,8 @@ let listUsersSchema = {
                     "email": {"type": "string", "required": true},
                     "phone": {"type": "string"},
                     "ts": {"type": "integer"},
+                    "lastSeen": {"type": "integer"},
+                    "lastLogin": {"type": "integer"},
                     "status": {"type": "string", "required": true},
                     "profile": {"type": "object"},
                     "groups": {
