@@ -21,7 +21,7 @@ describe("Testing last seen API", () => {
 
             requester('/user/me', 'get', {}, (error, body) => {
                 assert.ok(body);
-                assert.ok(body.data.lastSeen)
+                assert.ok(body.data.lastSeen);
                 done();
             });
         });
