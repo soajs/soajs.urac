@@ -21,18 +21,18 @@ jobs:
     after_success:
     - if [ "$TRAVIS_BRANCH" = "master" ]; then grunt coverage; fi
 
-  - stage: Publish to npm
-    if: branch =~ /(release)/
-    script:
-    - echo "PUBLISH npm"
-    deploy:
-      skip_cleanup: true
-      provider: npm
-      email: $NPM_EMAIL
-      api_key: $NPM_TOKEN
-      on:
-        all_branches: true
-        condition: $TRAVIS_BRANCH =~ ^(release)*
+  # - stage: Publish to npm
+  #   if: branch =~ /(release)/
+  #   script:
+  #   - echo "PUBLISH npm"
+  #   deploy:
+  #     skip_cleanup: true
+  #     provider: npm
+  #     email: $NPM_EMAIL
+  #     api_key: $NPM_TOKEN
+  #     on:
+  #       all_branches: true
+  #       condition: $TRAVIS_BRANCH =~ ^(release)*
 
   - stage: Publish to docker registry
     if: branch =~ /(release)/
