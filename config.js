@@ -437,6 +437,12 @@ module.exports = {
         },
 
         "post": {
+            '/user/last/seen': {
+                "_apiInfo": {
+                    "l": "Update user last seen timestamp",
+                    "group": "Internal"
+                }
+            },
             '/email': {
                 "_apiInfo": {
                     "l": "Send custom email",

@@ -252,6 +252,14 @@ let bl = {
         });
     },
 
+    "lastSeen": (soajs, inputmaskData, options, cb) => {
+        inputmaskData = inputmaskData || {};
+        inputmaskData.what = 'lastSeen';
+        inputmaskData.lastSeen = new Date().getTime();
+        inputmaskData.id = soajs.urac._id;
+        bl.updateOneField(soajs, inputmaskData, options, cb);
+    },
+
     "updateStatus": (soajs, inputmaskData, options, cb) => {
         inputmaskData = inputmaskData || {};
         inputmaskData.what = 'status';

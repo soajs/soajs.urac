@@ -28,6 +28,7 @@ describe("starting user integration tests", () => {
         //POST
 	    require("./post/getUsersbyIds.test");
         require("./post/addUser.test");
+        require("./post/lastSeen.test");
 
         done();
     });

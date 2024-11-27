@@ -291,6 +291,11 @@ function run(serviceStartCb) {
             });
 
             //POST methods
+            service.post("/user/last/seen", function (req, res) {
+                bl.user.lastSeen(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
+                    return res.json(req.soajs.buildResponse(error, data));
+                });
+            });
             service.post("/email", function (req, res) {
                 bl.sendCustomEmail(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
