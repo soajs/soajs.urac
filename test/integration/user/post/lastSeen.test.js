@@ -9,10 +9,6 @@ describe("Testing last seen API", () => {
         done();
     });
 
-    let users;
-    let selectedUser;
-
-
     //TODO: Nothing gets updated since status is already active, we should create a new user and update its status
     it("Success - set last seen on the logged in user", (done) => {
 
