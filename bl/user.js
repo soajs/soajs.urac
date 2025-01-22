@@ -256,8 +256,12 @@ let bl = {
         inputmaskData = inputmaskData || {};
         inputmaskData.what = 'lastSeen';
         inputmaskData.lastSeen = new Date().getTime();
-        inputmaskData.id = soajs.urac._id;
-        bl.updateOneField(soajs, inputmaskData, options, cb);
+        if (soajs.urac && soajs.urac._id) {
+            inputmaskData.id = soajs.urac._id;
+            bl.updateOneField(soajs, inputmaskData, options, cb);
+        } else {
+            return cb(null, false);
+        }
     },
 
     "updateStatus": (soajs, inputmaskData, options, cb) => {
