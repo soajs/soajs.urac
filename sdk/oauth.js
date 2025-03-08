@@ -19,9 +19,10 @@ let sdk = {
 		soajs.awareness.connect(service_name, service_version, (response) => {
 			if (response && response.host) {
 				let options = {
-					uri: 'http://' + response.host + "/token/auto/" + data.id,
-					headers: response.headers,
-					json: true
+					"uri": "http://" + response.host + "/token/auto/" + data.id,
+					"headers": response.headers,
+					"json": true,
+					"method": "post"
 				};
 
 				httpRequest(options)
