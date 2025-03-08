@@ -8,8 +8,9 @@
  * found in the LICENSE file at the root of this repository
  */
 
+const { httpRequest } = require("./request.js");
 const commonResponse = require("./comonResponse.js");
-const request = require("request");
+// const request = require("request");
 const service_name = "oauth";
 const service_version = "1";
 
@@ -23,9 +24,16 @@ let sdk = {
 					json: true
 				};
 
-				request.post(options, function (error, response, body) {
-					return commonResponse(soajs, body, error, cb);
-				});
+				httpRequest(requestOptions)
+					.then((body) => {
+						return commonResponse(soajs, body, null, cb);
+					})
+					.catch(({ error, body }) => {
+						return commonResponse(soajs, body, error, cb);
+					});
+				// request.post(options, function (error, response, body) {
+				// 	return commonResponse(soajs, body, error, cb);
+				// });
 			} else {
 				return cb(null, null);
 			}
