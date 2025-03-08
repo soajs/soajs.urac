@@ -24,7 +24,7 @@ let sdk = {
 					json: true
 				};
 
-				httpRequest(requestOptions)
+				httpRequest(options)
 					.then((body) => {
 						return commonResponse(soajs, body, null, cb);
 					})
