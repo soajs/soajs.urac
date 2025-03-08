@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+IMAGE="urac"
+DFILE="Dockerfile"
+
+echo "Release ${IMAGE} from ${DFILE}"
+
+PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -Fn '{ print $2 }' | sed 's/[n:",]//g' | tr -d '[[:space:]]')
+MAJOR_VERSION=$(echo ${PACKAGE_VERSION} | awk -F. '{ print $1 }')
+echo "Package version ${PACKAGE_VERSION}"
+echo "Major version ${MAJOR_VERSION}"
+
+docker build -t soajsorg/${IMAGE} -f ${DFILE} . --platform linux/amd64  
+docker tag soajsorg/${IMAGE}:latest soajsorg/${IMAGE}:${PACKAGE_VERSION}
+docker tag soajsorg/${IMAGE}:latest soajsorg/${IMAGE}:${MAJOR_VERSION}.x
+
+docker push soajsorg/${IMAGE}
+docker push soajsorg/${IMAGE}:${PACKAGE_VERSION}
+docker push soajsorg/${IMAGE}:${MAJOR_VERSION}.x
