@@ -10,14 +10,13 @@
 
 const http = require('http');
 
-function httpRequestLight({ uri, data = null, body = null, qs = null, method = 'GET', headers = null, json = true }) {
+function httpRequestLight({ uri, data = null, body = null, qs = null, method = 'GET', headers = null, json = true, timeout = 8000 }) {
     return new Promise((resolve, reject) => {
         data = data || body; // to be compatible with request package
 
         let onResponse = false;
         let options = {};
         const requestDataString = data ? (json ? JSON.stringify(data) : data.toString()) : '';
-
 
         try {
             const urlObj = new URL(uri);
@@ -71,6 +70,8 @@ function httpRequestLight({ uri, data = null, body = null, qs = null, method = '
 
         req.on('response', (res) => { // Listen for the 'response' event
             if (res.statusCode < 200 || res.statusCode >= 300) {
+                onResponse = true;
+                res.resume();
                 return reject(new Error(`Status Code: ${res.statusCode}`));
             }
 
@@ -120,6 +121,17 @@ function httpRequestLight({ uri, data = null, body = null, qs = null, method = '
             }
         });
 
+        // Handle request timeout
+        req.on('timeout', () => {
+            req.destroy(); // IMPORTANT: Forcefully end the request
+            if (!onResponse) {
+                onResponse = true;
+                return reject(new Error('Request timed out'));
+            }
+        });
+        // Set the timeout on the request
+        req.setTimeout(timeout);
+
         if (data) {
             req.write(requestDataString);
         }
@@ -128,10 +140,10 @@ function httpRequestLight({ uri, data = null, body = null, qs = null, method = '
     });
 }
 
-function httpRequest({ uri, data = null, body = null, qs = null, method = 'GET', headers = null, json = true }) {
+function httpRequest({ uri, data = null, body = null, qs = null, method = 'GET', headers = null, json = true, timeout = 8000 }) {
     return new Promise((resolve, reject) => {
         data = data || body; // to be compatible with request package
-        
+
         let onResponse = false;
         let options = {};
 
@@ -241,6 +253,17 @@ function httpRequest({ uri, data = null, body = null, qs = null, method = 'GET',
                 return reject({ error: error, body: null }); // Reject with error and null data for request errors
             }
         });
+
+        // Handle request timeout
+        req.on('timeout', () => {
+            req.destroy(); // IMPORTANT: Forcefully end the request
+            if (!onResponse) {
+                onResponse = true;
+                return reject(new Error('Request timed out'));
+            }
+        });
+        // Set the timeout on the request
+        req.setTimeout(timeout);
 
         if (data) {
             req.write(requestDataString);
