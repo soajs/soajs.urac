@@ -264,7 +264,10 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
         //TODO: clean up from sub tenant & index
         let condition = { "config.allowedTenants.tenant.id": data.tenant.id };
         let extraOptions = {};
-        let s = { "$pull": { "config.allowedTenants.$.groups": data.groupCode } };
+        let s = {
+            "$pull": { "config.allowedTenants.$.groups": data.groupCode },
+            "$set": { "ts": new Date().getTime() }
+        };
         __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, result) => {
             if (err) {
                 return cb(err);
@@ -280,7 +283,10 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
     } else {
         let condition = { "tenant.id": data.tenant.id };
         let extraOptions = {};
-        let s = { "$pull": { groups: data.groupCode } };
+        let s = {
+            "$pull": { groups: data.groupCode },
+            "$set": { "ts": new Date().getTime() }
+        };
         __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, _result) => {
             if (err) {
                 return cb(err);
@@ -292,7 +298,10 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
                 }
                 let condition = { "config.allowedTenants.tenant.id": data.tenant.id };
                 let extraOptions = {};
-                let s = { "$pull": { "config.allowedTenants.$.groups": data.groupCode } };
+                let s = {
+                    "$pull": { "config.allowedTenants.$.groups": data.groupCode },
+                    "$set": { "ts": new Date().getTime() }
+                };
                 __self.mongoCore.updateMany(colName, condition, s, extraOptions, (err, result) => {
                     if (err) {
                         return cb(err);
@@ -442,7 +451,8 @@ User.prototype.updateOneField = function (data, cb) {
         };
         let s = {
             '$set': {
-                [data.what]: data[data.what]
+                [data.what]: data[data.what],
+                "ts": new Date().getTime()
             }
         };
         if (data.status && data.what !== "status") {
@@ -483,7 +493,8 @@ User.prototype.updatePhone = function (data, cb) {
         };
         let s = {
             '$set': {
-                "phone": data.phone
+                "phone": data.phone,
+                "ts": new Date().getTime()
             }
         };
         __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
@@ -843,7 +854,11 @@ User.prototype.edit = function (data, cb) {
             'upsert': false
         };
         if (data.username || data.firstName || data.lastName || data.profile || data.groups || data.email || data.status) {
-            let s = { '$set': {} };
+            let s = {
+                '$set': {
+                    "ts": new Date().getTime()
+                }
+            };
 
             if (data.username) {
                 s.$set.username = data.username;
@@ -919,6 +934,7 @@ User.prototype.save = function (data, cb) {
     let extraOptions = {
         'upsert': false
     };
+    data.ts = new Date().getTime();
     let s = { '$set': data };
     __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
         let nModified = 0;
@@ -951,7 +967,8 @@ User.prototype.uninvite = function (data, cb) {
         let s = {
             "$pull": {
                 "config.allowedTenants": { "tenant.id": data.tenant.id }
-            }
+            },
+            "$set": { "ts": new Date().getTime() }
         };
         if (data.status) {
             condition.status = data.status;
@@ -1019,6 +1036,7 @@ User.prototype.editGroups = function (data, cb) {
         if (data.status) {
             condition.status = data.status;
         }
+        s.$set.ts = new Date().getTime();
         __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
             let nModified;
             if (!record) {
@@ -1104,7 +1122,10 @@ User.prototype.deleteUpdatePin = function (data, cb) {
             };
             condition["tenant.id"] = data.tenant.id;
         }
-
+        if (!s.$set) {
+            s.$set = {};
+        }
+        s.$set.ts = new Date().getTime();
         __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
             let nModified = 0;
             if (!record) {
@@ -1156,6 +1177,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
             }
             condition["tenant.id"] = data.tenant.id;
         }
+        s.$set.ts = new Date().getTime();
         __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
             let nModified = 0;
             if (!record) {

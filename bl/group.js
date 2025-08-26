@@ -104,11 +104,13 @@ let bl = {
             return cb(bl.handleError(soajs, 400, null));
         }
         let data = [];
+        let now = new Date().getTime();
         for (let i = 0; i < inputmaskData.groups.length; i++) {
             let record = {
                 "code": inputmaskData.groups[i].code,
                 "name": inputmaskData.groups[i].name,
-                "description": inputmaskData.groups[i].description
+                "description": inputmaskData.groups[i].description,
+                "ts": now
             };
             if (inputmaskData.groups[i].locked) {
                 record.locked = inputmaskData.groups[i].locked;

@@ -174,7 +174,8 @@ Group.prototype.add = function (data, cb) {
     let record = {
         "code": data.code,
         "name": data.name,
-        "description": data.description
+        "description": data.description,
+        "ts": new Date().getTime()
     };
     if (data.locked) {
         record.locked = data.locked;
@@ -244,7 +245,8 @@ Group.prototype.edit = function (data, cb) {
 
         let s = {
             '$set': {
-                'name': data.name
+                'name': data.name,
+                'ts': new Date().getTime()
             }
         };
         if (data.description) {
@@ -380,7 +382,7 @@ Group.prototype.updateEnvironments = function (data, cb) {
         return cb(error, null);
     }
     let s = {
-        '$set': {}
+        '$set': { 'ts': new Date().getTime() }
     };
     if (data.environments) {
         for (let i = 0; i < data.environments.length; i++) {
@@ -464,7 +466,7 @@ Group.prototype.updatePackages = function (data, cb) {
         return cb(error, null);
     }
     let s = {
-        '$set': {}
+        '$set': { 'ts': new Date().getTime() }
     };
     if (data.packages) {
         for (let i = 0; i < data.packages.length; i++) {
@@ -548,6 +550,7 @@ Group.prototype.deleteEnvironments = function (data, cb) {
     }
     let remove = (condition) => {
         let us = {
+            '$set': { 'ts': new Date().getTime() },
             '$unset': {}
         };
 
@@ -608,6 +611,7 @@ Group.prototype.deleteProducts = function (data, cb) {
     }
     let remove = (condition) => {
         let us = {
+            '$set': { 'ts': new Date().getTime() },
             '$unset': {}
         };
 
