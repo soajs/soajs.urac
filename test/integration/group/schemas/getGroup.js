@@ -22,10 +22,11 @@ let getGroupSchema = {
 			"required": false,
 			"additionalProperties": false,
 			"properties": {
-				"_id": {"type": "string", "required": true},
-				"code": {"type": "string", "required": true},
-				"name": {"type": "string", "required": true},
-				"description": {"type": "string", "required": false},
+				"_id": { "type": "string", "required": true },
+				"code": { "type": "string", "required": true },
+				"name": { "type": "string", "required": true },
+				"description": { "type": "string", "required": false },
+				"ts": { "type": "integer", "required": false },
 				"config": {
 					"type": "object",
 					"required": true,
@@ -59,15 +60,15 @@ let getGroupSchema = {
 					"required": false,
 					"additionalProperties": true,
 					"properties": {
-						"id": {"type": "string", "required": true},
-						"code": {"type": "string", "required": true},
+						"id": { "type": "string", "required": true },
+						"code": { "type": "string", "required": true },
 						"pin": {
 							"type": "object",
 							"required": true,
 							"additionalProperties": false,
 							"properties": {
-								"code": {"type": "string", "required": false},
-								"allowed": {"type": "boolean", "required": true}
+								"code": { "type": "string", "required": false },
+								"allowed": { "type": "boolean", "required": true }
 							}
 						}
 					}

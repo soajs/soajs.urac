@@ -25,37 +25,38 @@ let listGroupsSchema = {
                 "required": false,
                 "additionalProperties": false,
                 "properties": {
-                    "_id": {"type": "string", "required": true},
-                    "code": {"type": "string", "required": true},
-                    "name": {"type": "string", "required": true},
-                    "locked": {"type": "boolean", "required": false},
-                    "description": {"type": "string", "required": false},
+                    "_id": { "type": "string", "required": true },
+                    "code": { "type": "string", "required": true },
+                    "name": { "type": "string", "required": true },
+                    "locked": { "type": "boolean", "required": false },
+                    "description": { "type": "string", "required": false },
+                    "ts": { "type": "integer", "required": false },
                     "config": {
                         "type": "object",
                         "required": true,
                         "additionalProperties": false,
                         "properties": {
-	                        "allowedPackages": {
-		                        "type": "object",
-		                        "required": false,
-		                        "patternProperties": {
-			                        "^[a-zA-Z0-9]+$": {
-				                        "type": "array",
-				                        "items": {
-					                        "type": "string"
-				                        }
-			                        }
-		                        }
-	                        },
-	                        "allowedEnvironments": {
-		                        "type": "object",
-		                        "required": false,
-		                        "patternProperties": {
-			                        "^[a-zA-Z0-9]+$": {
-				                        "type": "object"
-			                        }
-		                        }
-	                        }
+                            "allowedPackages": {
+                                "type": "object",
+                                "required": false,
+                                "patternProperties": {
+                                    "^[a-zA-Z0-9]+$": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "allowedEnvironments": {
+                                "type": "object",
+                                "required": false,
+                                "patternProperties": {
+                                    "^[a-zA-Z0-9]+$": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
                         }
                     },
                     "tenant": {
@@ -63,15 +64,15 @@ let listGroupsSchema = {
                         "required": false,
                         "additionalProperties": true,
                         "properties": {
-                            "id": {"type": "string", "required": true},
-                            "code": {"type": "string", "required": true},
+                            "id": { "type": "string", "required": true },
+                            "code": { "type": "string", "required": true },
                             "pin": {
                                 "type": "object",
                                 "required": false,
                                 "additionalProperties": false,
                                 "properties": {
-                                    "code": {"type": "string", "required": false},
-                                    "allowed": {"type": "boolean", "required": true}
+                                    "code": { "type": "string", "required": false },
+                                    "allowed": { "type": "boolean", "required": true }
                                 }
                             }
                         }

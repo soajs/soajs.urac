@@ -29,18 +29,18 @@ let listAllSchema = {
 						"required": true,
 						"additionalProperties": false,
 						"properties": {
-							"_id": {"type": "string", "required": true},
-							"locked": {"type": "boolean"},
-							"username": {"type": "string", "required": true},
-							"firstName": {"type": "string", "required": true},
-							"lastName": {"type": "string", "required": true},
-							"email": {"type": "string", "required": true},
-							"phone": {"type": "string"},
-							"ts": {"type": "integer"},
-							"lastSeen": {"type": "integer"},
-							"lastLogin": {"type": "integer"},
-							"status": {"type": "string", "required": true},
-							"profile": {"type": "object"},
+							"_id": { "type": "string", "required": true },
+							"locked": { "type": "boolean" },
+							"username": { "type": "string", "required": true },
+							"firstName": { "type": "string", "required": true },
+							"lastName": { "type": "string", "required": true },
+							"email": { "type": "string", "required": true },
+							"phone": { "type": "string" },
+							"ts": { "type": "integer" },
+							"lastSeen": { "type": "integer" },
+							"lastLogin": { "type": "integer" },
+							"status": { "type": "string", "required": true },
+							"profile": { "type": "object" },
 							"groups": {
 								"type": "array",
 								"required": true,
@@ -52,8 +52,8 @@ let listAllSchema = {
 								"type": "object",
 								"additionalProperties": false,
 								"properties": {
-									"packages": {"type": "object"},
-									"keys": {"type": "object"},
+									"packages": { "type": "object" },
+									"keys": { "type": "object" },
 									"allowedTenants": {
 										"type": "array",
 										"items": {
@@ -65,15 +65,15 @@ let listAllSchema = {
 													"required": true,
 													"additionalProperties": false,
 													"properties": {
-														"id": {"type": "string"},
-														"code": {"type": "string"},
+														"id": { "type": "string" },
+														"code": { "type": "string" },
 														"pin": {
-															"allowed": {"type": "boolean"},
-															"code": {"type": "string"}
+															"allowed": { "type": "boolean" },
+															"code": { "type": "string" }
 														}
 													}
 												},
-												"groups": {"type": "array", "required": true}
+												"groups": { "type": "array", "required": true }
 											}
 										}
 									}
@@ -83,11 +83,11 @@ let listAllSchema = {
 								"type": "object",
 								"additionalProperties": false,
 								"properties": {
-									"id": {"type": "string"},
-									"code": {"type": "string"},
+									"id": { "type": "string" },
+									"code": { "type": "string" },
 									"pin": {
-										"allowed": {"type": "boolean"},
-										"code": {"type": "string"}
+										"allowed": { "type": "boolean" },
+										"code": { "type": "string" }
 									}
 								}
 							}
@@ -100,11 +100,12 @@ let listAllSchema = {
 						"type": "object",
 						"additionalProperties": false,
 						"properties": {
-							"_id": {"type": "string", "required": true},
-							"code": {"type": "string", "required": true},
-                            "locked": {"type": "boolean"},
-							"name": {"type": "string", "required": true},
-							"description": {"type": "string"},
+							"_id": { "type": "string", "required": true },
+							"code": { "type": "string", "required": true },
+							"locked": { "type": "boolean" },
+							"name": { "type": "string", "required": true },
+							"description": { "type": "string" },
+							"ts": { "type": "integer", "required": false },
 							"config": {
 								"type": "object",
 								"required": true,
@@ -135,14 +136,14 @@ let listAllSchema = {
 								"type": "object",
 								"additionalProperties": true,
 								"properties": {
-									"id": {"type": "string", "required": true},
-									"code": {"type": "string", "required": true},
+									"id": { "type": "string", "required": true },
+									"code": { "type": "string", "required": true },
 									"pin": {
 										"type": "object",
 										"additionalProperties": false,
 										"properties": {
-											"code": {"type": "string"},
-											"allowed": {"type": "boolean", "required": true}
+											"code": { "type": "string" },
+											"allowed": { "type": "boolean", "required": true }
 										}
 									}
 								}
