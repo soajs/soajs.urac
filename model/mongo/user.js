@@ -262,7 +262,7 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
     }
     if (data.tenant.type === "client" && data.tenant.main) {
         //TODO: clean up from sub tenant & index
-        let condition = { "config.allowedTenants.tenant.id": data.tenant.id };
+        let condition = { "config.allowedTenants.tenant.id": data.tenant.id, "config.allowedTenants.groups": data.groupCode };
         let extraOptions = {};
         let s = {
             "$pull": { "config.allowedTenants.$.groups": data.groupCode },
@@ -281,7 +281,7 @@ User.prototype.cleanDeletedGroup = function (data, cb) {
             }
         });
     } else {
-        let condition = { "tenant.id": data.tenant.id };
+        let condition = { "tenant.id": data.tenant.id, "groups": data.groupCode };
         let extraOptions = {};
         let s = {
             "$pull": { groups: data.groupCode },
