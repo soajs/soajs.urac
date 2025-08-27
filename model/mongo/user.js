@@ -1051,6 +1051,7 @@ User.prototype.editGroups = function (data, cb) {
                         "config.allowedTenants.$.groups": data.groups
                     }
                 };
+                s.$set.ts = new Date().getTime();
                 condition["config.allowedTenants.tenant.id"] = data.tenant.id;
                 condition["tenant.id"] = { "$ne": data.tenant.id };
                 if (data.status) {
@@ -1140,6 +1141,10 @@ User.prototype.deleteUpdatePin = function (data, cb) {
                         "config.allowedTenants.$.tenant.pin": 1
                     }
                 };
+                if (!s.$set) {
+                    s.$set = {};
+                }
+                s.$set.ts = new Date().getTime();
                 condition["config.allowedTenants.tenant.id"] = data.tenant.id;
                 condition["tenant.id"] = { "$ne": data.tenant.id };
                 __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
@@ -1196,6 +1201,7 @@ User.prototype.deleteUpdatePin = function (data, cb) {
                 }
                 condition["config.allowedTenants.tenant.id"] = data.tenant.id;
                 condition["tenant.id"] = { "$ne": data.tenant.id };
+                s.$set.ts = new Date().getTime();
                 __self.mongoCore.updateOne(colName, condition, s, null, (err, record) => {
                     let nModified = 0;
                     if (!record) {
