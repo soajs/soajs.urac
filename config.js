@@ -439,9 +439,13 @@ module.exports = {
         "post": {
             '/user/last/seen': {
                 "_apiInfo": {
-                    "l": "Update user last seen timestamp",
+                    "l": "Update user last seen timestamp & last network if provided",
                     "group": "Internal"
-                }
+                },
+                "lastNetwork": {
+                    "source": ['body.network'],
+                    "validation": { "type": "string" }
+                },
             },
             '/email': {
                 "_apiInfo": {

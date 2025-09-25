@@ -458,6 +458,9 @@ User.prototype.updateOneField = function (data, cb) {
         if (data.status && data.what !== "status") {
             s.$set.status = data.status;
         }
+        if (data.lastNetwork) {
+            s.$set.lastNetwork = data.lastNetwork;
+        }
         __self.mongoCore.updateOne(colName, condition, s, extraOptions, (err, record) => {
             if (!record || (record && !record.nModified)) {
                 let error = new Error("User: [" + data.what + "] for user [" + _id.toString() + "] was not update.");
