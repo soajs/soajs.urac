@@ -38,6 +38,7 @@ let listAllSchema = {
 							"phone": { "type": "string" },
 							"ts": { "type": "integer" },
 							"lastSeen": { "type": "integer" },
+							"lastNetwork": { "type": "string" },
 							"lastLogin": { "type": "integer" },
 							"status": { "type": "string", "required": true },
 							"profile": { "type": "object" },

@@ -283,6 +283,9 @@ let bl = {
         if (inputmaskData.status && inputmaskData.what !== "status") {
             data.status = inputmaskData.status;
         }
+        if (inputmaskData.lastNetwork) {
+            data.lastNetwork = inputmaskData.lastNetwork;
+        }
         modelObj.updateOneField(data, (err, record) => {
             bl.mt.closeModel(modelObj);
             if (err) {

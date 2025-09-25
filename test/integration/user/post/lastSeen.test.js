@@ -13,7 +13,7 @@ describe("Testing last seen API", () => {
     it("Success - set last seen on the logged in user", (done) => {
 
 
-        requester('/user/last/seen', 'post', { 'network': 'global' }, (error, body) => {
+        requester('/user/last/seen', 'post', { 'body': { 'network': 'global' } }, (error, body) => {
             assert.ifError(error);
             assert.ok(body);
             assert.ok(body.data);
@@ -23,7 +23,7 @@ describe("Testing last seen API", () => {
                 assert.ok(body);
                 assert.ok(body.data.lastSeen);
                 assert.ok(body.data.lastNetwork);
-                assert.deepStrictEqual(body.lastNetwork, 'global');
+                assert.deepStrictEqual(body.data.lastNetwork, 'global');
                 done();
             });
         });
