@@ -34,7 +34,7 @@
   "dependencies": {
     "async": "3.2.6",
     "handlebars": "4.7.8",
-    "soajs": "4.1.18",
+    "soajs": "4.1.19",
     "twilio": "5.10.5",
     "uuid": "13.0.0"
   }
