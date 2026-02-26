@@ -127,18 +127,6 @@ function User(soajs, localConfig, mongoCore) {
 
                 {
                     "col": colName,
-                    "i": { "tenant.id": 1, "firstName": 1 },
-                    "o": {},
-                    "usedBy": ["getUsersBasicInfo", "cleanDeletedGroup"]
-                },
-                {
-                    "col": colName,
-                    "i": { "tenant.id": 1, "lastName": 1 },
-                    "o": {},
-                    "usedBy": ["getUsersBasicInfo"]
-                },
-                {
-                    "col": colName,
                     "i": { "tenant.id": 1, "status": 1 },
                     "o": {},
                     "usedBy": ["getUsersBasicInfo"]
@@ -147,7 +135,7 @@ function User(soajs, localConfig, mongoCore) {
                     "col": colName,
                     "i": { "tenant.id": 1, "firstName": 1, "status": 1 },
                     "o": {},
-                    "usedBy": ["getUsersBasicInfo"]
+                    "usedBy": ["getUsersBasicInfo", "cleanDeletedGroup"]
                 },
                 {
                     "col": colName,
