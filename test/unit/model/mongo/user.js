@@ -422,6 +422,41 @@ describe("Unit test for: model - user", function () {
         });
     });
 
+    it("edit - using addedUser1_id id - ln only", function (done) {
+        let data = {
+            id: addedUser1_id.toString(),
+            "ln": "fr"
+        };
+        modelObj.edit(data, (error, record) => {
+            assert.ifError(error);
+            assert.equal(record, 1);
+            done();
+        });
+    });
+
+    it("edit - using addedUser1_id id - phone only", function (done) {
+        let data = {
+            id: addedUser1_id.toString(),
+            "phone": "+15551234567"
+        };
+        modelObj.edit(data, (error, record) => {
+            assert.ifError(error);
+            assert.equal(record, 1);
+            done();
+        });
+    });
+
+    it("edit - nothing to update", function (done) {
+        let data = {
+            id: addedUser1_id.toString()
+        };
+        modelObj.edit(data, (error) => {
+            assert.ok(error);
+            assert.equal(error.message, "User: nothing to update.");
+            done();
+        });
+    });
+
     it("edit - using addedUser1_id - error id", function (done) {
         let data = {
             id: "12121212121",

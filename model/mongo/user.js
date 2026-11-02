@@ -826,7 +826,7 @@ User.prototype.add = function (data, cb) {
  * @param data
  *  should have:
  *      required (id, _id)
- *      optional one of those (username, firstName, lastName, email, profile, groups, status)
+ *      optional one of those (username, firstName, lastName, email, profile, groups, status, ln, phone)
  *
  * @param cb
  */
@@ -844,7 +844,7 @@ User.prototype.edit = function (data, cb) {
         let extraOptions = {
             'upsert': false
         };
-        if (data.username || data.firstName || data.lastName || data.profile || data.groups || data.email || data.status) {
+        if (data.username || data.firstName || data.lastName || data.profile || data.groups || data.email || data.status || data.ln || data.phone) {
             let s = {
                 '$set': {
                     "ts": new Date().getTime()

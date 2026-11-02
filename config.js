@@ -81,6 +81,8 @@ module.exports = {
         536: "User is already in the tenant tenancy.",
         537: "Make sure to use the Email or Phone number related to this invite code.",
         538: "Phone already exists.",
+        539: "A signed in user is required.",
+        540: "The id does not match the signed in user.",
 
         598: "Problem with the used token and code.",
         599: "Token has expired.",
@@ -1219,7 +1221,7 @@ module.exports = {
                 },
                 "id": {
                     "source": ['body.id'],
-                    "required": true,
+                    "required": false,
                     "validation": { "type": "string" }
                 },
                 "oldPassword": {
@@ -1246,7 +1248,7 @@ module.exports = {
                 },
                 "id": {
                     "source": ['body.id'],
-                    "required": true,
+                    "required": false,
                     "validation": { "type": "string" }
                 },
                 "email": {
@@ -1263,7 +1265,7 @@ module.exports = {
                 },
                 "id": {
                     "source": ['body.id'],
-                    "required": true,
+                    "required": false,
                     "validation": { "type": "string" }
                 },
                 "phone": {
@@ -1280,7 +1282,7 @@ module.exports = {
                 },
                 "id": {
                     "source": ['body.id'],
-                    "required": true,
+                    "required": false,
                     "validation": { "type": "string" }
                 },
                 "email": {
@@ -1297,7 +1299,7 @@ module.exports = {
                 },
                 "id": {
                     "source": ['body.id'],
-                    "required": true,
+                    "required": false,
                     "validation": { "type": "string" }
                 },
                 "username": {
