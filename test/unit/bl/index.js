@@ -735,4 +735,120 @@ describe("Unit test for: BL - index", () => {
 			});
 		});
 	});
+
+	it('tests validateJoinCode', (done) => {
+		function UserModel() {
+			console.log("user model");
+		}
+
+		UserModel.prototype.closeConnection = () => {
+		};
+		UserModel.prototype.getUser = (data, cb) => {
+			return cb(null, Object.assign({}, user, {status: "active"}));
+		};
+		BL.user.model = UserModel;
+
+		function TokenModel() {
+			console.log("token model");
+		}
+
+		TokenModel.prototype.closeConnection = () => {
+		};
+		let expires = new Date((new Date().getFullYear()) + 2, 0, 1);
+		let codes = {
+			"123456": {"token": "123456", "inviteToken": "join-token-1", "confirmation": "phone", "expires": expires},
+			"654321": {"token": "654321", "inviteToken": "join-token-2", "confirmation": "emailAndPhone", "expires": expires}
+		};
+		TokenModel.prototype.get = (data, cb) => {
+			if (data.service === "joinInvite") {
+				return cb(null, codes[data.token] || null);
+			}
+			if (!data.service && data.services && ["join-token-1", "join-token-2"].indexOf(data.token) !== -1) {
+				return cb(null, {"token": data.token, "userId": user._id, "service": "join", "expires": expires});
+			}
+			return cb(null, null);
+		};
+		TokenModel.prototype.updateStatus = (data, cb) => {
+			return cb(null, true);
+		};
+		BL.token.model = TokenModel;
+
+		BL.validateJoinCode(soajs, {code: "123456"}, null, (error, result) => {
+			assert.ifError(error);
+			assert.strictEqual(result._id, user._id);
+			// code sent as token
+			BL.validateJoinCode(soajs, {token: "123456", code: "000000"}, null, (error, result) => {
+				assert.ifError(error);
+				assert.strictEqual(result._id, user._id);
+				BL.validateJoinCode(soajs, {token: "join-token-2", code: "654321"}, null, (error, result) => {
+					assert.ifError(error);
+					assert.strictEqual(result._id, user._id);
+					BL.validateJoinCode(soajs, {token: "join-token-1", code: "654321"}, null, (error) => {
+						assert.deepEqual(error, {code: 598, msg: "Problem with the used token and code."});
+						BL.validateJoinCode(soajs, {code: "000000"}, null, (error) => {
+							assert.deepEqual(error, {code: 600, msg: "unable to find token."});
+							done();
+						});
+					});
+				});
+			});
+		});
+	});
+
+	it('tests sendCustomEmail - no email or id, unknown id', (done) => {
+		function UserModel() {
+			console.log("user model");
+		}
+
+		UserModel.prototype.closeConnection = () => {
+		};
+		UserModel.prototype.getUser = (data, cb) => {
+			return cb(null, null);
+		};
+		BL.user.model = UserModel;
+
+		BL.sendCustomEmail(soajs, {what: "join"}, null, (error) => {
+			assert.deepEqual(error, {code: 541, msg: "Email or id is required."});
+			BL.sendCustomEmail(soajs, {what: "join", id: "5d7fee0876186d9ab9b36499"}, null, (error) => {
+				assert.deepEqual(error, {code: 520, msg: "Unable to find user."});
+				done();
+			});
+		});
+	});
+
+	it('tests joinInvite - joinInviteStrict from the registry', (done) => {
+		function UserModel() {
+			console.log("user model");
+		}
+
+		UserModel.prototype.closeConnection = () => {
+		};
+		BL.user.model = UserModel;
+
+		function TokenModel() {
+			console.log("token model");
+		}
+
+		TokenModel.prototype.closeConnection = () => {
+		};
+		TokenModel.prototype.get = (data, cb) => {
+			return cb(null, {
+				"token": data.token,
+				"email": "invited@localhost.com",
+				"phone": "+15551234567",
+				"expires": new Date((new Date().getFullYear()) + 2, 0, 1)
+			});
+		};
+		BL.token.model = TokenModel;
+
+		let strict = Object.assign({}, soajs, {
+			"servicesConfig": {},
+			"registry": {"custom": {"urac": {"value": {"joinInviteStrict": true}}}}
+		});
+		let data = {code: "123456", email: "other@localhost.com", phone: "+15551234567"};
+		BL.joinInvite(strict, data, null, (error) => {
+			assert.deepEqual(error, {code: 537, msg: "Make sure to use the Email or Phone number related to this invite code."});
+			done();
+		});
+	});
 });

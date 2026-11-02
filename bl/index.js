@@ -76,13 +76,15 @@ let bl = {
             };
             bl.user.getUser(soajs, d, null, (error, record) => {
                 if (error) {
-                    soajs.log.info(what + ': No Mail was sent: ' + error.message);
+                    soajs.log.info(what + ': No Mail was sent: ' + error.msg);
+                    return cb(error, null);
                 }
                 data.email = record.email;
                 sendEmail(data, what);
             });
         } else {
             soajs.log.info(what + ': No Mail was sent, unable to find the TO email address.');
+            return cb(bl.user.handleError(soajs, 541, null), null);
         }
     },
 
@@ -112,27 +114,37 @@ let bl = {
         options = {};
         options.mongoCore = modelObj.mongoCore;
         inputmaskData = inputmaskData || {};
-        inputmaskData.service = 'joinInvite';
-        bl.token.get(soajs, inputmaskData, options, (error, tokenRecord) => {
+        let getCode = (code, next) => {
+            bl.token.get(soajs, {"token": code, "service": 'joinInvite'}, options, next);
+        };
+        let validate = (error, tokenRecord) => {
             if (error) {
                 bl.user.mt.closeModel(modelObj);
                 return cb(error, null);
             }
+            let joinToken = inputmaskData.token;
             if (tokenRecord.confirmation !== "phone") {
-                if (tokenRecord.inviteToken !== inputmaskData.token) {
+                if (tokenRecord.inviteToken !== joinToken) {
                     bl.user.mt.closeModel(modelObj);
                     return cb(bl.user.handleError(soajs, 598, null));
                 }
             } else {
-                inputmaskData.token = tokenRecord.inviteToken;
+                joinToken = tokenRecord.inviteToken;
             }
-            bl.validateJoin(soajs, inputmaskData, options, (error, response) => {
+            bl.validateJoin(soajs, {"token": joinToken}, options, (error, response) => {
                 bl.user.mt.closeModel(modelObj);
                 if (error) {
                     return cb(error, null);
                 }
                 return cb(null, response);
             });
+        };
+        getCode(inputmaskData.code, (error, tokenRecord) => {
+            // older clients send the code as token
+            if (error && error.code === 600 && inputmaskData.token && inputmaskData.token !== inputmaskData.code) {
+                return getCode(inputmaskData.token, validate);
+            }
+            return validate(error, tokenRecord);
         });
     },
     "validateJoin": (soajs, inputmaskData, options, cb) => {

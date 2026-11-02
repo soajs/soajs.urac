@@ -30,7 +30,7 @@ let local = (soajs, inputmaskData, options, cb) => {
         let joinInviteStrict = false;
         if (soajs.servicesConfig.urac && Object.hasOwnProperty.call(soajs.servicesConfig.urac, 'joinInviteStrict')) {
             joinInviteStrict = soajs.servicesConfig.urac.joinInviteStrict;
-        } else if (soajs.registry && soajs.registry.custom && soajs.registry.custom.urac && soajs.registry.custom.urac.value && soajs.registry.custom.urac.value.hasOwnProperty('joinInviteFlex')) {
+        } else if (soajs.registry && soajs.registry.custom && soajs.registry.custom.urac && soajs.registry.custom.urac.value && soajs.registry.custom.urac.value.hasOwnProperty('joinInviteStrict')) {
             joinInviteStrict = soajs.registry.custom.urac.value.joinInviteStrict;
         }
         if (joinInviteStrict) {
