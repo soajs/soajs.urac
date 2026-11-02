@@ -36,6 +36,7 @@ let listAllSchema = {
 							"lastName": { "type": "string", "required": true },
 							"email": { "type": "string", "required": true },
 							"phone": { "type": "string" },
+							"ln": { "type": "string" },
 							"ts": { "type": "integer" },
 							"lastSeen": { "type": "integer" },
 							"lastNetwork": { "type": "string" },

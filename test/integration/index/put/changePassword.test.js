@@ -19,6 +19,8 @@ describe("Testing check password API", () => {
 	
 	let users = [];
 	let selectedUser;
+	// user of the requester access token
+	let ownerId = "5c8d0c505653de3985aa0ffd";
 	
 	it("Success - will return all user records", (done) => {
 		let params = {};
@@ -41,7 +43,7 @@ describe("Testing check password API", () => {
 	it("Success - will change password", (done) => {
 		let params = {
 			body: {
-				id: selectedUser._id,
+				id: ownerId,
 				oldPassword: "password",
 				password: "NewPass",
 				confirmation: "NewPass",
@@ -62,7 +64,7 @@ describe("Testing check password API", () => {
 	it("Fails - will not change password - old password is wrong", (done) => {
 		let params = {
 			body: {
-				id: selectedUser._id,
+				id: ownerId,
 				oldPassword: "123",
 				password: "NewPass",
 				confirmation: "NewPass",
@@ -86,7 +88,7 @@ describe("Testing check password API", () => {
 	it("Fails - will not change password - password not same as confirmation", (done) => {
 		let params = {
 			body: {
-				id: selectedUser._id,
+				id: ownerId,
 				oldPassword: "NewPass",
 				password: "NewPass",
 				confirmation: "NewPass2",
@@ -107,6 +109,30 @@ describe("Testing check password API", () => {
 		});
 	});
 	
+	it("Fails - will not change password - another user id", (done) => {
+		let params = {
+			body: {
+				id: selectedUser._id,
+				oldPassword: "password",
+				password: "NewPass",
+				confirmation: "NewPass",
+			}
+		};
+		requester('/account/password', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.ok(body.errors);
+			assert.deepEqual(body.errors.details, [{
+				code: 540,
+				message: 'The id does not match the signed in user.'
+			}]);
+			let check = validator.validate(body, changePasswordSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+
 	it("Fails - will not change password - not found", (done) => {
 		let params = {
 			body: {
@@ -120,6 +146,10 @@ describe("Testing check password API", () => {
 			assert.ifError(error);
 			assert.ok(body);
 			assert.ok(body.errors);
+			assert.deepEqual(body.errors.details, [{
+				code: 540,
+				message: 'The id does not match the signed in user.'
+			}]);
 			let check = validator.validate(body, changePasswordSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);
@@ -141,9 +171,8 @@ describe("Testing check password API", () => {
 			assert.ok(body);
 			assert.ok(body.errors);
 			assert.deepEqual(body.errors.details, [{
-				code: 602,
-				message:
-					'Model error: A valid ID is required'
+				code: 540,
+				message: 'The id does not match the signed in user.'
 			}]);
 			let check = validator.validate(body, changePasswordSchema);
 			assert.deepEqual(check.valid, true);
@@ -160,8 +189,27 @@ describe("Testing check password API", () => {
 			assert.ok(body.errors);
 			assert.deepEqual(body.errors.details, [{
 				code: 172,
-				message: 'Missing required field: id, oldPassword, password, confirmation'
+				message: 'Missing required field: oldPassword, password, confirmation'
 			}]);
+			let check = validator.validate(body, changePasswordSchema);
+			assert.deepEqual(check.valid, true);
+			assert.deepEqual(check.errors, []);
+			done();
+		});
+	});
+
+	it("Success - no id changes the signed in user password back", (done) => {
+		let params = {
+			body: {
+				oldPassword: "NewPass",
+				password: "password",
+				confirmation: "password",
+			}
+		};
+		requester('/account/password', 'put', params, (error, body) => {
+			assert.ifError(error);
+			assert.ok(body);
+			assert.deepEqual(body.data, true);
 			let check = validator.validate(body, changePasswordSchema);
 			assert.deepEqual(check.valid, true);
 			assert.deepEqual(check.errors, []);

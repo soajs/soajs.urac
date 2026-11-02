@@ -33,6 +33,23 @@ let bl = {
     token: null,
     template: null,
 
+    /**
+     * Account APIs act on the signed in user: an id in the input must be that user's id
+     *
+     * @returns {Object|null} error, or null after setting inputmaskData.id to the signed in user id
+     */
+    "signedInUser": (soajs, inputmaskData) => {
+        if (!soajs || !soajs.urac || !soajs.urac._id) {
+            return bl.user.handleError(soajs, 539, null);
+        }
+        let id = soajs.urac._id.toString();
+        if (inputmaskData.id && inputmaskData.id !== id) {
+            return bl.user.handleError(soajs, 540, null);
+        }
+        inputmaskData.id = id;
+        return null;
+    },
+
     "sendCustomEmail": (soajs, inputmaskData, options, cb) => {
 
         let sendEmail = (data, what) => {
@@ -188,6 +205,9 @@ let bl = {
     },
 
     "validateChangeEmail": (soajs, inputmaskData, options, cb) => {
+        if (!soajs.urac || !soajs.urac._id) {
+            return cb(bl.user.handleError(soajs, 539, null));
+        }
         //get model since token and user are in the same db always, aka main tenant db
         let modelObj = bl.user.mt.getModel(soajs);
         options = {};
@@ -234,6 +254,9 @@ let bl = {
         });
     },
     "validateChangePhone": (soajs, inputmaskData, options, cb) => {
+        if (!soajs.urac || !soajs.urac._id) {
+            return cb(bl.user.handleError(soajs, 539, null));
+        }
         //get model since token and user are in the same db always, aka main tenant db
         let modelObj = bl.user.mt.getModel(soajs);
         options = {};

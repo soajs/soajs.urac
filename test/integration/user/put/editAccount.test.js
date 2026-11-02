@@ -19,6 +19,8 @@ describe("Testing edit account API", () => {
 
     let users;
     let selectedUser;
+    // user of the requester access token
+    let ownerId = "5c8d0c505653de3985aa0ffd";
 
     it("Success - by id will return all user records - no data", (done) => {
         let params = {
@@ -44,8 +46,7 @@ describe("Testing edit account API", () => {
     it("Success - by id will edit account info", (done) => {
         let params = {
             body: {
-                id: selectedUser._id,
-                username: selectedUser.username,
+                id: ownerId,
                 firstName: 'John',
                 lastName: 'Does',
                 profile: {
@@ -65,6 +66,42 @@ describe("Testing edit account API", () => {
         });
     });
 
+    it("Success - no id will edit the signed in user ln only", (done) => {
+        let params = {
+            body: {
+                ln: 'fr'
+            }
+        };
+        requester('/account', 'put', params, (error, body) => {
+            assert.ifError(error);
+            assert.ok(body);
+            assert.deepEqual(body.data, true);
+            let check = validator.validate(body, editAccountSchema);
+            assert.deepEqual(check.valid, true);
+            assert.deepEqual(check.errors, []);
+            done();
+        });
+    });
+
+    it("Fails - another user id", (done) => {
+        let params = {
+            body: {
+                id: selectedUser._id,
+                phone: '+15551234567'
+            }
+        };
+        requester('/account', 'put', params, (error, body) => {
+            assert.ifError(error);
+            assert.ok(body);
+            assert.ok(body.errors);
+            assert.deepEqual(body.errors.details, [ { code: 540, message: 'The id does not match the signed in user.' } ]);
+            let check = validator.validate(body, editAccountSchema);
+            assert.deepEqual(check.valid, true);
+            assert.deepEqual(check.errors, []);
+            done();
+        });
+    });
+
     it("Fails - No data", (done) => {
         let params = {
         };
@@ -72,7 +109,7 @@ describe("Testing edit account API", () => {
             assert.ifError(error);
             assert.ok(body);
             assert.ok(body.errors);
-            assert.deepEqual(body.errors.details, [ { code: 172, message: 'Missing required field: id' } ]);
+            assert.deepEqual(body.errors.details, [ { code: 602, message: 'Model error: User: nothing to update.' } ]);
             let check = validator.validate(body, editAccountSchema);
             assert.deepEqual(check.valid, true);
             assert.deepEqual(check.errors, []);
@@ -90,9 +127,7 @@ describe("Testing edit account API", () => {
             assert.ifError(error);
             assert.ok(body);
             assert.ok(body.errors);
-            assert.deepEqual(body.errors.details, [ { code: 602,
-                message:
-                    'Model error: A valid ID is required' } ]);
+            assert.deepEqual(body.errors.details, [ { code: 540, message: 'The id does not match the signed in user.' } ]);
             let check = validator.validate(body, editAccountSchema);
             assert.deepEqual(check.valid, true);
             assert.deepEqual(check.errors, []);

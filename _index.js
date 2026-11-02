@@ -178,11 +178,19 @@ function run(serviceStartCb) {
                 });
             });
             service.put("/account/password", function (req, res) {
+                let userError = bl.signedInUser(req.soajs, req.soajs.inputmaskData);
+                if (userError) {
+                    return res.json(req.soajs.buildResponse(userError, null));
+                }
                 bl.changePassword(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });
             service.put("/account/email/code", function (req, res) {
+                let userError = bl.signedInUser(req.soajs, req.soajs.inputmaskData);
+                if (userError) {
+                    return res.json(req.soajs.buildResponse(userError, null));
+                }
                 req.soajs.inputmaskData.code = true;
                 req.soajs.inputmaskData.service = "changeEmail_code";
                 bl.changeEmail(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
@@ -190,16 +198,28 @@ function run(serviceStartCb) {
                 });
             });
             service.put("/account/email", function (req, res) {
+                let userError = bl.signedInUser(req.soajs, req.soajs.inputmaskData);
+                if (userError) {
+                    return res.json(req.soajs.buildResponse(userError, null));
+                }
                 bl.changeEmail(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });
             service.put("/account/phone", function (req, res) {
+                let userError = bl.signedInUser(req.soajs, req.soajs.inputmaskData);
+                if (userError) {
+                    return res.json(req.soajs.buildResponse(userError, null));
+                }
                 bl.changePhone(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });
             });
             service.put("/account", function (req, res) {
+                let userError = bl.signedInUser(req.soajs, req.soajs.inputmaskData);
+                if (userError) {
+                    return res.json(req.soajs.buildResponse(userError, null));
+                }
                 bl.user.edit(req.soajs, req.soajs.inputmaskData, null, (error, data) => {
                     return res.json(req.soajs.buildResponse(error, data));
                 });

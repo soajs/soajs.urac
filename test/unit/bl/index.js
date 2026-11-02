@@ -275,6 +275,44 @@ describe("Unit test for: BL - index", () => {
 			});
 		});
 	});
+	it('tests signedInUser - own id', () => {
+		let data = {id: "5d7fee0876186d9ab9b36493", firstName: "tony"};
+		assert.strictEqual(BL.signedInUser(soajs, data), null);
+		assert.strictEqual(data.id, "5d7fee0876186d9ab9b36493");
+	});
+
+	it('tests signedInUser - no id uses the signed in user', () => {
+		let data = {firstName: "tony"};
+		assert.strictEqual(BL.signedInUser(soajs, data), null);
+		assert.strictEqual(data.id, "5d7fee0876186d9ab9b36493");
+	});
+
+	it('tests signedInUser - another id is refused', () => {
+		let data = {id: "5d7fee0876186d9ab9b36492", firstName: "tony"};
+		let error = BL.signedInUser(soajs, data);
+		assert.deepEqual(error, {code: 540, msg: "The id does not match the signed in user."});
+		assert.strictEqual(data.id, "5d7fee0876186d9ab9b36492");
+	});
+
+	it('tests signedInUser - no signed in user is refused', () => {
+		let noUser = Object.assign({}, soajs, {urac: null});
+		let error = BL.signedInUser(noUser, {id: "5d7fee0876186d9ab9b36493"});
+		assert.deepEqual(error, {code: 539, msg: "A signed in user is required."});
+		error = BL.signedInUser(noUser, {});
+		assert.deepEqual(error, {code: 539, msg: "A signed in user is required."});
+	});
+
+	it('tests validateChangeEmail and validateChangePhone - no signed in user is refused', (done) => {
+		let noUser = Object.assign({}, soajs, {urac: null});
+		BL.validateChangeEmail(noUser, {token: "f65e8358-ce1d-47cb-b478-82e10c93f70e"}, null, (error) => {
+			assert.deepEqual(error, {code: 539, msg: "A signed in user is required."});
+			BL.validateChangePhone(noUser, {token: "f65e8358-ce1d-47cb-b478-82e10c93f70e"}, null, (error) => {
+				assert.deepEqual(error, {code: 539, msg: "A signed in user is required."});
+				done();
+			});
+		});
+	});
+
 	it('tests validateChangeEmail', (done) => {
 		function UserModel() {
 			console.log("user model");
